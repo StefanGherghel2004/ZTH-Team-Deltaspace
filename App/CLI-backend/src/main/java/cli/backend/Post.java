@@ -1,4 +1,89 @@
 package cli.backend;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Post {
+
+    private static int idIncrementation = 0;
+    private int postID;
+    private User user;
+    private String postTitle;
+    private String postContents;
+    private List<Comment> comments = new ArrayList<>();
+    private String imageLink;
+
+    //Constructor
+    public Post (User user, String postTitle, String postContents, String imageLink) {
+
+        this.postID = idIncrementation;
+        idIncrementation ++;
+
+        this.user = user;
+        this.imageLink = imageLink;
+        this.postTitle = postTitle;
+        this.postContents = postContents;
+    }
+
+    //Getters
+    public int getPostID () {
+
+        return this.postID;
+    }
+
+    public User getUser () {
+
+        return this.user;
+    }
+
+    public String getPostTitle () {
+
+        return this.postTitle;
+    }
+
+    public String getPostContents () {
+
+        return this.postContents;
+    }
+
+    public String getImageLink () {
+
+        return this.imageLink;
+    }
+
+
+    //Setters
+    public void setUser (User user) {
+
+        this.user = user;
+    }
+
+    public void setPostTitle (String postTitle) {
+
+        this.postTitle = postTitle;
+    }
+
+    public void setPostContents (String postContents) {
+
+        this.postContents = postContents;
+    }
+
+    public void setImageLink (String imageLink) {
+
+        this.imageLink = imageLink;
+    }
+
+    @Override
+    public String toString () {
+
+        return "Post{" + "id=" + postID + ", user=" + (user != null ? user.getUsername() : "null") +
+                ", title='" + postTitle + '\'' +
+                ", hasImage=" + (imageLink != null) +
+                '}';
+    }
+
+    public void addComment (Comment comment) {
+
+        this.comments.add(comment);
+    }
 }
