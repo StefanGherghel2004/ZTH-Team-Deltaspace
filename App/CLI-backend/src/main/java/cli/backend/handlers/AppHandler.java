@@ -47,6 +47,7 @@ public class AppHandler {
                 userHandler.userRegister();
                 break;
             case 2:
+                userHandler.userLogin();
                 break;
             case 3:
                 return false;
