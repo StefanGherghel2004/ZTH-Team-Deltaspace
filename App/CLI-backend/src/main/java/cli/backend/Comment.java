@@ -5,7 +5,7 @@ public class Comment {
     private User user;
     private int idPost;
     private int idComment;
-    private int idParent;
+    private int idParent = -1;
 
 
     public Comment(String text, User user, int IdPost){

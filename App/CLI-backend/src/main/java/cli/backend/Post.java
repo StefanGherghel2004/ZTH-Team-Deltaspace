@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Post {
 
     private static int postIdIncrementation = 0;
-    private int commentID = 0;
+    private int commentIdIncrementation;
     private int postID;
     private User user;
     private String postTitle;
@@ -24,6 +24,7 @@ public class Post {
         this.imageLink = imageLink;
         this.postTitle = postTitle;
         this.postContents = postContents;
+        this.commentIdIncrementation = 0;
     }
 
     //Getters
@@ -55,6 +56,11 @@ public class Post {
     public List<Comment> getComments () {
 
         return comments;
+    }
+
+    public int getCommentIdIncrementation () {
+
+        return commentIdIncrementation;
     }
 
     //Setters
@@ -90,9 +96,9 @@ public class Post {
     public void addComment (Comment comment, int idParent) {
 
         this.comments.add(comment);
-        comment.setIdComment(commentID);
+        comment.setIdComment(commentIdIncrementation);
         comment.setIdParent(idParent);
-        commentID ++;
+        commentIdIncrementation++;
     }
 
 }
