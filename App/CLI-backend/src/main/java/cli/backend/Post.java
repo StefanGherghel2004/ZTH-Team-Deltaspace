@@ -51,6 +51,10 @@ public class Post {
         return imageLink;
     }
 
+    public List<Comment> getComments () {
+
+        return comments;
+    }
 
     //Setters
     public void setUser (User user) {
@@ -86,4 +90,5 @@ public class Post {
 
         this.comments.add(comment);
     }
+
 }

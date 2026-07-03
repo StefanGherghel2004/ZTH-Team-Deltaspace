@@ -20,7 +20,7 @@ public class Comment {
     }
 
     public User getUsername(){
-        return username;
+        return user;
     }
 
     public int getId(){
@@ -30,5 +30,9 @@ public class Comment {
         return iDParrent;
     }
 
+    public int getCommentPostId () {
+
+        return idPost;
+    }
 
 }

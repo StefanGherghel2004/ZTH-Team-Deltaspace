@@ -21,8 +21,9 @@ public class CommentHandler {
             System.out.println("Error! Please introduce your text");
         }
 
-        else Comment newComment=new Comment(text, User user, post.getPostID());
-
+        else {
+            Comment newComment = new Comment(text, user, post.getPostID());
+        }
     }
 
     public void viewComment(Post post){
@@ -32,7 +33,7 @@ public class CommentHandler {
         }
         else {
             for(Comment comment:lista)
-                System.out.println("#" + post.getCommentPostId()+comment.getUsername() + comment.getText());
+                System.out.println("#" + comment.getCommentPostId()+comment.getUsername() + comment.getText());
         }
 
     }
