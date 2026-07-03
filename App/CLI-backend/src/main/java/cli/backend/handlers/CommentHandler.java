@@ -8,9 +8,18 @@ import java.util.Scanner;  // Import the Scanner class
 
 
 public class CommentHandler {
-
-
+    private static CommentHandler instance;
     private String text;
+    private CommentHandler(){
+    }
+    public static CommentHandler getInstance(){
+        if(instance==null){
+            instance=new CommentHandler();
+        }
+        return instance;
+    }
+
+
 
     public void addComment(User user, Post post ){
         Scanner sObject= new Scanner(System.in);
