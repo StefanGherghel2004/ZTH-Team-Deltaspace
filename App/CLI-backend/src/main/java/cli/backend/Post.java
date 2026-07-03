@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Post {
 
-    private static int idIncrementation = 0;
+    private static int postIdIncrementation = 0;
     private int commentID = 0;
     private int postID;
     private User user;
@@ -17,8 +17,8 @@ public class Post {
     //Constructor
     public Post (User user, String postTitle, String postContents, String imageLink) {
 
-        this.postID = idIncrementation;
-        idIncrementation ++;
+        this.postID = postIdIncrementation;
+        postIdIncrementation++;
 
         this.user = user;
         this.imageLink = imageLink;
@@ -87,10 +87,11 @@ public class Post {
                 '}';
     }
 
-    public void addComment (Comment comment) {
+    public void addComment (Comment comment, int idParent) {
 
         this.comments.add(comment);
-        comment
+        comment.setIdComment(commentID);
+        comment.setIdParent(idParent);
         commentID ++;
     }
 
