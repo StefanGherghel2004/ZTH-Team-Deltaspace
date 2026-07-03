@@ -21,7 +21,7 @@ public class CommentHandler {
             System.out.println("Error! Please introduce your text");
         }
 
-        else Comment newComment=new Comment(text, user.getUserId(), post.getPostId());
+        else Comment newComment=new Comment(text, User user, post.getPostID());
 
     }
 

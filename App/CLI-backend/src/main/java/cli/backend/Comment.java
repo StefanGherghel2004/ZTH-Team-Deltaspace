@@ -2,16 +2,17 @@ package cli.backend;
 
 public class Comment {
     private String text;
-    private User username;
-    private Post idPost;
+    private User user;
+    private int idPost;
     private int iDComment;
-    private static int counter=1;
+    private int iDParrent;
 
-    public Comment(String text, User username, Post Id){
+
+    public Comment(String text, User user, int IdPost){
         this.text=text;
-        this.username=username;
-        this.idPost=Id;
-        this.iDComment =counter++;
+        this.user=user;
+        this.idPost=IdPost;
+
     }
 
     public String getText(){
@@ -24,6 +25,9 @@ public class Comment {
 
     public int getId(){
         return iDComment;
+    }
+    public int getiDParrent(){
+        return iDParrent;
     }
 
 
