@@ -2,10 +2,12 @@ package cli.backend.handlers;
 
 import cli.backend.Community;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CommunityHandler {
-    private String communityName;
+    private List<Community> communities=new ArrayList<>();
     private static CommunityHandler instance;
     public static CommunityHandler getInstance(){
         if(instance==null){
@@ -15,10 +17,9 @@ public class CommunityHandler {
     }
     public void addComunity(){
         Scanner cobj= new Scanner(System.in);
+
         System.out.println("Please Enter Community Name:");
-
-        communityName=cobj.nextLine();
-
+        String communityName=cobj.nextLine();
 
         System.out.println("Please Enter Community Topic:");
         String topic=cobj.nextLine();
@@ -27,5 +28,19 @@ public class CommunityHandler {
         String description=cobj.nextLine();
 
         Community community= new Community(topic,communityName,description);
+        communities.add(community);
     }
-}
+    public void viewCommunities(){
+        if (communities.isEmpty()){
+            System.out.println("No communities created");
+        }
+        else {
+            for(Community community:communities){
+                System.out.println("r/" + community.getNickname() + " - " + community.getDescription());
+            }
+        }
+    }
+    }
+
+
+
