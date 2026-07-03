@@ -50,14 +50,25 @@ public class UserHandler {
 
     }
 
-    public void userLogin() {
+    public User userLogin() {
         System.out.println("Welcome to the login page.");
 
 
         System.out.println("Insert your username:");
-
+        String name = sc.nextLine();
 
         System.out.println("Insert your password:");
+        String password = sc.nextLine();
 
+        for (User user : users) {
+            if (user.getUsername().equals(name) && user.getPassword().equals(password)) {
+                System.out.println("Successfully logged in into your account - " + user.getUsername() + ".");
+                return user;
+            }
+        }
+
+        System.out.println("Invalid username or password");
+
+        return null;
     }
 }
