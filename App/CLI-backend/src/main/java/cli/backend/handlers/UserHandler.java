@@ -40,7 +40,7 @@ public class UserHandler {
 
         String email = sc.nextLine();
 
-        System.out.println("Please your password:");
+        System.out.println("Please enter your password:");
 
         String password = sc.nextLine();
 
