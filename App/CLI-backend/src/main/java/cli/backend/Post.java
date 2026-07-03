@@ -87,9 +87,10 @@ public class Post {
                 '}';
     }
 
-    public void addComment (Comment comment, int iDParrent) {
+    public void addComment (Comment comment) {
 
         this.comments.add(comment);
+        comment
         commentID ++;
     }
 

@@ -39,4 +39,9 @@ public class Comment {
         this.idParent=idParent;
     }
 
+    public void setIdComment (int idComment) {
+
+        this.idComment = idComment;
+    }
+
 }
