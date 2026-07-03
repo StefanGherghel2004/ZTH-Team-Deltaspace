@@ -35,4 +35,13 @@ public class Comment {
         return idPost;
     }
 
+    public void setIdParent(int idParent){
+        this.idParent=idParent;
+    }
+
+    public void setIdComment (int idComment) {
+
+        this.idComment = idComment;
+    }
+
 }
