@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Post {
 
     private static int idIncrementation = 0;
+    private int commentID = 0;
     private int postID;
     private User user;
     private String postTitle;
@@ -86,9 +87,10 @@ public class Post {
                 '}';
     }
 
-    public void addComment (Comment comment) {
+    public void addComment (Comment comment, int iDParrent) {
 
         this.comments.add(comment);
+        commentID ++;
     }
 
 }

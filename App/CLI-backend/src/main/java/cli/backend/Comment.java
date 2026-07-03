@@ -4,8 +4,8 @@ public class Comment {
     private String text;
     private User user;
     private int idPost;
-    private int iDComment;
-    private int iDParrent;
+    private int idComment;
+    private int idParent;
 
 
     public Comment(String text, User user, int IdPost){
@@ -24,10 +24,10 @@ public class Comment {
     }
 
     public int getId(){
-        return iDComment;
+        return idComment;
     }
-    public int getiDParrent(){
-        return iDParrent;
+    public int getIdParent(){
+        return idParent;
     }
 
     public int getCommentPostId () {
