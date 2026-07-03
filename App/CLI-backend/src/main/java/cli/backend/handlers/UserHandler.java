@@ -32,15 +32,15 @@ public class UserHandler {
 
         // checking name and password restrictions with
         // additional classes/methods to be in mind
-        System.out.println("Insert your username:");
+        System.out.println("Please enter your username:");
 
         String name = sc.nextLine();
 
-        System.out.println("Insert your email address:");
+        System.out.println("Please enter your email address:");
 
         String email = sc.nextLine();
 
-        System.out.println("Insert your password:");
+        System.out.println("Please your password:");
 
         String password = sc.nextLine();
 

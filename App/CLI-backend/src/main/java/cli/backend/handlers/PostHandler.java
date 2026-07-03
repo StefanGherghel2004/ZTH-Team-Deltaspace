@@ -41,13 +41,13 @@ public class PostHandler {
     public void addPost (User user) {
         System.out.println("Welcome to the post creation page.");
 
-        System.out.println("Insert post title:");
+        System.out.println("Please enter post title:");
         String postTitle = scan.nextLine();
 
-        System.out.println("Insert post contents:");
+        System.out.println("Please enter post contents:");
         String postContents = scan.nextLine();
 
-        System.out.println("Insert image link (or press Enter to skip):");
+        System.out.println("Please enter image link (or press Enter to skip):");
         String imageLink = scan.nextLine();
 
         if (imageLink.trim().isEmpty()) {
