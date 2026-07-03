@@ -36,11 +36,15 @@ public class UserHandler {
 
         String name = sc.nextLine();
 
+        System.out.println("Insert your email address:");
+
+        String email = sc.nextLine();
+
         System.out.println("Insert your password:");
 
         String password = sc.nextLine();
 
-        users.add(new User(name, password));
+        users.add(new User(name, email, password));
 
         System.out.println("Registration successful! Welcome to out platform.");
 
