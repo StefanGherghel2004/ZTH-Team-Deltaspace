@@ -35,4 +35,8 @@ public class Comment {
         return idPost;
     }
 
+    public void setIdParent(int idParent){
+        this.idParent=idParent;
+    }
+
 }
