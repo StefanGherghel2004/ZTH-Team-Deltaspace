@@ -53,7 +53,6 @@ public class UserHandler {
     public User userLogin() {
         System.out.println("Welcome to the login page.");
 
-
         System.out.println("Insert your username:");
         String name = sc.nextLine();
 

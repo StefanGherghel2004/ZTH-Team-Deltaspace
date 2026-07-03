@@ -38,9 +38,25 @@ public class PostHandler {
         }
     }
 
-    public void addPost (User user, String postTitle, String postContents, String imageLink) {
+    public void addPost (User user) {
+        System.out.println("Welcome to the post creation page.");
 
-        posts.add(new Post(user,postTitle,postContents,imageLink));
+        System.out.println("Insert post title:");
+        String postTitle = scan.nextLine();
+
+        System.out.println("Insert post contents:");
+        String postContents = scan.nextLine();
+
+        System.out.println("Insert image link (or press Enter to skip):");
+        String imageLink = scan.nextLine();
+
+        if (imageLink.trim().isEmpty()) {
+            imageLink = null;
+        }
+
+        posts.add(new Post(user, postTitle, postContents, imageLink));
+
+        System.out.println("Post created successfully!");
     }
 
     public List<Post> getRandomizedFeed(List<Post> posts) {

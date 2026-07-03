@@ -46,7 +46,7 @@ public class AppHandler {
         switch(currentState) {
             case NOT_LOGGED_IN:
                 System.out.println("\nWelcome to Deltaspace platform");
-                System.out.println("1. Register\n2. Login\n3. Shutdown");
+                System.out.println("1. Register\n2. Login\n3. Quit");
                 break;
             case LOGGED_IN:
                 System.out.println("\n1. Show feed\n2. Create community\n3. Logout");
