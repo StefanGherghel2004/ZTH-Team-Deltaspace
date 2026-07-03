@@ -3,6 +3,8 @@ package cli.backend;
 public class User {
 
     private int userID;
+    static int userCounter = 0;
+
     private String name;
     private String email;
     private String password;
@@ -11,6 +13,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
+        userID = userCounter++;
     }
 
     public String getUsername() {
