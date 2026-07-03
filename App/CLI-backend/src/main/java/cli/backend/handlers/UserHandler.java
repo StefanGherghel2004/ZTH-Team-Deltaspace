@@ -28,19 +28,36 @@ public class UserHandler {
 
     public void userRegister() {
 
+        System.out.println("Welcome to the registration page.");
+
         // checking name and password restrictions with
         // additional classes/methods to be in mind
         System.out.println("Insert your username:");
 
         String name = sc.nextLine();
 
+        System.out.println("Insert your email address:");
+
+        String email = sc.nextLine();
+
         System.out.println("Insert your password:");
 
         String password = sc.nextLine();
 
-        users.add(new User(name, password));
+        users.add(new User(name, email, password));
 
-        System.out.println("Registration succesfull! Welcome to out platform.");
+        System.out.println("Registration successful! Welcome to out platform.");
+
+    }
+
+    public void userLogin() {
+        System.out.println("Welcome to the login page.");
+
+
+        System.out.println("Insert your username:");
+
+
+        System.out.println("Insert your password:");
 
     }
 }
