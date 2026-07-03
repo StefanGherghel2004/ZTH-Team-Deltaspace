@@ -9,13 +9,13 @@ public class Community {
     private List<Post> listaPostari=new ArrayList<>();
     private String descriere;
     private int postId=0;
-    private Post post;
 
-    public Community(String topic,String nickname,String descriere, Post post){
+
+    public Community(String topic,String nickname,String descriere){
         this.topic=topic;
         this.nickname=nickname;
         this.descriere=descriere;
-        this.post=post;
+
     }
 
     public String getDescriere() {
@@ -30,9 +30,6 @@ public class Community {
         return listaPostari;
     }
 
-    public String descriere(){
-        return descriere;
-    }
 
     public void addPost(Post post){
     this.listaPostari.add(post);
