@@ -28,27 +28,27 @@ public class Post {
     //Getters
     public int getPostID () {
 
-        return this.postID;
+        return postID;
     }
 
     public User getUser () {
 
-        return this.user;
+        return user;
     }
 
     public String getPostTitle () {
 
-        return this.postTitle;
+        return postTitle;
     }
 
     public String getPostContents () {
 
-        return this.postContents;
+        return postContents;
     }
 
     public String getImageLink () {
 
-        return this.imageLink;
+        return imageLink;
     }
 
 
