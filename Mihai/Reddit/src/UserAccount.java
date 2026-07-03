@@ -6,7 +6,7 @@ public class UserAccount {
     private Password password;
 
 
-    public UserAccount (String username, String password) throws UsernameFormatException, PasswordSpecialCharacterException, PasswordLengthException, PasswordNumberException{
+    public UserAccount (String username, String password) throws UsernameFormatException, PasswordFormatException {
 
         this.username = new Username(username);
         this.password = new Password(password);
@@ -15,9 +15,5 @@ public class UserAccount {
     public String getUsername () {
 
         return this.username.getUsername();
-    }
-
-    public void setPassword (String password) {
-
     }
 }
