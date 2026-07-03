@@ -80,7 +80,7 @@ public class AppHandler {
         else if (currentState == State.LOGGED_IN) {
             switch(command) {
                 case 1:
-                    System.out.println("Showing feed...");
+                    postHandler.viewFeed();
                     break;
                 case 2:
                     System.out.println("Creating community...");

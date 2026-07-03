@@ -68,4 +68,20 @@ public class PostHandler {
         Collections.shuffle(randomizedList);
         return randomizedList;
     }
+
+    // dummy implementation
+    public void viewFeed() {
+
+        if (posts.isEmpty()) {
+            System.out.println("No posts to show!");
+            return;
+        }
+
+        List<Post> currentFeed = getRandomizedFeed(posts);
+
+        for (Post post : currentFeed) {
+            showPost(post);
+        }
+
+    }
 }
