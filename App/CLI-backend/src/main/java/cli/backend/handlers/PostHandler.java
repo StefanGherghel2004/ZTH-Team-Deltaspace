@@ -7,8 +7,11 @@ import java.util.*;
 
 public class PostHandler {
 
+    private User user;
     private List<Post> posts;
     private static PostHandler instance;
+
+    Scanner scan = new Scanner(System.in);
 
     private PostHandler () {
 
