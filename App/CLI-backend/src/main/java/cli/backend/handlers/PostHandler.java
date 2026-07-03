@@ -1,6 +1,5 @@
 package cli.backend.handlers;
 
-import cli.backend.Comment;
 import cli.backend.Post;
 import cli.backend.User;
 
@@ -39,12 +38,28 @@ public class PostHandler {
         }
     }
 
-    public void addPost (User user, String postTitle, String postContents, String imageLink) {
+    public void addPost (User user) {
+        System.out.println("Welcome to the post creation page.");
 
-        posts.add(new Post(user,postTitle,postContents,imageLink));
+        System.out.println("Please enter post title:");
+        String postTitle = scan.nextLine();
+
+        System.out.println("Please enter post contents:");
+        String postContents = scan.nextLine();
+
+        System.out.println("Please enter image link (or press Enter to skip):");
+        String imageLink = scan.nextLine();
+
+        if (imageLink.trim().isEmpty()) {
+            imageLink = null;
+        }
+
+        posts.add(new Post(user, postTitle, postContents, imageLink));
+
+        System.out.println("Post created successfully!");
     }
 
-    public List<Post> getRandomizedFeed() {
+    public List<Post> getRandomizedFeed(List<Post> posts) {
 
         if (posts == null || posts.isEmpty()) {
             return new ArrayList<>();
@@ -54,40 +69,19 @@ public class PostHandler {
         return randomizedList;
     }
 
-    public void showAllPosts () {
+    // dummy implementation
+    public void viewFeed() {
 
         if (posts.isEmpty()) {
-            System.out.println("No posts to show yet.");
+            System.out.println("No posts to show!");
             return;
         }
 
-        System.out.println("--- Global Feed ---");
-        for (Post post: posts) {
-            System.out.println(String.valueOf(post.getPostID()) + " " + post.getUser() + " " + post.getPostTitle());
-        }
-    }
+        List<Post> currentFeed = getRandomizedFeed(posts);
 
-    public Post getPostByID(int id) {
-        if (id >= 0 && id < posts.size()) {
-            return posts.get(id);
-        }
-        System.out.println("Error: Post ID " + id + " does not exist.");
-        return null;
-    }
-
-    public void showCommentsForPost(Post post) {
-
-        if (post.getComments().isEmpty()) {
-            System.out.println("There are currently no comments on this post.");
-            return;
+        for (Post post : currentFeed) {
+            showPost(post);
         }
 
-        Map<Integer, List<Comment>> commentTree = new HashMap<>();
-        for (Comment comment: post.getComments()) {
-            commentTree.putIfAbsent(comment.getIdParent(),new ArrayList<>());
-            commentTree.get(comment.getIdParent()).add(comment);
-        }
-
-        System.out.println("--- Comments ---");
     }
 }
