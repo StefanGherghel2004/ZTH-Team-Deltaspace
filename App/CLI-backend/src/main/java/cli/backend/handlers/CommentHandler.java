@@ -27,12 +27,12 @@ public class CommentHandler {
     }
 
     public void viewComment(Post post){
-        List<Comment> lista=post.getComments();
-        if(lista.isEmpty()){
+        List<Comment> list=post.getComments();
+        if(list.isEmpty()){
             System.out.println("Be first to comment");
         }
         else {
-            for(Comment comment:lista)
+            for(Comment comment:list)
                 System.out.println("#" + comment.getCommentPostId()+comment.getUsername() + comment.getText());
         }
 

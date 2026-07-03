@@ -6,33 +6,33 @@ import java.util.List;
 public class Community {
     private String nickname;
     private String topic;
-    private List<Post> listaPostari=new ArrayList<>();
-    private String descriere;
+    private List<Post> posts =new ArrayList<>();
+    private String description;
     private int postId=0;
 
 
-    public Community(String topic,String nickname,String descriere){
+    public Community(String topic,String nickname,String description){
         this.topic=topic;
         this.nickname=nickname;
-        this.descriere=descriere;
+        this.description =description;
 
     }
 
-    public String getDescriere() {
-        return descriere;
+    public String getDescription() {
+        return description;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public List<Post> getListaPostari(){
-        return listaPostari;
+    public List<Post> getPosts(){
+        return posts;
     }
 
 
     public void addPost(Post post){
-    this.listaPostari.add(post);
+    this.posts.add(post);
     postId++;
     }
 }

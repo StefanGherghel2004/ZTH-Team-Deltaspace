@@ -40,5 +40,4 @@ public class PostHandler {
         System.out.println("1. Show comments");
     }
 
-    public void createPost (User user, )
 }
