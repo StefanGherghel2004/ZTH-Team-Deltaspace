@@ -1,5 +1,7 @@
 package cli.backend.handlers;
 
+import cli.backend.User;
+
 import java.util.Scanner;
 
 public class AppHandler {
@@ -10,12 +12,14 @@ public class AppHandler {
     }
 
     private State currentState = State.NOT_LOGGED_IN;
+    private User currentUser;
 
     private static AppHandler instance;
 
     private static Scanner sc = new Scanner(System.in);
 
     private static UserHandler userHandler = UserHandler.getInstance();
+    private static PostHandler postHandler = PostHandler.getInstance();
 
     private AppHandler() {
 
@@ -49,7 +53,7 @@ public class AppHandler {
                 System.out.println("1. Register\n2. Login\n3. Quit");
                 break;
             case LOGGED_IN:
-                System.out.println("\n1. Show feed\n2. Create community\n3. Logout");
+                System.out.println("\n1. Show feed\n2. Create community\n3. Create Post\n4. Logout");
                 break;
         }
 
@@ -62,7 +66,9 @@ public class AppHandler {
                     userHandler.userRegister();
                     break;
                 case 2:
-                    if (userHandler.userLogin() != null) {
+                    User loggedInUser = userHandler.userLogin();
+                    if (loggedInUser != null) {
+                        currentUser = loggedInUser;
                         currentState = State.LOGGED_IN;
                     }
                     break;
@@ -80,7 +86,11 @@ public class AppHandler {
                     System.out.println("Creating community...");
                     break;
                 case 3:
+                    postHandler.addPost(currentUser);
+                    break;
+                case 4:
                     System.out.println("Logging out...");
+                    currentUser = null;
                     currentState = State.NOT_LOGGED_IN;
                     break;
             }
