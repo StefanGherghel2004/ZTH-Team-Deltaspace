@@ -63,7 +63,7 @@ public class CommunityHandler {
 
         Community community= new Community(selectedTopic, communityName,description);
         communities.add(community);
-        System.out.println("Community r/" + community.getNickname() + "successfully created.");
+        System.out.println("Community r/" + community.getNickname() + " successfully created.");
     }
 
     private void showTopicsList() {
@@ -90,10 +90,11 @@ public class CommunityHandler {
             System.out.print("No posts in this r/");
         }
         else {
-            for (Post post : communityPosts) {
-                System.out.println("User: " + post.getUser().getUsername());
+            for (Post post : community.getPosts()) {
+                System.out.println("ID: " + post.getPostID());
                 System.out.println("Title: " + post.getPostTitle());
-                System.out.println("Contents: " + post.getPostContents());
+                System.out.println("Author: " + post.getUser().getUsername());
+                System.out.println();
             }
         }
     }

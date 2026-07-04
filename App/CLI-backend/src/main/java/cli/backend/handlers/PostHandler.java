@@ -87,13 +87,13 @@ public class PostHandler {
 
     public void viewPost (Post post) {
 
-        System.out.println("User: " + post.getUser().getUsername());
+        System.out.println("Author: " + post.getUser().getUsername());
         System.out.println("Title: " + post.getPostTitle());
         if (post.getImageLink() != null) {
 
-            System.out.println(post.getImageLink());
+            System.out.println("Image: " + post.getImageLink());
         }
-        System.out.println(post.getPostContents() + "\n\n");
+        System.out.println("Content: " + post.getPostContents() + "\n\n");
     }
 
     // dummy implementation
@@ -150,4 +150,6 @@ public class PostHandler {
     public List<Post> getPosts(){
         return this.posts;
     }
+
+
 }

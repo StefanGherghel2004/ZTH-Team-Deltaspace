@@ -12,12 +12,15 @@ public class AppHandler {
         NOT_LOGGED_IN,
         LOGGED_IN,
         SHOW_COMMUNITIES,
-        IN_COMMUNITY
+        IN_COMMUNITY,
+        SHOW_POSTS,
+        ON_POST
     }
 
     private State currentState = State.NOT_LOGGED_IN;
     private User currentUser;
     private Community currentCommunity;
+    private Post currentPost;
 
     private static AppHandler instance;
 
@@ -26,6 +29,7 @@ public class AppHandler {
     private static UserHandler userHandler = UserHandler.getInstance();
     private static PostHandler postHandler = PostHandler.getInstance();
     private static CommunityHandler communityHandler=CommunityHandler.getInstance();
+    private static CommentHandler commentHandler= CommentHandler.getInstance();
 
     private AppHandler() {
 
@@ -69,6 +73,13 @@ public class AppHandler {
             case IN_COMMUNITY:
                 System.out.println("\n1.View Posts\n2.Add Post\n3. Return to Main Menu");
                 break;
+            case SHOW_POSTS:
+                communityHandler.viewCommunityPosts(currentCommunity);
+                break;
+            case ON_POST:
+                postHandler.viewPost(currentPost);
+                System.out.println("\n1. Show comments\n2. Add comment\n3. Back");
+                break;
 
         }
 
@@ -90,6 +101,27 @@ public class AppHandler {
                     currentState = State.LOGGED_IN;
                 }
             }
+            return true;
+        }
+
+        if(currentState == State.SHOW_POSTS){
+
+            if(currentCommunity.getPosts().isEmpty()){
+                currentState = State.IN_COMMUNITY;
+                return true;
+            }
+
+            System.out.println("Choose a post [ID]:");
+            int id = Integer.parseInt(sc.nextLine());
+
+            currentPost = currentCommunity.findPostById(id);
+
+            if(currentPost != null){
+                currentState = State.ON_POST;
+            } else {
+                System.out.println("Post not found!");
+            }
+
             return true;
         }
 
@@ -146,7 +178,7 @@ public class AppHandler {
         else if(currentState==State.IN_COMMUNITY){
             switch(command){
                 case 1:
-                    communityHandler.viewCommunityPosts(currentCommunity);
+                    currentState = State.SHOW_POSTS;
                     break;
                 case 2:
                     Post post = postHandler.addPost(currentUser, currentCommunity);
@@ -159,6 +191,23 @@ public class AppHandler {
                     break;
 
 
+            }
+        } else if(currentState == State.ON_POST){
+
+            switch(command){
+
+                case 1:
+                    postHandler.showComments(currentPost);
+                    break;
+
+                case 2:
+                    commentHandler.addComment(currentUser, currentPost);
+                    break;
+
+                case 3:
+                    currentPost = null;
+                    currentState = State.IN_COMMUNITY;
+                    break;
             }
         }
 

@@ -36,6 +36,15 @@ public class Community {
     postId++;
     }
 
+    public Post findPostById(int id) {
+        for (Post post : posts) {
+            if (post.getPostID() == id) {
+                return post;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Community{" +
