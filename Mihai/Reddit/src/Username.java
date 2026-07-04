@@ -48,4 +48,9 @@ public class Username {
             return true;
         }
     }
+
+    public String toString() {
+
+        return this.username;
+    }
 }

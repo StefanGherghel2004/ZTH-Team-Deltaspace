@@ -1,3 +1,4 @@
+import java.time.DateTimeException;
 import java.time.Year;
 import java.time.LocalDate;
 import java.time.Period;
@@ -7,7 +8,7 @@ public class DateOfBirth {
     private String dateOfBirth;
     private String dateError;
 
-    public DateOfBirth (String dateOfBirth) {
+    public DateOfBirth (String dateOfBirth) throws DateTimeException, AgeRequirementException {
 
         String[] characterSplitDateOfBirth = dateOfBirth.split("-");
 
@@ -23,13 +24,11 @@ public class DateOfBirth {
 
         if (day > 31 || month > 12 || (year > Year.now().getValue())) {
 
-            System.out.println("Please enter a valid date.");
-            this.dateError = "InvalidDateError";
+            throw new DateTimeException("Please enter a valid date.");
         }
         else if (age < 13) {
 
-            System.out.println("You need to be at least 13 years of age to create an account.");
-            this.dateError = "NotOldEnoughError";
+            throw new AgeRequirementException();
         }
         else {
 

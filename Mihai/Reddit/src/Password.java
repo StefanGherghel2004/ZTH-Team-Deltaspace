@@ -30,4 +30,9 @@ public class Password {
 
         return password != null && password.matches("(?=.*\\d)(?=.*\\p{Punct}).{14,}");
     }
+
+    public String toString () {
+
+        return this.password;
+    }
 }
