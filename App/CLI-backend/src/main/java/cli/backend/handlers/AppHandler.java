@@ -54,7 +54,7 @@ public class AppHandler {
                 System.out.println("1. Register\n2. Login\n3. Quit");
                 break;
             case LOGGED_IN:
-                System.out.println("\n1. Show feed\n2. Create community\n3. Create Post\n4. Logout");
+                System.out.println("\n1. Show feed\n2. Create community\n3. Create Post\n4. Show communities\n5. Logout");
                 break;
         }
 
@@ -91,6 +91,9 @@ public class AppHandler {
                     postHandler.addPost(currentUser);
                     break;
                 case 4:
+                    communityHandler.viewCommunities();
+                    break;
+                case 5:
                     System.out.println("Logging out...");
                     currentUser = null;
                     currentState = State.NOT_LOGGED_IN;
