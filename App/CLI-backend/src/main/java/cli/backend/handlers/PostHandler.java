@@ -1,5 +1,6 @@
 package cli.backend.handlers;
 
+import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 
@@ -11,6 +12,7 @@ public class PostHandler {
     private User user;
     private List<Post> posts;
     private static PostHandler instance;
+    private Community postCommunity;
 
     Scanner scan = new Scanner(System.in);
 
@@ -59,6 +61,11 @@ public class PostHandler {
         return randomizedList;
     }
 
+    public void viewPost (Post post) {
+
+
+    }
+
     // dummy implementation
     public void viewFeed() {
 
@@ -72,6 +79,9 @@ public class PostHandler {
         for (Post post : currentFeed) {
             System.out.println(post);
         }
+    }
+
+    public void showComments () {
 
     }
 }
