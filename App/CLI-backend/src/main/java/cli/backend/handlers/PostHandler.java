@@ -3,6 +3,7 @@ package cli.backend.handlers;
 import cli.backend.Post;
 import cli.backend.User;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class PostHandler {
@@ -25,17 +26,6 @@ public class PostHandler {
         }
 
         return instance;
-    }
-
-    public void showPost (Post post) {
-
-        System.out.println("User: " + post.getUser().getUsername());
-        System.out.println("Title: " + post.getPostTitle() + "\n");
-        System.out.println(post.getPostContents());
-
-        if (post.getImageLink() != null) {
-            System.out.println("Image link: " + post.getImageLink());
-        }
     }
 
     public void addPost (User user) {
@@ -80,7 +70,7 @@ public class PostHandler {
         List<Post> currentFeed = getRandomizedFeed(posts);
 
         for (Post post : currentFeed) {
-            showPost(post);
+            System.out.println(post);
         }
 
     }
