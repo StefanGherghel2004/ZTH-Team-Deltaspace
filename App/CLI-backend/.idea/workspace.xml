@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ab409964-0fb7-48b4-99e7-1693ae2f694a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/AppHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/AppHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/CommunityHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/CommunityHandler.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend" value="3FzMmPxtA6l7y4AaRkXjFmpJhan" />
+    </persistenceIdMap>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="14" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0000000000000175" />
+      <entry key="MS500" value="1.0017749572586885" />
+      <entry key="S2" value="1.2052576625879385" />
+      <entry key="S5" value="1.5361685992638057" />
+      <entry key="S10" value="1.8339332279599705" />
+      <entry key="S30" value="3.0435825496818327" />
+      <entry key="S60" value="5.781916739920783" />
+      <entry key="M2" value="17.08097035274561" />
+      <entry key="M5" value="54.1646299296084" />
+      <entry key="M10" value="93.49642345673195" />
+      <entry key="M15" value="123.25469738766735" />
+      <entry key="M30" value="193.53108002251577" />
+      <entry key="H1" value="295.2871321533515" />
+      <entry key="H2" value="488.9949909907111" />
+      <entry key="H4" value="808.9892951723596" />
+      <entry key="D1" value="1488.9953636350963" />
+      <entry key="W1" value="1681.7539631886616" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="6.845157849958794E-124" />
+      <entry key="S2" value="1.6389432211533062E-31" />
+      <entry key="S5" value="5.681445474044046E-13" />
+      <entry key="S10" value="9.872280161868547E-7" />
+      <entry key="S30" value="0.015495007220268232" />
+      <entry key="S60" value="0.1755861108940625" />
+      <entry key="M2" value="0.5922445998798096" />
+      <entry key="M5" value="1.311421152918668" />
+      <entry key="M10" value="3.2632601530924914" />
+      <entry key="M15" value="7.103490002611413" />
+      <entry key="M30" value="22.15679239373462" />
+      <entry key="H1" value="47.11598405783089" />
+      <entry key="H2" value="82.90908084879754" />
+      <entry key="H4" value="127.98496311664124" />
+      <entry key="D1" value="209.47792000700406" />
+      <entry key="W1" value="231.09277493761047" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.4316832876365716E-4" />
+      <entry key="MS500" value="0.17029883658809514" />
+      <entry key="S2" value="0.7061941034347075" />
+      <entry key="S5" value="1.1731854204257992" />
+      <entry key="S10" value="1.5619674157929089" />
+      <entry key="S30" value="2.83615004328094" />
+      <entry key="S60" value="5.779549288667703" />
+      <entry key="M2" value="17.546171771454517" />
+      <entry key="M5" value="55.405553161284196" />
+      <entry key="M10" value="96.71236475573103" />
+      <entry key="M15" value="130.31519175436296" />
+      <entry key="M30" value="215.64565444633794" />
+      <entry key="H1" value="342.3645193777999" />
+      <entry key="H2" value="571.8713110480275" />
+      <entry key="H4" value="936.9488061677886" />
+      <entry key="D1" value="1698.4661559577592" />
+      <entry key="W1" value="1912.845607502942" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3FzMmPxtA6l7y4AaRkXjFmpJhan" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="CLI-backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="CLI-backend" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ab409964-0fb7-48b4-99e7-1693ae2f694a" name="Changes" comment="" />
+      <created>1783073602810</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1783073602810</updated>
+      <workItem from="1783073603894" duration="12100000" />
+      <workItem from="1783157459479" duration="14550000" />
+      <workItem from="1783178402127" duration="106000" />
+      <workItem from="1783178571015" duration="409000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

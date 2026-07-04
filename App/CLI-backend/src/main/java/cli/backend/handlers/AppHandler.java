@@ -156,15 +156,7 @@ public class AppHandler {
                     break;
                 case 2:
                     postHandler.addPost(currentUser);
-                    if(!postHandler.getPosts().isEmpty()){
-                        Post lastPost=postHandler.getPosts().getLast();
-                        for(Community c: communityHandler.getCommunities()){
-                            if(c.getNickname().equalsIgnoreCase(lastPost.getCommunity())){
-                                c.getPosts().add(lastPost);
-                                break;
-                            }
-                        }
-                    }
+                    communityHandler.checkCommunityName(postHandler.getPosts().getLast());
                     break;
                 case 3:
                     System.out.println("Returning to Main Menu");
