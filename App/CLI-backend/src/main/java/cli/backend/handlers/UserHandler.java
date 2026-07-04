@@ -53,7 +53,22 @@ public class UserHandler {
                 "Invalid password format. Please ensure it meets the requirements."
         );
 
-        users.add(new User(name, email, password));
+        String inputDateOfBirth;
+        while (true) {
+            System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
+            inputDateOfBirth = sc.nextLine();
+
+            if (User.checkUserDateOfBirth(inputDateOfBirth)) {
+
+                break;
+            } else {
+
+                System.out.println("Registration failed. Ensure the format is correct (e.g., 15-08-2010) and that you are at least 13 years old.");
+                System.out.println("Please try again.\n");
+            }
+        }
+
+        users.add(new User(name, email, password,inputDateOfBirth));
 
         System.out.println("Registration successful! Welcome to our platform.");
 
