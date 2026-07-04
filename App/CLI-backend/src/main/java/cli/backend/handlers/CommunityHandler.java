@@ -34,10 +34,7 @@ public class CommunityHandler {
         System.out.println("Please Enter Community Name:");
         String communityName=cobj.nextLine();
 
-        System.out.println("TOPICS LIST");
-        for (int i = 0; i < TOPICS.size(); i++) {
-            System.out.println((i + 1) + ". " + TOPICS.get(i));
-        }
+        showTopicsList();
 
         int choice;
         String selectedTopic;
@@ -67,6 +64,14 @@ public class CommunityHandler {
         communities.add(community);
         System.out.println("Community r/" + community.getNickname() + "successfully created.");
     }
+
+    private void showTopicsList() {
+        System.out.println("TOPICS LIST");
+        for (int i = 0; i < TOPICS.size(); i++) {
+            System.out.println((i + 1) + ". " + TOPICS.get(i));
+        }
+    }
+
     public void viewCommunities(){
         if (communities.isEmpty()){
             System.out.println("No communities created");
