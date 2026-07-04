@@ -1,6 +1,7 @@
 package cli.backend.handlers;
 
 import cli.backend.Community;
+import cli.backend.Post;
 import cli.backend.User;
 
 import java.util.Scanner;
@@ -10,6 +11,7 @@ public class AppHandler {
     public enum State {
         NOT_LOGGED_IN,
         LOGGED_IN,
+        SHOW_COMMUNITY,
         IN_COMMUNITY
     }
 
@@ -59,11 +61,43 @@ public class AppHandler {
             case LOGGED_IN:
                 System.out.println("\n1. Show feed\n2. Create community\n3. Create Post\n4. Show communities\n5. Logout");
                 break;
+            case SHOW_COMMUNITY:
+                System.out.println("Choose a community");
+                System.out.println(communityHandler.getCommunities());
+                break;
             case IN_COMMUNITY:
-                System.out.println("1.View Posts\n2.Add Posts\n3. Return to Main Menu");
+                System.out.println("\n1.View Posts\n2.Add Posts\n3. Return to Main Menu");
                 break;
         }
 
+
+        if(currentState==State.SHOW_COMMUNITY){
+
+            if(communityHandler.getCommunities().isEmpty()){
+                currentState=State.LOGGED_IN;
+            }
+
+            else{
+                Community foundCommunity=null;
+                String communityName=sc.nextLine().trim();
+                for(Community c:communityHandler.getCommunities()){
+                    if(c.getNickname().equalsIgnoreCase(communityName)){
+                        foundCommunity=c;
+                        break;
+                    }
+                }
+
+                if(foundCommunity!=null){
+                    currentCommunity=foundCommunity;
+                    currentState=State.IN_COMMUNITY;
+                }
+                else{
+                    currentState=State.LOGGED_IN;
+                }
+
+            }
+            return true;
+        }
         int command;
 
         while (true) {
@@ -75,7 +109,6 @@ public class AppHandler {
                 System.out.println("Invalid input. Please enter a number from the list.");
             }
         }
-
         if (currentState == State.NOT_LOGGED_IN) {
             switch(command) {
                 case 1:
@@ -106,7 +139,7 @@ public class AppHandler {
                     break;
                 case 4:
                     communityHandler.viewCommunities();
-                    currentState=State.IN_COMMUNITY;
+                    currentState=State.SHOW_COMMUNITY;
                     break;
                 case 5:
                     System.out.println("Logging out...");
@@ -115,6 +148,7 @@ public class AppHandler {
                     break;
             }
         }
+
         else if(currentState==State.IN_COMMUNITY){
             switch(command){
                 case 1:
@@ -122,6 +156,15 @@ public class AppHandler {
                     break;
                 case 2:
                     postHandler.addPost(currentUser);
+                    if(!postHandler.getPosts().isEmpty()){
+                        Post lastPost=postHandler.getPosts().getLast();
+                        for(Community c: communityHandler.getCommunities()){
+                            if(c.getNickname().equalsIgnoreCase(lastPost.getCommunity())){
+                                c.getPosts().add(lastPost);
+                                break;
+                            }
+                        }
+                    }
                     break;
                 case 3:
                     System.out.println("Returning to Main Menu");

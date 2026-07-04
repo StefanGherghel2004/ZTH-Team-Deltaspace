@@ -127,4 +127,7 @@ public class PostHandler {
             }
         }
     }
+    public List<Post> getPosts(){
+        return this.posts;
+    }
 }
