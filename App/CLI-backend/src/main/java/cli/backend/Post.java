@@ -13,9 +13,10 @@ public class Post {
     private String postContents;
     private List<Comment> comments = new ArrayList<>();
     private String imageLink;
+    private String community;
 
     //Constructor
-    public Post (User user, String postTitle, String postContents, String imageLink) {
+    public Post (User user, String postTitle, String postContents, String imageLink, String community) {
 
         this.postID = postIdIncrementation;
         postIdIncrementation++;
@@ -63,6 +64,11 @@ public class Post {
         return commentIdIncrementation;
     }
 
+    public String getCommunity () {
+
+        return community;
+    }
+
     //Setters
     public void setUser (User user) {
 
@@ -82,6 +88,11 @@ public class Post {
     public void setImageLink (String imageLink) {
 
         this.imageLink = imageLink;
+    }
+
+    public void setCommunity (String community) {
+
+        this.community = community;
     }
 
     @Override

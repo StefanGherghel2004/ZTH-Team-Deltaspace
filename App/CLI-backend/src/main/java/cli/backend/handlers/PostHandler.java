@@ -30,8 +30,11 @@ public class PostHandler {
         return instance;
     }
 
-    public void addPost (User user) {
+    public void addPost (User user, Community community) {
         System.out.println("Welcome to the post creation page.");
+
+        System.out.print("Please enter the community in which you would like to post:");
+        String communityName = scan.nextLine();
 
         System.out.println("Please enter post title:");
         String postTitle = scan.nextLine();
@@ -46,7 +49,7 @@ public class PostHandler {
             imageLink = null;
         }
 
-        posts.add(new Post(user, postTitle, postContents, imageLink));
+        posts.add(new Post(user, postTitle, postContents, imageLink, communityName));
 
         System.out.println("Post created successfully!");
     }
@@ -63,7 +66,13 @@ public class PostHandler {
 
     public void viewPost (Post post) {
 
+        System.out.println("User: " + post.getUser());
+        System.out.println("Title: " + post.getPostTitle());
+        if (!post.getImageLink().isEmpty()) {
 
+            System.out.println(post.getImageLink());
+        }
+        System.out.println(post.getPostContents());
     }
 
     // dummy implementation
