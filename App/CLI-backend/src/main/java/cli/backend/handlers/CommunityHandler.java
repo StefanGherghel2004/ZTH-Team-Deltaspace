@@ -1,6 +1,7 @@
 package cli.backend.handlers;
 
 import cli.backend.Community;
+import cli.backend.Post;
 
 import java.sql.SQLOutput;
 import java.util.List;
@@ -77,10 +78,27 @@ public class CommunityHandler {
             System.out.println("No communities created");
         }
         else {
-            for(Community community:communities){
+            for (Community community : communities) {
                 System.out.println(community);
             }
         }
+    }
+
+    public void viewCommunityPosts(Community community){
+        List<Post> communityPosts=community.getPosts();
+        if(communityPosts.isEmpty()){
+            System.out.print("No posts in this r/");
+        }
+        else {
+            for (Post post : communityPosts) {
+                System.out.println(post.getUser().getUsername());
+                System.out.println(post.getPostTitle());
+                System.out.println(post.getPostContents());
+            }
+        }
+    }
+    public List<Community> getCommunities(){
+        return communities;
     }
     }
 

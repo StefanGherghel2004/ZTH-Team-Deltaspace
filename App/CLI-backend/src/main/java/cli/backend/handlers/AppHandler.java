@@ -1,5 +1,6 @@
 package cli.backend.handlers;
 
+import cli.backend.Community;
 import cli.backend.User;
 
 import java.util.Scanner;
@@ -8,11 +9,13 @@ public class AppHandler {
 
     public enum State {
         NOT_LOGGED_IN,
-        LOGGED_IN
+        LOGGED_IN,
+        IN_COMMUNITY
     }
 
     private State currentState = State.NOT_LOGGED_IN;
     private User currentUser;
+    private Community currentCommunity;
 
     private static AppHandler instance;
 
@@ -55,6 +58,9 @@ public class AppHandler {
                 break;
             case LOGGED_IN:
                 System.out.println("\n1. Show feed\n2. Create community\n3. Create Post\n4. Show communities\n5. Logout");
+                break;
+            case IN_COMMUNITY:
+                System.out.println("1.View Posts\n2.Add Posts\n3. Return to Main Menu");
                 break;
         }
 
@@ -100,12 +106,30 @@ public class AppHandler {
                     break;
                 case 4:
                     communityHandler.viewCommunities();
+                    currentState=State.IN_COMMUNITY;
                     break;
                 case 5:
                     System.out.println("Logging out...");
                     currentUser = null;
                     currentState = State.NOT_LOGGED_IN;
                     break;
+            }
+        }
+        else if(currentState==State.IN_COMMUNITY){
+            switch(command){
+                case 1:
+                    communityHandler.viewCommunityPosts(currentCommunity);
+                    break;
+                case 2:
+                    postHandler.addPost(currentUser);
+                    break;
+                case 3:
+                    System.out.println("Returning to Main Menu");
+                    currentCommunity=null;
+                    currentState=State.LOGGED_IN;
+                    break;
+
+
             }
         }
 
