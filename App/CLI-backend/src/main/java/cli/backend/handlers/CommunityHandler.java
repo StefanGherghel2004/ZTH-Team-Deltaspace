@@ -2,6 +2,7 @@ package cli.backend.handlers;
 
 import cli.backend.Community;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,6 +35,7 @@ public class CommunityHandler {
 
         Community community= new Community(topic,communityName,description);
         communities.add(community);
+        System.out.println("Community r/" + community.getNickname() + "successfully created.");
     }
     public void viewCommunities(){
         if (communities.isEmpty()){

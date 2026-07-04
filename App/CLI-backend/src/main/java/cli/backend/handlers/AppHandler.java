@@ -58,8 +58,17 @@ public class AppHandler {
                 break;
         }
 
-        System.out.print("Choose an option: ");
-        int command = Integer.parseInt(sc.nextLine());
+        int command;
+
+        while (true) {
+            System.out.print("Choose an option: ");
+            try {
+                command = Integer.parseInt(sc.nextLine().trim());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number from the list.");
+            }
+        }
 
         if (currentState == State.NOT_LOGGED_IN) {
             switch(command) {
@@ -84,7 +93,6 @@ public class AppHandler {
                     postHandler.viewFeed();
                     break;
                 case 2:
-                    System.out.println("Creating community...");
                     communityHandler.addCommunity();
                     break;
                 case 3:
