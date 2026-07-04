@@ -11,7 +11,6 @@ import java.util.Scanner;  // Import the Scanner class
 public class CommentHandler {
     private static CommentHandler instance;
     private String text;
-    private List<Comment> comments= new ArrayList<>();
 
     private CommentHandler(){
     }
@@ -31,10 +30,11 @@ public class CommentHandler {
 
         if(text.isEmpty()){
             System.out.println("Error! Please introduce your text");
-        }
-
-        else {
+        } else {
             Comment newComment = new Comment(text, user, post.getPostID());
+
+            post.getComments().add(newComment);
+            System.out.println("Comment added successfully!");
         }
     }
 
