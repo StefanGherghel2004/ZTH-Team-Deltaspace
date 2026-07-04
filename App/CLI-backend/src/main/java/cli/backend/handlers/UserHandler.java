@@ -46,7 +46,7 @@ public class UserHandler {
 
         users.add(new User(name, email, password));
 
-        System.out.println("Registration successful! Welcome to out platform.");
+        System.out.println("Registration successful! Welcome to our platform.");
 
     }
 

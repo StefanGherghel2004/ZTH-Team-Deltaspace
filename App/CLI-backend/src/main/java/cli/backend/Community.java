@@ -35,4 +35,14 @@ public class Community {
     this.posts.add(post);
     postId++;
     }
+
+    @Override
+    public String toString() {
+        return "Community{" +
+                "nickname=r/"  + nickname + '\'' +
+                ", topic='" + topic + '\'' +
+                ", posts=" + posts +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
