@@ -72,13 +72,13 @@ public class PostHandler {
 
     public void viewPost (Post post) {
 
-        System.out.println("User: " + post.getUser());
+        System.out.println("User: " + post.getUser().getUsername());
         System.out.println("Title: " + post.getPostTitle());
-        if (!post.getImageLink().isEmpty()) {
+        if (post.getImageLink() != null) {
 
             System.out.println(post.getImageLink());
         }
-        System.out.println(post.getPostContents());
+        System.out.println(post.getPostContents() + "\n\n");
     }
 
     // dummy implementation
@@ -92,7 +92,7 @@ public class PostHandler {
         List<Post> currentFeed = getRandomizedFeed(posts);
 
         for (Post post : currentFeed) {
-            System.out.println(post);
+            this.viewPost(post);
         }
     }
 
