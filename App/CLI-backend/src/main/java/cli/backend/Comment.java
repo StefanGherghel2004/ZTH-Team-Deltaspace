@@ -1,6 +1,7 @@
 package cli.backend;
 
 public class Comment {
+    private static int nextId = 1;
     private String text;
     private User user;
     private int idPost;
@@ -9,6 +10,7 @@ public class Comment {
 
 
     public Comment(String text, User user, int IdPost){
+        this.idComment = nextId++;
         this.text=text;
         this.user=user;
         this.idPost=IdPost;
@@ -18,8 +20,8 @@ public class Comment {
         return text;
     }
 
-    public User getUsername(){
-        return user;
+    public String getUsername(){
+        return user.getUsername();
     }
 
     public int getId(){

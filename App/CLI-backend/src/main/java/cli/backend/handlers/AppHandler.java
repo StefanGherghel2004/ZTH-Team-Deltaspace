@@ -78,7 +78,7 @@ public class AppHandler {
                 break;
             case ON_POST:
                 postHandler.viewPost(currentPost);
-                System.out.println("\n1. Show comments\n2. Add comment\n3. Back");
+                System.out.println("\n1. Show comments\n2. Add comment\n3. Reply to comment \n4. Back");
                 break;
 
         }
@@ -205,6 +205,9 @@ public class AppHandler {
                     break;
 
                 case 3:
+                    commentHandler.replyToComment(currentUser, currentPost);
+                    break;
+                case 4:
                     currentPost = null;
                     currentState = State.IN_COMMUNITY;
                     break;

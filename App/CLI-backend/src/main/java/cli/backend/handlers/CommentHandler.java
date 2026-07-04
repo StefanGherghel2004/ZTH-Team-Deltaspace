@@ -38,6 +38,56 @@ public class CommentHandler {
         }
     }
 
+    public void replyToComment(User user, Post post) {
+
+        if (post.getComments().isEmpty()) {
+            System.out.println("There are no comments to reply to.");
+            return;
+        }
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the ID of the comment you want to reply to: ");
+
+        int parentId;
+        try {
+            parentId = Integer.parseInt(sc.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid ID.");
+            return;
+        }
+
+        Comment parentComment = findCommentById(post, parentId);
+
+        if (parentComment == null) {
+            System.out.println("Comment not found.");
+            return;
+        }
+
+        System.out.print("Write reply: ");
+        String text = sc.nextLine().trim();
+
+        Comment reply = new Comment(text, user, post.getPostID());
+        reply.setIdParent(parentComment.getId());
+
+        post.getComments().add(reply);
+
+        System.out.println("Reply added successfully!");
+    }
+
+    private Comment findCommentById(Post post, int id) {
+
+        for (Comment comment : post.getComments()) {
+            if (comment.getId() == id) {
+                return comment;
+            }
+        }
+
+        return null;
+    }
+
+
+
     public void viewComment(Post post){
         List<Comment> comments=post.getComments();
         if(comments.isEmpty()){
