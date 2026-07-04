@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CommunityHandler {
+    public static final List<String> TOPICS = List.of(
+            "Food",
+            "Gaming",
+            "Science",
+            "Art",
+            "Tech"
+    );
 
     private static CommunityHandler instance;
     private  List<Community> communities;
@@ -27,13 +34,36 @@ public class CommunityHandler {
         System.out.println("Please Enter Community Name:");
         String communityName=cobj.nextLine();
 
-        System.out.println("Please Enter Community Topic:");
-        String topic=cobj.nextLine();
+        System.out.println("TOPICS LIST");
+        for (int i = 0; i < TOPICS.size(); i++) {
+            System.out.println((i + 1) + ". " + TOPICS.get(i));
+        }
+
+        int choice;
+        String selectedTopic;
+
+        while (true) {
+            System.out.print("Choose an option (1-" + TOPICS.size() + "): ");
+            try {
+                choice = Integer.parseInt(cobj.nextLine().trim());
+
+                if (choice < 1 || choice > TOPICS.size()) {
+                    System.out.println("Invalid option. Please enter a valid number.");
+                    continue;
+                }
+
+                selectedTopic = TOPICS.get(choice - 1);
+                break;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number from the list.");
+            }
+        }
 
         System.out.println("Please Enter Community Description");
         String description=cobj.nextLine();
 
-        Community community= new Community(topic,communityName,description);
+        Community community= new Community(selectedTopic, communityName,description);
         communities.add(community);
         System.out.println("Community r/" + community.getNickname() + "successfully created.");
     }
@@ -43,7 +73,7 @@ public class CommunityHandler {
         }
         else {
             for(Community community:communities){
-                System.out.println("r/" + community.getNickname() + " - " + community.getDescription());
+                System.out.println(community);
             }
         }
     }
