@@ -91,16 +91,25 @@ public class CommunityHandler {
         }
         else {
             for (Post post : communityPosts) {
-                System.out.println(post.getUser().getUsername());
-                System.out.println(post.getPostTitle());
-                System.out.println(post.getPostContents());
+                System.out.println("User: " + post.getUser().getUsername());
+                System.out.println("Title: " + post.getPostTitle());
+                System.out.println("Contents: " + post.getPostContents());
             }
         }
     }
     public List<Community> getCommunities(){
         return communities;
     }
+
+
+    public void checkCommunityName(Post post) {
+            for (Community c : communities) {
+                if (c.getNickname().equalsIgnoreCase(post.getCommunity())) {
+                    c.getPosts().add(post);
+                    break;
+                }
+            }
     }
 
-
+}
 
