@@ -39,7 +39,7 @@ public class Community {
     @Override
     public String toString() {
         return "Community{" +
-                "nickname='" + nickname + '\'' +
+                "nickname=r/"  + nickname + '\'' +
                 ", topic='" + topic + '\'' +
                 ", posts=" + posts +
                 ", description='" + description + '\'' +
