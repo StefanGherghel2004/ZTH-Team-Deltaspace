@@ -12,7 +12,6 @@ public class Comment {
         this.text=text;
         this.user=user;
         this.idPost=IdPost;
-
     }
 
     public String getText(){
