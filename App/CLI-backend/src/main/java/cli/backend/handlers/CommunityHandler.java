@@ -102,13 +102,13 @@ public class CommunityHandler {
     }
 
 
-    public void checkCommunityName(Post post) {
-            for (Community c : communities) {
-                if (c.getNickname().equalsIgnoreCase(post.getCommunity())) {
-                    c.getPosts().add(post);
-                    break;
-                }
+    public Community findCommunityByName(String name) {
+        for (Community c : communities) {
+            if (c.getNickname().equalsIgnoreCase(name)) {
+                return c;
             }
+        }
+        return null;
     }
 
 }

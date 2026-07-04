@@ -11,7 +11,7 @@ public class AppHandler {
     public enum State {
         NOT_LOGGED_IN,
         LOGGED_IN,
-        SHOW_COMMUNITY,
+        SHOW_COMMUNITIES,
         IN_COMMUNITY
     }
 
@@ -53,6 +53,7 @@ public class AppHandler {
 
     private boolean handleState() {
 
+        // this switch handles the first prompt of that page
         switch(currentState) {
             case NOT_LOGGED_IN:
                 System.out.println("\nWelcome to Deltaspace platform");
@@ -61,43 +62,37 @@ public class AppHandler {
             case LOGGED_IN:
                 System.out.println("\n1. Show feed\n2. Create community\n3. Create Post\n4. Show communities\n5. Logout");
                 break;
-            case SHOW_COMMUNITY:
+            case SHOW_COMMUNITIES:
                 System.out.println("Choose a community");
-                System.out.println(communityHandler.getCommunities());
+                communityHandler.viewCommunities();
                 break;
             case IN_COMMUNITY:
-                System.out.println("\n1.View Posts\n2.Add Posts\n3. Return to Main Menu");
+                System.out.println("\n1.View Posts\n2.Add Post\n3. Return to Main Menu");
                 break;
+
         }
 
 
-        if(currentState==State.SHOW_COMMUNITY){
+        if(currentState==State.SHOW_COMMUNITIES){
 
-            if(communityHandler.getCommunities().isEmpty()){
-                currentState=State.LOGGED_IN;
-            }
+            if (communityHandler.getCommunities().isEmpty()) {
+                currentState = State.LOGGED_IN;
+            } else {
+                String communityName = sc.nextLine().trim();
 
-            else{
-                Community foundCommunity=null;
-                String communityName=sc.nextLine().trim();
-                for(Community c:communityHandler.getCommunities()){
-                    if(c.getNickname().equalsIgnoreCase(communityName)){
-                        foundCommunity=c;
-                        break;
-                    }
+                Community foundCommunity = communityHandler.findCommunityByName(communityName);
+
+                if (foundCommunity != null) {
+                    currentCommunity = foundCommunity;
+                    currentState = State.IN_COMMUNITY;
+                } else {
+                    System.out.println("Community not found!");
+                    currentState = State.LOGGED_IN;
                 }
-
-                if(foundCommunity!=null){
-                    currentCommunity=foundCommunity;
-                    currentState=State.IN_COMMUNITY;
-                }
-                else{
-                    currentState=State.LOGGED_IN;
-                }
-
             }
             return true;
         }
+
         int command;
 
         while (true) {
@@ -138,8 +133,7 @@ public class AppHandler {
                     postHandler.addPost(currentUser);
                     break;
                 case 4:
-                    communityHandler.viewCommunities();
-                    currentState=State.SHOW_COMMUNITY;
+                    currentState=State.SHOW_COMMUNITIES;
                     break;
                 case 5:
                     System.out.println("Logging out...");
@@ -155,8 +149,8 @@ public class AppHandler {
                     communityHandler.viewCommunityPosts(currentCommunity);
                     break;
                 case 2:
-                    postHandler.addPost(currentUser);
-                    communityHandler.checkCommunityName(postHandler.getPosts().getLast());
+                    Post post = postHandler.addPost(currentUser, currentCommunity);
+                    currentCommunity.getPosts().add(post);
                     break;
                 case 3:
                     System.out.println("Returning to Main Menu");

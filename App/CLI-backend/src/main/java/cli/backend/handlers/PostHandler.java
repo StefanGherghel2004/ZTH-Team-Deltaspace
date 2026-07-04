@@ -30,15 +30,26 @@ public class PostHandler {
         return instance;
     }
 
-    public void addPost (User user) {
+    public Post addPost(User user) {
+        return addPost(user, null);
+    }
+
+    public Post addPost (User user, Community community) {
         System.out.println("Welcome to the post creation page.");
 
-        System.out.print("Please enter the community in which you would like to post " +
-                "\n(or press Enter to post to u/" + user.getUsername() + "): ");
-        String communityName = scan.nextLine();
+        String communityName;
 
-        if (communityName.trim().isEmpty()) {
-            communityName = "u/" + user.getUsername();
+        if (community != null) {
+            communityName = community.getNickname();
+        } else {
+            System.out.print("Please enter the community in which you would like to post " +
+                    "\n(or press Enter to post to u/" + user.getUsername() + "): ");
+
+            communityName = scan.nextLine().trim();
+
+            if (communityName.isEmpty()) {
+                communityName = "u/" + user.getUsername();
+            }
         }
         
         System.out.println("Please enter post title:");
@@ -54,9 +65,13 @@ public class PostHandler {
             imageLink = null;
         }
 
-        posts.add(new Post(user, postTitle, postContents, imageLink, communityName));
+        Post newPost = new Post(user, postTitle, postContents, imageLink, communityName);
+
+        posts.add(newPost);
 
         System.out.println("Post created successfully!");
+
+        return newPost;
     }
 
 

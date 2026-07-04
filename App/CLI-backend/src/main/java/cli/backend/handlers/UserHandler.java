@@ -20,12 +20,18 @@ public class UserHandler {
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
     private UserHandler() {
-
+        users.add(new User(
+                "admin",
+                "admin@test",
+                "Admin123",
+                "01-01-2000"
+        ));
     }
 
     public static UserHandler getInstance() {
         if (instance == null) {
             instance = new UserHandler();
+
         }
 
         return instance;
