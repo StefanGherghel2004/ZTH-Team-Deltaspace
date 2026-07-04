@@ -30,7 +30,7 @@ public class PostHandler {
         return instance;
     }
 
-    public void addPost (User user, Community community) {
+    public void addPost (User user) {
         System.out.println("Welcome to the post creation page.");
 
         System.out.print("Please enter the community in which you would like to post:");
@@ -91,6 +91,7 @@ public class PostHandler {
     }
 
     public void showComments () {
+
 
     }
 }
