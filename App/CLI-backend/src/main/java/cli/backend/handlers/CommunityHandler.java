@@ -2,20 +2,25 @@ package cli.backend.handlers;
 
 import cli.backend.Community;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CommunityHandler {
-    private List<Community> communities=new ArrayList<>();
+
     private static CommunityHandler instance;
+    private  List<Community> communities;
+    private CommunityHandler(){
+
+        this.communities=new java.util.ArrayList<>();
+
+    }
     public static CommunityHandler getInstance(){
         if(instance==null){
             instance=new CommunityHandler();
         }
         return instance;
     }
-    public void addComunity(){
+    public void addCommunity(){
         Scanner cobj= new Scanner(System.in);
 
         System.out.println("Please Enter Community Name:");

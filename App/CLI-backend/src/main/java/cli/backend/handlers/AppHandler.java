@@ -20,6 +20,7 @@ public class AppHandler {
 
     private static UserHandler userHandler = UserHandler.getInstance();
     private static PostHandler postHandler = PostHandler.getInstance();
+    private static CommunityHandler communityHandler=CommunityHandler.getInstance();
 
     private AppHandler() {
 
@@ -84,6 +85,7 @@ public class AppHandler {
                     break;
                 case 2:
                     System.out.println("Creating community...");
+                    communityHandler.addCommunity();
                     break;
                 case 3:
                     postHandler.addPost(currentUser);
