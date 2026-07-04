@@ -33,9 +33,14 @@ public class PostHandler {
     public void addPost (User user) {
         System.out.println("Welcome to the post creation page.");
 
-        System.out.print("Please enter the community in which you would like to post:");
+        System.out.print("Please enter the community in which you would like to post " +
+                "\n(or press Enter to post to u/" + user.getUsername() + "): ");
         String communityName = scan.nextLine();
 
+        if (communityName.trim().isEmpty()) {
+            communityName = "u/" + user.getUsername();
+        }
+        
         System.out.println("Please enter post title:");
         String postTitle = scan.nextLine();
 
@@ -126,5 +131,8 @@ public class PostHandler {
                 printThread(reply.getId(), commentTree, depth + 1);
             }
         }
+    }
+    public List<Post> getPosts(){
+        return this.posts;
     }
 }

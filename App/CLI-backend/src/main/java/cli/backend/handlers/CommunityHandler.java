@@ -79,7 +79,7 @@ public class CommunityHandler {
         }
         else {
             for (Community community : communities) {
-                System.out.println(community);
+                System.out.println(community.getNickname());
             }
         }
     }

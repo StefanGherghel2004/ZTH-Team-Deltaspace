@@ -26,6 +26,7 @@ public class Post {
         this.postTitle = postTitle;
         this.postContents = postContents;
         this.commentIdIncrementation = 0;
+        this.community=community;
     }
 
     //Getters
