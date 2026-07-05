@@ -113,4 +113,20 @@ public class Post {
         commentIdIncrementation++;
     }
 
+    public Comment findCommentById(int id) {
+
+        for (Comment comment : comments) {
+            if (comment.getId() == id) {
+                return comment;
+            }
+        }
+
+        return null;
+    }
+
+    public int getCommentsCount() {
+        return comments.size();
+    }
+
+
 }

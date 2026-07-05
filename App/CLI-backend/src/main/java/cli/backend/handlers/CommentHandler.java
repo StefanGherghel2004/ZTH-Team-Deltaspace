@@ -33,7 +33,7 @@ public class CommentHandler {
         } else {
             Comment newComment = new Comment(text, user, post.getPostID());
 
-            post.getComments().add(newComment);
+            post.addComment(newComment, -1);
             System.out.println("Comment added successfully!");
         }
     }
@@ -57,7 +57,7 @@ public class CommentHandler {
             return;
         }
 
-        Comment parentComment = findCommentById(post, parentId);
+        Comment parentComment = post.findCommentById(parentId);
 
         if (parentComment == null) {
             System.out.println("Comment not found.");
@@ -70,24 +70,12 @@ public class CommentHandler {
         Comment reply = new Comment(text, user, post.getPostID());
         reply.setIdParent(parentComment.getId());
 
-        post.getComments().add(reply);
+        post.addComment(reply, parentComment.getId());
 
         System.out.println("Reply added successfully!");
     }
 
-    private Comment findCommentById(Post post, int id) {
-
-        for (Comment comment : post.getComments()) {
-            if (comment.getId() == id) {
-                return comment;
-            }
-        }
-
-        return null;
-    }
-
-
-
+    // maybe this is not needed now
     public void viewComment(Post post){
         List<Comment> comments=post.getComments();
         if(comments.isEmpty()){

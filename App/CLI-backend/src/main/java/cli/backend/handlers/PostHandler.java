@@ -93,7 +93,8 @@ public class PostHandler {
 
             System.out.println("Image: " + post.getImageLink());
         }
-        System.out.println("Content: " + post.getPostContents() + "\n\n");
+        System.out.println("Content: " + post.getPostContents());
+        System.out.println("Comments counter: " + post.getCommentsCount() + "\n");
     }
 
     // dummy implementation
