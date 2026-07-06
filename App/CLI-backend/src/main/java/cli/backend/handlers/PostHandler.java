@@ -9,10 +9,8 @@ import java.util.*;
 
 public class PostHandler {
 
-    private User user;
     private List<Post> posts;
     private static PostHandler instance;
-    private Community postCommunity;
 
     Scanner scan = new Scanner(System.in);
 
@@ -34,23 +32,25 @@ public class PostHandler {
         return addPost(user, null);
     }
 
-    public Post addPost (User user, Community community) {
+    public Post addPost (User user, Community currentCommunity) {
         System.out.println("Welcome to the post creation page.");
 
-        String communityName;
+        Community targetCommunity = currentCommunity;
 
-        if (community != null) {
-            communityName = community.getNickname();
-        } else {
+        if (targetCommunity == null) {
             System.out.print("Please enter the community in which you would like to post " +
                     "\n(or press Enter to post to u/" + user.getUsername() + "): ");
+            String communityName = scan.nextLine().trim();
 
-            communityName = scan.nextLine().trim();
-
-            if (communityName.isEmpty()) {
-                communityName = "u/" + user.getUsername();
+            if (!communityName.isEmpty()) {
+                targetCommunity = CommunityHandler.getInstance().findCommunityByName(communityName);
+                if (targetCommunity == null) {
+                    System.out.println("Community not found! Posting to your profile instead.");
+                }
             }
         }
+
+        String targetName = (targetCommunity != null) ? targetCommunity.getNickname() : "u/" + user.getUsername();
         
         System.out.println("Please enter post title:");
         String postTitle = scan.nextLine();
@@ -65,9 +65,13 @@ public class PostHandler {
             imageLink = null;
         }
 
-        Post newPost = new Post(user, postTitle, postContents, imageLink, communityName);
+        Post newPost = new Post(user, postTitle, postContents, imageLink, targetName);
 
         posts.add(newPost);
+
+        if (targetCommunity != null) {
+            targetCommunity.addPost(newPost);
+        }
 
         System.out.println("Post created successfully!");
 
@@ -87,6 +91,7 @@ public class PostHandler {
 
     public void viewPost (Post post) {
 
+        System.out.println("Community: " + post.getCommunityName());
         System.out.println("Author: " + post.getUser().getUsername());
         System.out.println("Title: " + post.getPostTitle());
         if (post.getImageLink() != null) {

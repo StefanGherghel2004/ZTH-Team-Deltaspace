@@ -8,7 +8,6 @@ public class Community {
     private String topic;
     private List<Post> posts =new ArrayList<>();
     private String description;
-    private int postId=0;
 
 
     public Community(String topic,String nickname,String description){
@@ -32,8 +31,7 @@ public class Community {
 
 
     public void addPost(Post post){
-    this.posts.add(post);
-    postId++;
+        posts.add(post);
     }
 
     public Post findPostById(int id) {
