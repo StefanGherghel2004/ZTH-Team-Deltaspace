@@ -10,7 +10,6 @@ import java.util.Scanner;  // Import the Scanner class
 
 public class CommentHandler {
     private static CommentHandler instance;
-    private String text;
 
     private CommentHandler(){
     }
@@ -23,10 +22,7 @@ public class CommentHandler {
 
 
 
-    public void addComment(User user, Post post ){
-        Scanner sObject= new Scanner(System.in);
-        System.out.println("Write Comment: ");
-        text=sObject.nextLine();
+    public void addComment(User user, Post post , String text){
 
         if(text.isEmpty()){
             System.out.println("Error! Please introduce your text");
@@ -38,38 +34,16 @@ public class CommentHandler {
         }
     }
 
-    public void replyToComment(User user, Post post) {
+    public void replyToComment(User user, Post post, Comment parentComment, String text) {
 
-        if (post.getComments().isEmpty()) {
-            System.out.println("There are no comments to reply to.");
+        if (text == null || text.trim().isEmpty()) {
+            System.out.println("Error! Comment text cannot be empty.");
             return;
         }
-
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter the ID of the comment you want to reply to: ");
-
-        int parentId;
-        try {
-            parentId = Integer.parseInt(sc.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid ID.");
-            return;
-        }
-
-        Comment parentComment = post.findCommentById(parentId);
-
-        if (parentComment == null) {
-            System.out.println("Comment not found.");
-            return;
-        }
-
-        System.out.print("Write reply: ");
-        String text = sc.nextLine().trim();
 
         Comment reply = new Comment(text, user, post.getPostID());
-        reply.setIdParent(parentComment.getId());
 
+        reply.setIdParent(parentComment.getId());
         post.addComment(reply, parentComment.getId());
 
         System.out.println("Reply added successfully!");

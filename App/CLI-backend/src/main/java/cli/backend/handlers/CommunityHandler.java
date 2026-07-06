@@ -32,8 +32,8 @@ public class CommunityHandler {
     public void addCommunity(){
         Scanner cobj= new Scanner(System.in);
 
-        System.out.println("Please Enter Community Name:");
-        String communityName=cobj.nextLine();
+        System.out.print("Please enter community name: \nr/");
+        String communityName = "r/" + cobj.nextLine().trim();
 
         showTopicsList();
 
@@ -63,7 +63,7 @@ public class CommunityHandler {
 
         Community community= new Community(selectedTopic, communityName,description);
         communities.add(community);
-        System.out.println("Community r/" + community.getNickname() + " successfully created.");
+        System.out.println("Community " + community.getNickname() + " successfully created.");
     }
 
     private void showTopicsList() {
