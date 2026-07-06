@@ -5,6 +5,7 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class AppHandler {
@@ -12,6 +13,7 @@ public class AppHandler {
     public enum State {
         NOT_LOGGED_IN,
         LOGGED_IN,
+        SHOW_FEED,
         SHOW_COMMUNITIES,
         IN_COMMUNITY,
         SHOW_POSTS_COMMUNITY,
@@ -63,6 +65,7 @@ public class AppHandler {
         return switch (currentState) {
             case NOT_LOGGED_IN -> handleNotLoggedIn();
             case LOGGED_IN -> handleLoggedIn();
+            case SHOW_FEED -> handleShowFeed();
             case SHOW_COMMUNITIES -> handleShowCommunities();
             case IN_COMMUNITY -> handleInCommunity();
             case SHOW_POSTS_COMMUNITY -> handleShowPostsInCommunity();
@@ -110,9 +113,7 @@ public class AppHandler {
 
         switch(command) {
             case 1:
-                postHandler.viewFeed();
-                System.out.print("\nPress Enter to return to Main Menu...");
-                sc.nextLine();
+                currentState = State.SHOW_FEED;
                 break;
             case 2:
                 communityHandler.addCommunity();
@@ -235,7 +236,9 @@ public class AppHandler {
                 sc.nextLine();
                 break;
             case 2:
-                commentHandler.addComment(currentUser, currentPost);
+                System.out.println("Write Comment: ");
+                String text = sc.nextLine();
+                commentHandler.addComment(currentUser, currentPost, text);
                 break;
             case 3:
                 System.out.print("Enter Comment ID to select: ");
@@ -286,6 +289,44 @@ public class AppHandler {
                 currentState = State.ON_POST;
                 break;
         }
+        return true;
+    }
+
+    private boolean handleShowFeed() {
+        System.out.println("\n--- Your Feed ---");
+        postHandler.viewFeed();
+
+        if(postHandler.getPosts().isEmpty()){
+            System.out.println(postHandler.getPosts());
+            System.out.print("\nPress Enter to return to Main Menu...");
+            sc.nextLine();
+            currentState = State.LOGGED_IN;
+            return true;
+        }
+
+        System.out.print("Choose a post [ID] (or press Enter to go back): ");
+        String input = sc.nextLine().trim();
+
+        if (input.isEmpty()) {
+            currentState = State.LOGGED_IN;
+            return true;
+        }
+
+        try {
+            int id = Integer.parseInt(input);
+
+            Post foundPost = postHandler.findPostById(id);
+
+            if(foundPost != null){
+                currentPost = foundPost;
+                currentState = State.ON_POST;
+            } else {
+                System.out.println("Post not found in feed!");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid ID format!");
+        }
+
         return true;
     }
 

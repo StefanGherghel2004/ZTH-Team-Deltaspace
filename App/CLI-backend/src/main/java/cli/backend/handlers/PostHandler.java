@@ -91,6 +91,7 @@ public class PostHandler {
 
     public void viewPost (Post post) {
 
+        System.out.println("ID: " + post.getPostID());
         System.out.println("Community: " + post.getCommunityName());
         System.out.println("Author: " + post.getUser().getUsername());
         System.out.println("Title: " + post.getPostTitle());
@@ -158,4 +159,12 @@ public class PostHandler {
     }
 
 
+    public Post findPostById(int id) {
+        for (Post post : posts) {
+            if (post.getPostID() == id) {
+                return post;
+            }
+        }
+        return null;
+    }
 }

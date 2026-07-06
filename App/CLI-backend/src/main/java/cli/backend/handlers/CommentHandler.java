@@ -10,7 +10,6 @@ import java.util.Scanner;  // Import the Scanner class
 
 public class CommentHandler {
     private static CommentHandler instance;
-    private String text;
 
     private CommentHandler(){
     }
@@ -23,10 +22,7 @@ public class CommentHandler {
 
 
 
-    public void addComment(User user, Post post ){
-        Scanner sObject= new Scanner(System.in);
-        System.out.println("Write Comment: ");
-        text=sObject.nextLine();
+    public void addComment(User user, Post post , String text){
 
         if(text.isEmpty()){
             System.out.println("Error! Please introduce your text");
