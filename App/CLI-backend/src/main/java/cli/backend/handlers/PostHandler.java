@@ -28,10 +28,6 @@ public class PostHandler {
         return instance;
     }
 
-    public Post addPost(User user) {
-        return addPost(user, null);
-    }
-
     public Post addPost (User user, Community currentCommunity) {
         System.out.println("Welcome to the post creation page.");
 
@@ -39,11 +35,11 @@ public class PostHandler {
 
         if (targetCommunity == null) {
             System.out.print("Please enter the community in which you would like to post " +
-                    "\n(or press Enter to post to u/" + user.getUsername() + "): ");
+                    "\n(or press Enter to post to u/" + user.getUsername() + "): r/");
             String communityName = scan.nextLine().trim();
 
             if (!communityName.isEmpty()) {
-                targetCommunity = CommunityHandler.getInstance().findCommunityByName(communityName);
+                targetCommunity = CommunityHandler.getInstance().findCommunityByName("r/" + communityName);
                 if (targetCommunity == null) {
                     System.out.println("Community not found! Posting to your profile instead.");
                 }
