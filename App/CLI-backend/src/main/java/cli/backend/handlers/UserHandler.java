@@ -1,6 +1,7 @@
 package cli.backend.handlers;
 
 import cli.backend.User;
+import cli.backend.services.PasswordService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class UserHandler {
         users.add(new User(
                 "admin",
                 "admin@test",
-                "Admin123",
+                PasswordService.hash("Admin123"),
                 "01-01-2000"
         ));
     }
@@ -74,7 +75,9 @@ public class UserHandler {
             }
         }
 
-        users.add(new User(name, email, password,inputDateOfBirth));
+        password = PasswordService.hash(password);
+
+        users.add(new User(name, email, password, inputDateOfBirth));
 
         System.out.println("Registration successful! Welcome to our platform.");
 
@@ -90,7 +93,7 @@ public class UserHandler {
         String password = sc.nextLine();
 
         for (User user : users) {
-            if (user.getUsername().equals(name) && user.getPassword().equals(password)) {
+            if (user.getUsername().equals(name) && PasswordService.verify(password, user.getPassword())) {
                 System.out.println("Successfully logged in into your account - " + user.getUsername() + ".");
                 return user;
             }
