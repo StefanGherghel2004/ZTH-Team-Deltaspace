@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommentService {
 
-    public static boolean addComment (User user, Post post, String text) throws EmptyCommentException {
+    public static void addComment (User user, Post post, String text) throws EmptyCommentException {
 
         if(text.isEmpty()){
             throw new EmptyCommentException("Error! Please introduce your text");
@@ -17,7 +17,6 @@ public class CommentService {
             Comment newComment = new Comment(text, user, post.getPostID());
 
             post.addComment(newComment, -1);
-            return true;
         }
     }
 

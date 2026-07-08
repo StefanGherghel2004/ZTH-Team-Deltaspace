@@ -6,6 +6,8 @@ import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
 import cli.backend.services.CommentService;
+import cli.backend.services.PasswordService;
+import cli.backend.services.UserService;
 
 import java.sql.SQLOutput;
 import java.util.Scanner;
@@ -87,9 +89,53 @@ public class AppHandler {
 
         switch(command) {
             case 1:
-                userHandler.userRegister();
+                System.out.println("Welcome to the registration page.");
+                System.out.println("Please enter your username (4-20 characters, alphanumeric):");
+                String username;
+                while (!UserService.validateUsername(username = sc.nextLine())){
+                    System.out.println("Invalid username format. Please try again.");
+                }
+
+                System.out.println("Please enter your email address:");
+                String email;
+                while (!UserService.validateEmail(email = sc.nextLine())) {
+                    System.out.println("Invalid email format. Must be like 'user@domain.com'.");
+                }
+
+                System.out.println("Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):");
+                String password;
+                while (!UserService.validatePassword(password = sc.nextLine())) {
+                    System.out.println("Invalid password format. Please ensure it meets the requirements.");
+                }
+
+                System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
+                String dateOfBirth;
+                while (!UserService.validateDateOfBirth(dateOfBirth = sc.nextLine())) {
+                    System.out.println("Invalid date of birth format. Ensure the format is correct " +
+                            "(e.g., 15-08-2010) and that you are at least 13 years old.");
+                }
+
+                password = PasswordService.hash(password);
+                UserHandler.users.add(new User(username, email, password, dateOfBirth));
+                System.out.println("Registration successful! Welcome to our platform.");
+
                 break;
             case 2:
+                System.out.println("Welcome to the login page.");
+                while (true) {
+                    System.out.print("Insert your username:");
+                    String loginUsername = sc.nextLine();
+
+                    System.out.print("Insert your password:");
+                    String loginPassword = sc.nextLine();
+
+                    if (UserService.validateUserAccount(loginUsername, loginPassword, UserHandler.users)) {
+                        System.out.println("\nLogin successful! Welcome back.");
+
+                        break;
+                    } else
+                        System.out.println("Invalid username or password. Please try again.\n");
+                }
                 User loggedInUser = userHandler.userLogin();
                 if (loggedInUser != null) {
                     currentUser = loggedInUser;
@@ -238,13 +284,16 @@ public class AppHandler {
                 sc.nextLine();
                 break;
             case 2:
-                System.out.println("Write Comment: ");
-                String text = sc.nextLine();
-                try {
-                    if (CommentService.addComment(currentUser, currentPost, text))
+                while(true) {
+                    System.out.println("Write Comment: ");
+                    String text = sc.nextLine();
+                    try {
+                        CommentService.addComment(currentUser, currentPost, text);
                         System.out.println("Comment added successfully!");
-                } catch (EmptyCommentException e){
-                    System.out.println(e.getMessage());
+                        break;
+                    } catch (EmptyCommentException e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
                 break;
             case 3:

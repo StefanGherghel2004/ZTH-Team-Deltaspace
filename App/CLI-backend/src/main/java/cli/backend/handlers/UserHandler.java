@@ -2,6 +2,7 @@ package cli.backend.handlers;
 
 import cli.backend.User;
 import cli.backend.services.PasswordService;
+import cli.backend.services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,7 @@ public class UserHandler {
 
     private static final Scanner sc = new Scanner(System.in);
 
-    private static final List<User> users = new ArrayList<>();
-
-    private static final String USERNAME_REGEX = "^[a-zA-Z0-9._-]{4,20}$";
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+    public static final List<User> users = new ArrayList<>();
 
     private UserHandler() {
         users.add(new User(
@@ -34,75 +31,9 @@ public class UserHandler {
             instance = new UserHandler();
 
         }
-
         return instance;
     }
 
-    public void userRegister() {
-
-        System.out.println("Welcome to the registration page.");
-
-        String name = getValidInput(
-                "Please enter your username (4-20 characters, alphanumeric):",
-                USERNAME_REGEX,
-                "Invalid username format. Please try again."
-        );
-
-        String email = getValidInput(
-                "Please enter your email address:",
-                EMAIL_REGEX,
-                "Invalid email format. Must be like 'user@domain.com'."
-        );
-
-        String password = getValidInput(
-                "Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):",
-                PASSWORD_REGEX,
-                "Invalid password format. Please ensure it meets the requirements."
-        );
-
-        String inputDateOfBirth;
-        while (true) {
-            System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
-            inputDateOfBirth = sc.nextLine();
-
-            if (User.checkUserDateOfBirth(inputDateOfBirth)) {
-
-                break;
-            } else {
-
-                System.out.println("Registration failed. Ensure the format is correct (e.g., 15-08-2010) and that you are at least 13 years old.");
-                System.out.println("Please try again.\n");
-            }
-        }
-
-        password = PasswordService.hash(password);
-
-        users.add(new User(name, email, password, inputDateOfBirth));
-
-        System.out.println("Registration successful! Welcome to our platform.");
-
-    }
-
-    public User userLogin() {
-        System.out.println("Welcome to the login page.");
-
-        System.out.println("Insert your username:");
-        String name = sc.nextLine();
-
-        System.out.println("Insert your password:");
-        String password = sc.nextLine();
-
-        for (User user : users) {
-            if (user.getUsername().equals(name) && PasswordService.verify(password, user.getPassword())) {
-                System.out.println("Successfully logged in into your account - " + user.getUsername() + ".");
-                return user;
-            }
-        }
-
-        System.out.println("Invalid username or password");
-
-        return null;
-    }
 
     // this method will not return without a proper input
     private String getValidInput(String prompt, String regex, String errorMsg) {

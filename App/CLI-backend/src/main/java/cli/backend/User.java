@@ -43,20 +43,4 @@ public class User {
         return userID;
     }
 
-    public static boolean checkUserDateOfBirth (String dateOfBirth) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        try {
-
-            LocalDate birthday = LocalDate.parse(dateOfBirth, formatter);
-            LocalDate today = LocalDate.now();
-            Period age = Period.between(birthday, today);
-
-            return age.getYears() >= 13;
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format!");
-            return false;
-        }
-    }
 }
