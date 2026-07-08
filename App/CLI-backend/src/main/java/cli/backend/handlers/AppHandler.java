@@ -8,8 +8,14 @@ import cli.backend.exceptions.EmptyCommentException;
 import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.exceptions.InvalidUserAccountException;
 import cli.backend.services.*;
-
 import java.util.*;
+import cli.backend.readers.ConsoleReader;
+import cli.backend.services.CommentService;
+import cli.backend.services.CommunityService;
+import cli.backend.services.PasswordService;
+import cli.backend.services.UserService;
+
+import java.util.List;
 
 public class AppHandler {
 
@@ -33,7 +39,7 @@ public class AppHandler {
 
     private static AppHandler instance;
 
-    private static Scanner sc = new Scanner(System.in);
+    private static ConsoleReader consoleReader = new ConsoleReader();
 
     private static final PostService postService=PostService.getInstance();
     private static final UserService userService = UserService.getInstance();
@@ -84,7 +90,7 @@ public class AppHandler {
         System.out.println("2. Login");
         System.out.println("3. Quit");
 
-        int command = readIntegerCommand(1, 3);
+        int command = consoleReader.readIntInRange(1,3);
 
         switch(command) {
             case 1:
@@ -108,7 +114,7 @@ public class AppHandler {
         System.out.println("4. Show communities");
         System.out.println("5. Logout");
 
-        int command = readIntegerCommand(1, 5);
+        int command = consoleReader.readIntInRange(1,5);
 
         switch(command) {
             case 1:
@@ -132,6 +138,37 @@ public class AppHandler {
         return true;
     }
 
+    private boolean handleCreateCommunity()  {
+        System.out.println("\n--- Create Community ---");
+        System.out.print("Please enter community name: \nr/");
+        String communityName = consoleReader.readString();
+        List<String> topics = communityService.getAvailableTopics();
+
+        int choice;
+        String selectedTopic;
+        System.out.println("TOPICS LIST");
+        for(String i:topics){
+            System.out.println((topics.indexOf(i) + 1) + ". " + i);
+        }
+
+        choice = consoleReader.readIntInRange(1,topics.size());
+        selectedTopic = topics.get(choice - 1);
+
+        System.out.println("Please Enter Community Description");
+        String description = consoleReader.readString();
+
+
+        try {
+            communityService.addCommunity(communityName, selectedTopic, description);
+            System.out.println("Community " + communityName + " successfully created.");
+            currentState = State.LOGGED_IN;
+        } catch (InvalidCommunityException e) {
+            System.out.println(e.getMessage());
+        }
+        return true;
+
+    }
+
     private boolean handleShowCommunities() {
         System.out.println("\n--- Communities ---");
         List<Community> communities = communityService.getCommunities();
@@ -145,9 +182,8 @@ public class AppHandler {
             }
         }
 
-
         System.out.print("\nChoose a community (or press Enter to go back): ");
-        String communityName = sc.nextLine().trim();
+        String communityName = consoleReader.readString();
 
         if (communityName.isEmpty()) {
             currentState = State.LOGGED_IN;
@@ -171,7 +207,7 @@ public class AppHandler {
         System.out.println("2. Add Post");
         System.out.println("3. Return to Main Menu");
 
-        int command = readIntegerCommand(1, 3);
+        int command = consoleReader.readIntInRange(1, 3);
 
         switch(command){
             case 1:
@@ -210,7 +246,7 @@ public class AppHandler {
         }
 
         System.out.print("Choose a post [ID] (or press Enter to go back): ");
-        String input = sc.nextLine().trim();
+        String input = consoleReader.readString();
 
         if (input.isEmpty()) {
             currentState = State.IN_COMMUNITY;
@@ -256,7 +292,7 @@ public class AppHandler {
             System.out.println("4. Back to Community");
         }
 
-        int command = readIntegerCommand(1, 4);
+        int command = consoleReader.readIntInRange(1, 4);
 
         switch(command){
             case 1:
@@ -288,12 +324,12 @@ public class AppHandler {
         System.out.println("\n1. Reply");
         System.out.println("2. Back to Post");
 
-        int command = readIntegerCommand(1, 2);
+        int command = consoleReader.readIntInRange(1, 2);
 
         switch(command) {
             case 1:
                 System.out.print("Write reply: ");
-                String text = sc.nextLine().trim();
+                String text = consoleReader.readString();
 
                 try {
                     commentService.replyToComment(currentUser, currentPost, currentComment, text);
@@ -329,13 +365,13 @@ public class AppHandler {
         if(postService.getPosts().isEmpty()){
             System.out.println(postService.getPosts());
             System.out.print("\nPress Enter to return to Main Menu...");
-            sc.nextLine();
+            consoleReader.readString();
             currentState = State.LOGGED_IN;
             return true;
         }
 
         System.out.print("Choose a post [ID] (or press Enter to go back): ");
-        String input = sc.nextLine().trim();
+        String input = consoleReader.readString();
 
         if (input.isEmpty()) {
             currentState = State.LOGGED_IN;
@@ -364,10 +400,10 @@ public class AppHandler {
         System.out.println("Welcome to the login page.");
         while (true) {
             System.out.println("Insert your username:");
-            String loginUsername = sc.nextLine();
+            String loginUsername = consoleReader.readString();
 
             System.out.println("Insert your password:");
-            String loginPassword = sc.nextLine();
+            String loginPassword = consoleReader.readString();
 
             try {
                 currentUser = userService.validateUserAccount(loginUsername, loginPassword);
@@ -385,26 +421,26 @@ public class AppHandler {
 
         System.out.println("Please enter your username (4-20 characters, alphanumeric):");
         String username;
-        while (!userService.validateUsername(username = sc.nextLine())){
+        while (!userService.validateUsername(username = consoleReader.readString())){
             System.out.println("Invalid username format. Please try again.");
         }
 
         System.out.println("Please enter your email address:");
         String email;
-        while (!userService.validateEmail(email = sc.nextLine())) {
+        while (!userService.validateEmail(email = consoleReader.readString())) {
             System.out.println("Invalid email format. Must be like 'user@domain.com'.");
         }
 
         System.out.println("Please enter your password (min 8 chars, 1 uppercase, " +
                 "1 lowercase, 1 number):");
         String password;
-        while (!userService.validatePassword(password = sc.nextLine())) {
+        while (!userService.validatePassword(password = consoleReader.readString())) {
             System.out.println("Invalid password format. Please ensure it meets the requirements.");
         }
 
         System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
         String dateOfBirth;
-        while (!userService.validateDateOfBirth(dateOfBirth = sc.nextLine())) {
+        while (!userService.validateDateOfBirth(dateOfBirth = consoleReader.readString())) {
             System.out.println("Invalid date of birth format. Ensure the format is correct " +
                     "(e.g., 15-08-2010) and that you are at least 13 years old.");
         }
@@ -418,7 +454,7 @@ public class AppHandler {
     private void createCommunity()  {
         System.out.println("\n--- Create Community ---");
         System.out.print("Please enter community name: \nr/");
-        String communityName = "r/" + sc.nextLine().trim();
+        String communityName = "r/" + consoleReader.readString();
         List<String> topics= communityService.getAvailableTopics();
 
         int choice;
@@ -431,7 +467,7 @@ public class AppHandler {
         while (true) {
             System.out.print("Choose an option (1-" + topics.size() + "): ");
             try {
-                choice = Integer.parseInt(sc.nextLine().trim());
+                choice = Integer.parseInt(consoleReader.readString());
 
                 if (choice < 1 || choice > topics.size()) {
                     System.out.println("Invalid option. Please enter a valid number.");
@@ -446,7 +482,7 @@ public class AppHandler {
             }
         }
         System.out.println("Please Enter Community Description");
-        String description=sc.nextLine();
+        String description = consoleReader.readString();
 
 
         try {
@@ -466,7 +502,7 @@ public class AppHandler {
             System.out.print("Please enter the community in which you would like to post " +
                     "\n(or press Enter to post to u/" + currentUser.getUsername() + "): r/");
 
-            String input = sc.nextLine().trim();
+            String input = consoleReader.readString();
 
             if (input.isEmpty()) {
                 System.out.println("Posting to your profile (u/" + currentUser.getUsername() + ").");
@@ -481,13 +517,13 @@ public class AppHandler {
 
         }
         System.out.println("Please enter post title:");
-        String postTitle = sc.nextLine();
+        String postTitle = consoleReader.readString();
 
         System.out.println("Please enter post contents:");
-        String postContents = sc.nextLine();
+        String postContents = consoleReader.readString();
 
         System.out.println("Please enter image link (or press Enter to skip):");
-        String imageLink = sc.nextLine();
+        String imageLink = consoleReader.readString();
         if (imageLink.trim().isEmpty()) {
             imageLink = null;
         }
@@ -533,13 +569,13 @@ public class AppHandler {
         printThread(-1, commentTree, 0);
 
         System.out.print("\nPress Enter to return to the post menu...");
-        sc.nextLine();
+        consoleReader.readString();
     }
 
     private void writeCommentToPost() {
         while(true) {
             System.out.println("Write Comment: ");
-            String text = sc.nextLine();
+            String text = consoleReader.readString();
             try {
                 commentService.addComment(currentUser, currentPost, text);
                 System.out.println("Comment added successfully!");
@@ -553,7 +589,7 @@ public class AppHandler {
     private void selectCommentToReply() {
         System.out.print("Enter Comment ID to select: ");
         try {
-            int commentId = Integer.parseInt(sc.nextLine().trim());
+            int commentId = Integer.parseInt(consoleReader.readString());
             Comment foundComment = currentPost.findCommentById(commentId);
 
             if (foundComment != null) {
@@ -564,28 +600,6 @@ public class AppHandler {
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid ID format!");
-        }
-    }
-
-    // method will return just after introducing a valid option in the range
-    private int readIntegerCommand(int min, int max) {
-        while (true) {
-
-            System.out.print("Choose an option (" + min + "-" + max + "): ");
-
-            try {
-                int command = Integer.parseInt(sc.nextLine().trim());
-
-                if (command >= min && command <= max) {
-                    return command;
-                } else {
-                    System.out.println("Invalid option. Please enter a number between" +
-                                       " " + min + " and " + max + ".");
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-            }
         }
     }
 }
