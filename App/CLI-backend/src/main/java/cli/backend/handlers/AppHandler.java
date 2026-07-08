@@ -4,6 +4,7 @@ import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
+import cli.backend.exceptions.EmptyCommentException;
 import cli.backend.services.CommentService;
 
 import java.sql.SQLOutput;
@@ -239,8 +240,12 @@ public class AppHandler {
             case 2:
                 System.out.println("Write Comment: ");
                 String text = sc.nextLine();
-                if(CommentService.addComment(currentUser, currentPost, text))
-                    System.out.println("Comment added successfully!");
+                try {
+                    if (CommentService.addComment(currentUser, currentPost, text))
+                        System.out.println("Comment added successfully!");
+                } catch (EmptyCommentException e){
+                    System.out.println(e.getMessage());
+                }
                 break;
             case 3:
                 System.out.print("Enter Comment ID to select: ");
@@ -281,8 +286,12 @@ public class AppHandler {
                 String text = sc.nextLine().trim();
 
                 if (!text.isEmpty()) {
-                    if(CommentService.replyToComment(currentUser, currentPost, currentComment, text))
-                        System.out.println("Reply added successfully!");
+                    try {
+                        if (CommentService.replyToComment(currentUser, currentPost, currentComment, text))
+                            System.out.println("Reply added successfully!");
+                    } catch (EmptyCommentException e) {
+                        System.out.println(e.getMessage());
+                    }
                 } else {
                     System.out.println("Reply cannot be empty!");
                 }
