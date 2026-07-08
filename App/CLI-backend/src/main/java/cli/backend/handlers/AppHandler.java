@@ -379,11 +379,11 @@ public class AppHandler {
         System.out.println("1. Show comments");
         System.out.println("2. Add comment");
         System.out.println("3. Select comment (Reply)");
-        if(currentCommunity!=null && currentCommunity.getNickname().startsWith("r")) {
-            System.out.println("4. Back to Community");
+        if(currentPost.getCommunityName().equalsIgnoreCase(currentPost.getUser().getUsername())) {
+            System.out.println("4. Back to Main Menu");
         }
         else {
-            System.out.println("4. Back to Main Menu");
+            System.out.println("4. Back to Community");
         }
 
         int command = readIntegerCommand(1, 4);
