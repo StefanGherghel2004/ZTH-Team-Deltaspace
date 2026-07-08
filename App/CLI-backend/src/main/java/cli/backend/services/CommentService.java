@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommentService {
 
-    public static void addComment (User user, Post post, String text) {
+    public static boolean addComment (User user, Post post, String text) {
 
         if(text.isEmpty()){
             throw new EmptyCommentException("Error! Please introduce your text");
@@ -17,11 +17,11 @@ public class CommentService {
             Comment newComment = new Comment(text, user, post.getPostID());
 
             post.addComment(newComment, -1);
-            System.out.println("Comment added successfully!");
+            return true;
         }
     }
 
-    public static void replyToComment (User user, Post post, Comment parentComment, String text) {
+    public static boolean replyToComment (User user, Post post, Comment parentComment, String text) {
 
         if (text == null || text.trim().isEmpty())
             throw new EmptyCommentException("Error! Comment text cannot be empty.");
@@ -31,18 +31,18 @@ public class CommentService {
         reply.setIdParent(parentComment.getId());
         post.addComment(reply, parentComment.getId());
 
-        System.out.println("Reply added successfully!");
+        return true;
     }
 
-    public static void viewComments (Post post) {
+    public static boolean viewComments (Post post) {
 
         List<Comment> comments=post.getComments();
-        if(comments.isEmpty()){
-            System.out.println("Be first to comment");
-        }
+        if(comments.isEmpty())
+            return false;
         else {
             for(Comment comment:comments)
                 System.out.println("#" + comment.getCommentPostId()+comment.getUsername() + comment.getText());
+            return true;
         }
     }
 }

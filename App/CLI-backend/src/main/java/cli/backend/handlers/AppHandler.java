@@ -239,7 +239,8 @@ public class AppHandler {
             case 2:
                 System.out.println("Write Comment: ");
                 String text = sc.nextLine();
-                CommentService.addComment(currentUser, currentPost, text);
+                if(CommentService.addComment(currentUser, currentPost, text))
+                    System.out.println("Comment added successfully!");
                 break;
             case 3:
                 System.out.print("Enter Comment ID to select: ");
@@ -280,7 +281,8 @@ public class AppHandler {
                 String text = sc.nextLine().trim();
 
                 if (!text.isEmpty()) {
-                    CommentService.replyToComment(currentUser, currentPost, currentComment, text);
+                    if(CommentService.replyToComment(currentUser, currentPost, currentComment, text))
+                        System.out.println("Reply added successfully!");
                 } else {
                     System.out.println("Reply cannot be empty!");
                 }
