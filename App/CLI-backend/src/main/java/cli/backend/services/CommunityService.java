@@ -8,6 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityService {
+
+    private static CommunityService instance;
+    public static CommunityService getInstance(){
+        if(instance==null){
+            instance = new CommunityService();
+        }
+        return instance;
+    }
+
     public static final List<String> TOPICS=List.of(
             "Food",
             "Gaming",
@@ -16,6 +25,7 @@ public class CommunityService {
             "Tech"
     );
     private static List<Community> communities=new ArrayList<>();
+
 
     public static List<Community> getCommunities(){
         return communities;

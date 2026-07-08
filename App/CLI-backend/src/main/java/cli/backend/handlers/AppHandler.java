@@ -7,13 +7,9 @@ import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
 import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.exceptions.InvalidUserAccountException;
-import cli.backend.services.CommentService;
-import cli.backend.services.CommunityService;
-import cli.backend.services.PasswordService;
-import cli.backend.services.UserService;
+import cli.backend.services.*;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AppHandler {
 
@@ -25,6 +21,7 @@ public class AppHandler {
         CREATE_COMMUNITY,
         IN_COMMUNITY,
         SHOW_POSTS_COMMUNITY,
+        CREATE_POST,
         ON_POST,
         ON_COMMENT
     }
@@ -40,10 +37,11 @@ public class AppHandler {
 
     private static Scanner sc = new Scanner(System.in);
 
-    private static final PostHandler postHandler = PostHandler.getInstance();
+    //private static final PostHandler postHandler = PostHandler.getInstance();
+    private static final PostService postService=PostService.getInstance();
     private static final UserService userService = UserService.getInstance();
     private static final CommentService commentService = CommentService.getInstance();
-    //private static CommunityHandler communityHandler=CommunityHandler.getInstance();
+    private static final CommunityService communityService=CommunityService.getInstance();
 
     private AppHandler() {
 
@@ -78,6 +76,7 @@ public class AppHandler {
             case SHOW_COMMUNITIES -> handleShowCommunities();
             case IN_COMMUNITY -> handleInCommunity();
             case SHOW_POSTS_COMMUNITY -> handleShowPostsInCommunity();
+            case CREATE_POST -> handleCreatePost();
             case ON_POST -> handleOnPost();
             case ON_COMMENT -> handleOnComment();
             default -> false;
@@ -174,7 +173,7 @@ public class AppHandler {
                 currentState=State.CREATE_COMMUNITY;
                 break;
             case 3:
-                postHandler.addPost(currentUser, null);
+                currentState=State.CREATE_POST;
                 break;
             case 4:
                 currentState = State.SHOW_COMMUNITIES;
@@ -278,7 +277,7 @@ public class AppHandler {
                 currentState = State.SHOW_POSTS_COMMUNITY;
                 break;
             case 2:
-                postHandler.addPost(currentUser, currentCommunity);
+                currentState = State.CREATE_POST;
                 break;
             case 3:
                 System.out.println("Returning to Main Menu...");
@@ -333,20 +332,80 @@ public class AppHandler {
         return true;
     }
 
+    private boolean handleCreatePost(){
+        System.out.println("Welcome to the post creation page.");
+        Community targetCommunity=currentCommunity;
+        if (targetCommunity == null) {
+            System.out.print("Please enter the community in which you would like to post " +
+                    "\n(or press Enter to post to u/" + currentUser.getUsername() + "): r/");
+            String communityName = sc.nextLine().trim();
+
+            if (!communityName.isEmpty()) {
+                targetCommunity = CommunityService.getCommunityByName(communityName);
+                if (targetCommunity == null) {
+                    System.out.println("Community not found! Posting to your profile instead.");
+                }
+            }
+        }
+        System.out.println("Please enter post title:");
+        String postTitle = sc.nextLine();
+
+        System.out.println("Please enter post contents:");
+        String postContents = sc.nextLine();
+
+        System.out.println("Please enter image link (or press Enter to skip):");
+        String imageLink = sc.nextLine();
+        if (imageLink.trim().isEmpty()) {
+            imageLink = null;
+        }
+        currentPost=postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
+        System.out.println("Post created successfully!");
+        currentState=State.ON_POST;
+        return true;
+    }
     private boolean handleOnPost() {
         System.out.println("\n--- Viewing Post ---");
-        postHandler.viewPost(currentPost);
+        System.out.println("ID: " + currentPost.getPostID());
+        System.out.println("Community: " + currentPost.getCommunityName());
+        System.out.println("Author: " + currentPost.getUser().getUsername());
+        System.out.println("Title: " + currentPost.getPostTitle());
+        if (currentPost.getImageLink() != null) {
+
+            System.out.println("Image: " + currentPost.getImageLink());
+        }
+        System.out.println("Content: " + currentPost.getPostContents());
+        System.out.println("Comments counter: " + currentPost.getCommentsCount() + "\n");
 
         System.out.println("1. Show comments");
         System.out.println("2. Add comment");
         System.out.println("3. Select comment (Reply)");
-        System.out.println("4. Back to Community");
+        if(currentCommunity!=null && currentCommunity.getNickname().startsWith("r")) {
+            System.out.println("4. Back to Community");
+        }
+        else {
+            System.out.println("4. Back to Main Menu");
+        }
 
         int command = readIntegerCommand(1, 4);
 
         switch(command){
             case 1:
-                postHandler.showComments(currentPost);
+                List<Comment> flatCommentsList = currentPost.getComments();
+                if (flatCommentsList == null || flatCommentsList.isEmpty()) {
+                    System.out.println("\n(No comments yet. Be the first to reply!)");
+                    return true;
+                }
+
+                System.out.println("\n--- Discussion Thread ---");
+
+                Map<Integer, List<Comment>> commentTree = new HashMap<>();
+                for (Comment comment : flatCommentsList) {
+                    commentTree.putIfAbsent(comment.getIdParent(), new ArrayList<>());
+                    commentTree.get(comment.getIdParent()).add(comment);
+                }
+
+                printThread(-1, commentTree, 0);
+
                 System.out.print("\nPress Enter to return to the post menu...");
                 sc.nextLine();
                 break;
@@ -381,10 +440,33 @@ public class AppHandler {
                 break;
             case 4:
                 currentPost = null;
-                currentState = State.IN_COMMUNITY;
+                if(currentCommunity!=null) {
+                    currentState = State.IN_COMMUNITY;
+                }
+                else {
+                    currentState=State.LOGGED_IN;
+                }
                 break;
         }
         return true;
+    }
+
+    private void printThread(int parentId, Map<Integer, List<Comment>> commentTree, int depth) {
+
+        List<Comment> replies = commentTree.get(parentId);
+
+        if (replies != null) {
+            for (Comment reply : replies) {
+
+                String indent = "    ".repeat(depth);
+                String branch = depth > 0 ? "|_ " : "";
+
+
+                System.out.println(indent + branch + "[" + reply.getUsername() + "]: " + reply.getText() + "  (ID: " + reply.getId() + ")");
+
+                printThread(reply.getId(), commentTree, depth + 1);
+            }
+        }
     }
 
     private boolean handleOnComment() {
@@ -418,10 +500,22 @@ public class AppHandler {
 
     private boolean handleShowFeed() {
         System.out.println("\n--- Your Feed ---");
-        postHandler.viewFeed();
+        List<Post> posts=postService.getPosts();
+        for(Post post: posts) {
+            System.out.println("ID: " + post.getPostID());
+            System.out.println("Community: " + post.getCommunityName());
+            System.out.println("Author: " + post.getUser().getUsername());
+            System.out.println("Title: " + post.getPostTitle());
+            if (post.getImageLink() != null) {
 
-        if(postHandler.getPosts().isEmpty()){
-            System.out.println(postHandler.getPosts());
+                System.out.println("Image: " + post.getImageLink());
+            }
+            System.out.println("Content: " + post.getPostContents());
+            System.out.println("Comments counter: " + post.getCommentsCount() + "\n");
+        }
+
+        if(postService.getPosts().isEmpty()){
+            System.out.println(postService.getPosts());
             System.out.print("\nPress Enter to return to Main Menu...");
             sc.nextLine();
             currentState = State.LOGGED_IN;
@@ -439,7 +533,7 @@ public class AppHandler {
         try {
             int id = Integer.parseInt(input);
 
-            Post foundPost = postHandler.findPostById(id);
+            Post foundPost = PostService.findPostById(id);
 
             if(foundPost != null){
                 currentPost = foundPost;
