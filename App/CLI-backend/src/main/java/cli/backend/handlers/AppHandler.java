@@ -4,6 +4,7 @@ import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
+import cli.backend.services.CommentService;
 
 import java.sql.SQLOutput;
 import java.util.Scanner;
@@ -238,7 +239,7 @@ public class AppHandler {
             case 2:
                 System.out.println("Write Comment: ");
                 String text = sc.nextLine();
-                commentHandler.addComment(currentUser, currentPost, text);
+                CommentService.addComment(currentUser, currentPost, text);
                 break;
             case 3:
                 System.out.print("Enter Comment ID to select: ");
@@ -279,7 +280,7 @@ public class AppHandler {
                 String text = sc.nextLine().trim();
 
                 if (!text.isEmpty()) {
-                    commentHandler.replyToComment(currentUser, currentPost, currentComment, text);
+                    CommentService.replyToComment(currentUser, currentPost, currentComment, text);
                 } else {
                     System.out.println("Reply cannot be empty!");
                 }
@@ -343,7 +344,7 @@ public class AppHandler {
                     return command;
                 } else {
                     System.out.println("Invalid option. Please enter a number between" +
-                                       "" + min + " and " + max + ".");
+                                       " " + min + " and " + max + ".");
                 }
 
             } catch (NumberFormatException e) {
