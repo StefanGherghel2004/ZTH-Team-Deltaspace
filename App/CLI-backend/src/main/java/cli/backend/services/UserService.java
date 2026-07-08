@@ -86,7 +86,7 @@ public class UserService {
                 return user;
         }
 
-        throw new InvalidUserAccountException("Invalid username or password. Please try again.\n");
+        throw new InvalidUserAccountException("Invalid username/email or password. Please try again.\n");
     }
 
     public  boolean validate(String user, String regex) {
