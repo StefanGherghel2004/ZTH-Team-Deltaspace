@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PostService {
 
-    private static List<Post> posts=new ArrayList<>();
+    private final List<Post> posts=new ArrayList<>();
     private static PostService instance;
 
     public static PostService getInstance(){
@@ -20,7 +20,7 @@ public class PostService {
         return instance;
     }
 
-    public static Post addPost(User user,String postTitle, String postContents, String imageLink, Community currentCommunity){
+    public Post addPost(User user,String postTitle, String postContents, String imageLink, Community currentCommunity){
         Community targetCommunity = currentCommunity;
 
         String targetName = (targetCommunity != null) ? targetCommunity.getNickname() : "u/" + user.getUsername();
@@ -32,7 +32,7 @@ public class PostService {
         return newPost;
     }
 
-    public static List<Post> getRandomizedFeed(List<Post> posts){
+    public List<Post> getRandomizedFeed(List<Post> posts){
         if(posts==null || posts.isEmpty()){
             return new ArrayList<>();
         }
@@ -40,10 +40,10 @@ public class PostService {
         Collections.shuffle(randomizedList);
         return randomizedList;
     }
-    public static List<Post> getPosts(){
+    public List<Post> getPosts(){
         return posts;
     }
-    public static Post findPostById(int id){
+    public Post findPostById(int id){
         for (Post p:posts){
             if(p.getPostID()==id) {
                 return p;

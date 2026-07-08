@@ -10,6 +10,7 @@ import java.util.List;
 public class CommunityService {
 
     private static CommunityService instance;
+
     public static CommunityService getInstance(){
         if(instance==null){
             instance = new CommunityService();
@@ -24,14 +25,14 @@ public class CommunityService {
             "Art",
             "Tech"
     );
-    private static List<Community> communities=new ArrayList<>();
+    private final List<Community> communities=new ArrayList<>();
 
 
-    public static List<Community> getCommunities(){
+    public List<Community> getCommunities(){
         return communities;
     }
 
-    public static Community getCommunityByName(String name){
+    public Community getCommunityByName(String name){
         for (Community c:communities){
             if(c.getNickname().equalsIgnoreCase(name)){
                 return c;
@@ -40,7 +41,7 @@ public class CommunityService {
         return null;
     }
 
-    public static void addCommunity(String name,String topic,String description) throws InvalidCommunityException {
+    public void addCommunity(String name,String topic,String description) throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
             communities.add(new Community(topic, name, description));
         }
@@ -48,7 +49,7 @@ public class CommunityService {
             throw new InvalidCommunityException("Invalid topic. Please choose from the available topics.");
         }
     }
-    public static List<String> getAvailableTopics(){
+    public List<String> getAvailableTopics(){
         return new ArrayList<>(TOPICS);
     }
 

@@ -37,11 +37,10 @@ public class AppHandler {
 
     private static Scanner sc = new Scanner(System.in);
 
-    //private static final PostHandler postHandler = PostHandler.getInstance();
     private static final PostService postService=PostService.getInstance();
     private static final UserService userService = UserService.getInstance();
     private static final CommentService commentService = CommentService.getInstance();
-    private static final CommunityService communityService=CommunityService.getInstance();
+    private static final CommunityService communityService = CommunityService.getInstance();
 
     private AppHandler() {
 
@@ -190,8 +189,8 @@ public class AppHandler {
     private boolean handleCreateCommunity()  {
         System.out.println("\n--- Create Community ---");
         System.out.print("Please enter community name: \nr/");
-        String communityName = sc.nextLine().trim();
-        List<String> topics= CommunityService.getAvailableTopics();
+        String communityName = "r/" + sc.nextLine().trim();
+        List<String> topics= communityService.getAvailableTopics();
 
         int choice;
         String selectedTopic;
@@ -222,7 +221,7 @@ public class AppHandler {
 
 
         try {
-            CommunityService.addCommunity(communityName, selectedTopic, description);
+            communityService.addCommunity(communityName, selectedTopic, description);
             System.out.println("Community " + communityName + " successfully created.");
             currentState = State.LOGGED_IN;
         } catch (InvalidCommunityException e) {
@@ -233,14 +232,14 @@ public class AppHandler {
     }
     private boolean handleShowCommunities() {
         System.out.println("\n--- Communities ---");
-        List<Community> communities = CommunityService.getCommunities();
+        List<Community> communities = communityService.getCommunities();
         if (communities.isEmpty()) {
             System.out.println("No communities created");
             currentState = State.LOGGED_IN;
             return true;
         } else {
             for (Community c : communities) {
-                System.out.println("r/"+c.getNickname());
+                System.out.println(c.getNickname());
             }
         }
 
@@ -253,7 +252,7 @@ public class AppHandler {
             return true;
         }
 
-        Community foundCommunity = CommunityService.getCommunityByName(communityName);
+        Community foundCommunity = communityService.getCommunityByName(communityName);
         if (foundCommunity != null) {
             currentCommunity = foundCommunity;
             currentState = State.IN_COMMUNITY;
@@ -338,14 +337,13 @@ public class AppHandler {
         if (targetCommunity == null) {
             System.out.print("Please enter the community in which you would like to post " +
                     "\n(or press Enter to post to u/" + currentUser.getUsername() + "): r/");
-            String communityName = sc.nextLine().trim();
+            String communityName = "r/" + sc.nextLine().trim();
 
-            if (!communityName.isEmpty()) {
-                targetCommunity = CommunityService.getCommunityByName(communityName);
-                if (targetCommunity == null) {
-                    System.out.println("Community not found! Posting to your profile instead.");
-                }
+            targetCommunity = communityService.getCommunityByName(communityName);
+            if (targetCommunity == null) {
+                System.out.println("Community not found! Posting to your profile instead.");
             }
+
         }
         System.out.println("Please enter post title:");
         String postTitle = sc.nextLine();
@@ -358,7 +356,7 @@ public class AppHandler {
         if (imageLink.trim().isEmpty()) {
             imageLink = null;
         }
-        currentPost=postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
+        currentPost= postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
         System.out.println("Post created successfully!");
         currentState=State.ON_POST;
         return true;
@@ -379,7 +377,7 @@ public class AppHandler {
         System.out.println("1. Show comments");
         System.out.println("2. Add comment");
         System.out.println("3. Select comment (Reply)");
-        if(currentPost.getCommunityName().equalsIgnoreCase(currentPost.getUser().getUsername())) {
+        if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getUser().getUsername())) {
             System.out.println("4. Back to Main Menu");
         }
         else {
@@ -533,7 +531,7 @@ public class AppHandler {
         try {
             int id = Integer.parseInt(input);
 
-            Post foundPost = PostService.findPostById(id);
+            Post foundPost = postService.findPostById(id);
 
             if(foundPost != null){
                 currentPost = foundPost;
