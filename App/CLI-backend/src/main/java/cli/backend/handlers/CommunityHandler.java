@@ -1,4 +1,4 @@
-package cli.backend.handlers;
+/*package cli.backend.handlers;
 
 import cli.backend.Community;
 import cli.backend.Post;
@@ -113,4 +113,4 @@ public class CommunityHandler {
     }
 
 }
-
+*/

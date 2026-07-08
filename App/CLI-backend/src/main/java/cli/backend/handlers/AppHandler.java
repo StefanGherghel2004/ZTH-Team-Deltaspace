@@ -5,11 +5,14 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
+import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.exceptions.InvalidUserAccountException;
 import cli.backend.services.CommentService;
+import cli.backend.services.CommunityService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AppHandler {
@@ -19,6 +22,7 @@ public class AppHandler {
         LOGGED_IN,
         SHOW_FEED,
         SHOW_COMMUNITIES,
+        CREATE_COMMUNITY,
         IN_COMMUNITY,
         SHOW_POSTS_COMMUNITY,
         ON_POST,
@@ -37,9 +41,9 @@ public class AppHandler {
     private static Scanner sc = new Scanner(System.in);
 
     private static final PostHandler postHandler = PostHandler.getInstance();
-    private static final CommunityHandler communityHandler=CommunityHandler.getInstance();
     private static final UserService userService = UserService.getInstance();
     private static final CommentService commentService = CommentService.getInstance();
+    //private static CommunityHandler communityHandler=CommunityHandler.getInstance();
 
     private AppHandler() {
 
@@ -68,6 +72,7 @@ public class AppHandler {
     private boolean handleState() {
         return switch (currentState) {
             case NOT_LOGGED_IN -> handleNotLoggedIn();
+            case CREATE_COMMUNITY -> handleCreateCommunity();
             case LOGGED_IN -> handleLoggedIn();
             case SHOW_FEED -> handleShowFeed();
             case SHOW_COMMUNITIES -> handleShowCommunities();
@@ -166,7 +171,7 @@ public class AppHandler {
                 currentState = State.SHOW_FEED;
                 break;
             case 2:
-                communityHandler.addCommunity();
+                currentState=State.CREATE_COMMUNITY;
                 break;
             case 3:
                 postHandler.addPost(currentUser, null);
@@ -183,14 +188,63 @@ public class AppHandler {
         return true;
     }
 
+    private boolean handleCreateCommunity()  {
+        System.out.println("\n--- Create Community ---");
+        System.out.print("Please enter community name: \nr/");
+        String communityName = sc.nextLine().trim();
+        List<String> topics= CommunityService.getAvailableTopics();
+
+        int choice;
+        String selectedTopic;
+        System.out.println("TOPICS LIST");
+        for(String i:topics){
+            System.out.println((topics.indexOf(i) + 1) + ". " + i);
+        }
+
+        while (true) {
+            System.out.print("Choose an option (1-" + topics.size() + "): ");
+            try {
+                choice = Integer.parseInt(sc.nextLine().trim());
+
+                if (choice < 1 || choice > topics.size()) {
+                    System.out.println("Invalid option. Please enter a valid number.");
+                    continue;
+                }
+
+                selectedTopic = topics.get(choice - 1);
+                break;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number from the list.");
+            }
+        }
+        System.out.println("Please Enter Community Description");
+        String description=sc.nextLine();
+
+
+        try {
+            CommunityService.addCommunity(communityName, selectedTopic, description);
+            System.out.println("Community " + communityName + " successfully created.");
+            currentState = State.LOGGED_IN;
+        } catch (InvalidCommunityException e) {
+            System.out.println(e.getMessage());
+        }
+        return true;
+
+    }
     private boolean handleShowCommunities() {
         System.out.println("\n--- Communities ---");
-        communityHandler.viewCommunities();
-
-        if (communityHandler.getCommunities().isEmpty()) {
+        List<Community> communities = CommunityService.getCommunities();
+        if (communities.isEmpty()) {
+            System.out.println("No communities created");
             currentState = State.LOGGED_IN;
             return true;
+        } else {
+            for (Community c : communities) {
+                System.out.println("r/"+c.getNickname());
+            }
         }
+
 
         System.out.print("\nChoose a community (or press Enter to go back): ");
         String communityName = sc.nextLine().trim();
@@ -200,7 +254,7 @@ public class AppHandler {
             return true;
         }
 
-        Community foundCommunity = communityHandler.findCommunityByName(communityName);
+        Community foundCommunity = CommunityService.getCommunityByName(communityName);
         if (foundCommunity != null) {
             currentCommunity = foundCommunity;
             currentState = State.IN_COMMUNITY;
@@ -237,7 +291,18 @@ public class AppHandler {
 
     private boolean handleShowPostsInCommunity() {
         System.out.println("\n--- Posts in " + currentCommunity.getNickname() + " ---");
-        communityHandler.viewCommunityPosts(currentCommunity);
+        List<Post> communityPosts=currentCommunity.getPosts();
+        if(communityPosts.isEmpty()){
+            System.out.print("No posts in this r/");
+        }
+        else {
+            for (Post post : communityPosts) {
+                System.out.println("ID: " + post.getPostID());
+                System.out.println("Title: " + post.getPostTitle());
+                System.out.println("Author: " + post.getUser().getUsername());
+                System.out.println();
+            }
+        }
 
         if(currentCommunity.getPosts().isEmpty()){
             currentState = State.IN_COMMUNITY;
