@@ -5,6 +5,7 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
+import cli.backend.exceptions.InvalidUserAccount;
 import cli.backend.services.CommentService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
@@ -100,7 +101,8 @@ public class AppHandler {
                     System.out.println("Invalid email format. Must be like 'user@domain.com'.");
                 }
 
-                System.out.println("Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):");
+                System.out.println("Please enter your password (min 8 chars, 1 uppercase, " +
+                        "1 lowercase, 1 number):");
                 String password;
                 while (!UserService.validatePassword(password = sc.nextLine())) {
                     System.out.println("Invalid password format. Please ensure it meets the requirements.");
@@ -114,7 +116,7 @@ public class AppHandler {
                 }
 
                 password = PasswordService.hash(password);
-                UserService.users.add(new User(username, email, password, dateOfBirth));
+                UserService.addUser(username, email, password, dateOfBirth);
                 System.out.println("Registration successful! Welcome to our platform.");
 
                 break;
@@ -128,16 +130,12 @@ public class AppHandler {
                     System.out.print("Insert your password:");
                     String loginPassword = sc.nextLine();
 
-                    if (UserService.validateUserAccount(loginUsername, loginPassword, UserService.users)) {
-                        System.out.println("\nLogin successful! Welcome back.");
-                        loggedInUser = UserService.users.stream().filter(u ->
-                                        u.getUsername().equals(loginUsername) &&
-                                                u.getPassword().equals(loginPassword))
-                                .findFirst()
-                                .orElse(null);
+                    try{
+                        loggedInUser = UserService.validateUserAccount(loginUsername,loginPassword);
                         break;
-                    } else
-                        System.out.println("Invalid username or password. Please try again.\n");
+                    } catch (InvalidUserAccount e){
+                        System.out.println(e.getMessage());
+                    }
                 }
 
                 if (loggedInUser != null) {

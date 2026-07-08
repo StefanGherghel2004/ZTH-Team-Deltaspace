@@ -1,6 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.User;
+import cli.backend.exceptions.InvalidUserAccount;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -16,7 +17,12 @@ public class UserService {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
-    public static final List<User> users = new ArrayList<>();
+    private static final List<User> users = new ArrayList<>();
+
+    public static void addUser (String username, String email, String password, String dateOfBirth){
+
+        users.add(new User(username,email,password,dateOfBirth));
+    }
 
     public static boolean validateUsername (String username) {
 
@@ -59,16 +65,17 @@ public class UserService {
         }
     }
 
-    public static boolean validateUserAccount (String username, String password, List<User> users) {
+    public static User validateUserAccount (String username, String password)
+            throws InvalidUserAccount {
 
         for (User user : users) {
             if(user.getUsername().isEmpty() || user.getPassword().isEmpty())
-                return false;
+                throw new InvalidUserAccount("Invalid username or password. Please try again.\n");
 
             if (user.getUsername().equals(username) && PasswordService.verify(password, user.getPassword()))
-                return true;
+                return user;
         }
-        return false;
+        throw new InvalidUserAccount("Invalid username or password. Please try again.\n");
     }
 
     public static boolean validate(String user, String regex) {
