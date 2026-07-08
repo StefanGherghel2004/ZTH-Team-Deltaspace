@@ -76,11 +76,13 @@ public class UserService {
         }
     }
 
-    public  User validateUserAccount (String username, String password)
+    public  User validateUserAccount (String usernameOrEmail, String password)
             throws InvalidUserAccountException {
 
         for (User user : users) {
-            if (user.getUsername().equals(username) && PasswordService.verify(password, user.getPassword()))
+
+            if ((user.getUsername().equals(usernameOrEmail) || user.getEmail().equals(usernameOrEmail))
+            && PasswordService.verify(password, user.getPassword()))
                 return user;
         }
 

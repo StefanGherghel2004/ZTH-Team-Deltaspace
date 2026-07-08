@@ -399,7 +399,7 @@ public class AppHandler {
     private void userLogin() {
         System.out.println("Welcome to the login page.");
         while (true) {
-            System.out.println("Insert your username:");
+            System.out.println("Insert your username or email:");
             String loginUsername = consoleReader.readString();
 
             System.out.println("Insert your password:");
