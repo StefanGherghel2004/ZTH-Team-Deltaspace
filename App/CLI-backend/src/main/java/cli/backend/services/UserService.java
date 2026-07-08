@@ -13,41 +13,52 @@ import java.util.regex.Pattern;
 
 public class UserService {
 
+    private static final int MIN_AGE = 13;
+
+    private static UserService instance;
+
     private static final String USERNAME_REGEX = "^[a-zA-Z0-9._-]{4,20}$";
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
-    private static final List<User> users = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
 
-    public static void addUser (String username, String email, String password, String dateOfBirth){
+    private UserService() {
+
+        this.addUser("admin",
+                "test@admin",
+                PasswordService.hash("Admin123"),
+                "01-01-2000");
+
+    }
+
+    public static UserService getInstance() {
+        if (instance == null) {
+            instance = new UserService();
+        }
+        return instance;
+    }
+
+    public void addUser (String username, String email, String password, String dateOfBirth){
 
         users.add(new User(username,email,password,dateOfBirth));
     }
 
-    public static boolean validateUsername (String username) {
+    public boolean validateUsername (String username) {
 
-        if(validate(username,USERNAME_REGEX) && !username.isEmpty())
-            return true;
-        else
-            return false;
+        return (validate(username,USERNAME_REGEX) && !username.isEmpty());
     }
 
-    public static boolean validatePassword (String password) {
+    public boolean validatePassword (String password) {
 
-        if(validate(password,PASSWORD_REGEX) && !password.isEmpty())
-            return true;
-        else
-            return false;
+        return (validate(password,PASSWORD_REGEX) && !password.isEmpty());
     }
 
-    public static boolean validateEmail (String email) {
-        if (validate(email,EMAIL_REGEX) && !email.isEmpty())
-            return true;
-        else
-            return false;
+    public boolean validateEmail (String email) {
+        return (validate(email,EMAIL_REGEX) && !email.isEmpty());
     }
 
-    public static boolean validateDateOfBirth (String dateOfBirth) {
+    public boolean validateDateOfBirth (String dateOfBirth) {
 
         if (dateOfBirth.isEmpty())
             return false;
@@ -58,30 +69,25 @@ public class UserService {
             LocalDate birthday = LocalDate.parse(dateOfBirth, formatter);
             LocalDate today = LocalDate.now();
             Period age = Period.between(birthday, today);
-            return age.getYears() >= 13;
+            return age.getYears() >= MIN_AGE;
         } catch (DateTimeParseException e) {
             System.out.println("Invalid date format!");
             return false;
         }
     }
 
-    public static User validateUserAccount (String username, String password)
+    public  User validateUserAccount (String username, String password)
             throws InvalidUserAccountException {
 
         for (User user : users) {
-            if(user.getUsername().isEmpty() || user.getPassword().isEmpty())
-                throw new InvalidUserAccountException("Invalid username or password. Please try again.\n");
-
             if (user.getUsername().equals(username) && PasswordService.verify(password, user.getPassword()))
                 return user;
         }
+
         throw new InvalidUserAccountException("Invalid username or password. Please try again.\n");
     }
 
-    public static boolean validate(String user, String regex) {
-        if (Pattern.matches(regex,user))
-            return true;
-        else
-            return false;
+    public  boolean validate(String user, String regex) {
+        return user != null && Pattern.matches(regex, user);
     }
 }

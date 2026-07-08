@@ -9,7 +9,20 @@ import java.util.List;
 
 public class CommentService {
 
-    public static void addComment (User user, Post post, String text) throws EmptyCommentException {
+    private static CommentService instance;
+
+    private CommentService() {
+
+    }
+
+    public static CommentService getInstance() {
+        if (instance == null) {
+            instance = new CommentService();
+        }
+        return instance;
+    }
+
+    public void addComment (User user, Post post, String text) throws EmptyCommentException {
 
         if(text.isEmpty()){
             throw new EmptyCommentException("Error! Please introduce your text");
@@ -20,7 +33,7 @@ public class CommentService {
         }
     }
 
-    public static boolean replyToComment (User user, Post post, Comment parentComment, String text)
+    public void replyToComment (User user, Post post, Comment parentComment, String text)
             throws EmptyCommentException {
 
         if (text == null || text.trim().isEmpty())
@@ -30,11 +43,9 @@ public class CommentService {
 
         reply.setIdParent(parentComment.getId());
         post.addComment(reply, parentComment.getId());
-
-        return true;
     }
 
-    public static boolean viewComments (Post post) {
+    public boolean viewComments (Post post) {
 
         List<Comment> comments=post.getComments();
         if(comments.isEmpty())

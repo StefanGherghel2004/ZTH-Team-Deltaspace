@@ -36,8 +36,10 @@ public class AppHandler {
 
     private static Scanner sc = new Scanner(System.in);
 
-    private static PostHandler postHandler = PostHandler.getInstance();
-    private static CommunityHandler communityHandler=CommunityHandler.getInstance();
+    private static final PostHandler postHandler = PostHandler.getInstance();
+    private static final CommunityHandler communityHandler=CommunityHandler.getInstance();
+    private static final UserService userService = UserService.getInstance();
+    private static final CommentService commentService = CommentService.getInstance();
 
     private AppHandler() {
 
@@ -90,32 +92,32 @@ public class AppHandler {
                 System.out.println("Welcome to the registration page.");
                 System.out.println("Please enter your username (4-20 characters, alphanumeric):");
                 String username;
-                while (!UserService.validateUsername(username = sc.nextLine())){
+                while (!userService.validateUsername(username = sc.nextLine())){
                     System.out.println("Invalid username format. Please try again.");
                 }
 
                 System.out.println("Please enter your email address:");
                 String email;
-                while (!UserService.validateEmail(email = sc.nextLine())) {
+                while (!userService.validateEmail(email = sc.nextLine())) {
                     System.out.println("Invalid email format. Must be like 'user@domain.com'.");
                 }
 
                 System.out.println("Please enter your password (min 8 chars, 1 uppercase, " +
                         "1 lowercase, 1 number):");
                 String password;
-                while (!UserService.validatePassword(password = sc.nextLine())) {
+                while (!userService.validatePassword(password = sc.nextLine())) {
                     System.out.println("Invalid password format. Please ensure it meets the requirements.");
                 }
 
                 System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
                 String dateOfBirth;
-                while (!UserService.validateDateOfBirth(dateOfBirth = sc.nextLine())) {
+                while (!userService.validateDateOfBirth(dateOfBirth = sc.nextLine())) {
                     System.out.println("Invalid date of birth format. Ensure the format is correct " +
                             "(e.g., 15-08-2010) and that you are at least 13 years old.");
                 }
 
                 password = PasswordService.hash(password);
-                UserService.addUser(username, email, password, dateOfBirth);
+                userService.addUser(username, email, password, dateOfBirth);
                 System.out.println("Registration successful! Welcome to our platform.");
 
                 break;
@@ -123,24 +125,24 @@ public class AppHandler {
                 User loggedInUser;
                 System.out.println("Welcome to the login page.");
                 while (true) {
-                    System.out.print("Insert your username:");
+                    System.out.println("Insert your username:");
                     String loginUsername = sc.nextLine();
 
-                    System.out.print("Insert your password:");
+                    System.out.println("Insert your password:");
                     String loginPassword = sc.nextLine();
 
                     try{
-                        loggedInUser = UserService.validateUserAccount(loginUsername,loginPassword);
+                        loggedInUser = userService.validateUserAccount(loginUsername,loginPassword);
+                        System.out.println("Successfully logged in into your account - "
+                                           + loggedInUser.getUsername());
                         break;
                     } catch (InvalidUserAccountException e){
                         System.out.println(e.getMessage());
                     }
                 }
 
-                if (loggedInUser != null) {
-                    currentUser = loggedInUser;
-                    currentState = State.LOGGED_IN;
-                }
+                currentUser = loggedInUser;
+                currentState = State.LOGGED_IN;
                 break;
             case 3:
                 System.out.println("Shutting down...");
@@ -288,7 +290,7 @@ public class AppHandler {
                     System.out.println("Write Comment: ");
                     String text = sc.nextLine();
                     try {
-                        CommentService.addComment(currentUser, currentPost, text);
+                        commentService.addComment(currentUser, currentPost, text);
                         System.out.println("Comment added successfully!");
                         break;
                     } catch (EmptyCommentException e) {
@@ -334,15 +336,11 @@ public class AppHandler {
                 System.out.print("Write reply: ");
                 String text = sc.nextLine().trim();
 
-                if (!text.isEmpty()) {
-                    try {
-                        if (CommentService.replyToComment(currentUser, currentPost, currentComment, text))
-                            System.out.println("Reply added successfully!");
-                    } catch (EmptyCommentException e) {
-                        System.out.println(e.getMessage());
-                    }
-                } else {
-                    System.out.println("Reply cannot be empty!");
+                try {
+                    commentService.replyToComment(currentUser, currentPost, currentComment, text);
+                    System.out.println("Reply added successfully!");
+                } catch (EmptyCommentException e) {
+                    System.out.println(e.getMessage());
                 }
                 break;
             case 2:
