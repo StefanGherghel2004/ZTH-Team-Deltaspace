@@ -88,60 +88,10 @@ public class AppHandler {
 
         switch(command) {
             case 1:
-                System.out.println("Welcome to the registration page.");
-                System.out.println("Please enter your username (4-20 characters, alphanumeric):");
-                String username;
-                while (!userService.validateUsername(username = sc.nextLine())){
-                    System.out.println("Invalid username format. Please try again.");
-                }
-
-                System.out.println("Please enter your email address:");
-                String email;
-                while (!userService.validateEmail(email = sc.nextLine())) {
-                    System.out.println("Invalid email format. Must be like 'user@domain.com'.");
-                }
-
-                System.out.println("Please enter your password (min 8 chars, 1 uppercase, " +
-                        "1 lowercase, 1 number):");
-                String password;
-                while (!userService.validatePassword(password = sc.nextLine())) {
-                    System.out.println("Invalid password format. Please ensure it meets the requirements.");
-                }
-
-                System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
-                String dateOfBirth;
-                while (!userService.validateDateOfBirth(dateOfBirth = sc.nextLine())) {
-                    System.out.println("Invalid date of birth format. Ensure the format is correct " +
-                            "(e.g., 15-08-2010) and that you are at least 13 years old.");
-                }
-
-                password = PasswordService.hash(password);
-                userService.addUser(username, email, password, dateOfBirth);
-                System.out.println("Registration successful! Welcome to our platform.");
-
+                userRegistration();
                 break;
             case 2:
-                User loggedInUser;
-                System.out.println("Welcome to the login page.");
-                while (true) {
-                    System.out.println("Insert your username:");
-                    String loginUsername = sc.nextLine();
-
-                    System.out.println("Insert your password:");
-                    String loginPassword = sc.nextLine();
-
-                    try{
-                        loggedInUser = userService.validateUserAccount(loginUsername,loginPassword);
-                        System.out.println("Successfully logged in into your account - "
-                                           + loggedInUser.getUsername());
-                        break;
-                    } catch (InvalidUserAccountException e){
-                        System.out.println(e.getMessage());
-                    }
-                }
-
-                currentUser = loggedInUser;
-                currentState = State.LOGGED_IN;
+                userLogin();
                 break;
             case 3:
                 System.out.println("Shutting down...");
@@ -182,49 +132,6 @@ public class AppHandler {
         return true;
     }
 
-    private void createCommunity()  {
-        System.out.println("\n--- Create Community ---");
-        System.out.print("Please enter community name: \nr/");
-        String communityName = "r/" + sc.nextLine().trim();
-        List<String> topics= communityService.getAvailableTopics();
-
-        int choice;
-        String selectedTopic;
-        System.out.println("TOPICS LIST");
-        for(String i:topics){
-            System.out.println((topics.indexOf(i) + 1) + ". " + i);
-        }
-
-        while (true) {
-            System.out.print("Choose an option (1-" + topics.size() + "): ");
-            try {
-                choice = Integer.parseInt(sc.nextLine().trim());
-
-                if (choice < 1 || choice > topics.size()) {
-                    System.out.println("Invalid option. Please enter a valid number.");
-                    continue;
-                }
-
-                selectedTopic = topics.get(choice - 1);
-                break;
-
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number from the list.");
-            }
-        }
-        System.out.println("Please Enter Community Description");
-        String description=sc.nextLine();
-
-
-        try {
-            communityService.addCommunity(communityName, selectedTopic, description);
-            System.out.println("Community " + communityName + " successfully created.");
-            currentState = State.LOGGED_IN;
-        } catch (InvalidCommunityException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
     private boolean handleShowCommunities() {
         System.out.println("\n--- Communities ---");
         List<Community> communities = communityService.getCommunities();
@@ -326,43 +233,6 @@ public class AppHandler {
         return true;
     }
 
-    private void createPost(){
-        System.out.println("Welcome to the post creation page.");
-        Community targetCommunity=currentCommunity;
-        if (targetCommunity == null) {
-            System.out.print("Please enter the community in which you would like to post " +
-                    "\n(or press Enter to post to u/" + currentUser.getUsername() + "): r/");
-
-            String input = sc.nextLine().trim();
-
-            if (input.isEmpty()) {
-                System.out.println("Posting to your profile (u/" + currentUser.getUsername() + ").");
-            } else {
-                String communityName = "r/" + input;
-                targetCommunity = communityService.getCommunityByName(communityName);
-
-                if (targetCommunity == null) {
-                    System.out.println("Community not found! Posting to your profile instead.");
-                }
-            }
-
-        }
-        System.out.println("Please enter post title:");
-        String postTitle = sc.nextLine();
-
-        System.out.println("Please enter post contents:");
-        String postContents = sc.nextLine();
-
-        System.out.println("Please enter image link (or press Enter to skip):");
-        String imageLink = sc.nextLine();
-        if (imageLink.trim().isEmpty()) {
-            imageLink = null;
-        }
-        currentPost= postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
-        System.out.println("Post created successfully!");
-        currentState=State.ON_POST;
-    }
-
     private boolean handleOnPost() {
         System.out.println("\n--- Viewing Post ---");
         System.out.println("ID: " + currentPost.getPostID());
@@ -390,53 +260,13 @@ public class AppHandler {
 
         switch(command){
             case 1:
-                List<Comment> flatCommentsList = currentPost.getComments();
-                if (flatCommentsList == null || flatCommentsList.isEmpty()) {
-                    System.out.println("\n(No comments yet. Be the first to reply!)");
-                    return true;
-                }
-
-                System.out.println("\n--- Discussion Thread ---");
-
-                Map<Integer, List<Comment>> commentTree = new HashMap<>();
-                for (Comment comment : flatCommentsList) {
-                    commentTree.putIfAbsent(comment.getIdParent(), new ArrayList<>());
-                    commentTree.get(comment.getIdParent()).add(comment);
-                }
-
-                printThread(-1, commentTree, 0);
-
-                System.out.print("\nPress Enter to return to the post menu...");
-                sc.nextLine();
+                showCommentsThread();
                 break;
             case 2:
-                while(true) {
-                    System.out.println("Write Comment: ");
-                    String text = sc.nextLine();
-                    try {
-                        commentService.addComment(currentUser, currentPost, text);
-                        System.out.println("Comment added successfully!");
-                        break;
-                    } catch (EmptyCommentException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
+                writeCommentToPost();
                 break;
             case 3:
-                System.out.print("Enter Comment ID to select: ");
-                try {
-                    int commentId = Integer.parseInt(sc.nextLine().trim());
-                    Comment foundComment = currentPost.findCommentById(commentId);
-
-                    if (foundComment != null) {
-                        currentComment = foundComment;
-                        currentState = State.ON_COMMENT;
-                    } else {
-                        System.out.println("Comment not found!");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid ID format!");
-                }
+                selectCommentToReply();
                 break;
             case 4:
                 currentPost = null;
@@ -449,24 +279,6 @@ public class AppHandler {
                 break;
         }
         return true;
-    }
-
-    private void printThread(int parentId, Map<Integer, List<Comment>> commentTree, int depth) {
-
-        List<Comment> replies = commentTree.get(parentId);
-
-        if (replies != null) {
-            for (Comment reply : replies) {
-
-                String indent = "    ".repeat(depth);
-                String branch = depth > 0 ? "|_ " : "";
-
-
-                System.out.println(indent + branch + "[" + reply.getUsername() + "]: " + reply.getText() + "  (ID: " + reply.getId() + ")");
-
-                printThread(reply.getId(), commentTree, depth + 1);
-            }
-        }
     }
 
     private boolean handleOnComment() {
@@ -546,6 +358,213 @@ public class AppHandler {
         }
 
         return true;
+    }
+
+    private void userLogin() {
+        System.out.println("Welcome to the login page.");
+        while (true) {
+            System.out.println("Insert your username:");
+            String loginUsername = sc.nextLine();
+
+            System.out.println("Insert your password:");
+            String loginPassword = sc.nextLine();
+
+            try {
+                currentUser = userService.validateUserAccount(loginUsername, loginPassword);
+                System.out.println("Successfully logged in into your account - " + currentUser.getUsername());
+                currentState = State.LOGGED_IN;
+                break;
+            } catch (InvalidUserAccountException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void userRegistration() {
+        System.out.println("Welcome to the registration page.");
+
+        System.out.println("Please enter your username (4-20 characters, alphanumeric):");
+        String username;
+        while (!userService.validateUsername(username = sc.nextLine())){
+            System.out.println("Invalid username format. Please try again.");
+        }
+
+        System.out.println("Please enter your email address:");
+        String email;
+        while (!userService.validateEmail(email = sc.nextLine())) {
+            System.out.println("Invalid email format. Must be like 'user@domain.com'.");
+        }
+
+        System.out.println("Please enter your password (min 8 chars, 1 uppercase, " +
+                "1 lowercase, 1 number):");
+        String password;
+        while (!userService.validatePassword(password = sc.nextLine())) {
+            System.out.println("Invalid password format. Please ensure it meets the requirements.");
+        }
+
+        System.out.println("Please enter your date of birth (DD-MM-YYYY): ");
+        String dateOfBirth;
+        while (!userService.validateDateOfBirth(dateOfBirth = sc.nextLine())) {
+            System.out.println("Invalid date of birth format. Ensure the format is correct " +
+                    "(e.g., 15-08-2010) and that you are at least 13 years old.");
+        }
+
+        password = PasswordService.hash(password);
+        userService.addUser(username, email, password, dateOfBirth);
+        System.out.println("Registration successful! Welcome to our platform.");
+    }
+
+
+    private void createCommunity()  {
+        System.out.println("\n--- Create Community ---");
+        System.out.print("Please enter community name: \nr/");
+        String communityName = "r/" + sc.nextLine().trim();
+        List<String> topics= communityService.getAvailableTopics();
+
+        int choice;
+        String selectedTopic;
+        System.out.println("TOPICS LIST");
+        for(String i:topics){
+            System.out.println((topics.indexOf(i) + 1) + ". " + i);
+        }
+
+        while (true) {
+            System.out.print("Choose an option (1-" + topics.size() + "): ");
+            try {
+                choice = Integer.parseInt(sc.nextLine().trim());
+
+                if (choice < 1 || choice > topics.size()) {
+                    System.out.println("Invalid option. Please enter a valid number.");
+                    continue;
+                }
+
+                selectedTopic = topics.get(choice - 1);
+                break;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number from the list.");
+            }
+        }
+        System.out.println("Please Enter Community Description");
+        String description=sc.nextLine();
+
+
+        try {
+            communityService.addCommunity(communityName, selectedTopic, description);
+            System.out.println("Community " + communityName + " successfully created.");
+        } catch (InvalidCommunityException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+
+    private void createPost(){
+        System.out.println("Welcome to the post creation page.");
+        Community targetCommunity=currentCommunity;
+        if (targetCommunity == null) {
+            System.out.print("Please enter the community in which you would like to post " +
+                    "\n(or press Enter to post to u/" + currentUser.getUsername() + "): r/");
+
+            String input = sc.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("Posting to your profile (u/" + currentUser.getUsername() + ").");
+            } else {
+                String communityName = "r/" + input;
+                targetCommunity = communityService.getCommunityByName(communityName);
+
+                if (targetCommunity == null) {
+                    System.out.println("Community not found! Posting to your profile instead.");
+                }
+            }
+
+        }
+        System.out.println("Please enter post title:");
+        String postTitle = sc.nextLine();
+
+        System.out.println("Please enter post contents:");
+        String postContents = sc.nextLine();
+
+        System.out.println("Please enter image link (or press Enter to skip):");
+        String imageLink = sc.nextLine();
+        if (imageLink.trim().isEmpty()) {
+            imageLink = null;
+        }
+        currentPost= postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
+        System.out.println("Post created successfully!");
+        currentState=State.ON_POST;
+    }
+
+
+    private void printThread(int parentId, Map<Integer, List<Comment>> commentTree, int depth) {
+
+        List<Comment> replies = commentTree.get(parentId);
+
+        if (replies != null) {
+            for (Comment reply : replies) {
+
+                String indent = "    ".repeat(depth);
+                String branch = depth > 0 ? "|_ " : "";
+
+
+                System.out.println(indent + branch + "[" + reply.getUsername() + "]: " + reply.getText() + "  (ID: " + reply.getId() + ")");
+
+                printThread(reply.getId(), commentTree, depth + 1);
+            }
+        }
+    }
+
+    private void showCommentsThread() {
+        List<Comment> flatCommentsList = currentPost.getComments();
+        if (flatCommentsList == null || flatCommentsList.isEmpty()) {
+            System.out.println("\n(No comments yet. Be the first to reply!)");
+            return;
+        }
+
+        System.out.println("\n--- Discussion Thread ---");
+
+        Map<Integer, List<Comment>> commentTree = new HashMap<>();
+        for (Comment comment : flatCommentsList) {
+            commentTree.putIfAbsent(comment.getIdParent(), new ArrayList<>());
+            commentTree.get(comment.getIdParent()).add(comment);
+        }
+
+        printThread(-1, commentTree, 0);
+
+        System.out.print("\nPress Enter to return to the post menu...");
+        sc.nextLine();
+    }
+
+    private void writeCommentToPost() {
+        while(true) {
+            System.out.println("Write Comment: ");
+            String text = sc.nextLine();
+            try {
+                commentService.addComment(currentUser, currentPost, text);
+                System.out.println("Comment added successfully!");
+                break;
+            } catch (EmptyCommentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void selectCommentToReply() {
+        System.out.print("Enter Comment ID to select: ");
+        try {
+            int commentId = Integer.parseInt(sc.nextLine().trim());
+            Comment foundComment = currentPost.findCommentById(commentId);
+
+            if (foundComment != null) {
+                currentComment = foundComment;
+                currentState = State.ON_COMMENT;
+            } else {
+                System.out.println("Comment not found!");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid ID format!");
+        }
     }
 
     // method will return just after introducing a valid option in the range
