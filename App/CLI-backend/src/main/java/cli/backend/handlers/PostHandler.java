@@ -39,7 +39,7 @@ public class PostHandler {
             String communityName = scan.nextLine().trim();
 
             if (!communityName.isEmpty()) {
-                targetCommunity = CommunityHandler.getInstance().findCommunityByName("r/" + communityName);
+                //targetCommunity = CommunityHandler.getInstance().findCommunityByName("r/" + communityName);
                 if (targetCommunity == null) {
                     System.out.println("Community not found! Posting to your profile instead.");
                 }
