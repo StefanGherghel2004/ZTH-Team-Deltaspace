@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cli.backend</groupId>
-    <artifactId>CLI-backend</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>Deltaspace</artifactId>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
