@@ -18,10 +18,8 @@ public class AppHandler {
         LOGGED_IN,
         SHOW_FEED,
         SHOW_COMMUNITIES,
-        CREATE_COMMUNITY,
         IN_COMMUNITY,
         SHOW_POSTS_COMMUNITY,
-        CREATE_POST,
         ON_POST,
         ON_COMMENT
     }
@@ -69,13 +67,11 @@ public class AppHandler {
     private boolean handleState() {
         return switch (currentState) {
             case NOT_LOGGED_IN -> handleNotLoggedIn();
-            case CREATE_COMMUNITY -> handleCreateCommunity();
             case LOGGED_IN -> handleLoggedIn();
             case SHOW_FEED -> handleShowFeed();
             case SHOW_COMMUNITIES -> handleShowCommunities();
             case IN_COMMUNITY -> handleInCommunity();
             case SHOW_POSTS_COMMUNITY -> handleShowPostsInCommunity();
-            case CREATE_POST -> handleCreatePost();
             case ON_POST -> handleOnPost();
             case ON_COMMENT -> handleOnComment();
             default -> false;
@@ -169,10 +165,10 @@ public class AppHandler {
                 currentState = State.SHOW_FEED;
                 break;
             case 2:
-                currentState=State.CREATE_COMMUNITY;
+                createCommunity();
                 break;
             case 3:
-                currentState=State.CREATE_POST;
+                createPost();
                 break;
             case 4:
                 currentState = State.SHOW_COMMUNITIES;
@@ -186,7 +182,7 @@ public class AppHandler {
         return true;
     }
 
-    private boolean handleCreateCommunity()  {
+    private void createCommunity()  {
         System.out.println("\n--- Create Community ---");
         System.out.print("Please enter community name: \nr/");
         String communityName = "r/" + sc.nextLine().trim();
@@ -227,7 +223,6 @@ public class AppHandler {
         } catch (InvalidCommunityException e) {
             System.out.println(e.getMessage());
         }
-        return true;
 
     }
     private boolean handleShowCommunities() {
@@ -276,7 +271,7 @@ public class AppHandler {
                 currentState = State.SHOW_POSTS_COMMUNITY;
                 break;
             case 2:
-                currentState = State.CREATE_POST;
+                createPost();
                 break;
             case 3:
                 System.out.println("Returning to Main Menu...");
@@ -331,17 +326,24 @@ public class AppHandler {
         return true;
     }
 
-    private boolean handleCreatePost(){
+    private void createPost(){
         System.out.println("Welcome to the post creation page.");
         Community targetCommunity=currentCommunity;
         if (targetCommunity == null) {
             System.out.print("Please enter the community in which you would like to post " +
                     "\n(or press Enter to post to u/" + currentUser.getUsername() + "): r/");
-            String communityName = "r/" + sc.nextLine().trim();
 
-            targetCommunity = communityService.getCommunityByName(communityName);
-            if (targetCommunity == null) {
-                System.out.println("Community not found! Posting to your profile instead.");
+            String input = sc.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("Posting to your profile (u/" + currentUser.getUsername() + ").");
+            } else {
+                String communityName = "r/" + input;
+                targetCommunity = communityService.getCommunityByName(communityName);
+
+                if (targetCommunity == null) {
+                    System.out.println("Community not found! Posting to your profile instead.");
+                }
             }
 
         }
@@ -359,8 +361,8 @@ public class AppHandler {
         currentPost= postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
         System.out.println("Post created successfully!");
         currentState=State.ON_POST;
-        return true;
     }
+
     private boolean handleOnPost() {
         System.out.println("\n--- Viewing Post ---");
         System.out.println("ID: " + currentPost.getPostID());
