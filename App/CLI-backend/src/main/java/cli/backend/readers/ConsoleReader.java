@@ -18,6 +18,7 @@ public class ConsoleReader {
         this.scanner = new Scanner(System.in);
     }
 
+    //Reads a string value and returns it only if it is a integer
     public int readInt () {
 
         while (true) {
@@ -32,6 +33,7 @@ public class ConsoleReader {
         }
     }
 
+    //Reads a string value and returns it only if it is a integer and in a specific range
     public int readIntInRange (int min, int max) {
 
         while (true) {
