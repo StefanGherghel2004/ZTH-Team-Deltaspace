@@ -5,12 +5,11 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
-import cli.backend.exceptions.InvalidUserAccount;
+import cli.backend.exceptions.InvalidUserAccountException;
 import cli.backend.services.CommentService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class AppHandler {
@@ -133,7 +132,7 @@ public class AppHandler {
                     try{
                         loggedInUser = UserService.validateUserAccount(loginUsername,loginPassword);
                         break;
-                    } catch (InvalidUserAccount e){
+                    } catch (InvalidUserAccountException e){
                         System.out.println(e.getMessage());
                     }
                 }

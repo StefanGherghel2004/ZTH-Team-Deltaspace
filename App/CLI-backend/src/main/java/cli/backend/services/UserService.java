@@ -1,7 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.User;
-import cli.backend.exceptions.InvalidUserAccount;
+import cli.backend.exceptions.InvalidUserAccountException;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -66,16 +66,16 @@ public class UserService {
     }
 
     public static User validateUserAccount (String username, String password)
-            throws InvalidUserAccount {
+            throws InvalidUserAccountException {
 
         for (User user : users) {
             if(user.getUsername().isEmpty() || user.getPassword().isEmpty())
-                throw new InvalidUserAccount("Invalid username or password. Please try again.\n");
+                throw new InvalidUserAccountException("Invalid username or password. Please try again.\n");
 
             if (user.getUsername().equals(username) && PasswordService.verify(password, user.getPassword()))
                 return user;
         }
-        throw new InvalidUserAccount("Invalid username or password. Please try again.\n");
+        throw new InvalidUserAccountException("Invalid username or password. Please try again.\n");
     }
 
     public static boolean validate(String user, String regex) {
