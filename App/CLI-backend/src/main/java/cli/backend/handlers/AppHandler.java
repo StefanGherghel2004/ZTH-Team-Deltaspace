@@ -36,10 +36,8 @@ public class AppHandler {
 
     private static Scanner sc = new Scanner(System.in);
 
-    private static UserHandler userHandler = UserHandler.getInstance();
     private static PostHandler postHandler = PostHandler.getInstance();
     private static CommunityHandler communityHandler=CommunityHandler.getInstance();
-    private static CommentHandler commentHandler= CommentHandler.getInstance();
 
     private AppHandler() {
 
@@ -116,11 +114,12 @@ public class AppHandler {
                 }
 
                 password = PasswordService.hash(password);
-                UserHandler.users.add(new User(username, email, password, dateOfBirth));
+                UserService.users.add(new User(username, email, password, dateOfBirth));
                 System.out.println("Registration successful! Welcome to our platform.");
 
                 break;
             case 2:
+                User loggedInUser;
                 System.out.println("Welcome to the login page.");
                 while (true) {
                     System.out.print("Insert your username:");
@@ -129,14 +128,18 @@ public class AppHandler {
                     System.out.print("Insert your password:");
                     String loginPassword = sc.nextLine();
 
-                    if (UserService.validateUserAccount(loginUsername, loginPassword, UserHandler.users)) {
+                    if (UserService.validateUserAccount(loginUsername, loginPassword, UserService.users)) {
                         System.out.println("\nLogin successful! Welcome back.");
-
+                        loggedInUser = UserService.users.stream().filter(u ->
+                                        u.getUsername().equals(loginUsername) &&
+                                                u.getPassword().equals(loginPassword))
+                                .findFirst()
+                                .orElse(null);
                         break;
                     } else
                         System.out.println("Invalid username or password. Please try again.\n");
                 }
-                User loggedInUser = userHandler.userLogin();
+
                 if (loggedInUser != null) {
                     currentUser = loggedInUser;
                     currentState = State.LOGGED_IN;

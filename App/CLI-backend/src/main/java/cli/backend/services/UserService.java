@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,8 @@ public class UserService {
     private static final String USERNAME_REGEX = "^[a-zA-Z0-9._-]{4,20}$";
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+
+    public static final List<User> users = new ArrayList<>();
 
     public static boolean validateUsername (String username) {
 
