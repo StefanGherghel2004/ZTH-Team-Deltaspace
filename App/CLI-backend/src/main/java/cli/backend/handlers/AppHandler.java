@@ -544,11 +544,18 @@ public class AppHandler {
         if (imageLink.trim().isEmpty()) {
             imageLink = null;
         }
-        System.out.println("Is your post NSFW?");
+        System.out.println("Is your post NSFW? [yes/no]");
         boolean NSFW = consoleReader.readString().equalsIgnoreCase("yes");
-        currentPost = postService.addPost(currentUser, postTitle, postContents, imageLink, NSFW, targetCommunity);
-        System.out.println("Post created successfully!");
-        currentState = State.ON_POST;
+        if(NSFW && !currentUser.checkAge()) {
+            System.out.println("You must be at least 18 years old to create an NSFW post.");
+            currentState=State.LOGGED_IN;
+       }
+        else{
+            currentPost = postService.addPost(currentUser, postTitle, postContents, imageLink, NSFW, targetCommunity);
+            System.out.println("Post created successfully!");
+            currentState = State.ON_POST;
+        }
+
     }
 
 
