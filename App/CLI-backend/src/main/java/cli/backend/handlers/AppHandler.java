@@ -14,6 +14,9 @@ import cli.backend.services.CommentService;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
+import cli.backend.userinterface.MainMenu;
+import cli.backend.userinterface.Menu;
+import cli.backend.userinterface.StartMenu;
 
 import java.util.List;
 
@@ -45,6 +48,7 @@ public class AppHandler {
     private static final UserService userService = UserService.getInstance();
     private static final CommentService commentService = CommentService.getInstance();
     private static final CommunityService communityService = CommunityService.getInstance();
+    private static Menu menus;
 
     private AppHandler() {
 
@@ -85,10 +89,9 @@ public class AppHandler {
     }
 
     private boolean handleNotLoggedIn() {
-        System.out.println("\n--- Welcome to Deltaspace platform ---");
-        System.out.println("1. Register");
-        System.out.println("2. Login");
-        System.out.println("3. Quit");
+
+        menus = new StartMenu();
+        menus.showMenu();
 
         int command = consoleReader.readIntInRange(1,3);
 
@@ -107,12 +110,9 @@ public class AppHandler {
     }
 
     private boolean handleLoggedIn() {
-        System.out.println("\n--- Main Menu ---");
-        System.out.println("1. Show feed");
-        System.out.println("2. Create community");
-        System.out.println("3. Create Post");
-        System.out.println("4. Show communities");
-        System.out.println("5. Logout");
+
+        menus = new MainMenu();
+        menus.showMenu();
 
         int command = consoleReader.readIntInRange(1,5);
 
