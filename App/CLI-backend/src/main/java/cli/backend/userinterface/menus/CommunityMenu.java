@@ -1,29 +1,22 @@
-package cli.backend.userinterface;
+package cli.backend.userinterface.menus;
 
 import cli.backend.Community;
-
-import java.util.ArrayList;
-import java.util.List;
+import cli.backend.services.CommunityService;
 
 public class CommunityMenu extends Menu {
 
-    private List<Community> communityList = new ArrayList<>();
+    private CommunityService communityService = CommunityService.getInstance();
 
     @Override
     public void showMenu() {
         System.out.println("\n--- Communities ---");
-        if (communityList.isEmpty()) {
+        if (communityService.getCommunities().isEmpty()) {
             System.out.println("No communities created");
         } else {
-            for (Community c : communityList)
+            for (Community c : communityService.getCommunities())
                 System.out.println(c.getNickname());
         }
 
         System.out.print("\nChoose a community (or press Enter to go back): ");
-    }
-
-    public void setCommunityList (List<Community> communityList) {
-
-        this.communityList = communityList;
     }
 }

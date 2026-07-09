@@ -5,17 +5,19 @@ import java.util.Scanner;
 public class ConsoleReader {
 
     private final Scanner scanner;
-
-    private enum COMMANDS {
-        BACK,
-        NEXT,
-        OPEN,
-        CLOSE
-    }
+    private static ConsoleReader instance = null;
 
     public ConsoleReader () {
 
         this.scanner = new Scanner(System.in);
+    }
+
+    public static ConsoleReader getInstance () {
+
+        if (instance == null)
+            instance = new ConsoleReader();
+
+        return instance;
     }
 
     //Reads a string value and returns it only if it is an integer

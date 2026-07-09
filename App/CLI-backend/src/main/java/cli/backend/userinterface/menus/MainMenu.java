@@ -1,4 +1,4 @@
-package cli.backend.userinterface;
+package cli.backend.userinterface.menus;
 
 public class MainMenu extends Menu{
 

@@ -14,7 +14,7 @@ import cli.backend.services.CommentService;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
-import cli.backend.userinterface.*;
+import cli.backend.userinterface.menus.*;
 
 import java.util.List;
 
@@ -40,9 +40,9 @@ public class AppHandler {
 
     private static AppHandler instance;
 
-    private static ConsoleReader consoleReader = new ConsoleReader();
+    private static ConsoleReader consoleReader = ConsoleReader.getInstance();
 
-    private static final PostService postService=PostService.getInstance();
+    private static final PostService postService = PostService.getInstance();
     private static final UserService userService = UserService.getInstance();
     private static final CommentService commentService = CommentService.getInstance();
     private static final CommunityService communityService = CommunityService.getInstance();
@@ -171,8 +171,8 @@ public class AppHandler {
 
         List<Community> communities = communityService.getCommunities();
         menus = new CommunityMenu();
-        ((CommunityMenu)menus).setCommunityList(communities);
         menus.showMenu();
+
         if (communities.isEmpty())
             currentState = State.LOGGED_IN;
 
@@ -196,8 +196,7 @@ public class AppHandler {
 
     private boolean handleInCommunity() {
 
-        menus = new InCommunityMenu();
-        ((InCommunityMenu)menus).setCurrentCommunity(currentCommunity);
+        menus = new InCommunityMenu(currentCommunity);
         menus.showMenu();
 
         int command = consoleReader.readIntInRange(1, 3);
@@ -285,15 +284,8 @@ public class AppHandler {
         System.out.println("Content: " + currentPost.getPostContents());
         System.out.println("Comments counter: " + currentPost.getCommentsCount() + "\n");
 
-        System.out.println("1. Show comments");
-        System.out.println("2. Add comment");
-        System.out.println("3. Select comment (Reply)");
-        if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getUser().getUsername())) {
-            System.out.println("4. Back to Main Menu");
-        }
-        else {
-            System.out.println("4. Back to Community");
-        }
+        menus = new PostMenu(currentPost);
+        menus.showMenu();
 
         int command = consoleReader.readIntInRange(1, 4);
 
@@ -321,11 +313,8 @@ public class AppHandler {
     }
 
     private boolean handleOnComment() {
-        System.out.println("\n--- Selected Comment ---");
-        System.out.println("[" + currentComment.getUsername() + "]: " + currentComment.getText());
-
-        System.out.println("\n1. Reply");
-        System.out.println("2. Back to Post");
+        menus = new CommentMenu(currentComment);
+        menus.showMenu();
 
         int command = consoleReader.readIntInRange(1, 2);
 
