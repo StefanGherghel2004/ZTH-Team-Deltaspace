@@ -241,6 +241,8 @@ public class AppHandler {
         System.out.print("Choose a post [ID] (or press Enter to go back): ");
         String input = consoleReader.readString();
 
+
+
         if (input.isEmpty()) {
             currentState = State.IN_COMMUNITY;
             return true;
@@ -251,7 +253,14 @@ public class AppHandler {
             currentPost = currentCommunity.findPostById(id);
 
             if(currentPost != null){
-                currentState = State.ON_POST;
+                if(currentPost.getNSFW() && !currentUser.checkAge()) {
+                    System.out.println("This post is marked as NSFW. You must be at least 18 years old to view it.");
+                    currentPost = null;
+                    currentState=State.IN_COMMUNITY;
+                }
+                else {
+                    currentState = State.ON_POST;
+                }
             } else {
                 System.out.println("Post not found!");
             }
@@ -268,6 +277,7 @@ public class AppHandler {
         System.out.println("Community: " + currentPost.getCommunityName());
         System.out.println("Author: " + currentPost.getUser().getUsername());
         System.out.println("Title: " + currentPost.getPostTitle());
+        System.out.println("NSFW: " + (currentPost.getNSFW()? "Yes":"No"));
         if (currentPost.getImageLink() != null) {
 
             System.out.println("Image: " + currentPost.getImageLink());
@@ -378,7 +388,14 @@ public class AppHandler {
 
             if(foundPost != null){
                 currentPost = foundPost;
-                currentState = State.ON_POST;
+                if(currentPost.getNSFW() && !currentUser.checkAge()) {
+                    System.out.println("This post is marked as NSFW. You must be at least 18 years old to view it.");
+                    currentPost = null;
+                    currentState=State.SHOW_FEED;
+                }
+                else {
+                    currentState = State.ON_POST;
+                }
             } else {
                 System.out.println("Post not found in feed!");
             }
@@ -520,9 +537,18 @@ public class AppHandler {
         if (imageLink.trim().isEmpty()) {
             imageLink = null;
         }
-        currentPost= postService.addPost(currentUser,postTitle,postContents,imageLink,targetCommunity);
-        System.out.println("Post created successfully!");
-        currentState=State.ON_POST;
+        System.out.println("Is your post NSFW? [yes/no]");
+        boolean NSFW = consoleReader.readString().equalsIgnoreCase("yes");
+        if(NSFW && !currentUser.checkAge()) {
+            System.out.println("You must be at least 18 years old to create an NSFW post.");
+            currentState=State.LOGGED_IN;
+       }
+        else{
+            currentPost = postService.addPost(currentUser, postTitle, postContents, imageLink, NSFW, targetCommunity);
+            System.out.println("Post created successfully!");
+            currentState = State.ON_POST;
+        }
+
     }
 
 

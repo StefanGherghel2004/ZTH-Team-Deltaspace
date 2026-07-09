@@ -14,9 +14,9 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private String imageLink;
     private String communityName;
-
+    private boolean NSFW=false;
     //Constructor
-    public Post (User user, String postTitle, String postContents, String imageLink, String community) {
+    public Post (User user, String postTitle, String postContents, String imageLink, boolean NSFW, String community) {
 
         this.postID = postIdIncrementation;
         postIdIncrementation++;
@@ -25,6 +25,7 @@ public class Post {
         this.imageLink = imageLink;
         this.postTitle = postTitle;
         this.postContents = postContents;
+        this.NSFW = NSFW;
         this.commentIdIncrementation = 0;
         this.communityName =community;
     }
@@ -70,6 +71,10 @@ public class Post {
         return communityName;
     }
 
+    public boolean getNSFW(){
+        return NSFW;
+    }
+
     //Setters
     public void setUser (User user) {
 
@@ -96,12 +101,17 @@ public class Post {
         this.communityName = communityName;
     }
 
+    public void SetNSFW(boolean NSFW) {
+        this.NSFW = NSFW;
+    }
+
     @Override
     public String toString () {
 
         return "Post{" + "id=" + postID + ", user=" + (user != null ? user.getUsername() : "null") +
                 ", title='" + postTitle + '\'' +
                 ", hasImage=" + (imageLink != null) +
+                ", NSFW=" + NSFW +
                 '}';
     }
 
