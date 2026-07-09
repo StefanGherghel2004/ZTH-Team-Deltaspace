@@ -395,7 +395,14 @@ public class AppHandler {
 
             if(foundPost != null){
                 currentPost = foundPost;
-                currentState = State.ON_POST;
+                if(currentPost.getNSFW() && !currentUser.checkAge()) {
+                    System.out.println("This post is marked as NSFW. You must be at least 18 years old to view it.");
+                    currentPost = null;
+                    currentState=State.SHOW_FEED;
+                }
+                else {
+                    currentState = State.ON_POST;
+                }
             } else {
                 System.out.println("Post not found in feed!");
             }
