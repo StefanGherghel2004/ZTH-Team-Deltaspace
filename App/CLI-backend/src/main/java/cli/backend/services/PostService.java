@@ -20,11 +20,11 @@ public class PostService {
         return instance;
     }
 
-    public Post addPost(User user,String postTitle, String postContents, String imageLink, Community currentCommunity){
+    public Post addPost(User user,String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity){
         Community targetCommunity = currentCommunity;
 
         String targetName = (targetCommunity != null) ? targetCommunity.getNickname() : "u/" + user.getUsername();
-        Post newPost = new Post(user, postTitle, postContents, imageLink, targetName);
+        Post newPost = new Post(user, postTitle, postContents, imageLink, NSFW, targetName);
         posts.add(newPost);
         if(targetCommunity != null) {
             targetCommunity.addPost(newPost);
@@ -43,6 +43,7 @@ public class PostService {
     public List<Post> getPosts(){
         return posts;
     }
+
     public Post findPostById(int id){
         for (Post p:posts){
             if(p.getPostID()==id) {

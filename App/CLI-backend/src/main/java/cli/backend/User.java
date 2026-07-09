@@ -43,4 +43,12 @@ public class User {
         return userID;
     }
 
+    public boolean checkAge(){
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate birthday=LocalDate.parse(dateOfBirth, formatter);
+        Period age = Period.between(birthday, today);
+        return age.getYears() >= 18;
+    }
+
 }
