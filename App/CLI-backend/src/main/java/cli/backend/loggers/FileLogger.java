@@ -1,15 +1,16 @@
 package cli.backend.loggers;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileLogger implements Loggable {
-    FileWriter writer;
+    BufferedWriter writer;
     private LogLevel level;
 
     public FileLogger(LogLevel logLevel, String filename) {
         try {
-            writer = new FileWriter(filename);
+            writer = new BufferedWriter(new FileWriter(filename));
         } catch (IOException e) {
             System.out.println("Error opening file: " + filename);
         }
@@ -20,6 +21,11 @@ public class FileLogger implements Loggable {
 
     @Override
     public void log(LogLevel level, String message) {
+
+        if (this.level != level) {
+            return;
+        }
+        
         try {
             writer.write(message + "\n");
             writer.flush();
