@@ -1,5 +1,8 @@
 package cli.backend.userinterface.menus;
 
+import cli.backend.commands.startmenu.LoginCommand;
+import cli.backend.commands.startmenu.QuitCommand;
+import cli.backend.commands.startmenu.RegisterCommand;
 import cli.backend.textformatters.Color;
 
 public class StartMenu extends Menu{
@@ -12,12 +15,16 @@ public class StartMenu extends Menu{
     Color.textCyan("██████╔╝███████╗███████╗██║   ██║  ██║███████║██║     ██║  ██║╚██████╗███████╗\n") +
     Color.textBrightCyan("╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝");
 
+    public StartMenu() {
+        addOption(1, "Register", new RegisterCommand());
+        addOption(2, "Login", new LoginCommand());
+        addOption(3, "Quit", new QuitCommand());
+    }
+
     @Override
     public void showMenu(){
         System.out.println(LOGO);
         System.out.println("\n--- Welcome to Deltaspace platform ---");
-        System.out.println("1. Register");
-        System.out.println("2. Login");
-        System.out.println("3. Quit");
+        super.showMenu();
     }
 }

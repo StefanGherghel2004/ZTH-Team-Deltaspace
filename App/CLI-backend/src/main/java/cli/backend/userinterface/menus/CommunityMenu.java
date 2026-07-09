@@ -1,22 +1,25 @@
 package cli.backend.userinterface.menus;
 
 import cli.backend.Community;
-import cli.backend.services.CommunityService;
+import cli.backend.commands.BackCommand;
+import cli.backend.commands.CreatePostCommand;
+import cli.backend.commands.communitymenu.ShowPostsInCommunityCommand;
 
 public class CommunityMenu extends Menu {
 
-    private CommunityService communityService = CommunityService.getInstance();
+    Community currentCommunity;
+
+    public CommunityMenu(Community currentCommunity) {
+        this.currentCommunity = currentCommunity;
+
+        addOption(1, "View Posts", new ShowPostsInCommunityCommand());
+        addOption(2, "Add Post", new CreatePostCommand());
+        addOption(3, "Return to Main Menu", new BackCommand());
+    }
 
     @Override
     public void showMenu() {
-        System.out.println("\n--- Communities ---");
-        if (communityService.getCommunities().isEmpty()) {
-            System.out.println("No communities created");
-        } else {
-            for (Community c : communityService.getCommunities())
-                System.out.println(c.getNickname());
-        }
-
-        System.out.print("\nChoose a community (or press Enter to go back): ");
+        System.out.println("\n--- " + currentCommunity.getNickname() + " ---");
+        super.showMenu();
     }
 }
