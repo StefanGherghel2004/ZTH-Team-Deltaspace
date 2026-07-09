@@ -1,10 +1,7 @@
-package cli.backend.userinterface;
+package cli.backend.userinterface.menus;
 
 import cli.backend.Community;
 import cli.backend.services.CommunityService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommunityMenu extends Menu {
 

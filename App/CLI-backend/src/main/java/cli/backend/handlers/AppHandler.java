@@ -14,7 +14,7 @@ import cli.backend.services.CommentService;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
-import cli.backend.userinterface.*;
+import cli.backend.userinterface.menus.*;
 
 import java.util.List;
 
@@ -40,9 +40,9 @@ public class AppHandler {
 
     private static AppHandler instance;
 
-    private static ConsoleReader consoleReader = new ConsoleReader();
+    private static ConsoleReader consoleReader = ConsoleReader.getInstance();
 
-    private static final PostService postService=PostService.getInstance();
+    private static final PostService postService = PostService.getInstance();
     private static final UserService userService = UserService.getInstance();
     private static final CommentService commentService = CommentService.getInstance();
     private static final CommunityService communityService = CommunityService.getInstance();
