@@ -1,18 +1,20 @@
 package cli.backend.userinterface;
 
+import cli.backend.textformatters.Color;
+
 public class StartMenu extends Menu{
+
+    private static final String LOGO =
+    Color.textBrightMagenta("██████╗ ███████╗██╗  ████████╗ █████╗ ███████╗██████╗  █████╗  ██████╗███████╗\n") +
+    Color.textMagenta("██╔══██╗██╔════╝██║  ╚══██╔══╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝\n") +
+    Color.textBlue("██║  ██║█████╗  ██║     ██║   ███████║███████╗██████╔╝███████║██║     █████╗\n") +
+    Color.textBrightBlue("██║  ██║██╔══╝  ██║     ██║   ██╔══██║╚════██║██╔═══╝ ██╔══██║██║     ██╔══╝\n") +
+    Color.textCyan("██████╔╝███████╗███████╗██║   ██║  ██║███████║██║     ██║  ██║╚██████╗███████╗\n") +
+    Color.textBrightCyan("╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝");
 
     @Override
     public void showMenu(){
-        String logo = """
-██████╗ ███████╗██╗  ████████╗ █████╗ ███████╗██████╗  █████╗  ██████╗███████╗
-██╔══██╗██╔════╝██║  ╚══██╔══╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝
-██║  ██║█████╗  ██║     ██║   ███████║███████╗██████╔╝███████║██║     █████╗
-██║  ██║██╔══╝  ██║     ██║   ██╔══██║╚════██║██╔═══╝ ██╔══██║██║     ██╔══╝
-██████╔╝███████╗███████╗██║   ██║  ██║███████║██║     ██║  ██║╚██████╗███████╗
-╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝
-""";
-        System.out.println(logo);
+        System.out.println(LOGO);
         System.out.println("\n--- Welcome to Deltaspace platform ---");
         System.out.println("1. Register");
         System.out.println("2. Login");

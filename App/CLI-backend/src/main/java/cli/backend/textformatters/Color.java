@@ -16,6 +16,10 @@ public class Color {
     private static final String TEXT_MAGENTA = "\u001b[35m";
     private static final String TEXT_CYAN = "\u001b[36m";
 
+    private static final String TEXT_BRIGHT_BLUE = "\u001b[34;1m";
+    private static final String TEXT_BRIGHT_MAGENTA = "\u001b[35;1m";
+    private static final String TEXT_BRIGHT_CYAN = "\u001b[36;1m";
+
     private static final String BG_RED = "\u001b[41m";
     private static final String BG_GREEN = "\u001b[42m";
     private static final String BG_YELLOW = "\u001b[43m";
@@ -60,13 +64,26 @@ public class Color {
         return apply(TEXT_BLUE, m);
     }
 
+    public static String textBrightBlue(String m) {
+        return apply(TEXT_BRIGHT_BLUE, m);
+    }
+
     public static String textMagenta(String m) {
         return apply(TEXT_MAGENTA, m);
+    }
+
+    public static String textBrightMagenta(String m) {
+        return apply(TEXT_BRIGHT_MAGENTA, m);
     }
 
     public static String textCyan(String m) {
         return apply(TEXT_CYAN, m);
     }
+
+    public static String textBrightCyan(String m) {
+        return apply(TEXT_BRIGHT_CYAN, m);
+    }
+
 
     // background color methods
     public static String bgRed(String m) {
