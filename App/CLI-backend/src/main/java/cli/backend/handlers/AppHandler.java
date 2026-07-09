@@ -14,9 +14,7 @@ import cli.backend.services.CommentService;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
-import cli.backend.userinterface.MainMenu;
-import cli.backend.userinterface.Menu;
-import cli.backend.userinterface.StartMenu;
+import cli.backend.userinterface.*;
 
 import java.util.List;
 
@@ -170,19 +168,14 @@ public class AppHandler {
     }
 
     private boolean handleShowCommunities() {
-        System.out.println("\n--- Communities ---");
-        List<Community> communities = communityService.getCommunities();
-        if (communities.isEmpty()) {
-            System.out.println("No communities created");
-            currentState = State.LOGGED_IN;
-            return true;
-        } else {
-            for (Community c : communities) {
-                System.out.println(c.getNickname());
-            }
-        }
 
-        System.out.print("\nChoose a community (or press Enter to go back): ");
+        List<Community> communities = communityService.getCommunities();
+        menus = new CommunityMenu();
+        ((CommunityMenu)menus).setCommunityList(communities);
+        menus.showMenu();
+        if (communities.isEmpty())
+            currentState = State.LOGGED_IN;
+
         String communityName = consoleReader.readString();
 
         if (communityName.isEmpty()) {
@@ -202,10 +195,10 @@ public class AppHandler {
     }
 
     private boolean handleInCommunity() {
-        System.out.println("\n--- " + currentCommunity.getNickname() + " ---");
-        System.out.println("1. View Posts");
-        System.out.println("2. Add Post");
-        System.out.println("3. Return to Main Menu");
+
+        menus = new InCommunityMenu();
+        ((InCommunityMenu)menus).setCurrentCommunity(currentCommunity);
+        menus.showMenu();
 
         int command = consoleReader.readIntInRange(1, 3);
 
@@ -227,7 +220,7 @@ public class AppHandler {
 
     private boolean handleShowPostsInCommunity() {
         System.out.println("\n--- Posts in " + currentCommunity.getNickname() + " ---");
-        List<Post> communityPosts=currentCommunity.getPosts();
+        List<Post> communityPosts = currentCommunity.getPosts();
         if(communityPosts.isEmpty()){
             System.out.print("No posts in this r/");
         }
@@ -544,11 +537,18 @@ public class AppHandler {
         if (imageLink.trim().isEmpty()) {
             imageLink = null;
         }
-        System.out.println("Is your post NSFW?");
+        System.out.println("Is your post NSFW? [yes/no]");
         boolean NSFW = consoleReader.readString().equalsIgnoreCase("yes");
-        currentPost = postService.addPost(currentUser, postTitle, postContents, imageLink, NSFW, targetCommunity);
-        System.out.println("Post created successfully!");
-        currentState = State.ON_POST;
+        if(NSFW && !currentUser.checkAge()) {
+            System.out.println("You must be at least 18 years old to create an NSFW post.");
+            currentState=State.LOGGED_IN;
+       }
+        else{
+            currentPost = postService.addPost(currentUser, postTitle, postContents, imageLink, NSFW, targetCommunity);
+            System.out.println("Post created successfully!");
+            currentState = State.ON_POST;
+        }
+
     }
 
 

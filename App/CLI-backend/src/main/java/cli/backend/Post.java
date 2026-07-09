@@ -14,7 +14,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private String imageLink;
     private String communityName;
-    private boolean NSFW;
+    private boolean NSFW=false;
     //Constructor
     public Post (User user, String postTitle, String postContents, String imageLink, boolean NSFW, String community) {
 
