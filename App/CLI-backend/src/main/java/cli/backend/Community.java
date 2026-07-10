@@ -52,4 +52,12 @@ public class Community {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+    public boolean hasNSFWPost() {
+        for (Post p:posts){
+            if(p.getNSFW())
+                return true;
+        }
+        return false;
+    }
 }

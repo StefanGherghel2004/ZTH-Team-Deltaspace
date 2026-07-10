@@ -20,7 +20,11 @@ public class ShowCommunitiesCommand implements Command {
         }
 
         for (Community c : communityService.getCommunities()) {
+            if(c.hasNSFWPost() && !app.getCurrentUser().checkAge()){
+                continue;
+            }
             System.out.println(c.getNickname());
+
         }
 
         System.out.print("\nChoose a community (or press Enter to go back): ");
