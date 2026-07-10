@@ -22,19 +22,29 @@ public class DeletePostCommand implements Command {
            CommunityService communityService = CommunityService.getInstance();
             
            Post postToDelete = app.getCurrentPost();
+            if(postToDelete.getUser().equals(app.getCurrentUser()))
+            {
+                postService.deletePost(postToDelete);
+               String communityName = postToDelete.getCommunityName();
+               Community community = communityService.getCommunityByName(communityName);
+               if (community != null) {
+                   if(postToDelete.getUser().equals(app.getCurrentUser()))
+                   {
+                       community.deletePost(postToDelete);
+                   }
+               }
 
-           postService.deletePost(postToDelete);
+               app.setCurrentPost(null);
+               app.setCurrentState(AppHandler.State.LOGGED_IN);
+               System.out.println("Post deleted successfully.");
+               return true;
+            }
+            else{
+                System.out.println("You cannot delete this post as you are not the owner.");
+                app.setCurrentState(AppHandler.State.LOGGED_IN);
+                return true;
 
-           String communityName = postToDelete.getCommunityName();
-           Community community = communityService.getCommunityByName(communityName);
-           if (community != null) {
-               community.deletePost(postToDelete);
-           }
-            
-           app.setCurrentPost(null);
-           app.setCurrentState(AppHandler.State.LOGGED_IN);
-           System.out.println("Post deleted successfully.");
-           return true;
+            }
        } else {
            System.out.println("Post deletion cancelled.");
            app.setCurrentState(AppHandler.State.ON_POST);
