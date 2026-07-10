@@ -53,6 +53,10 @@ public class Community {
                 '}';
     }
 
+    public void deletePost(Post post){
+        posts.remove(post);
+    }
+
     public boolean hasNSFWPost() {
         for (Post p:posts){
             if(p.getNSFW())
