@@ -22,7 +22,8 @@ public class CommentMenu extends Menu {
         addOption(1, "Reply", new ReplyToCommentCommand());
         addOption(2, "Back to Post", new BackCommand());
 
-        if (appHandler.getCurrentUser() == currentCommunity.getCommunityCreator())
+        if ((appHandler.getCurrentUser() == currentCommunity.getCommunityCreator()) ||
+                (appHandler.getCurrentUser() == currentComment.getUser()))
             addOption(3, "Delete comment", new DeleteCommentsCommand());
     }
 

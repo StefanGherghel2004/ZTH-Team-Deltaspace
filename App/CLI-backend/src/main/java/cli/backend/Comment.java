@@ -22,6 +22,7 @@ public class Comment {
     public String getUsername(){
         return user.getUsername();
     }
+    public User getUser () {return this.user;}
 
     public int getId(){
         return idComment;

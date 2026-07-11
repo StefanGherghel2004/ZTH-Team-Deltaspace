@@ -20,9 +20,11 @@ public class DeletePostCommand implements Command {
         if (confirmation.equalsIgnoreCase("yes")) {
             PostService postService = PostService.getInstance();
            CommunityService communityService = CommunityService.getInstance();
+           Community currentCommunity = app.getCurrentCommunity();
             
            Post postToDelete = app.getCurrentPost();
-            if(postToDelete.getUser().equals(app.getCurrentUser()))
+            if(postToDelete.getUser().equals(app.getCurrentUser()) ||
+            currentCommunity.getCommunityCreator().equals(app.getCurrentUser()))
             {
                 postService.deletePost(postToDelete);
                String communityName = postToDelete.getCommunityName();
