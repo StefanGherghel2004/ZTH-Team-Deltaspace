@@ -47,6 +47,8 @@ public class CreateCommunityCommand implements Command {
         try {
             communityService.addCommunity(appHandler.getCurrentUser(), communityName, selectedTopic, description);
             System.out.println("Community " + communityName + " successfully created.");
+            appHandler.setCurrentCommunity(communityService.getCommunityByName(communityName));
+            appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
         } catch (InvalidCommunityException e) {
             System.out.println(e.getMessage());
         }

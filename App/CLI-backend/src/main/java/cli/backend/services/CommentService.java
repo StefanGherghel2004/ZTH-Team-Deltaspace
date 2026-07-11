@@ -1,6 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.Comment;
+import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
@@ -45,16 +46,32 @@ public class CommentService {
         post.addComment(reply, parentComment.getId());
     }
 
-    public boolean viewComments (Post post) {
-
-        List<Comment> comments=post.getComments();
-        if(comments.isEmpty())
+    public boolean deleteComment(Post post, Comment comment) {
+        if (post == null || comment == null) {
             return false;
-        else {
-            for(Comment comment:comments)
-                System.out.println("#" + comment.getCommentPostId()+comment.getUsername()
-                        + comment.getText());
+        }
+        return post.getComments().removeIf(c -> c.equals(comment));
+    }
+
+    public boolean canUserDeleteComment(User user, Comment comment, Community community) {
+        if (user == null || comment == null) {
+            return false;
+        }
+
+        String username = user.getUsername();
+
+        if ("admin".equals(username)) {
             return true;
         }
+
+        if (comment.getUsername().equals(username)) {
+            return true;
+        }
+
+        if (community != null && community.getCommunityCreator().getUsername().equals(username)) {
+            return true;
+        }
+
+        return false;
     }
 }

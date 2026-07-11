@@ -15,6 +15,7 @@ public class PostMenu extends Menu {
         this.currentPost = currentPost;
         int menuIndex = 1;
 
+        setTitle("Post Actions");
         addOption(menuIndex++, "Show comments", new ShowCommentsCommand());
         addOption(menuIndex++, "Add comment", new AddCommentCommand());
         addOption(menuIndex++, "Select comment (Reply)", new SelectCommentCommand());
@@ -35,7 +36,6 @@ public class PostMenu extends Menu {
         System.out.println("Title:     " + currentPost.getPostTitle());
         System.out.println("NSFW:      " + (currentPost.getNSFW() ? "Yes" : "No"));
         System.out.println(currentPost.getPostContents());
-        System.out.println("\n--- Post Actions ---");
         super.showMenu();
     }
 }

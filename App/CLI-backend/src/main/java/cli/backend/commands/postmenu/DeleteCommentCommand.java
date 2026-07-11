@@ -7,15 +7,17 @@ import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.LogLevel;
 import cli.backend.readers.ConsoleReader;
+import cli.backend.services.CommentService;
 
 
-public class DeleteCommentsCommand implements Command {
+public class DeleteCommentCommand implements Command {
     @Override
     public boolean execute() {
         AppHandler appHandler = AppHandler.getInstance();
         ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.INFO);
         Comment currentComment = appHandler.getCurrentComment();
         Post currentPost = appHandler.getCurrentPost();
+        CommentService commentService = CommentService.getInstance();
         ConsoleReader consoleReader = new ConsoleReader();
 
         if(currentComment == null)
@@ -26,7 +28,7 @@ public class DeleteCommentsCommand implements Command {
 
         if (confirmation.equalsIgnoreCase("yes")) {
 
-            boolean removed = currentPost.getComments().removeIf(c -> c.equals(currentComment));
+            boolean removed = commentService.deleteComment(currentPost, currentComment);
 
             if (removed) {
 

@@ -16,6 +16,7 @@ public class StartMenu extends Menu{
     Color.textBrightCyan("╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝");
 
     public StartMenu() {
+        setTitle("Welcome to Deltaspace platform");
         addOption(1, "Register", new RegisterCommand());
         addOption(2, "Login", new LoginCommand());
         addOption(3, "Quit", new QuitCommand());
@@ -24,7 +25,6 @@ public class StartMenu extends Menu{
     @Override
     public void showMenu(){
         System.out.println(LOGO);
-        System.out.println("\n--- Welcome to Deltaspace platform ---");
         super.showMenu();
     }
 }

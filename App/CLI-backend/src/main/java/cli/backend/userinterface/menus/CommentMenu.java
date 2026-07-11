@@ -3,14 +3,10 @@ package cli.backend.userinterface.menus;
 import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.commands.BackCommand;
-import cli.backend.commands.communitymenu.DeleteCommunityCommand;
-import cli.backend.commands.postmenu.DeleteCommentsCommand;
+import cli.backend.commands.postmenu.DeleteCommentCommand;
 import cli.backend.commands.postmenu.ReplyToCommentCommand;
 import cli.backend.handlers.AppHandler;
 import cli.backend.services.CommentService;
-import cli.backend.services.CommunityService;
-
-import java.util.List;
 
 public class CommentMenu extends Menu {
 
@@ -22,18 +18,19 @@ public class CommentMenu extends Menu {
         this.currentComment = comment;
         int menuIndex = 1;
 
+        setTitle("Selected Comment");
         addOption(menuIndex++, "Reply", new ReplyToCommentCommand());
         addOption(menuIndex++, "Back to Post", new BackCommand());
 
-        if (List.of(currentCommunity.getCommunityCreator().getUsername(),currentComment.getUsername(),"admin")
-                .contains(appHandler.getCurrentUser().getUsername()))
-            addOption(menuIndex++, "Delete comment", new DeleteCommentsCommand());
+        CommentService commentService = CommentService.getInstance();
+
+        if (commentService.canUserDeleteComment(appHandler.getCurrentUser(), currentComment, currentCommunity)) {
+            addOption(menuIndex++, "Delete comment", new DeleteCommentCommand());
+        }
     }
 
     @Override
     public void showMenu() {
-        System.out.println("\n--- Selected Comment ---");
-        System.out.println("[" + currentComment.getUsername() + "]: " + currentComment.getText());
         super.showMenu();
     }
 }

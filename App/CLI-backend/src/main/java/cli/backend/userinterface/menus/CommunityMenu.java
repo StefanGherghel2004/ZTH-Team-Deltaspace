@@ -18,6 +18,7 @@ public class CommunityMenu extends Menu {
         this.currentCommunity = currentCommunity;
         int menuIndex = 1;
 
+        setTitle(currentCommunity.getNickname());
         addOption(menuIndex++, "View Posts", new ShowPostsInCommunityCommand());
         addOption(menuIndex++, "Add Post", new CreatePostCommand());
         addOption(menuIndex++, "Return to Main Menu", new BackCommand());
@@ -29,7 +30,6 @@ public class CommunityMenu extends Menu {
 
     @Override
     public void showMenu() {
-        System.out.println("\n--- " + currentCommunity.getNickname() + " ---");
         super.showMenu();
     }
 }

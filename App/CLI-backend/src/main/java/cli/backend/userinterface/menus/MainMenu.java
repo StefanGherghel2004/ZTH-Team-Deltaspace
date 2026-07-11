@@ -9,6 +9,7 @@ import cli.backend.commands.mainmenu.ShowFeedCommand;
 public class MainMenu extends Menu{
 
     public MainMenu() {
+        setTitle("Main Menu");
         addOption(1, "Show feed", new ShowFeedCommand());
         addOption(2, "Create community", new CreateCommunityCommand());
         addOption(3, "Create Post", new CreatePostCommand());
@@ -18,7 +19,6 @@ public class MainMenu extends Menu{
 
     @Override
     public void showMenu () {
-        System.out.println("\n--- Main Menu ---");
         super.showMenu();
     }
 }

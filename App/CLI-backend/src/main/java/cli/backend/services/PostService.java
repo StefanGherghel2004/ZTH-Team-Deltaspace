@@ -56,4 +56,19 @@ public class PostService {
         posts.removeIf(p -> p.getPostID() == post.getPostID());
     }
 
+    public boolean canUserDeletePost(cli.backend.User user, Post post, Community community) {
+        if (user == null || post == null) {
+            return false;
+        }
+
+        if (post.getUser().equals(user)) {
+            return true;
+        }
+
+        if (community != null && community.getCommunityCreator().equals(user)) {
+            return true;
+        }
+        
+        return false;
+    }
 }

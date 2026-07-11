@@ -13,46 +13,50 @@ import cli.backend.services.CommunityService;
 public class DeletePostCommand implements Command {
     @Override
     public boolean execute() {
-       AppHandler app = AppHandler.getInstance();
-       ConsoleReader consoleReader = ConsoleReader.getInstance();
-        ConsoleLogger consoleLogger=new ConsoleLogger(LogLevel.INFO);
+        AppHandler app = AppHandler.getInstance();
+        ConsoleReader consoleReader = ConsoleReader.getInstance();
+        ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.INFO);
+        PostService postService = PostService.getInstance();
+        CommunityService communityService = CommunityService.getInstance();
+
+        Post postToDelete = app.getCurrentPost();
+        Community currentCommunity = app.getCurrentCommunity();
+
+        if (!postService.canUserDeletePost(app.getCurrentUser(), postToDelete, currentCommunity)) {
+            consoleLogger.log(LogLevel.INFO, "You cannot delete this post as you are not the owner.");
+            returnToPreviousState(app, currentCommunity);
+            return true;
+        }
+
         System.out.print("Are you sure you want to delete this post? (yes/no): ");
         String confirmation = consoleReader.readString();
 
         if (confirmation.equalsIgnoreCase("yes")) {
-            PostService postService = PostService.getInstance();
-           CommunityService communityService = CommunityService.getInstance();
-           Community currentCommunity = app.getCurrentCommunity();
-            
-           Post postToDelete = app.getCurrentPost();
-            if(postToDelete.getUser().equals(app.getCurrentUser()) ||
-            currentCommunity.getCommunityCreator().equals(app.getCurrentUser()))
-            {
-                postService.deletePost(postToDelete);
-               String communityName = postToDelete.getCommunityName();
-               Community community = communityService.getCommunityByName(communityName);
-               if (community != null) {
-                   if(postToDelete.getUser().equals(app.getCurrentUser()))
-                   {
-                       community.deletePost(postToDelete);
-                   }
-               }
+            postService.deletePost(postToDelete);
 
-               app.setCurrentPost(null);
-               app.setCurrentState(AppHandler.State.LOGGED_IN);
-               consoleLogger.log(LogLevel.INFO,"Post deleted successfully.");
-               return true;
+            Community community = communityService.getCommunityByName(postToDelete.getCommunityName());
+            if (community != null) {
+                community.deletePost(postToDelete);
             }
-            else{
-                consoleLogger.log(LogLevel.INFO,"You cannot delete this post as you are not the owner.");
-                app.setCurrentState(AppHandler.State.LOGGED_IN);
-                return true;
 
-            }
-       } else {
-            consoleLogger.log(LogLevel.INFO,"Post deletion cancelled.");
+            app.setCurrentPost(null);
+            returnToPreviousState(app, currentCommunity);
+            consoleLogger.log(LogLevel.INFO, "Post deleted successfully.");
+        } else {
+            consoleLogger.log(LogLevel.INFO, "Post deletion cancelled.");
             app.setCurrentState(AppHandler.State.ON_POST);
-            return true;
-       }
+        }
+
+        return true;
+
     }
+
+    private void returnToPreviousState(AppHandler app, Community currentCommunity) {
+        if (currentCommunity != null) {
+            app.setCurrentState(AppHandler.State.ON_COMMUNITY);
+        } else {
+            app.setCurrentState(AppHandler.State.LOGGED_IN);
+        }
+    }
+
 }
