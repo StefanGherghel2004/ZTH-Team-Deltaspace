@@ -3,6 +3,8 @@ package cli.backend.commands.communitymenu;
 import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
+import cli.backend.loggers.ConsoleLogger;
+import cli.backend.loggers.LogLevel;
 import cli.backend.readers.ConsoleReader;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class ShowPostsInCommunityCommand implements Command {
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
         ConsoleReader consoleReader = ConsoleReader.getInstance();
-
+        ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.WARNING);
         System.out.println("\n--- Posts in " + app.getCurrentCommunity().getNickname() + " ---");
         List<Post> communityPosts = app.getCurrentCommunity().getPosts();
 
@@ -35,7 +37,7 @@ public class ShowPostsInCommunityCommand implements Command {
 
             if (currentPost != null) {
                 if (currentPost.getNSFW() && !app.getCurrentUser().checkAge()) {
-                    System.out.println("This post is marked as NSFW. You must be at least 18 years old to view it.");
+                    consoleLogger.log(LogLevel.WARNING,"This post is marked as NSFW. You must be at least 18 years old to view it.");
                 } else {
                     app.setCurrentPost(currentPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
