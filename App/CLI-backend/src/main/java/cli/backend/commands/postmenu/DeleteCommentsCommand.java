@@ -8,6 +8,7 @@ import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.LogLevel;
 import cli.backend.readers.ConsoleReader;
 
+
 public class DeleteCommentsCommand implements Command {
     @Override
     public boolean execute() {
@@ -15,18 +16,29 @@ public class DeleteCommentsCommand implements Command {
         ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.INFO);
         Comment currentComment = appHandler.getCurrentComment();
         Post currentPost = appHandler.getCurrentPost();
+        ConsoleReader consoleReader = new ConsoleReader();
 
         if(currentComment == null)
             return false;
 
-        boolean removed = currentPost.getComments().removeIf(c -> c.equals(currentComment));
+        System.out.print("Are you sure you want to delete this comment? (yes/no): ");
+        String confirmation = consoleReader.readString();
 
-        if (removed) {
+        if (confirmation.equalsIgnoreCase("yes")) {
 
-            appHandler.setCurrentComment(null);
-            appHandler.setCurrentState(AppHandler.State.ON_POST);
-            consoleLogger.log(LogLevel.INFO,"Comment deleted successfully!");
-            return true;
+            boolean removed = currentPost.getComments().removeIf(c -> c.equals(currentComment));
+
+            if (removed) {
+
+                appHandler.setCurrentComment(null);
+                appHandler.setCurrentState(AppHandler.State.ON_POST);
+                consoleLogger.log(LogLevel.INFO, "Comment deleted successfully!");
+                return true;
+            }
+        }else{
+
+            System.out.println("Comment deletion cancelled.");
+            appHandler.setCurrentState(AppHandler.State.ON_COMMENT);
         }
         return false;
     }

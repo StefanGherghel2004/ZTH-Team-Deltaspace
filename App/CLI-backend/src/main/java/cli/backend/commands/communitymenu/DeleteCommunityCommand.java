@@ -6,9 +6,11 @@ import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.LogLevel;
 import cli.backend.loggers.Logger;
+import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
 
 import java.util.List;
+
 
 public class DeleteCommunityCommand implements Command {
 
@@ -21,18 +23,29 @@ public class DeleteCommunityCommand implements Command {
         CommunityService communityService = CommunityService.getInstance();
         List<Community> communityList = communityService.getCommunities();
         ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.INFO);
+        ConsoleReader consoleReader = new ConsoleReader();
 
         if(currentCommunity == null)
             return false;
 
-        boolean removed = communityList.removeIf(c -> c.equals(currentCommunity));
+        System.out.print("Are you sure you want to delete this community? (yes/no): ");
+        String confirmation = consoleReader.readString();
 
-        if (removed) {
+        if (confirmation.equalsIgnoreCase("yes")) {
 
-            appHandler.setCurrentCommunity(null);
-            appHandler.setCurrentState(AppHandler.State.LOGGED_IN);
-            consoleLogger.log(LogLevel.INFO,"Community deleted successfully!");
-            return true;
+            boolean removed = communityList.removeIf(c -> c.equals(currentCommunity));
+
+            if (removed) {
+
+                appHandler.setCurrentCommunity(null);
+                appHandler.setCurrentState(AppHandler.State.LOGGED_IN);
+                consoleLogger.log(LogLevel.INFO, "Community deleted successfully!");
+                return true;
+            }
+        }else{
+
+            System.out.println("Community deletion cancelled.");
+            appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
         }
         return false;
     }
