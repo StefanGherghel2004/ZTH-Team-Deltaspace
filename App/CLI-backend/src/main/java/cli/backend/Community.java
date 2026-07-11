@@ -8,13 +8,19 @@ public class Community {
     private String topic;
     private List<Post> posts =new ArrayList<>();
     private String description;
+    private User communityCreator;
 
 
-    public Community(String topic,String nickname,String description){
+    public Community(User communityCreator, String topic,String nickname,String description){
         this.topic=topic;
         this.nickname=nickname;
         this.description =description;
+        this.communityCreator = communityCreator;
+    }
 
+    public User getCommunityCreator () {
+
+        return this.communityCreator;
     }
 
     public String getDescription() {

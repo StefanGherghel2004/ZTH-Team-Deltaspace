@@ -2,6 +2,7 @@ package cli.backend.commands.mainmenu;
 
 import cli.backend.commands.Command;
 import cli.backend.exceptions.InvalidCommunityException;
+import cli.backend.handlers.AppHandler;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
 import java.util.List;
@@ -11,6 +12,7 @@ public class CreateCommunityCommand implements Command {
     public boolean execute() {
         ConsoleReader consoleReader = ConsoleReader.getInstance();
         CommunityService communityService = CommunityService.getInstance();
+        AppHandler appHandler = AppHandler.getInstance();
 
         System.out.println("\n--- Create Community ---");
         System.out.print("Please enter community name: \nr/");
@@ -43,7 +45,7 @@ public class CreateCommunityCommand implements Command {
         String description = consoleReader.readString();
 
         try {
-            communityService.addCommunity(communityName, selectedTopic, description);
+            communityService.addCommunity(appHandler.getCurrentUser(), communityName, selectedTopic, description);
             System.out.println("Community " + communityName + " successfully created.");
         } catch (InvalidCommunityException e) {
             System.out.println(e.getMessage());

@@ -2,6 +2,7 @@ package cli.backend.services;
 
 import cli.backend.Comment;
 import cli.backend.Community;
+import cli.backend.User;
 import cli.backend.exceptions.InvalidCommunityException;
 
 import java.util.ArrayList;
@@ -41,9 +42,10 @@ public class CommunityService {
         return null;
     }
 
-    public void addCommunity(String name,String topic,String description) throws InvalidCommunityException {
+    public void addCommunity(User communityCreator, String name, String topic, String description)
+            throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
-            communities.add(new Community(topic, name, description));
+            communities.add(new Community(communityCreator, topic, name, description));
         }
         else {
             throw new InvalidCommunityException("Invalid topic. Please choose from the available topics.");
