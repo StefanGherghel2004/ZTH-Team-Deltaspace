@@ -50,6 +50,6 @@ public class DeleteCommunityCommand implements Command {
             consoleLogger.log(LogLevel.INFO,"Community deletion cancelled.");
             appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
         }
-        return false;
+        return true;
     }
 }

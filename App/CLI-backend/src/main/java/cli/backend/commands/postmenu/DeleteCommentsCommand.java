@@ -40,6 +40,6 @@ public class DeleteCommentsCommand implements Command {
             System.out.println("Comment deletion cancelled.");
             appHandler.setCurrentState(AppHandler.State.ON_COMMENT);
         }
-        return false;
+        return true;
     }
 }
