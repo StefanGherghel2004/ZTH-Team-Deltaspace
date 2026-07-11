@@ -10,6 +10,8 @@ import cli.backend.handlers.AppHandler;
 import cli.backend.services.CommentService;
 import cli.backend.services.CommunityService;
 
+import java.util.List;
+
 public class CommentMenu extends Menu {
 
     private Comment currentComment;
@@ -18,13 +20,14 @@ public class CommentMenu extends Menu {
 
     public CommentMenu(Comment comment) {
         this.currentComment = comment;
+        int menuIndex = 1;
 
-        addOption(1, "Reply", new ReplyToCommentCommand());
-        addOption(2, "Back to Post", new BackCommand());
+        addOption(menuIndex++, "Reply", new ReplyToCommentCommand());
+        addOption(menuIndex++, "Back to Post", new BackCommand());
 
-        if ((appHandler.getCurrentUser() == currentCommunity.getCommunityCreator()) ||
-                (appHandler.getCurrentUser() == currentComment.getUser()))
-            addOption(3, "Delete comment", new DeleteCommentsCommand());
+        if (List.of(currentCommunity.getCommunityCreator().getUsername(),currentComment.getUsername(),"admin")
+                .contains(appHandler.getCurrentUser().getUsername()))
+            addOption(menuIndex++, "Delete comment", new DeleteCommentsCommand());
     }
 
     @Override
