@@ -1,6 +1,7 @@
 package cli.backend.commands.communitymenu;
 
 import cli.backend.Community;
+import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.ConsoleLogger;
@@ -8,6 +9,7 @@ import cli.backend.loggers.LogLevel;
 import cli.backend.loggers.Logger;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
+import cli.backend.services.PostService;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class DeleteCommunityCommand implements Command {
         List<Community> communityList = communityService.getCommunities();
         ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.INFO);
         ConsoleReader consoleReader = new ConsoleReader();
-
+        PostService postService = PostService.getInstance();
         if(currentCommunity == null)
             return false;
 
@@ -34,9 +36,10 @@ public class DeleteCommunityCommand implements Command {
         if (confirmation.equalsIgnoreCase("yes")) {
 
             boolean removed = communityList.removeIf(c -> c.equals(currentCommunity));
-
+            List<Post> poststodelete=appHandler.getCurrentCommunity().getPosts();
             if (removed) {
-
+                for (Post p : poststodelete)
+                    postService.deletePost(p);
                 appHandler.setCurrentCommunity(null);
                 appHandler.setCurrentState(AppHandler.State.LOGGED_IN);
                 consoleLogger.log(LogLevel.INFO, "Community deleted successfully!");
