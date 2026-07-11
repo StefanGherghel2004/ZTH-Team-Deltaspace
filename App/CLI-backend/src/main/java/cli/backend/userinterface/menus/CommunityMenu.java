@@ -7,6 +7,8 @@ import cli.backend.commands.communitymenu.DeleteCommunityCommand;
 import cli.backend.commands.communitymenu.ShowPostsInCommunityCommand;
 import cli.backend.handlers.AppHandler;
 
+import java.util.List;
+
 public class CommunityMenu extends Menu {
 
     private AppHandler appHandler = AppHandler.getInstance();
@@ -14,13 +16,15 @@ public class CommunityMenu extends Menu {
 
     public CommunityMenu(Community currentCommunity) {
         this.currentCommunity = currentCommunity;
+        int menuIndex = 1;
 
-        addOption(1, "View Posts", new ShowPostsInCommunityCommand());
-        addOption(2, "Add Post", new CreatePostCommand());
-        addOption(3, "Return to Main Menu", new BackCommand());
+        addOption(menuIndex++, "View Posts", new ShowPostsInCommunityCommand());
+        addOption(menuIndex++, "Add Post", new CreatePostCommand());
+        addOption(menuIndex++, "Return to Main Menu", new BackCommand());
 
-        if (appHandler.getCurrentUser() == currentCommunity.getCommunityCreator())
-            addOption(4, "Delete community", new DeleteCommunityCommand());
+        if (List.of(currentCommunity.getCommunityCreator().getUsername(),"admin")
+                .contains(appHandler.getCurrentUser().getUsername()))
+            addOption(menuIndex++, "Delete community", new DeleteCommunityCommand());
     }
 
     @Override
