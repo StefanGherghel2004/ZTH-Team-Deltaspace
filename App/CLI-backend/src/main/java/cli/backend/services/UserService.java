@@ -52,11 +52,7 @@ public class UserService {
     }
 
     public boolean validateUsername (String username) {
-
-        if(validate(username,USERNAME_REGEX) && !username.isEmpty()){
-            return !excelRead.checkDuplicateUsername(username,"App/CLI-backend/databases/UserDatabase.xlsx");
-        }
-        return false;
+        return validate(username,USERNAME_REGEX) && !username.isEmpty();
     }
 
     public boolean validatePassword (String password) {
@@ -65,10 +61,7 @@ public class UserService {
     }
 
     public boolean validateEmail (String email) {
-        if(validate(email,EMAIL_REGEX) && !email.isEmpty()){
-        return !excelRead.checkDuplicateEmail(email,"App/CLI-backend/databases/UserDatabase.xlsx");
-        }
-        return false;
+        return validate(email,EMAIL_REGEX) && !email.isEmpty();
     }
 
     public boolean validateDateOfBirth (String dateOfBirth) {
