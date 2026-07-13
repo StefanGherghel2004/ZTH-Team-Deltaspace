@@ -2,20 +2,24 @@ package cli.backend.commands;
 
 import cli.backend.Community;
 import cli.backend.Post;
+import cli.backend.database.ExcelWrite;
 import cli.backend.handlers.AppHandler;
 import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PostService;
 
+import java.util.List;
+
 public class CreatePostCommand implements Command {
     @Override
     public boolean execute() {
+
         AppHandler app = AppHandler.getInstance();
-        ConsoleReader consoleReader = ConsoleReader.getInstance();
         Console console = Console.getInstance();
         CommunityService communityService = CommunityService.getInstance();
         PostService postService = PostService.getInstance();
+        ExcelWrite excelWrite = ExcelWrite.getInstance();
 
         console.info("Welcome to the post creation page.");
         Community targetCommunity = app.getCurrentCommunity();
@@ -48,7 +52,20 @@ public class CreatePostCommand implements Command {
         if (NSFW && !app.getCurrentUser().checkAge()) {
             console.error("You must be at least 18 years old to create an NSFW post.");
         } else {
-            Post newPost = postService.addPost(app.getCurrentUser(), postTitle, postContents, imageLink, NSFW, targetCommunity);
+            Post newPost = postService.addPost(app.getCurrentUser(), postTitle, postContents,
+                    imageLink, NSFW, targetCommunity);
+
+            String targetCommunityChecked = (targetCommunity != null) ? targetCommunity.getNickname() : "None";
+            String imageLinkChecked = (imageLink != null) ? imageLink : "No image link";
+
+            excelWrite.write(excelWrite.postDatabasePath, List.of(
+                    String.valueOf(newPost.getPostID()),
+                    app.getCurrentUser().getUsername(),
+                    postTitle,postContents,
+                    imageLinkChecked,
+                    targetCommunityChecked,
+                    String.valueOf(NSFW)));
+
             console.success("Post created successfully!");
             app.setCurrentPost(newPost);
             app.setCurrentState(AppHandler.State.ON_POST);

@@ -1,11 +1,7 @@
 package cli.backend.database;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.*;
 import java.util.List;
 
@@ -33,11 +29,22 @@ public class ExcelWrite {
         return instance;
     }
 
+    public File prepareFile(String path) {
+        File file = new File(path);
+        File parentDir = file.getParentFile();
+
+        if (parentDir != null && !parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+
+        return file;
+    }
+
     public void write(String path, List<String> entry) {
         try {
-            File file = DatabaseInitialize.getInstance().createFile(path);
+            File file = prepareFile(path);
 
-            if (file.length() == 0) {
+            if (!file.exists() || file.length() == 0) {
                 workbook = new XSSFWorkbook();
             } else {
                 try (FileInputStream in = new FileInputStream(file)) {
@@ -64,15 +71,17 @@ public class ExcelWrite {
                     celNum++;
                 }
 
+                // 5. Save and write to disk
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     workbook.write(out);
                 }
             } finally {
+                // Always close the workbook to release file locks
                 workbook.close();
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to write to Excel file at: " + path, e);
         }
     }
 
@@ -83,6 +92,90 @@ public class ExcelWrite {
             return sheet.getLastRowNum();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isSheetEmpty(String filePath) throws IOException {
+        File file = new File(filePath);
+
+        if (!file.exists() || file.length() == 0) {
+            return true;
+        }
+
+        try (FileInputStream fis = new FileInputStream(file);
+             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fis)) {
+
+            if (xssfWorkbook.getNumberOfSheets() == 0) {
+                return true;
+            }
+
+            XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
+
+            if (xssfSheet == null || xssfSheet.getPhysicalNumberOfRows() == 0) {
+                return true;
+            }
+
+            for (int r = 0; r <= xssfSheet.getLastRowNum(); r++) {
+                Row xssfRow = xssfSheet.getRow(r);
+                if (xssfRow == null) {
+                    continue;
+                }
+                for (int c = 0; c < xssfRow.getLastCellNum(); c++) {
+                    Cell cell = xssfRow.getCell(c);
+                    if (cell != null && cell.getCellType() != CellType.BLANK) {
+                        if (cell.getCellType() == CellType.STRING) {
+                            if (!cell.getStringCellValue().trim().isEmpty()) {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    public static int getCurrentId(String filepath) {
+        File file = new File(filepath);
+        int currentId;
+        if (!file.exists() || file.length() == 0) {
+            currentId = 0;
+            return currentId;
+        }
+
+        try (FileInputStream in = new FileInputStream(file);
+             XSSFWorkbook workbook = new XSSFWorkbook(in)) {
+            if (workbook.getNumberOfSheets() == 0) {
+                currentId = 0;
+                return currentId;
+            }
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            int lastRowIndex = sheet.getLastRowNum();
+
+            if (lastRowIndex == 0) {
+                currentId = 0;
+                return currentId;
+            }
+
+            Row row = sheet.getRow(lastRowIndex);
+            if (row != null) {
+                Cell cell = row.getCell(0);
+                if (cell != null) {
+                    String cellValue = cell.toString().trim();
+                    if (cellValue.endsWith(".0")) {
+                        cellValue = cellValue.substring(0, cellValue.length() - 2);
+                    }
+                    currentId = Integer.parseInt(cellValue);
+                    return currentId;
+                }
+            }
+            currentId = 0;
+            return currentId;
+        } catch (IOException | NumberFormatException e) {
+            currentId = 0;
+            return currentId;
         }
     }
 }

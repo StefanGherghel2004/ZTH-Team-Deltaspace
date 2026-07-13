@@ -1,13 +1,6 @@
 package cli.backend;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import cli.backend.database.ExcelWrite;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +20,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
-        getCurrentUserId();
+        userCounter = ExcelWrite.getCurrentId(ExcelWrite.getInstance().userDatabasePath);
         userID = ++userCounter;
     }
 
@@ -55,45 +48,5 @@ public class User {
         LocalDate birthday=LocalDate.parse(dateOfBirth, formatter);
         Period age = Period.between(birthday, today);
         return age.getYears() >= 18;
-    }
-
-    public void getCurrentUserId() {
-        File file = new File("App/CLI-backend/databases/UserDatabase.xlsx");
-
-        if (!file.exists() || file.length() == 0) {
-            userCounter = 0;
-            return;
-        }
-
-        try (FileInputStream in = new FileInputStream(file);
-             XSSFWorkbook workbook = new XSSFWorkbook(in)) {
-            if (workbook.getNumberOfSheets() == 0) {
-                userCounter = 0;
-                return;
-            }
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            int lastRowIndex = sheet.getLastRowNum();
-
-            if (lastRowIndex == 0) {
-                userCounter = 0;
-                return;
-            }
-
-            Row row = sheet.getRow(lastRowIndex);
-            if (row != null) {
-                Cell cell = row.getCell(0);
-                if (cell != null) {
-                    String cellValue = cell.toString().trim();
-                    if (cellValue.endsWith(".0")) {
-                        cellValue = cellValue.substring(0, cellValue.length() - 2);
-                    }
-                    userCounter = Integer.parseInt(cellValue);
-                    return;
-                }
-            }
-            userCounter = 0;
-        } catch (IOException | NumberFormatException e) {
-            userCounter = 0;
-        }
     }
 }

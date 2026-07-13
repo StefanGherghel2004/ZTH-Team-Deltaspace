@@ -12,7 +12,7 @@ public class Main {
 
         AppHandler app = AppHandler.getInstance();
 
-        DatabaseInitialize.getInstance();
+        DatabaseInitialize.getInstance().setupDatabases();
         Logger.init();
         app.run();
     }
