@@ -8,16 +8,26 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class ExcelRead {
-    private final String filename;
 
-    public ExcelRead(String filename) {
-        this.filename = filename;
+    private static ExcelRead instance;
+    private ExcelRead() {
     }
 
-    public void readExcel()  {
+    public static ExcelRead getInstance()
+    {
+        if(instance==null){
+            instance=new ExcelRead();
+
+        }
+        return instance;
+    }
+
+    public void readExcel(String filename)  {
         System.out.println("Attempting to open Excel");
         try (FileInputStream file = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(file)) {
@@ -42,5 +52,62 @@ public class ExcelRead {
 
         }
     }
+    public boolean checkDuplicateUsername(String usernameToCheck,String filename){
+
+        try (FileInputStream file = new FileInputStream(filename);
+             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            DataFormatter formatter = new DataFormatter();
+            for(int i=1;i<=sheet.getLastRowNum();i++){
+                Row row=sheet.getRow(i);
+                if(row==null){
+                    continue;
+                }
+                Cell usernameCell = row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                String username = formatter.formatCellValue(usernameCell).trim();
+                if(username.isEmpty()){
+                    continue;
+                }
+                if(username.equalsIgnoreCase(usernameToCheck.trim())){
+                    return true;
+                }
+
+            }
+
+        }catch (IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkDuplicateEmail(String emailToCheck,String filename){
+
+        try (FileInputStream file = new FileInputStream(filename);
+             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+                XSSFSheet sheet = workbook.getSheetAt(0);
+                DataFormatter formatter = new DataFormatter();
+                for(int i=1;i<=sheet.getLastRowNum();i++) {
+                    Row row = sheet.getRow(i);
+                    if (row == null) {
+                        continue;
+                    }
+                    Cell emailCell = row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String email = formatter.formatCellValue(emailCell).trim();
+                    if (email.isEmpty()) {
+                        continue;
+                    }
+                    if (email.equalsIgnoreCase(emailToCheck.trim())){
+                       return true;
+                    }
+
+                }
+            }catch(IOException e){
+                System.out.println("File not found");
+                e.printStackTrace();
+        }
+        return false;
+    }
+
 }
 
