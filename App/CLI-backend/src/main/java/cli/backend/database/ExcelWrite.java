@@ -71,12 +71,11 @@ public class ExcelWrite {
                     celNum++;
                 }
 
-                // 5. Save and write to disk
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     workbook.write(out);
                 }
             } finally {
-                // Always close the workbook to release file locks
+
                 workbook.close();
             }
 
@@ -87,7 +86,7 @@ public class ExcelWrite {
 
     public int getNumberOfEntries (String path) {
         try{
-            workbook = new XSSFWorkbook(new FileInputStream(new File(path)));
+            workbook = new XSSFWorkbook(new FileInputStream(path));
             sheet = workbook.getSheetAt(0);
             return sheet.getLastRowNum();
         } catch (IOException e) {
