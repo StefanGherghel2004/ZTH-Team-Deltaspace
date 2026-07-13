@@ -51,10 +51,10 @@ public class RegisterCommand implements Command {
             console.error("Invalid email format. Must be like 'user@domain.com'.");
             continue;
         }
-        if(emailCheck.isDuplicate(email)){
+        if(emailCheck.isDuplicate(email)) {
             console.error("Email already exists. Please use a different email address.");
             continue;
-            {
+        }
 
             break;
         }
