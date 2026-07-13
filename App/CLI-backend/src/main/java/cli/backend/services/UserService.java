@@ -1,7 +1,6 @@
 package cli.backend.services;
 
 import cli.backend.User;
-import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidUserAccountException;
 
@@ -25,7 +24,7 @@ public class UserService {
 
     private final List<User> users = new ArrayList<>();
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
-    private static ExcelRead excelRead = ExcelRead.getInstance();
+
     private UserService() {
 
         this.addUser("admin",
@@ -52,7 +51,8 @@ public class UserService {
     }
 
     public boolean validateUsername (String username) {
-        return validate(username,USERNAME_REGEX) && !username.isEmpty();
+
+        return (validate(username,USERNAME_REGEX) && !username.isEmpty());
     }
 
     public boolean validatePassword (String password) {
@@ -61,7 +61,7 @@ public class UserService {
     }
 
     public boolean validateEmail (String email) {
-        return validate(email,EMAIL_REGEX) && !email.isEmpty();
+        return (validate(email,EMAIL_REGEX) && !email.isEmpty());
     }
 
     public boolean validateDateOfBirth (String dateOfBirth) {
