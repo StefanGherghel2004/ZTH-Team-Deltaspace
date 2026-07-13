@@ -27,12 +27,12 @@ public class UserService {
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
     private static ExcelRead  excelRead = ExcelRead.getInstance();
     private UserService() {
-
-        this.addUser("admin",
-                "test@admin",
-                PasswordService.hash("Admin123"),
-                "01-01-2000");
-
+        if (excelWrite.getNumberOfEntries(excelWrite.userDatabasePath) == 0) {
+            this.addUser("admin",
+                    "test@admin",
+                    PasswordService.hash("Admin123"),
+                    "01-01-2000");
+        }
     }
 
     public static UserService getInstance() {

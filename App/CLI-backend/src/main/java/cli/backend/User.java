@@ -95,9 +95,7 @@ public class User {
                     return;
                 }
             }
-
             userCounter = 0;
-
         } catch (IOException | NumberFormatException e) {
             userCounter = 0;
         }
