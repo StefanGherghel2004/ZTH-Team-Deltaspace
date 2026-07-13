@@ -1,6 +1,5 @@
 package cli.backend;
 
-import cli.backend.database.DatabaseInitialize;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -9,12 +8,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class User {
 
