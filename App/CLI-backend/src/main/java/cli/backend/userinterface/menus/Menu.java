@@ -1,6 +1,7 @@
 package cli.backend.userinterface.menus;
 
 import cli.backend.commands.Command;
+import cli.backend.readers.Console;
 import cli.backend.textformatters.BoxPadder;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public abstract class Menu {
         }
 
         String menuBox = BoxPadder.format(formattedOptions, title);
-        System.out.print(menuBox);
+        Console.getInstance().info(menuBox);
     }
 
     public Command getCommand(int choice) {
