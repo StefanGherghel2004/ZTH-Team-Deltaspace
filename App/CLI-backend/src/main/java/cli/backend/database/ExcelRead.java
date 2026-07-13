@@ -1,5 +1,6 @@
 package cli.backend.database;
 
+import cli.backend.Community;
 import cli.backend.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -51,7 +52,7 @@ public class ExcelRead {
 
         }
     }
-    public boolean checkDuplicateUsername(String usernameToCheck,String filename){
+    public boolean checkDuplicateCell(String cellValueToCheck,int column, String filename){
 
         try (FileInputStream file = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(file)) {
@@ -62,12 +63,12 @@ public class ExcelRead {
                 if(row==null){
                     continue;
                 }
-                Cell usernameCell = row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                String username = formatter.formatCellValue(usernameCell).trim();
-                if(username.isEmpty()){
+                Cell usernameCell = row.getCell(column, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                String cellValue = formatter.formatCellValue(usernameCell).trim();
+                if(cellValue.isEmpty()){
                     continue;
                 }
-                if(username.equalsIgnoreCase(usernameToCheck.trim())){
+                if(cellValue.equalsIgnoreCase(cellValueToCheck.trim())){
                     return true;
                 }
 
@@ -80,59 +81,8 @@ public class ExcelRead {
         return false;
     }
 
-    public boolean checkDuplicateEmail(String emailToCheck,String filename){
 
-        try (FileInputStream file = new FileInputStream(filename);
-             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
-                XSSFSheet sheet = workbook.getSheetAt(0);
-                DataFormatter formatter = new DataFormatter();
-                for(int i=1;i<=sheet.getLastRowNum();i++) {
-                    Row row = sheet.getRow(i);
-                    if (row == null) {
-                        continue;
-                    }
-                    Cell emailCell = row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                    String email = formatter.formatCellValue(emailCell).trim();
-                    if (email.isEmpty()) {
-                        continue;
-                    }
-                    if (email.equalsIgnoreCase(emailToCheck.trim())){
-                       return true;
-                    }
 
-                }
-            }catch(IOException e){
-                System.out.println("File not found");
-                e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean checkDuplicateCommmunity(String communityNameToCheck , String filename) {
-        try(FileInputStream file = new FileInputStream(filename);
-            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            DataFormatter formatter = new DataFormatter();
-            for(int i=1;i<=sheet.getLastRowNum();i++){
-                Row row = sheet.getRow(i);
-                if(row==null){
-                    continue;
-                }
-                Cell communityCell = row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                String communityName = formatter.formatCellValue(communityCell).trim();
-                if(communityName.isEmpty()){
-                    continue;
-                }
-                if(communityName.equalsIgnoreCase(communityNameToCheck.trim())){
-                    return true;
-                }
-            }
-    }catch(IOException e){
-            System.out.println("File not found");
-            e.printStackTrace();
-        }
-        return false;
-    }
     public List<User> getExcelUsers(){
 
         String filename = "App/CLI-backend/databases/UserDatabase.xlsx";
@@ -164,6 +114,41 @@ public class ExcelRead {
         }
 
     return excelUsers;
+    }
+
+    public List<Community> getExcelCommunities(){
+        String filename = "App/CLI-backend/databases/CommunityDatabase.xlsx";
+        List<Community> excelCommunities = new ArrayList<>();
+
+        try(FileInputStream file = new FileInputStream(filename);
+            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            DataFormatter formatter = new DataFormatter();
+            for(int i=1;i<=sheet.getLastRowNum();i++){
+                Row row = sheet.getRow(i);
+                if(row==null){
+                    continue;
+                }
+
+                String communityNamecell = formatter.formatCellValue(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String communityTopicCell = formatter.formatCellValue(row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String communityDescriptionCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String communityUserCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                if(communityNamecell.isEmpty()) {
+                    continue;
+                }
+                Community community = new Community(communityUserCell,communityTopicCell,communityNamecell,communityDescriptionCell);
+                excelCommunities.add(community);
+
+
+            }
+        }catch(IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+
+        return excelCommunities;
+    }
     }
 }
 

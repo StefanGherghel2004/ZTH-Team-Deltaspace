@@ -32,7 +32,7 @@ public class RegisterCommand implements Command {
                 continue;
             }
 
-            if (excelRead.checkDuplicateUsername(username, "App/CLI-backend/databases/UserDatabase.xlsx")) {
+            if (excelRead.checkDuplicateCell(username, 1,"App/CLI-backend/databases/UserDatabase.xlsx")) {
                 System.out.println("Username already exists. Please choose a different username.");
                 continue;
             }
@@ -46,7 +46,7 @@ public class RegisterCommand implements Command {
             System.out.println("Invalid email format. Must be like 'user@domain.com'.");
             continue;
         }
-        if(excelRead.checkDuplicateEmail(email,"App/CLI-backend/databases/UserDatabase.xlsx")){
+        if(excelRead.checkDuplicateCell(email,2,"App/CLI-backend/databases/UserDatabase.xlsx")){
             System.out.println("Email already exists. Please use a different email address.");
             continue;
             }

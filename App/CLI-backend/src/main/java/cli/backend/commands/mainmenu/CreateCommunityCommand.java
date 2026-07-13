@@ -21,7 +21,7 @@ public class CreateCommunityCommand implements Command {
         String communityName;
         while(true){
             communityName = "r/" + console.getStringInput("Please enter community name: \nr/");
-            if(excelRead.checkDuplicateCommmunity(communityName,"App/CLI-backend/databases/CommunityDatabase.xlsx")){
+            if(excelRead.checkDuplicateCell(communityName,0,"App/CLI-backend/databases/CommunityDatabase.xlsx")){
                 System.out.println("Community name already exists. Please choose a different name.");
                 continue;
             }
