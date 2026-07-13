@@ -8,17 +8,17 @@ public class Community {
     private String topic;
     private List<Post> posts =new ArrayList<>();
     private String description;
-    private User communityCreator;
+    private String communityCreator;
 
 
-    public Community(User communityCreator, String topic,String nickname,String description){
+    public Community(String communityCreator, String topic,String nickname,String description){
         this.topic=topic;
         this.nickname=nickname;
         this.description =description;
         this.communityCreator = communityCreator;
     }
 
-    public User getCommunityCreator () {
+    public String getCommunityCreator () {
 
         return this.communityCreator;
     }

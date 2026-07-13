@@ -43,12 +43,12 @@ public class CommunityService {
         return null;
     }
 
-    public void addCommunity(User communityCreator, String name, String topic, String description)
+    public void addCommunity(String communityCreator, String name, String topic, String description)
             throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
             communities.add(new Community(communityCreator, topic, name, description));
             excelWrite.write("App/CLI-backend/databases/CommunityDatabase.xlsx",List.of(
-                    name,topic,description,communityCreator.getUsername()
+                    name,topic,description,communityCreator
             ));
         }
         else {

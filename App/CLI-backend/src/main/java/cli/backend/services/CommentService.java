@@ -68,7 +68,7 @@ public class CommentService {
             return true;
         }
 
-        if (community != null && community.getCommunityCreator().getUsername().equals(username)) {
+        if (community != null && community.getCommunityCreator().equals(username)) {
             return true;
         }
 
