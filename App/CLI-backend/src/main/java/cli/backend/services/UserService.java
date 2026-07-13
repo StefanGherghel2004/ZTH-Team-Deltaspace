@@ -4,6 +4,7 @@ import cli.backend.User;
 import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidUserAccountException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -25,23 +26,21 @@ public class UserService {
     private final List<User> users = new ArrayList<>();
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
 
-    private UserService() {
-
+    private UserService(){
         this.addUser("admin",
                 "test@admin",
                 PasswordService.hash("Admin123"),
                 "01-01-2000");
-
     }
 
-    public static UserService getInstance() {
+    public static UserService getInstance(){
         if (instance == null) {
             instance = new UserService();
         }
         return instance;
     }
 
-    public void addUser (String username, String email, String password, String dateOfBirth){
+    public void addUser (String username, String email, String password, String dateOfBirth) {
 
         User user = new User(username,email,password,dateOfBirth);
         excelWrite.write("App/CLI-backend/databases/UserDatabase.xlsx", List.of(
