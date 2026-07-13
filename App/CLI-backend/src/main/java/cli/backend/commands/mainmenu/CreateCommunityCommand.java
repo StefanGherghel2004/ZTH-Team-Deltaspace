@@ -1,6 +1,7 @@
 package cli.backend.commands.mainmenu;
 
 import cli.backend.commands.Command;
+import cli.backend.database.ExcelRead;
 import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.handlers.AppHandler;
 import cli.backend.readers.Console;
@@ -14,9 +15,18 @@ public class CreateCommunityCommand implements Command {
         CommunityService communityService = CommunityService.getInstance();
         AppHandler appHandler = AppHandler.getInstance();
         Console console = Console.getInstance();
+        ExcelRead excelRead = ExcelRead.getInstance();
 
         console.info("\n--- Create Community ---");
-        String communityName = "r/" + console.getStringInput("Please enter community name: \nr/");
+        String communityName;
+        while(true){
+            communityName = "r/" + console.getStringInput("Please enter community name: \nr/");
+            if(excelRead.checkDuplicateCommmunity(communityName,"App/CLI-backend/databases/CommunityDatabase.xlsx")){
+                System.out.println("Community name already exists. Please choose a different name.");
+                continue;
+            }
+            break;
+        }
         List<String> topics = communityService.getAvailableTopics();
 
         console.info("TOPICS LIST");

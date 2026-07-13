@@ -3,6 +3,7 @@ package cli.backend.services;
 import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.User;
+import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidCommunityException;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 public class CommunityService {
 
     private static CommunityService instance;
-
+    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
     public static CommunityService getInstance(){
         if(instance==null){
             instance = new CommunityService();
@@ -46,6 +47,9 @@ public class CommunityService {
             throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
             communities.add(new Community(communityCreator, topic, name, description));
+            excelWrite.write("App/CLI-backend/databases/CommunityDatabase.xlsx",List.of(
+                    name,topic,description,communityCreator.getUsername()
+            ));
         }
         else {
             throw new InvalidCommunityException("Invalid topic. Please choose from the available topics.");

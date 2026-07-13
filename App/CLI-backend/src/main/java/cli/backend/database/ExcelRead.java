@@ -109,5 +109,30 @@ public class ExcelRead {
         return false;
     }
 
+    public boolean checkDuplicateCommmunity(String communityNameToCheck , String filename) {
+        try(FileInputStream file = new FileInputStream(filename);
+            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            DataFormatter formatter = new DataFormatter();
+            for(int i=1;i<=sheet.getLastRowNum();i++){
+                Row row = sheet.getRow(i);
+                if(row==null){
+                    continue;
+                }
+                Cell communityCell = row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                String communityName = formatter.formatCellValue(communityCell).trim();
+                if(communityName.isEmpty()){
+                    continue;
+                }
+                if(communityName.equalsIgnoreCase(communityNameToCheck.trim())){
+                    return true;
+                }
+            }
+    }catch(IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 
