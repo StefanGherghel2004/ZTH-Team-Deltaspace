@@ -27,7 +27,7 @@ public class ShowCommunitiesCommand implements Command {
             console.info(c.getNickname());
         }
 
-        String communityName = console.getStringInput("Choose a community (or press Enter to go back): ");
+        String communityName = console.getStringInput("Choose a community (or press Enter to go back): ", true);
 
         if (!communityName.isEmpty()) {
             Community foundCommunity = communityService.getCommunityByName(communityName);

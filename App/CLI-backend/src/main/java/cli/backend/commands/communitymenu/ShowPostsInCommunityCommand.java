@@ -26,8 +26,7 @@ public class ShowPostsInCommunityCommand implements Command {
             console.info("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Author: " + post.getUser().getUsername());
         }
 
-        // this will be changed when extracting more common behavior in the console class
-        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ");
+        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);
 
         if (input.isEmpty()) return true;
 

@@ -16,19 +16,19 @@ public class LoginCommand implements Command {
         Console console = Console.getInstance();
 
         console.info("Welcome to the login page.");
-        while (true) {
-            String username = console.getStringInput("Insert your username or email:");
-            String password = console.getStringInput("Insert your password:");
+        String username = console.getStringInput("Insert your username or email:");
+        String password = console.getStringInput("Insert your password:");
 
-            try {
-                User user = userService.validateUserAccount(username, password);
-                console.success("Successfully logged in - " + user.getUsername());
-                app.setCurrentUser(user);
-                app.setCurrentState(AppHandler.State.LOGGED_IN);
-                return true;
-            } catch (InvalidUserAccountException e) {
-                System.out.println(e.getMessage());
-            }
+        try {
+            User user = userService.validateUserAccount(username, password);
+            console.success("Successfully logged in - " + user.getUsername());
+            app.setCurrentUser(user);
+            app.setCurrentState(AppHandler.State.LOGGED_IN);
+            return true;
+        } catch (InvalidUserAccountException e) {
+            console.error(e.getMessage());
         }
+
+        return true;
     }
 }

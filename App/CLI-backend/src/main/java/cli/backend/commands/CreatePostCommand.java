@@ -21,8 +21,8 @@ public class CreatePostCommand implements Command {
         Community targetCommunity = app.getCurrentCommunity();
 
         if (targetCommunity == null) {
-            System.out.print("Please enter the community in which you would like to post \n(or press Enter to post to u/" + app.getCurrentUser().getUsername() + "): r/");
-            String input = consoleReader.readString();
+            String input = console.getStringInput("Please enter the community in which you would" +
+                    "like to post \n(or press Enter to post to u/" + app.getCurrentUser().getUsername() + "): r/", true);
 
             if (input.isEmpty()) {
                 console.info("Posting to your profile (u/" + app.getCurrentUser().getUsername() + ").");
@@ -38,7 +38,7 @@ public class CreatePostCommand implements Command {
         String postTitle = console.getStringInput("Please enter post title:");
         String postContents = console.getStringInput("Please enter post contents:");
 
-        String imageLink = console.getStringInput("Please enter image link (or press Enter to skip):");
+        String imageLink = console.getStringInput("Please enter image link (or press Enter to skip):", true);
         if (imageLink.isEmpty()) {
             imageLink = null;
         }

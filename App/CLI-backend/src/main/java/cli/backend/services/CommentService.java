@@ -6,7 +6,10 @@ import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.exceptions.EmptyCommentException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommentService {
 
@@ -32,6 +35,22 @@ public class CommentService {
 
             post.addComment(newComment, -1);
         }
+    }
+
+    public Map<Integer, List<Comment>> getCommentTree(Post post) {
+        Map<Integer, List<Comment>> commentTree = new HashMap<>();
+        List<Comment> flatCommentsList = post.getComments();
+
+        if (flatCommentsList == null || flatCommentsList.isEmpty()) {
+            return commentTree;
+        }
+
+        for (Comment comment : flatCommentsList) {
+            commentTree.putIfAbsent(comment.getIdParent(), new ArrayList<>());
+            commentTree.get(comment.getIdParent()).add(comment);
+        }
+
+        return commentTree;
     }
 
     public void replyToComment (User user, Post post, Comment parentComment, String text)
@@ -74,4 +93,5 @@ public class CommentService {
 
         return false;
     }
+
 }

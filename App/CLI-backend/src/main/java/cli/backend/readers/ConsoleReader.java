@@ -52,12 +52,18 @@ public class ConsoleReader {
         }
     }
 
-    public String readString(){
+    public String readString() {
+        return readString(false);
+    }
+
+    public String readString(boolean allowEmpty) {
         while (true) {
-            String input = scanner.nextLine();
-            if (input != null) {
-                return input.trim();
+            String input = scanner.nextLine().trim();
+                
+            if (allowEmpty || !input.isEmpty()) {
+                return input;
             }
+
             System.out.println(Color.textRed("Input cannot be empty. Try again."));
         }
     }

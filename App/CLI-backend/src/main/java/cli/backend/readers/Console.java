@@ -23,6 +23,11 @@ public class Console {
         return reader.readString();
     }
 
+    public String getStringInput(String prompt, boolean allowEmpty) {
+        System.out.println(prompt);
+        return reader.readString(allowEmpty);
+    }
+
     public int getIntInput(String prompt) {
         System.out.println(prompt);
         return reader.readInt();

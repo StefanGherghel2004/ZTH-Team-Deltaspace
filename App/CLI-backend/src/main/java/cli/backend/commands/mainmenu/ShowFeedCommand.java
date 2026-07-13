@@ -27,8 +27,7 @@ public class ShowFeedCommand implements Command {
             console.info("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Community: " + post.getCommunityName());
         }
 
-        // will be changed
-        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ");
+        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);
 
         if (!input.isEmpty()) {
             try {

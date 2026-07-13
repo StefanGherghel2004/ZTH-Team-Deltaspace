@@ -1,9 +1,11 @@
 package cli.backend.commands.postmenu;
 
 import cli.backend.Comment;
+import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.readers.Console;
+import cli.backend.services.CommentService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,24 +16,20 @@ public class ShowCommentsCommand implements Command {
     @Override
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
-        List<Comment> flatCommentsList = app.getCurrentPost().getComments();
         Console console = Console.getInstance();
+        Post currentPost = app.getCurrentPost();
 
-        if (flatCommentsList == null || flatCommentsList.isEmpty()) {
+        Map<Integer, List<Comment>> commentTree = CommentService.getInstance().getCommentTree(currentPost);
+
+        if (commentTree.isEmpty()) {
             console.info("(No comments yet. Be the first to reply!)");
             return true;
         }
 
         console.info("\n--- Discussion Thread ---");
-        Map<Integer, List<Comment>> commentTree = new HashMap<>();
-        for (Comment comment : flatCommentsList) {
-            commentTree.putIfAbsent(comment.getIdParent(), new ArrayList<>());
-            commentTree.get(comment.getIdParent()).add(comment);
-        }
-
         printThread(-1, commentTree, 0, console);
 
-        console.getStringInput("Press Enter to return to the post menu...");
+        console.getStringInput("Press Enter to return to the post menu...", true);
         return true;
     }
 
