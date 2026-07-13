@@ -45,13 +45,13 @@ public class DatabaseInitialize {
 
     public void setupDatabases () throws IOException {
 
-        excelWrite.write("App/CLI-backend/databases/UserDatabase.xlsx",
+        excelWrite.write(excelWrite.userDatabasePath,
                 List.of("ID","Username","E-mail","Password","Date of Birth"));
 
-        excelWrite.write("App/CLI-backend/databases/PostDatabase.xlsx",
+        excelWrite.write(excelWrite.postDatabasePath,
                 List.of("ID","Title","Contents","Image link","Community","NSFW"));
 
-        excelWrite.write("App/CLI-backend/databases/CommunityDatabase.xlsx",
+        excelWrite.write(excelWrite.communityDatabasePath,
                 List.of("Name","Topic","Description","Community creator"));
     }
 }
