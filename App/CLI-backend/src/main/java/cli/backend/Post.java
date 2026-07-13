@@ -1,5 +1,6 @@
 package cli.backend;
 
+import cli.backend.database.ExcelWrite;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -15,11 +16,9 @@ public class Post {
     private String imageLink;
     private String communityName;
     private boolean NSFW=false;
+
     //Constructor
     public Post (User user, String postTitle, String postContents, String imageLink, boolean NSFW, String community) {
-
-        this.postID = postIdIncrementation;
-        postIdIncrementation++;
 
         this.user = user;
         this.imageLink = imageLink;
@@ -27,7 +26,9 @@ public class Post {
         this.postContents = postContents;
         this.NSFW = NSFW;
         this.commentIdIncrementation = 0;
-        this.communityName =community;
+        this.communityName = community;
+        postIdIncrementation = ExcelWrite.getCurrentId(ExcelWrite.getInstance().postDatabasePath);
+        this.postID = ++postIdIncrementation;
     }
 
     //Getters
@@ -137,6 +138,4 @@ public class Post {
     public int getCommentsCount() {
         return comments.size();
     }
-
-
 }

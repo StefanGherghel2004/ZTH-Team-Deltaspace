@@ -44,7 +44,7 @@ public class UserService {
     public void addUser (String username, String email, String password, String dateOfBirth){
 
         User user = new User(username,email,password,dateOfBirth);
-        excelWrite.write("App/CLI-backend/databases/UserDatabase.xlsx", List.of(
+        excelWrite.write(excelWrite.userDatabasePath, List.of(
                 String.valueOf(user.getUserID()),user.getUsername(),user.getEmail(),user.getPassword(),
                 String.valueOf(user.getDateOfBirth())));
         users.add(user);
