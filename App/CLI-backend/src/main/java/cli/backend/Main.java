@@ -1,6 +1,7 @@
 package cli.backend;
 
 import cli.backend.database.DatabaseInitialize;
+
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.*;
 
