@@ -2,6 +2,7 @@ package cli.backend.services;
 
 import cli.backend.Comment;
 import cli.backend.Community;
+import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
@@ -56,6 +57,23 @@ public class CommunityService {
         else {
             throw new InvalidCommunityException("Invalid topic. Please choose from the available topics.");
         }
+    }
+
+    public boolean deleteCommunity(Community community) {
+        if (community == null) {
+            return false;
+        }
+
+        boolean isRemoved = communities.remove(community);
+
+        if (isRemoved) {
+            List<Post> postsToDelete = community.getPosts();
+            for (Post p : postsToDelete) {
+                PostService.getInstance().deletePost(p);
+            }
+        }
+
+        return isRemoved;
     }
     public List<String> getAvailableTopics(){
         return new ArrayList<>(TOPICS);
