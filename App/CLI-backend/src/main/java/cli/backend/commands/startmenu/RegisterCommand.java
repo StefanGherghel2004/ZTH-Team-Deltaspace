@@ -33,12 +33,12 @@ public class RegisterCommand implements Command {
         while(true) {
 
             if (!userService.validateUsername(username = consoleReader.readString())) {
-                System.out.println("Invalid username format. Please try again.");
+                console.error("Invalid username format. Please try again.");
                 continue;
             }
 
             if (userCheck.isDuplicate(username)) {
-                System.out.println("Username already exists. Please choose a different username.");
+                console.error("Username already exists. Please choose a different username.");
                 continue;
             }
             break;
@@ -48,11 +48,11 @@ public class RegisterCommand implements Command {
         String email;
         while(true){
         if(!userService.validateEmail(email = consoleReader.readString())) {
-            System.out.println("Invalid email format. Must be like 'user@domain.com'.");
+            console.error("Invalid email format. Must be like 'user@domain.com'.");
             continue;
         }
         if(emailCheck.isDuplicate(email)){
-            System.out.println("Email already exists. Please use a different email address.");
+            console.error("Email already exists. Please use a different email address.");
             continue;
             }
             break;

@@ -25,7 +25,7 @@ public class CreateCommunityCommand implements Command {
         while(true){
             communityName = "r/" + console.getStringInput("Please enter community name: \nr/");
             if(communityCheck.isDuplicate(communityName)){
-                System.out.println("Community name already exists. Please choose a different name.");
+                console.error("Community name already exists. Please choose a different name.");
                 continue;
             }
             break;
