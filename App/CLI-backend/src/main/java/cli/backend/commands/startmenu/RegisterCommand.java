@@ -5,6 +5,9 @@ import cli.backend.User;
 import cli.backend.commands.Command;
 import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
+import cli.backend.duplicates.CheckDuplicate;
+import cli.backend.duplicates.EmailDuplicate;
+import cli.backend.duplicates.UserDuplicate;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
@@ -19,7 +22,9 @@ public class RegisterCommand implements Command {
         ConsoleReader consoleReader = ConsoleReader.getInstance();
         UserService userService = UserService.getInstance();
         ExcelWrite excelWrite = ExcelWrite.getInstance();
-        ExcelRead excelRead = ExcelRead.getInstance();
+        CheckDuplicate userCheck=new UserDuplicate();
+        CheckDuplicate emailCheck=new EmailDuplicate();
+
 
         System.out.println("Welcome to the registration page.");
 
@@ -32,7 +37,7 @@ public class RegisterCommand implements Command {
                 continue;
             }
 
-            if (excelRead.checkDuplicateCell(username, 1,"App/CLI-backend/databases/UserDatabase.xlsx")) {
+            if (userCheck.isDuplicate(username)) {
                 System.out.println("Username already exists. Please choose a different username.");
                 continue;
             }
@@ -46,7 +51,7 @@ public class RegisterCommand implements Command {
             System.out.println("Invalid email format. Must be like 'user@domain.com'.");
             continue;
         }
-        if(excelRead.checkDuplicateCell(email,2,"App/CLI-backend/databases/UserDatabase.xlsx")){
+        if(emailCheck.isDuplicate(email)){
             System.out.println("Email already exists. Please use a different email address.");
             continue;
             }

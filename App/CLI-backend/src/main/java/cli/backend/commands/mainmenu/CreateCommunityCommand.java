@@ -2,8 +2,11 @@ package cli.backend.commands.mainmenu;
 
 import cli.backend.commands.Command;
 import cli.backend.database.ExcelRead;
+import cli.backend.duplicates.CheckDuplicate;
+import cli.backend.duplicates.CommunityDuplicate;
 import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.handlers.AppHandler;
+import cli.backend.loggers.ConsoleLogger;
 import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
@@ -15,13 +18,13 @@ public class CreateCommunityCommand implements Command {
         CommunityService communityService = CommunityService.getInstance();
         AppHandler appHandler = AppHandler.getInstance();
         Console console = Console.getInstance();
-        ExcelRead excelRead = ExcelRead.getInstance();
+        CheckDuplicate communityCheck = new CommunityDuplicate();
 
         console.info("\n--- Create Community ---");
         String communityName;
         while(true){
             communityName = "r/" + console.getStringInput("Please enter community name: \nr/");
-            if(excelRead.checkDuplicateCell(communityName,0,"App/CLI-backend/databases/CommunityDatabase.xlsx")){
+            if(communityCheck.isDuplicate(communityName)){
                 System.out.println("Community name already exists. Please choose a different name.");
                 continue;
             }

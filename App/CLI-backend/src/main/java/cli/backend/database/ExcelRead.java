@@ -52,36 +52,29 @@ public class ExcelRead {
 
         }
     }
-    public boolean checkDuplicateCell(String cellValueToCheck,int column, String filename){
-
+    public List<String> getColumnValues(String filename, int columnIndex) {
+        List<String> columnValues = new ArrayList<>();
         try (FileInputStream file = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             DataFormatter formatter = new DataFormatter();
-            for(int i=1;i<=sheet.getLastRowNum();i++){
-                Row row=sheet.getRow(i);
-                if(row==null){
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) {
                     continue;
                 }
-                Cell usernameCell = row.getCell(column, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                String cellValue = formatter.formatCellValue(usernameCell).trim();
-                if(cellValue.isEmpty()){
-                    continue;
+                Cell cell = row.getCell(columnIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                String cellValue = formatter.formatCellValue(cell).trim();
+                if (!cellValue.isEmpty()) {
+                    columnValues.add(cellValue);
                 }
-                if(cellValue.equalsIgnoreCase(cellValueToCheck.trim())){
-                    return true;
-                }
-
             }
-
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("File not found");
             e.printStackTrace();
         }
-        return false;
+        return columnValues;
     }
-
-
 
     public List<User> getExcelUsers(){
 
