@@ -27,10 +27,7 @@ public class UserService {
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
 
     private UserService(){
-        this.addUser("admin",
-                "test@admin",
-                PasswordService.hash("Admin123"),
-                "01-01-2000");
+
     }
 
     public static UserService getInstance(){
@@ -98,5 +95,11 @@ public class UserService {
         return user != null && Pattern.matches(regex, user);
     }
 
+    public void addAdmin () {
 
+        addUser("admin",
+                "test@admin",
+                PasswordService.hash("Admin123"),
+                "01-01-2000");
+    }
 }
