@@ -23,7 +23,7 @@ public class CommunityMenu extends Menu {
         addOption(menuIndex++, "Add Post", new CreatePostCommand());
         addOption(menuIndex++, "Return to Main Menu", new BackCommand());
 
-        if (List.of(currentCommunity.getCommunityCreator().getUsername(),"admin")
+        if (List.of(currentCommunity.getCommunityCreator(),"admin")
                 .contains(appHandler.getCurrentUser().getUsername()))
             addOption(menuIndex++, "Delete community", new DeleteCommunityCommand());
     }
