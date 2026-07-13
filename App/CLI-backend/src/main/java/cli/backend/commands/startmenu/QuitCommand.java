@@ -2,11 +2,12 @@ package cli.backend.commands.startmenu;
 
 
 import cli.backend.commands.Command;
+import cli.backend.readers.Console;
 
 public class QuitCommand implements Command {
     @Override
     public boolean execute() {
-        System.out.println("Shutting down...");
+        Console.getInstance().info("Logging out...");
         return false;
     }
 }

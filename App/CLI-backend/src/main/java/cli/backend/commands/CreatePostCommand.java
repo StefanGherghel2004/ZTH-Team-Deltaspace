@@ -3,6 +3,7 @@ package cli.backend.commands;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.handlers.AppHandler;
+import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PostService;
@@ -12,10 +13,11 @@ public class CreatePostCommand implements Command {
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
         ConsoleReader consoleReader = ConsoleReader.getInstance();
+        Console console = Console.getInstance();
         CommunityService communityService = CommunityService.getInstance();
         PostService postService = PostService.getInstance();
 
-        System.out.println("Welcome to the post creation page.");
+        console.info("Welcome to the post creation page.");
         Community targetCommunity = app.getCurrentCommunity();
 
         if (targetCommunity == null) {
@@ -23,36 +25,31 @@ public class CreatePostCommand implements Command {
             String input = consoleReader.readString();
 
             if (input.isEmpty()) {
-                System.out.println("Posting to your profile (u/" + app.getCurrentUser().getUsername() + ").");
+                console.info("Posting to your profile (u/" + app.getCurrentUser().getUsername() + ").");
             } else {
                 String communityName = "r/" + input;
                 targetCommunity = communityService.getCommunityByName(communityName);
                 if (targetCommunity == null) {
-                    System.out.println("Community not found! Posting to your profile instead.");
+                    console.error("Community not found! Posting to your profile instead.");
                 }
             }
         }
 
-        System.out.println("Please enter post title:");
-        String postTitle = consoleReader.readString();
+        String postTitle = console.getStringInput("Please enter post title:");
+        String postContents = console.getStringInput("Please enter post contents:");
 
-        System.out.println("Please enter post contents:");
-        String postContents = consoleReader.readString();
-
-        System.out.println("Please enter image link (or press Enter to skip):");
-        String imageLink = consoleReader.readString();
-        if (imageLink.trim().isEmpty()) {
+        String imageLink = console.getStringInput("Please enter image link (or press Enter to skip):");
+        if (imageLink.isEmpty()) {
             imageLink = null;
         }
 
-        System.out.println("Is your post NSFW? [yes/no]");
-        boolean NSFW = consoleReader.readString().equalsIgnoreCase("yes");
+        boolean NSFW = console.getUserConfirmation("Is your post NSFW? [yes/no]");
 
         if (NSFW && !app.getCurrentUser().checkAge()) {
-            System.out.println("You must be at least 18 years old to create an NSFW post.");
+            console.error("You must be at least 18 years old to create an NSFW post.");
         } else {
             Post newPost = postService.addPost(app.getCurrentUser(), postTitle, postContents, imageLink, NSFW, targetCommunity);
-            System.out.println("Post created successfully!");
+            console.success("Post created successfully!");
             app.setCurrentPost(newPost);
             app.setCurrentState(AppHandler.State.ON_POST);
         }

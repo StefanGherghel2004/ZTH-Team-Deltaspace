@@ -1,5 +1,7 @@
 package cli.backend.readers;
 
+import cli.backend.textformatters.Color;
+
 import java.util.Scanner;
 
 public class ConsoleReader {
@@ -30,7 +32,7 @@ public class ConsoleReader {
             try{
                 return Integer.parseInt(inputInteger);
             } catch (NumberFormatException e) {
-                System.out.println("Error: Please enter a valid number.");
+                System.out.println(Color.textRed("Please enter a valid number."));
             }
         }
     }
@@ -45,8 +47,8 @@ public class ConsoleReader {
                 return value;
             }
             else
-                System.out.println("Invalid option. Please enter a number between" +
-                        " " + min + " and " + max + ".");
+                System.out.println(Color.textRed("Invalid option. Please enter a number between" +
+                        " " + min + " and " + max + "."));
         }
     }
 
@@ -56,7 +58,8 @@ public class ConsoleReader {
             if (input != null) {
                 return input.trim();
             }
-            System.out.println("Error: Input cannot be empty. Try again.");
+            System.out.println(Color.textRed("Input cannot be empty. Try again."));
         }
     }
+
 }

@@ -3,6 +3,7 @@ package cli.backend.commands.mainmenu;
 import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
+import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.PostService;
 import java.util.List;
@@ -12,23 +13,22 @@ public class ShowFeedCommand implements Command {
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
         PostService postService = PostService.getInstance();
-        ConsoleReader reader = ConsoleReader.getInstance();
+        Console console = Console.getInstance();
 
-        System.out.println("\n--- Your Feed ---");
+        console.info("\n--- Your Feed ---");
         List<Post> posts = postService.getPosts();
 
         if (posts.isEmpty()) {
-            System.out.print("Feed is empty.\nPress Enter to return...");
-            reader.readString();
+            console.getStringInput("Feed is empty.\nPress Enter to return...");
             return true;
         }
 
         for(Post post: posts) {
-            System.out.println("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Community: " + post.getCommunityName());
+            console.info("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Community: " + post.getCommunityName());
         }
 
-        System.out.print("Choose a post [ID] (or press Enter to go back): ");
-        String input = reader.readString();
+        // will be changed
+        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ");
 
         if (!input.isEmpty()) {
             try {
@@ -36,16 +36,16 @@ public class ShowFeedCommand implements Command {
                 Post foundPost = postService.findPostById(id);
                 if (foundPost != null) {
                     if (foundPost.getNSFW() && !app.getCurrentUser().checkAge()) {
-                        System.out.println("NSFW Post. You must be 18+.");
+                        console.error("NSFW Post. You must be 18+.");
                     } else {
                         app.setCurrentPost(foundPost);
                         app.setCurrentState(AppHandler.State.ON_POST);
                     }
                 } else {
-                    System.out.println("Post not found!");
+                    console.error("Post not found!");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid ID format!");
+                console.error("Invalid ID format!");
             }
         }
         return true;
