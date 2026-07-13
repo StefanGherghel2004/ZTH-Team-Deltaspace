@@ -19,7 +19,7 @@ public class ShowFeedCommand implements Command {
         List<Post> posts = postService.getPosts();
 
         if (posts.isEmpty()) {
-            console.getStringInput("Feed is empty.\nPress Enter to return...");
+            console.getStringInput("Feed is empty.\nPress Enter to return...", true);
             return true;
         }
 
