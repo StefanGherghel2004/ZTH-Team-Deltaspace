@@ -1,16 +1,21 @@
 package cli.backend.commands.startmenu;
 
 
+import cli.backend.User;
 import cli.backend.commands.Command;
+import cli.backend.database.ExcelWrite;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
+
+import java.util.List;
 
 public class RegisterCommand implements Command {
     @Override
     public boolean execute() {
         ConsoleReader consoleReader = ConsoleReader.getInstance();
         UserService userService = UserService.getInstance();
+        ExcelWrite excelWrite = ExcelWrite.getInstance();
 
         System.out.println("Welcome to the registration page.");
 

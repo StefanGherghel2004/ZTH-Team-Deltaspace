@@ -14,6 +14,7 @@ import java.util.List;
 public class DatabaseInitialize {
 
     private static DatabaseInitialize instance = null;
+    private ExcelWrite excelWrite = ExcelWrite.getInstance();
 
     private DatabaseInitialize () throws IOException {
 
@@ -44,13 +45,13 @@ public class DatabaseInitialize {
 
     public void setupDatabases () throws IOException {
 
-        ExcelWrite.write("App/CLI-backend/databases/UserDatabase.xlsx",
+        excelWrite.write("App/CLI-backend/databases/UserDatabase.xlsx",
                 List.of("ID","Username","E-mail","Password","Date of Birth"));
 
-        ExcelWrite.write("App/CLI-backend/databases/PostDatabase.xlsx",
+        excelWrite.write("App/CLI-backend/databases/PostDatabase.xlsx",
                 List.of("ID","Title","Contents","Image link","Community","NSFW"));
 
-        ExcelWrite.write("App/CLI-backend/databases/CommunityDatabase.xlsx",
+        excelWrite.write("App/CLI-backend/databases/CommunityDatabase.xlsx",
                 List.of("Name","Topic","Description","Community creator"));
     }
 }

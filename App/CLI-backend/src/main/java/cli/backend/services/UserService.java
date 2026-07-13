@@ -1,6 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.User;
+import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidUserAccountException;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public class UserService {
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
     private final List<User> users = new ArrayList<>();
+    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
 
     private UserService() {
 
@@ -41,7 +43,11 @@ public class UserService {
 
     public void addUser (String username, String email, String password, String dateOfBirth){
 
-        users.add(new User(username,email,password,dateOfBirth));
+        User user = new User(username,email,password,dateOfBirth);
+        excelWrite.write("App/CLI-backend/databases/UserDatabase.xlsx", List.of(
+                String.valueOf(user.getUserID()),user.getUsername(),user.getEmail(),user.getPassword(),
+                String.valueOf(user.getDateOfBirth())));
+        users.add(user);
     }
 
     public boolean validateUsername (String username) {
