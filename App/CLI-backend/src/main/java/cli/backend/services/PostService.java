@@ -52,11 +52,19 @@ public class PostService {
         }
         return null;
     }
-    public void deletePost(Post post){
-        posts.removeIf(p -> p.getPostID() == post.getPostID());
+
+    public void deletePost(Post postToDelete) {
+        posts.remove(postToDelete);
+
+        Community community = CommunityService.getInstance()
+                .getCommunityByName(postToDelete.getCommunityName());
+        if (community != null) {
+            community.deletePost(postToDelete);
+        }
     }
 
-    public boolean canUserDeletePost(cli.backend.User user, Post post, Community community) {
+
+    public boolean canUserDeletePost(User user, Post post, Community community) {
         if (user == null || post == null) {
             return false;
         }

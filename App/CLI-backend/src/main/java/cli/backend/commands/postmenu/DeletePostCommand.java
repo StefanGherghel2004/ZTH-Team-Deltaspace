@@ -17,7 +17,6 @@ public class DeletePostCommand implements Command {
         AppHandler app = AppHandler.getInstance();
         Console console = Console.getInstance();
         PostService postService = PostService.getInstance();
-        CommunityService communityService = CommunityService.getInstance();
 
         Post postToDelete = app.getCurrentPost();
         Community currentCommunity = app.getCurrentCommunity();
@@ -32,12 +31,6 @@ public class DeletePostCommand implements Command {
 
         if (confirm) {
             postService.deletePost(postToDelete);
-
-            Community community = communityService.getCommunityByName(postToDelete.getCommunityName());
-            if (community != null) {
-                community.deletePost(postToDelete);
-            }
-
             app.setCurrentPost(null);
             returnToPreviousState(app, currentCommunity);
             console.success("Post deleted successfully.");
