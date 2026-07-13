@@ -5,6 +5,7 @@ import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.LogLevel;
+import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 import java.util.List;
 
@@ -12,22 +13,21 @@ public class ShowPostsInCommunityCommand implements Command {
     @Override
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
-        ConsoleReader consoleReader = ConsoleReader.getInstance();
-        ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.WARNING);
-        System.out.println("\n--- Posts in " + app.getCurrentCommunity().getNickname() + " ---");
+        Console console = Console.getInstance();
+        console.info("\n--- Posts in " + app.getCurrentCommunity().getNickname() + " ---");
         List<Post> communityPosts = app.getCurrentCommunity().getPosts();
 
         if (communityPosts.isEmpty()) {
-            System.out.println("No posts in this r/");
+            console.info("No posts in this r/");
             return true;
         }
 
         for (Post post : communityPosts) {
-            System.out.println("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Author: " + post.getUser().getUsername());
+            console.info("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Author: " + post.getUser().getUsername());
         }
 
-        System.out.print("\nChoose a post [ID] (or press Enter to go back): ");
-        String input = consoleReader.readString();
+        // this will be changed when extracting more common behavior in the console class
+        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ");
 
         if (input.isEmpty()) return true;
 
@@ -37,16 +37,16 @@ public class ShowPostsInCommunityCommand implements Command {
 
             if (currentPost != null) {
                 if (currentPost.getNSFW() && !app.getCurrentUser().checkAge()) {
-                    consoleLogger.log(LogLevel.WARNING,"This post is marked as NSFW. You must be at least 18 years old to view it.");
+                    console.error("This post is marked as NSFW. You must be at least 18 years old to view it.");
                 } else {
                     app.setCurrentPost(currentPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
                 }
             } else {
-                System.out.println("Post not found!");
+                console.error("Post not found!");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            console.error("Invalid ID format!");
         }
         return true;
     }

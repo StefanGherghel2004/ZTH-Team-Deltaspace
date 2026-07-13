@@ -6,6 +6,7 @@ import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.LogLevel;
+import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 import cli.backend.services.PostService;
 import cli.backend.services.CommunityService;
@@ -14,8 +15,7 @@ public class DeletePostCommand implements Command {
     @Override
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
-        ConsoleReader consoleReader = ConsoleReader.getInstance();
-        ConsoleLogger consoleLogger = new ConsoleLogger(LogLevel.INFO);
+        Console console = Console.getInstance();
         PostService postService = PostService.getInstance();
         CommunityService communityService = CommunityService.getInstance();
 
@@ -23,15 +23,14 @@ public class DeletePostCommand implements Command {
         Community currentCommunity = app.getCurrentCommunity();
 
         if (!postService.canUserDeletePost(app.getCurrentUser(), postToDelete, currentCommunity)) {
-            consoleLogger.log(LogLevel.INFO, "You cannot delete this post as you are not the owner.");
+            console.error("You cannot delete this post as you are not the owner.");
             returnToPreviousState(app, currentCommunity);
             return true;
         }
 
-        System.out.print("Are you sure you want to delete this post? (yes/no): ");
-        String confirmation = consoleReader.readString();
+        boolean confirm = console.getUserConfirmation("Are you sure you want to delete this post? (yes/no): ");
 
-        if (confirmation.equalsIgnoreCase("yes")) {
+        if (confirm) {
             postService.deletePost(postToDelete);
 
             Community community = communityService.getCommunityByName(postToDelete.getCommunityName());
@@ -41,9 +40,9 @@ public class DeletePostCommand implements Command {
 
             app.setCurrentPost(null);
             returnToPreviousState(app, currentCommunity);
-            consoleLogger.log(LogLevel.INFO, "Post deleted successfully.");
+            console.success("Post deleted successfully.");
         } else {
-            consoleLogger.log(LogLevel.INFO, "Post deletion cancelled.");
+            console.info("Post deletion cancelled.");
             app.setCurrentState(AppHandler.State.ON_POST);
         }
 
