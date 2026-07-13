@@ -11,7 +11,7 @@ public class Main {
 
         AppHandler app = AppHandler.getInstance();
 
-        DatabaseInitialize.getInstance().initialize();
+        DatabaseInitialize.getInstance();
         Logger.init();
         app.run();
     }
