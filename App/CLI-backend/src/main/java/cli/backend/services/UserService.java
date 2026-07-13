@@ -1,6 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.User;
+import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidUserAccountException;
 
@@ -22,9 +23,9 @@ public class UserService {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
-    private final List<User> users = new ArrayList<>();
-    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
 
+    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
+    private static ExcelRead  excelRead = ExcelRead.getInstance();
     private UserService() {
 
         this.addUser("admin",
@@ -81,7 +82,7 @@ public class UserService {
             return false;
         }
     }
-
+    List<User> users=excelRead.getExcelUsers();
     public  User validateUserAccount (String usernameOrEmail, String password)
             throws InvalidUserAccountException {
 

@@ -1,5 +1,6 @@
 package cli.backend.database;
 
+import cli.backend.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -8,9 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 public class ExcelRead {
 
@@ -133,6 +132,38 @@ public class ExcelRead {
             e.printStackTrace();
         }
         return false;
+    }
+    public List<User> getExcelUsers(){
+
+        String filename = "App/CLI-backend/databases/UserDatabase.xlsx";
+        List<User> excelUsers = new ArrayList<>();
+
+        try(FileInputStream file = new FileInputStream(filename);
+            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            DataFormatter formatter = new DataFormatter();
+            for(int i=1;i<=sheet.getLastRowNum();i++){
+                Row row = sheet.getRow(i);
+                if(row==null){
+                    continue;
+                }
+
+                String userNameCell = formatter.formatCellValue(row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String emailCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String passwordCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String dateOfBirthCell = formatter.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                if(userNameCell.isEmpty()) {
+                    continue;
+                }
+                excelUsers.add(new User(userNameCell,emailCell,passwordCell,dateOfBirthCell));
+
+            }
+        }catch(IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+
+    return excelUsers;
     }
 }
 
