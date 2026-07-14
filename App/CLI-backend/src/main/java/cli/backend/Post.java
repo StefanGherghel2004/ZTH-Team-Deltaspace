@@ -31,6 +31,10 @@ public class Post {
         this.postID = ++postIdIncrementation;
     }
 
+    public void setPostID(int postID) {
+        this.postID = postID;
+    }
+
     //Getters
     public int getPostID () {
 

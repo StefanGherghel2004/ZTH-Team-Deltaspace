@@ -1,6 +1,7 @@
 package cli.backend.database;
 
 import cli.backend.Community;
+import cli.backend.Post;
 import cli.backend.User;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -15,31 +16,31 @@ import java.util.*;
 public class ExcelRead {
 
     private static ExcelRead instance;
+
     private ExcelRead() {
     }
 
-    public static ExcelRead getInstance()
-    {
-        if(instance==null){
-            instance=new ExcelRead();
+    public static ExcelRead getInstance() {
+        if (instance == null) {
+            instance = new ExcelRead();
 
         }
         return instance;
     }
 
-    public void readExcel(String filename)  {
+    public void readExcel(String filename) {
         System.out.println("Attempting to open Excel");
         try (FileInputStream file = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(file)) {
 
             XSSFSheet sheet = workbook.getSheetAt(0);
             DataFormatter formatter = new DataFormatter();
-            for (int i=0;i<=sheet.getLastRowNum();i++){
+            for (int i = 0; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                if(row==null){
+                if (row == null) {
                     continue;
                 }
-                for(int j=0;j<row.getLastCellNum();j++){
+                for (int j = 0; j < row.getLastCellNum(); j++) {
                     Cell cell = row.getCell(j, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     String cellValue = formatter.formatCellValue(cell);
                     System.out.printf("%-16s", cellValue);
@@ -52,6 +53,7 @@ public class ExcelRead {
 
         }
     }
+
     public List<String> getColumnValues(String filename, int columnIndex) {
         List<String> columnValues = new ArrayList<>();
         try (FileInputStream file = new FileInputStream(filename);
@@ -76,18 +78,18 @@ public class ExcelRead {
         return columnValues;
     }
 
-    public List<User> getExcelUsers(){
+    public List<User> getExcelUsers() {
 
         String filename = "App/CLI-backend/databases/UserDatabase.xlsx";
         List<User> excelUsers = new ArrayList<>();
 
-        try(FileInputStream file = new FileInputStream(filename);
-            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        try (FileInputStream file = new FileInputStream(filename);
+             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             DataFormatter formatter = new DataFormatter();
-            for(int i=1;i<=sheet.getLastRowNum();i++){
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                if(row==null){
+                if (row == null) {
                     continue;
                 }
 
@@ -95,31 +97,31 @@ public class ExcelRead {
                 String emailCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String passwordCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String dateOfBirthCell = formatter.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
-                if(userNameCell.isEmpty()) {
+                if (userNameCell.isEmpty()) {
                     continue;
                 }
-                excelUsers.add(new User(userNameCell,emailCell,passwordCell,dateOfBirthCell));
+                excelUsers.add(new User(userNameCell, emailCell, passwordCell, dateOfBirthCell));
 
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("File not found");
             e.printStackTrace();
         }
 
-    return excelUsers;
+        return excelUsers;
     }
 
-    public List<Community> getExcelCommunities(){
+    public List<Community> getExcelCommunities() {
         String filename = "App/CLI-backend/databases/CommunityDatabase.xlsx";
         List<Community> excelCommunities = new ArrayList<>();
 
-        try(FileInputStream file = new FileInputStream(filename);
-            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        try (FileInputStream file = new FileInputStream(filename);
+             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             DataFormatter formatter = new DataFormatter();
-            for(int i=1;i<=sheet.getLastRowNum();i++){
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                if(row==null){
+                if (row == null) {
                     continue;
                 }
 
@@ -127,20 +129,66 @@ public class ExcelRead {
                 String communityTopicCell = formatter.formatCellValue(row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String communityDescriptionCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String communityUserCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
-                if(communityNamecell.isEmpty()) {
+                if (communityNamecell.isEmpty()) {
                     continue;
                 }
-                Community community = new Community(communityUserCell,communityTopicCell,communityNamecell,communityDescriptionCell);
+                Community community = new Community(communityUserCell, communityTopicCell, communityNamecell, communityDescriptionCell);
                 excelCommunities.add(community);
 
 
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("File not found");
             e.printStackTrace();
         }
 
         return excelCommunities;
+    }
+
+    public List<Post> getExcelPosts() {
+        String filename = "App/CLI-backend/databases/PostDatabase.xlsx";
+        List<Post> excelPosts = new ArrayList<>();
+        try (FileInputStream file = new FileInputStream(filename);
+             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            DataFormatter formatter = new DataFormatter();
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) {
+                    continue;
+                }
+                String postIDCell = formatter.formatCellValue(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postUserCell = formatter.formatCellValue(row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postTitleCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postContentCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postImageLinkCell = formatter.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postCommunityNameCell = formatter.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postNSFWCell = formatter.formatCellValue(row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+
+                if (postUserCell.isEmpty()) {
+                    continue;
+                }
+                boolean isNSFW = Boolean.parseBoolean(postNSFWCell);
+                List<User> users = getExcelUsers();
+                User user = null;
+                for (User u : users) {
+                    if (u.getUsername().equalsIgnoreCase(postUserCell)) {
+                        user = u;
+                    }
+                }
+                if(postCommunityNameCell.equalsIgnoreCase("None")){
+                    postCommunityNameCell="u/"+postUserCell;
+                }
+                Post post= new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+                post.setPostID(Integer.parseInt(postIDCell));
+                excelPosts.add(post);
+
+            }
+        } catch (IOException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        return excelPosts;
     }
 }
 
