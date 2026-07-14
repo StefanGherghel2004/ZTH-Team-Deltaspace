@@ -23,7 +23,10 @@ public class CreateCommunityCommand implements Command {
         console.info("\n--- Create Community ---");
         String communityName;
         while(true){
-            communityName = "r/" + console.getStringInput("Please enter community name: \nr/");
+            communityName = console.getStringInput("Please enter community name:");
+            if (!communityName.startsWith("r/")) {
+                communityName = "r/" + communityName;
+            }
             if(communityCheck.isDuplicate(communityName)){
                 console.error("Community name already exists. Please choose a different name.");
                 continue;
@@ -38,7 +41,7 @@ public class CreateCommunityCommand implements Command {
         }
 
         int choice = console.getIntInRangeInput(1, topics.size(), "");
-        String selectedTopic = topics.get(choice);
+        String selectedTopic = topics.get(choice - 1);
 
         String description = console.getStringInput("Please Enter Community Description");
 
