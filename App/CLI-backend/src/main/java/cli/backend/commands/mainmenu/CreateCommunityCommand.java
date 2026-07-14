@@ -34,11 +34,7 @@ public class CreateCommunityCommand implements Command {
             break;
         }
         List<String> topics = communityService.getAvailableTopics();
-
-        console.info("TOPICS LIST");
-        for (String i : topics) {
-            console.info((topics.indexOf(i) + 1) + ". " + i);
-        }
+        console.printIndexList("Topics", topics);
 
         int choice = console.getIntInRangeInput(1, topics.size(), "");
         String selectedTopic = topics.get(choice - 1);

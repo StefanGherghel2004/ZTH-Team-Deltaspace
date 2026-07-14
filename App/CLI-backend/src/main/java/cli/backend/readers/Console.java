@@ -2,6 +2,8 @@ package cli.backend.readers;
 
 import cli.backend.textformatters.Color;
 
+import java.util.List;
+
 public class Console {
     private static Console instance;
     private ConsoleReader reader;
@@ -55,6 +57,13 @@ public class Console {
 
     public void info(String message) {
         System.out.println(message);
+    }
+
+    public void printIndexList(String title, List<String> content) {
+        info(title);
+        for (String i : content) {
+            info((content.indexOf(i) + 1) + ". " + i);
+        }
     }
 
 
