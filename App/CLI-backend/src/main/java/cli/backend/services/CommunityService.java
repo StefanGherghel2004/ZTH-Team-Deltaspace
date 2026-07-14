@@ -48,6 +48,13 @@ public class CommunityService {
         return null;
     }
 
+    public String formatName(String name) {
+        if (!name.startsWith("r/")) {
+            name = "r/" + name;
+        }
+        return name;
+    }
+
     public void addCommunity(String communityCreator, String name, String topic, String description)
             throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {

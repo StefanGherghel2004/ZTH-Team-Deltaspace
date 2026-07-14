@@ -24,9 +24,7 @@ public class CreateCommunityCommand implements Command {
         String communityName;
         while(true){
             communityName = console.getStringInput("Please enter community name:");
-            if (!communityName.startsWith("r/")) {
-                communityName = "r/" + communityName;
-            }
+            communityName = communityService.formatName(communityName);
             if(communityCheck.isDuplicate(communityName)){
                 console.error("Community name already exists. Please choose a different name.");
                 continue;

@@ -3,6 +3,7 @@ package cli.backend.services;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
+import cli.backend.database.ExcelWrite;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,7 @@ public class PostService {
 
     private final List<Post> posts=new ArrayList<>();
     private static PostService instance;
+    private final ExcelWrite excelWrite = ExcelWrite.getInstance();
 
     public static PostService getInstance(){
         if(instance==null){
@@ -29,6 +31,18 @@ public class PostService {
         if(targetCommunity != null) {
             targetCommunity.addPost(newPost);
         }
+
+        String targetCommunityChecked = (targetCommunity != null) ? targetCommunity.getNickname() : "None";
+        String imageLinkChecked = (imageLink != null) ? imageLink : "No image link";
+
+        excelWrite.write(excelWrite.postDatabasePath, List.of(
+                String.valueOf(newPost.getPostID()),
+                user.getUsername(),
+                postTitle,postContents,
+                imageLinkChecked,
+                targetCommunityChecked,
+                String.valueOf(NSFW)));
+
         return newPost;
     }
 
