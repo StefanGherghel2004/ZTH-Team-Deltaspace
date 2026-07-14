@@ -53,23 +53,7 @@ public class ExcelWrite {
             }
 
             try {
-                sheet = workbook.getNumberOfSheets() > 0 ?
-                        workbook.getSheetAt(0) : workbook.createSheet();
-
-                int nextRowIndex = sheet.getLastRowNum() + 1;
-                if (sheet.getPhysicalNumberOfRows() == 0) {
-                    nextRowIndex = 0;
-                }
-
-                row = sheet.createRow(nextRowIndex);
-
-                int celNum = 0;
-                for (String data : entry) {
-                    Cell cell = row.createCell(celNum);
-                    cell.setCellValue(data);
-                    sheet.autoSizeColumn(celNum);
-                    celNum++;
-                }
+                workbook = rowEntry(workbook,entry);
 
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     workbook.write(out);
@@ -176,5 +160,27 @@ public class ExcelWrite {
             currentId = 0;
             return currentId;
         }
+    }
+
+    public XSSFWorkbook rowEntry(XSSFWorkbook workbook, List<String> entry) {
+
+        sheet = workbook.getNumberOfSheets() > 0 ?
+                workbook.getSheetAt(0) : workbook.createSheet();
+
+        int nextRowIndex = sheet.getLastRowNum() + 1;
+        if (sheet.getPhysicalNumberOfRows() == 0) {
+            nextRowIndex = 0;
+        }
+
+        row = sheet.createRow(nextRowIndex);
+
+        int celNum = 0;
+        for (String data : entry) {
+            Cell cell = row.createCell(celNum);
+            cell.setCellValue(data);
+            sheet.autoSizeColumn(celNum);
+            celNum++;
+        }
+        return workbook;
     }
 }

@@ -4,6 +4,7 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.database.ExcelWrite;
+import cli.backend.database.ExcelRead;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +12,8 @@ import java.util.List;
 
 public class PostService {
 
-    private final List<Post> posts=new ArrayList<>();
+    private final ExcelRead excelRead = ExcelRead.getInstance();
+    private final List<Post> posts= excelRead.getExcelPosts();
     private static PostService instance;
     private final ExcelWrite excelWrite = ExcelWrite.getInstance();
 
