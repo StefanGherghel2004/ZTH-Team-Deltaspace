@@ -7,9 +7,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -23,7 +21,6 @@ public class ExcelRead {
     public static ExcelRead getInstance() {
         if (instance == null) {
             instance = new ExcelRead();
-
         }
         return instance;
     }
@@ -50,7 +47,6 @@ public class ExcelRead {
         } catch (IOException e) {
             System.out.println("Error");
             e.printStackTrace();
-
         }
     }
 
@@ -79,7 +75,6 @@ public class ExcelRead {
     }
 
     public List<User> getExcelUsers() {
-
         String filename = "App/CLI-backend/databases/UserDatabase.xlsx";
         List<User> excelUsers = new ArrayList<>();
 
@@ -101,7 +96,6 @@ public class ExcelRead {
                     continue;
                 }
                 excelUsers.add(new User(userNameCell, emailCell, passwordCell, dateOfBirthCell));
-
             }
         } catch (IOException e) {
             System.out.println("File not found");
@@ -132,10 +126,9 @@ public class ExcelRead {
                 if (communityNamecell.isEmpty()) {
                     continue;
                 }
+                // Order matched constructor signature: Creator/User, Topic, Name (Nickname), Description
                 Community community = new Community(communityUserCell, communityTopicCell, communityNamecell, communityDescriptionCell);
                 excelCommunities.add(community);
-
-
             }
         } catch (IOException e) {
             System.out.println("File not found");
@@ -145,9 +138,15 @@ public class ExcelRead {
         return excelCommunities;
     }
 
+    // FIXED: Reads posts, maps users and updates communities IN-MEMORY efficiently
     public List<Post> getExcelPosts() {
         String filename = "App/CLI-backend/databases/PostDatabase.xlsx";
         List<Post> excelPosts = new ArrayList<>();
+
+        // Cache these collections outside of the loop so we don't hit the disk constantly!
+        List<User> users = getExcelUsers();
+        List<Community> communities = getExcelCommunities();
+
         try (FileInputStream file = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -169,20 +168,30 @@ public class ExcelRead {
                     continue;
                 }
                 boolean isNSFW = Boolean.parseBoolean(postNSFWCell);
-                List<User> users = getExcelUsers();
+
+                // Fast User Matching
                 User user = null;
                 for (User u : users) {
                     if (u.getUsername().equalsIgnoreCase(postUserCell)) {
                         user = u;
+                        break;
                     }
                 }
-                if(postCommunityNameCell.equalsIgnoreCase("None")){
-                    postCommunityNameCell="u/"+postUserCell;
+                if (postCommunityNameCell.equalsIgnoreCase("None")) {
+                    postCommunityNameCell = "u/" + postUserCell;
                 }
-                Post post= new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+
+                Post post = new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
                 post.setPostID(Integer.parseInt(postIDCell));
                 excelPosts.add(post);
 
+                // Allocate post to the cached community instance
+                for (Community c : communities) {
+                    if (c.getNickname().equalsIgnoreCase(postCommunityNameCell)) {
+                        c.addPost(post);
+                        break;
+                    }
+                }
             }
         } catch (IOException e) {
             System.out.println("File not found");
@@ -190,6 +199,64 @@ public class ExcelRead {
         }
         return excelPosts;
     }
+
+    // FIXED: Reads all posts and returns the list of communities with posts successfully attached
+    public List<Community> getCommunityExcelPosts() {
+        String filename = "App/CLI-backend/databases/PostDatabase.xlsx";
+        List<User> excelUsers = getExcelUsers();
+        List<Community> communities = getExcelCommunities();
+
+        try (FileInputStream file = new FileInputStream(filename);
+             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            DataFormatter formatter = new DataFormatter();
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) {
+                    continue;
+                }
+                String postIDCell = formatter.formatCellValue(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postUserCell = formatter.formatCellValue(row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postTitleCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postContentCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postImageLinkCell = formatter.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postCommunityNameCell = formatter.formatCellValue(row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                String postNSFWCell = formatter.formatCellValue(row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+
+                if (postUserCell.isEmpty()) {
+                    continue;
+                }
+
+                boolean isNSFW = Boolean.parseBoolean(postNSFWCell);
+
+                // Fast User Matching
+                User user = null;
+                for (User u : excelUsers) {
+                    if (u.getUsername().equalsIgnoreCase(postUserCell)) {
+                        user = u;
+                        break;
+                    }
+                }
+
+                if (postCommunityNameCell.equalsIgnoreCase("None")) {
+                    postCommunityNameCell = "u/" + postUserCell;
+                }
+
+                Post post = new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+                post.setPostID(Integer.parseInt(postIDCell));
+
+                // Allocate post to the target community
+                for (Community c : communities) {
+                    if (c.getNickname().equalsIgnoreCase(postCommunityNameCell)) {
+                        c.addPost(post);
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        return communities;
+    }
 }
-
-

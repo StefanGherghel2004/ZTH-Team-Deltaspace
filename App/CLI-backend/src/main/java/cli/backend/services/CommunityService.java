@@ -32,7 +32,7 @@ public class CommunityService {
             "Art",
             "Tech"
     );
-    private final List<Community> communities=excelRead.getExcelCommunities();
+    private final List<Community> communities=excelRead.getCommunityExcelPosts();
 
 
     public List<Community> getCommunities(){

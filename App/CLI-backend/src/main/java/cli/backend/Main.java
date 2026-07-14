@@ -6,6 +6,7 @@ import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.*;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -15,5 +16,6 @@ public class Main {
         DatabaseInitialize.getInstance().setupDatabases();
         Logger.init();
         app.run();
+
     }
 }
