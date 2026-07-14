@@ -89,7 +89,7 @@ public class PostService {
             return true;
         }
 
-        if (community != null && community.getCommunityCreator().equals(user)) {
+        if (community != null && community.getCommunityCreator().equals(user.getUsername())) {
             return true;
         }
         
