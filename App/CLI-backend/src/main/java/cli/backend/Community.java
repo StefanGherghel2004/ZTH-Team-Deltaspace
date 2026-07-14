@@ -1,9 +1,13 @@
 package cli.backend;
 
+import cli.backend.database.ExcelDelete;
+import cli.backend.database.ExcelRead;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Community {
+    ExcelRead excelRead= ExcelRead.getInstance();
     private String nickname;
     private String topic;
     private List<Post> posts =new ArrayList<>();
