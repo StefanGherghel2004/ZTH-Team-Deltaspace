@@ -1,13 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.exception.PostNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Community;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +50,10 @@ public class PostService {
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    public Post findById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
     }
 }
