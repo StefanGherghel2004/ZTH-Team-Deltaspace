@@ -5,6 +5,7 @@ import cli.backend.commands.mainmenu.CreateCommunityCommand;
 import cli.backend.commands.mainmenu.LogoutCommand;
 import cli.backend.commands.mainmenu.ShowCommunitiesCommand;
 import cli.backend.commands.mainmenu.ShowFeedCommand;
+import cli.backend.commands.startmenu.DeleteUserCommand;
 
 public class MainMenu extends Menu{
 
@@ -15,6 +16,7 @@ public class MainMenu extends Menu{
         addOption(3, "Create Post", new CreatePostCommand());
         addOption(4, "Show communities", new ShowCommunitiesCommand());
         addOption(5, "Logout", new LogoutCommand());
+        addOption(6,"Delete Account",new DeleteUserCommand());
     }
 
     @Override

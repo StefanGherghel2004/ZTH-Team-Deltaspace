@@ -1,6 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.User;
+import cli.backend.database.ExcelDelete;
 import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidUserAccountException;
@@ -22,9 +23,11 @@ public class UserService {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
-
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
     private static ExcelRead  excelRead = ExcelRead.getInstance();
+    private static ExcelDelete excelDelete = ExcelDelete.getInstance();
+    private String filename="App/CLI-backend/databases/UserDatabase.xlsx";
+
     private UserService() {
         if (excelWrite.getNumberOfEntries(excelWrite.userDatabasePath) == 0) {
             this.addUser("admin",
@@ -100,4 +103,11 @@ public class UserService {
     }
 
 
+    public boolean deleteUser(User currentUser) {
+        boolean isRemoved = users.remove(currentUser);
+        if(isRemoved){
+            excelDelete.deleteRowfromExcel(filename,1,currentUser.getUsername());
+        }
+        return isRemoved;
+    }
 }
