@@ -43,8 +43,7 @@ public class UserController {
         return userService.findByUsername(username);
     }
 
-    // doesn't work if the user has posts at the moment
-    // because of foreign key in db
+    // a soft delete under hood (sets deleted = true)
     @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable String username) {
