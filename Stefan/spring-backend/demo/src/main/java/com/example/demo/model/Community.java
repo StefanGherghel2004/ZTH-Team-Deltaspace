@@ -20,6 +20,7 @@ public class Community {
     @Column(unique = true, nullable = false)
     private String name;
 
+    // CascadeType.ALL ensures community deletion also removes all associated posts.
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Post> posts = new ArrayList<>();
