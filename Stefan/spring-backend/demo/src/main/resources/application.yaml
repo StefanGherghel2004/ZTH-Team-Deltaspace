@@ -19,5 +19,5 @@ aws:
     bucket-name: reddit-clone-deltaspace
     region: us-east-1
   credentials:
-    access-key: AKIAWQBDWULGIVPOHGZA
-    secret-key: 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
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
