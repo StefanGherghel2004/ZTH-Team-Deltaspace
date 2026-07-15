@@ -2,10 +2,14 @@ package cli.backend;
 
 import cli.backend.database.ExcelDelete;
 import cli.backend.database.ExcelRead;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class Community {
     ExcelRead excelRead= ExcelRead.getInstance();
     private String nickname;
@@ -21,24 +25,6 @@ public class Community {
         this.description =description;
         this.communityCreator = communityCreator;
     }
-
-    public String getCommunityCreator () {
-
-        return this.communityCreator;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public List<Post> getPosts(){
-        return posts;
-    }
-
 
     public void addPost(Post post){
         posts.add(post);
@@ -69,7 +55,7 @@ public class Community {
 
     public boolean hasNSFWPost() {
         for (Post p:posts){
-            if(p.getNSFW())
+            if(p.isNSFW())
                 return true;
         }
         return false;

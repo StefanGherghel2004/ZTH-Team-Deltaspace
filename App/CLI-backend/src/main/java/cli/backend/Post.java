@@ -1,9 +1,14 @@
 package cli.backend;
 
 import cli.backend.database.ExcelWrite;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class Post {
 
     private static int postIdIncrementation = 0;
@@ -15,7 +20,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private String imageLink;
     private String communityName;
-    private boolean NSFW=false;
+    private boolean NSFW;
 
     //Constructor
     public Post (User user, String postTitle, String postContents, String imageLink, boolean NSFW, String community) {
@@ -29,85 +34,6 @@ public class Post {
         this.communityName = community;
         postIdIncrementation = ExcelWrite.getCurrentId(ExcelWrite.getInstance().postDatabasePath);
         this.postID = ++postIdIncrementation;
-    }
-
-    public void setPostID(int postID) {
-        this.postID = postID;
-    }
-
-    //Getters
-    public int getPostID () {
-
-        return postID;
-    }
-
-    public User getUser () {
-
-        return user;
-    }
-
-    public String getPostTitle () {
-
-        return postTitle;
-    }
-
-    public String getPostContents () {
-
-        return postContents;
-    }
-
-    public String getImageLink () {
-
-        return imageLink;
-    }
-
-    public List<Comment> getComments () {
-
-        return comments;
-    }
-
-    public int getCommentIdIncrementation () {
-
-        return commentIdIncrementation;
-    }
-
-    public String getCommunityName () {
-
-        return communityName;
-    }
-
-    public boolean getNSFW(){
-        return NSFW;
-    }
-
-    //Setters
-    public void setUser (User user) {
-
-        this.user = user;
-    }
-
-    public void setPostTitle (String postTitle) {
-
-        this.postTitle = postTitle;
-    }
-
-    public void setPostContents (String postContents) {
-
-        this.postContents = postContents;
-    }
-
-    public void setImageLink (String imageLink) {
-
-        this.imageLink = imageLink;
-    }
-
-    public void setCommunityName (String communityName) {
-
-        this.communityName = communityName;
-    }
-
-    public void SetNSFW(boolean NSFW) {
-        this.NSFW = NSFW;
     }
 
     @Override

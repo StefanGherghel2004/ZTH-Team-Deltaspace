@@ -34,7 +34,7 @@ public class PostMenu extends Menu {
         System.out.println("Community: " + currentPost.getCommunityName());
         System.out.println("Author:    u/" + currentPost.getUser().getUsername());
         System.out.println("Title:     " + currentPost.getPostTitle());
-        System.out.println("NSFW:      " + (currentPost.getNSFW() ? "Yes" : "No"));
+        System.out.println("NSFW:      " + (currentPost.isNSFW() ? "Yes" : "No"));
         System.out.println(currentPost.getPostContents());
         super.showMenu();
     }
