@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.user.UserCreateDto;
 import com.example.demo.dto.user.UserResponseDto;
+import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -42,10 +43,10 @@ public class UserController {
         return userService.findByUsername(username);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public void deleteUser(@PathVariable String username) {
+        userService.deleteUserByUsername(username);
     }
 
     @GetMapping
@@ -53,8 +54,8 @@ public class UserController {
         return userService.listAllUsers();
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    @PutMapping("{username}")
+    public User updateUser(@PathVariable String username, @Valid @RequestBody UserUpdateDto updateDto) {
+        return userService.updateUser(username, updateDto);
     }
 }
