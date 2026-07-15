@@ -1,13 +1,16 @@
 package cli.backend;
 
-public class Comment {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+public class Comment {
     private String text;
     private User user;
     private int idPost;
     private int idComment;
     private int idParent = -1;
-
 
     public Comment(String text, User user, int IdPost){
         this.text=text;
@@ -15,34 +18,18 @@ public class Comment {
         this.idPost=IdPost;
     }
 
-    public String getText(){
-        return text;
-    }
-
     public String getUsername(){
+
         return user.getUsername();
     }
-    public User getUser () {return this.user;}
 
     public int getId(){
+
         return idComment;
-    }
-    public int getIdParent(){
-        return idParent;
     }
 
     public int getCommentPostId () {
 
         return idPost;
     }
-
-    public void setIdParent(int idParent){
-        this.idParent=idParent;
-    }
-
-    public void setIdComment (int idComment) {
-
-        this.idComment = idComment;
-    }
-
 }
