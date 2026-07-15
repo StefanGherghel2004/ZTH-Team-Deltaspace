@@ -2,11 +2,15 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+
 import java.time.LocalDate;
 
 @Data
 @Entity
 @Table(name = "users")
+// instead of deleting it will update the deleted field
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +25,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
 }

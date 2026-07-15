@@ -25,6 +25,8 @@ public class PostService {
 
         User author = userService.findByUsername(dto.getAuthorUsername());
 
+        // TO DO add check if user is deleted
+
         Post post = new Post();
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
