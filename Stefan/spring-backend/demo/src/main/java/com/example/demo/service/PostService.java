@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.model.Community;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommunityRepository communityRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
 
@@ -31,6 +34,12 @@ public class PostService {
         if (dto.getFile() != null && !dto.getFile().isEmpty()) {
             String imageUrl = s3ImageService.uploadImage(dto.getFile());
             post.setImageLink(imageUrl);
+        }
+
+        if (dto.getCommunityName() != null && !dto.getCommunityName().isBlank()) {
+            Community community = communityRepository.findByName(dto.getCommunityName())
+                    .orElseThrow(() -> new RuntimeException("Community not found"));
+            post.setCommunity(community);
         }
 
         return postRepository.save(post);
