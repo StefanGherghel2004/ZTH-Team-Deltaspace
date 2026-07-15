@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: demo
+  datasource:
+    url: jdbc:h2:mem:membersdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+aws:
+  s3:
+    bucket-name: reddit-clone-deltaspace
+    region: us-east-1
+  credentials:
+    access-key: AKIAWQBDWULGIVPOHGZA
+    secret-key: 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

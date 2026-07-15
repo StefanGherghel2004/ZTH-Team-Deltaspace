@@ -1,0 +1,69 @@
+package com.example.demo.exception;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
+        var errorResponse = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
+                                                                               HttpServletRequest request) {
+
+        Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        fieldError -> Objects.requireNonNullElse(
+                                fieldError.getDefaultMessage(),
+                                "Validation failed"
+                        ),
+                        (first, second) -> first
+                ));
+
+        var errorResponse = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message("Validation failed")
+                .errors(errors)
+                .time(LocalDateTime.now())
+                .url(request.getRequestURL().toString())
+                .build();
+
+        return ResponseEntity.badRequest()
+                .body(errorResponse);
+    }
+
+
+
+    @Data
+    @Builder
+    public static class ErrorResponse {
+        private String message;
+        private int status;
+        private LocalDateTime time;
+        private String url;
+        private Map<String, String> errors;
+    }
+}
