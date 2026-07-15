@@ -14,5 +14,7 @@ public class PostCreateDto {
     @NotBlank(message = "Author username is required")
     private String authorUsername;
 
+    private String communityName;
+
     private MultipartFile file;
 }
