@@ -3,6 +3,7 @@ package com.example.demo.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -53,6 +54,20 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest()
                 .body(errorResponse);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDatabaseError(DataIntegrityViolationException ex, HttpServletRequest request) {
+        
+        var errorResponse = ErrorResponse.builder()
+                .message("Db error")
+                .status(HttpStatus.CONFLICT.value())
+                .time(LocalDateTime.now())
+                .url(request.getRequestURL().toString())
+                .errors(Map.of("details", ex.getMostSpecificCause().getMessage()))
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
 
