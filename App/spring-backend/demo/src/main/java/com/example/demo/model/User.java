@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -30,4 +31,19 @@ public class User {
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
