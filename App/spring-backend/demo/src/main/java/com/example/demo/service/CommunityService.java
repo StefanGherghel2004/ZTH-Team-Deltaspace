@@ -25,7 +25,7 @@ public class CommunityService {
     private final UserService userService;
     public Community addCommunity(CommunityCreateDto dto){
 
-        String communityAuthor = String.valueOf(userService.findByUsername(dto.getAuthorUsername()));
+        User author = userService.findByUsername(dto.getAuthorUsername());
         boolean topicExist=false;
         for(String topic :Topics){
             if(topic.equalsIgnoreCase(dto.getTopic())){
@@ -38,7 +38,7 @@ public class CommunityService {
         }
 
         Community community = new Community();
-        community.setCommunityAuthor(communityAuthor);
+        community.setAuthor(author);
         community.setName(dto.getTitle());
         community.setTopic(dto.getTopic());
         community.setDescription(dto.getDescription());
