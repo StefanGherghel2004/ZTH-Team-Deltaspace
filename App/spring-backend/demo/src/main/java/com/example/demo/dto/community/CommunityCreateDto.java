@@ -7,7 +7,7 @@ import lombok.Data;
 public class CommunityCreateDto {
     @NotBlank(message= "Community Name is required")
     private String title;
-
+    private String topic2;
     private String topic;
     private String description;
 }
