@@ -12,10 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "communities")
-public class Community {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Community extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String name;

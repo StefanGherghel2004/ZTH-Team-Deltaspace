@@ -12,10 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 // instead of deleting it will update the deleted field
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -32,18 +29,4 @@ public class User {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    public void prePersist() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }
