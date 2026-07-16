@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "comments")
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
 public class Comment {
 
     @Id
