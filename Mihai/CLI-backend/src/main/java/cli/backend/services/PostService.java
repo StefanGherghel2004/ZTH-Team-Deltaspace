@@ -85,7 +85,7 @@ public class PostService {
             return false;
         }
 
-        if (post.getUser().equals(user)) {
+        if (post.getUser().getUsername().equals(user.getUsername())) {
             return true;
         }
 

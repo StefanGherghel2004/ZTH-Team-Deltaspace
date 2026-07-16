@@ -70,7 +70,7 @@ public class BoxPadder {
 
         // empty row after title
         sb.append(VERTICAL)
-                .repeat(" ", WIDTH)
+                .repeat(' ', WIDTH)
                 .append(VERTICAL)
                 .append("\n");
     }

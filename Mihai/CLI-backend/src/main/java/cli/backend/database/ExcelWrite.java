@@ -13,9 +13,9 @@ public class ExcelWrite {
     private static Row row;
     private static Cell cell;
 
-    public String userDatabasePath = "App/CLI-backend/databases/UserDatabase.xlsx";
-    public String postDatabasePath = "App/CLI-backend/databases/PostDatabase.xlsx";
-    public String communityDatabasePath = "App/CLI-backend/databases/CommunityDatabase.xlsx";
+    public String userDatabasePath = "Mihai/CLI-backend/databases/UserDatabase.xlsx";
+    public String postDatabasePath = "Mihai/CLI-backend/databases/PostDatabase.xlsx";
+    public String communityDatabasePath = "Mihai/CLI-backend/databases/CommunityDatabase.xlsx";
 
     private ExcelWrite () {
 
