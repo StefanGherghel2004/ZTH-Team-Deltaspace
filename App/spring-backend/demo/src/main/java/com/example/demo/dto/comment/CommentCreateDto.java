@@ -10,9 +10,6 @@ public class CommentCreateDto {
     @NotBlank(message = "Comment contents cannot be empty.")
     private String text;
 
-    @NotBlank(message = "Author username is required.")
-    private String authorUsername;
-
     @NotNull(message = "Comment must be referred to a post.")
     private Long postId;
 

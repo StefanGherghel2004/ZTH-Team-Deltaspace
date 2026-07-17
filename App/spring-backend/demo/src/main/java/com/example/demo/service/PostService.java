@@ -2,9 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
-import com.example.demo.exception.CommunityNotFoundException;
-import com.example.demo.exception.PostNotFoundException;
-import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.notfound.CommunityNotFoundException;
+import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.model.Community;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;

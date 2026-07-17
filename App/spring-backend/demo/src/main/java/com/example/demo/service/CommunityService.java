@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.community.CommunityCreateDto;
 import com.example.demo.dto.community.CommunityUpdateDto;
-import com.example.demo.exception.CommunityNotFoundException;
+import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.model.Community;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.User;

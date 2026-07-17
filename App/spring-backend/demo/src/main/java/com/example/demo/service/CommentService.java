@@ -2,10 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
-import com.example.demo.dto.user.UserUpdateDto;
-import com.example.demo.exception.CommentNotFoundException;
-import com.example.demo.exception.PostNotFoundException;
-import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.notfound.CommentNotFoundException;
+import com.example.demo.exception.notfound.PostNotFoundException;
+import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
@@ -27,13 +26,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final UserService userService;
 
     @Transactional
     public Comment addComment (CommentCreateDto commentDto) {
 
-        User authorUser = userRepository.findByUsername(commentDto.getAuthorUsername()).orElseThrow(() ->
-                new UserNotFoundException("User with username: " + commentDto.getAuthorUsername() +
-                        " was not found."));
+        User authorUser = userService.getAuthenticatedUser();
 
         Post targetPost = postRepository.findById(commentDto.getPostId()).orElseThrow(() ->
                 new PostNotFoundException("Post with id: " + commentDto.getPostId() +
@@ -62,6 +60,10 @@ public class CommentService {
     public void deleteCommentById (Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new CommentNotFoundException("Comment with id: " + " was not found."));
+
+        if (!comment.getUser().equals(userService.getAuthenticatedUser()))
+            throw new AccessDeniedException("You are not the author of this comment");
+
         commentRepository.delete(comment);
     }
 
