@@ -29,8 +29,16 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<Comment> listAllCommentsOnPost (@RequestParam Long postId){
-        return commentService.getCommentsByPostId(postId);
+    public List<Comment> getComments(@RequestParam(required = false) Long postId) {
+        if (postId != null) {
+            return commentService.getCommentsByPostId(postId);
+        }
+        return commentService.getAllComments();
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCommentById (@PathVariable Long id) {
+        commentService.deleteCommentById(id);
+    }
 }

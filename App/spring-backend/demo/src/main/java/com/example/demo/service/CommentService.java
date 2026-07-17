@@ -46,8 +46,8 @@ public class CommentService {
             Comment parentComment = commentRepository.findById(commentDto.getParentCommentId())
                     .orElseThrow(() -> new CommentNotFoundException("Parent comment with id: " +
                             commentDto.getParentCommentId() + " was not found."));
+            commentToAdd.setParentComment(parentComment);
         }
-
         return commentRepository.save(commentToAdd);
     }
 
@@ -65,5 +65,9 @@ public class CommentService {
 
     public List<Comment> getCommentsByPostId(Long postId) {
         return commentRepository.findByPostId(postId);
+    }
+
+    public List<Comment> getAllComments (){
+        return commentRepository.findAll();
     }
 }
