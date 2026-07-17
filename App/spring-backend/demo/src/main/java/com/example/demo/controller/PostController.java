@@ -39,7 +39,7 @@ public class PostController {
 
     @GetMapping("community/{communityName}")
     public List<Post> getCommunityPosts(@PathVariable String communityName){
-        return postService.getCommunityPost(communityName);
+        return postService.getCommunityPosts(communityName);
     }
 
     @PutMapping("{id}")
