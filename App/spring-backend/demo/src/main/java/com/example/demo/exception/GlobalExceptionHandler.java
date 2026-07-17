@@ -19,12 +19,21 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception e){
+        var errorResponse = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.FORBIDDEN.value())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse,HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler({
             CommentNotFoundException.class,
             PostNotFoundException.class,
             UserNotFoundException.class,
-            CommunityNotFoundException.class
+            CommunityNotFoundException.class,
     })
     public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
         var errorResponse = ErrorResponse.builder()

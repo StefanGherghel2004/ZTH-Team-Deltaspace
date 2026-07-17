@@ -4,11 +4,14 @@ import com.example.demo.dto.community.CommunityCreateDto;
 import com.example.demo.dto.community.CommunityUpdateDto;
 import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.model.Community;
+import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommunityRepository;
+import com.example.demo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -23,7 +26,9 @@ public class CommunityService {
     "SCIENCE",
     "TECH"
     );
+
     private final CommunityRepository communityRepository;
+    private final PostRepository postRepository;
     private final UserService userService;
     public Community addCommunity(CommunityCreateDto dto){
 
@@ -74,4 +79,15 @@ public class CommunityService {
         community.setTopic(updateDto.getTopic());
         return communityRepository.save(community);
     }
+
+    public Community verifyNsfwCommunities(String communityName, int userAge){
+        boolean isNSFW=postRepository.existsByCommunityNameAndNsfwTrue(communityName);
+        if(isNSFW && userAge<18) {
+            throw new AccessDeniedException("This community is marked as NSFW");
+            }
+        return communityRepository.findByName(communityName)
+                .orElseThrow(()->new CommunityNotFoundException("Community not found"));
+
+    }
 }
+
