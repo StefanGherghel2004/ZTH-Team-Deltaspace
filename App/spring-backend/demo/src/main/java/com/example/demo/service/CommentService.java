@@ -2,10 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
-import com.example.demo.dto.user.UserUpdateDto;
-import com.example.demo.exception.CommentNotFoundException;
-import com.example.demo.exception.PostNotFoundException;
-import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.notfound.CommentNotFoundException;
+import com.example.demo.exception.notfound.PostNotFoundException;
+import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;

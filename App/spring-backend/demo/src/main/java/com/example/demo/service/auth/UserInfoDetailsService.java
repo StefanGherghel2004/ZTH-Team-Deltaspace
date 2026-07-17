@@ -1,6 +1,6 @@
 package com.example.demo.service.auth;
 
-import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

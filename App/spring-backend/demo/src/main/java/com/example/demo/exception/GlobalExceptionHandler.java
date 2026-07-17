@@ -1,5 +1,9 @@
 package com.example.demo.exception;
 
+import com.example.demo.exception.notfound.CommentNotFoundException;
+import com.example.demo.exception.notfound.CommunityNotFoundException;
+import com.example.demo.exception.notfound.PostNotFoundException;
+import com.example.demo.exception.notfound.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
