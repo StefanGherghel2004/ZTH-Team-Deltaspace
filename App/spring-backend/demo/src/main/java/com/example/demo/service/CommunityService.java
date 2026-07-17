@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -32,7 +34,7 @@ public class CommunityService {
     private final UserService userService;
     public Community addCommunity(CommunityCreateDto dto){
 
-        User author = userService.findByUsername(dto.getAuthorUsername());
+        User author = userService.getAuthenticatedUser();
         boolean topicExist=false;
         for(String topic :Topics){
             if(topic.equalsIgnoreCase(dto.getTopic())){
@@ -80,7 +82,9 @@ public class CommunityService {
         return communityRepository.save(community);
     }
 
-    public Community verifyNsfwCommunities(String communityName, int userAge){
+    public Community verifyNsfwCommunities(String communityName){
+        User authenticatedUser= userService.getAuthenticatedUser();
+        int userAge= Period.between(authenticatedUser.getDateOfBirth(), LocalDate.now()).getYears();
         boolean isNSFW=postRepository.existsByCommunityNameAndNsfwTrue(communityName);
         if(isNSFW && userAge<18) {
             throw new AccessDeniedException("This community is marked as NSFW");

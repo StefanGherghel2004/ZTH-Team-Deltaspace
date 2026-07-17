@@ -45,8 +45,8 @@ public class CommunityController {
     }
 
     @GetMapping("{communityName}")
-    public Community getCommunity(@PathVariable String communityName, @RequestHeader ("X-User-Age") int userAge){
-        return communityService.verifyNsfwCommunities(communityName,userAge);
+    public Community getCommunity(@PathVariable String communityName){
+        return communityService.verifyNsfwCommunities(communityName);
 
     }
 

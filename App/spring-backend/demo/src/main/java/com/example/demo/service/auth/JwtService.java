@@ -27,8 +27,8 @@ public class JwtService {
     private String createToken(Map<String, Object> claims, String username) {
         return Jwts.builder().
                 claims(claims).
-                subject(username).
-                issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                subject(username).                                                   // 3 hours for testing
+                issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 180))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
