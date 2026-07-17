@@ -8,6 +8,7 @@ public class CommunityCreateDto {
     @NotBlank(message= "Community Name is required")
     private String title;
 
+    @NotBlank(message = "Topic is required")
     private String topic;
     private String description;
     @NotBlank(message = "Author username is required")
