@@ -44,4 +44,10 @@ public class CommunityController {
         return communityService.updateCommunity(communityName,updateDto);
     }
 
+    @GetMapping("{communityName}")
+    public Community getCommunity(@PathVariable String communityName, @RequestHeader ("X-User-Age") int userAge){
+        return communityService.verifyNsfwCommunities(communityName,userAge);
+
+    }
+
 }

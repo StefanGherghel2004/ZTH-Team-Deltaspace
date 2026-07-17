@@ -19,7 +19,7 @@ public class Post extends BaseEntity {
     private String content;
 
     private String imageLink;
-    private boolean isNsfw;
+    private boolean nsfw;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
