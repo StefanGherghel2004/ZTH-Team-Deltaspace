@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.comment.CommentCreateDto;
+import com.example.demo.dto.comment.CommentUpdateDto;
+import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.CommentNotFoundException;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
@@ -69,5 +71,14 @@ public class CommentService {
 
     public List<Comment> getAllComments (){
         return commentRepository.findAll();
+    }
+
+    @Transactional
+    public Comment editComment (Long commentId, CommentUpdateDto updateDto) {
+        Comment updatedComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("Comment with id: " + commentId +
+                        " was not found."));
+        updatedComment.setText(updateDto.getText());
+        return commentRepository.save(updatedComment);
     }
 }
