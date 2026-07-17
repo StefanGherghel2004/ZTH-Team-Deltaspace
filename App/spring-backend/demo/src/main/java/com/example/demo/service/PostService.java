@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
+import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.model.Community;
@@ -9,6 +10,7 @@ import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -77,5 +79,16 @@ public class PostService {
 
 
         return postRepository.save(post);
+    }
+
+    @Transactional
+    public void deletePostById (Long id) {
+        Post post = postRepository.findPostById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post with id: " + id + " was not found"));
+
+        if(!post.getAuthor().equals(userService.getAuthenticatedUser()))
+            throw new AccessDeniedException("You are not the author of this post.");
+
+        postRepository.delete(post);
     }
 }
