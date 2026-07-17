@@ -61,6 +61,10 @@ public class CommunityService {
     public void deleteCommunityByName(String communityName) {
         Community communityToDelete=communityRepository.findByName(communityName)
             .orElseThrow(()-> new CommunityNotFoundException("Community " + communityName + " not found"));
+        User user = userService.getAuthenticatedUser();
+        if(!communityToDelete.getAuthor().equals(user)){
+            throw new AccessDeniedException("You are not allowed to perform this operation");
+        }
         communityRepository.delete(communityToDelete);
     }
 
