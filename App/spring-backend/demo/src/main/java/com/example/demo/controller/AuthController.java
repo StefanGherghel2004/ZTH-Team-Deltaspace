@@ -21,7 +21,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping
-    public ResponseEntity<String> AuthResponseDto(@RequestBody AuthRequestDto request) {
+    public ResponseEntity<String> loginUser(@RequestBody AuthRequestDto request) {
 
         try {
             Authentication authentication = authenticationManager.authenticate(

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.user.UserUpdateDto;
+import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,8 +39,11 @@ public class UserService {
 
     public User updateUser(String username, UserUpdateDto updateDto) {
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with name: " + username));
+        User user = getAuthenticatedUser();
+
+        if (!user.getUsername().equals(username)) {
+            throw new AccessDeniedException("This account is not yours.");
+        }
 
         if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
@@ -57,10 +62,19 @@ public class UserService {
     }
 
     public void deleteUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+        User user = getAuthenticatedUser();
+
+        if (!user.getUsername().equals(username)) {
+            throw new AccessDeniedException("This account is not yours.");
+        }
 
         userRepository.delete(user);
+    }
+
+    public User getAuthenticatedUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }
 
