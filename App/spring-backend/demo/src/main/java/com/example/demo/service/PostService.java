@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.model.Community;
@@ -61,5 +62,20 @@ public class PostService {
         Community community = communityRepository.findByName(communityName)
                 .orElseThrow(()->new CommunityNotFoundException("Community not found"));
         return postRepository.findByCommunityName(communityName);
+    }
+
+    public Post updatePost(Long id, PostUpdateDto updateDto) {
+        Post post = postRepository.findPostById(id)
+                .orElseThrow(()->new PostNotFoundException("Post not found"));
+        post.setTitle(updateDto.getTitle());
+        post.setContent(updateDto.getContent());
+        post.setNsfw(updateDto.isNsfw());
+        if(updateDto.getFile()!=null && !updateDto.getFile().isEmpty()){
+            String imageLink = s3ImageService.uploadImage(updateDto.getFile());
+            post.setImageLink(imageLink);
+        }
+
+
+        return postRepository.save(post);
     }
 }
