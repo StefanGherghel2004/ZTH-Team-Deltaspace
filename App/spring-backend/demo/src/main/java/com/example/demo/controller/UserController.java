@@ -28,7 +28,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @PostMapping
+    @PostMapping("/addUser")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto addUser(@Valid @RequestBody UserCreateDto createDto) {
         User userToSave = userMapper.toEntity(createDto);
