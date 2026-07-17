@@ -71,6 +71,11 @@ public class CommunityService {
     public Community updateCommunity(String communityName, CommunityUpdateDto updateDto){
         Community community = communityRepository.findByName(communityName)
                 .orElseThrow(()->new CommunityNotFoundException("Community not found"));
+
+        User authenticatedUser = userService.getAuthenticatedUser();
+        if(!community.getAuthor().equals(authenticatedUser)) {
+            throw new AccessDeniedException("You are not allowed to perform this operation. You are not the owner");
+        }
         boolean topicExist=false;
         for(String topic:Topics){
             if(topic.equalsIgnoreCase(updateDto.getTopic()))
