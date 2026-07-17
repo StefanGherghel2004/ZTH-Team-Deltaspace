@@ -21,13 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CommunityService {
-    public static final List<String> Topics=List.of(
-    "FOOD",
-    "GAMING",
-    "ART",
-    "SCIENCE",
-    "TECH"
-    );
+
+    public enum Topic {
+        FOOD,
+        GAMING,
+        ART,
+        SCIENCE,
+        TECH
+    }
 
     private final CommunityRepository communityRepository;
     private final PostRepository postRepository;
@@ -35,21 +36,12 @@ public class CommunityService {
     public Community addCommunity(CommunityCreateDto dto){
 
         User author = userService.getAuthenticatedUser();
-        boolean topicExist=false;
-        for(String topic :Topics){
-            if(topic.equalsIgnoreCase(dto.getTopic())){
-                topicExist=true;
-                break;
-            }
-        }
-        if(!topicExist){
-            throw new IllegalArgumentException("The Selected Topic does not exist");
-        }
+        Topic topic = getTopicFromString(dto.getTopic());
 
         Community community = new Community();
         community.setAuthor(author);
         community.setName(dto.getTitle());
-        community.setTopic(dto.getTopic());
+        community.setTopic(topic.name());
         community.setDescription(dto.getDescription());
 
         return communityRepository.save(community);
@@ -76,14 +68,11 @@ public class CommunityService {
         if(!community.getAuthor().equals(authenticatedUser)) {
             throw new AccessDeniedException("You are not allowed to perform this operation. You are not the owner");
         }
-        boolean topicExist=false;
-        for(String topic:Topics){
-            if(topic.equalsIgnoreCase(updateDto.getTopic()))
-                topicExist = true;
-                break;
-        }
-        if(!topicExist){
-            throw new IllegalArgumentException("The Selected Topic does not exist");
+
+        Topic topic;
+        if (updateDto.getTopic() != null) {
+            topic = getTopicFromString(updateDto.getTopic());
+            community.setTopic(topic.name());
         }
 
         community.setDescription(updateDto.getDescription());
@@ -101,6 +90,22 @@ public class CommunityService {
         return communityRepository.findByName(communityName)
                 .orElseThrow(()->new CommunityNotFoundException("Community not found"));
 
+    }
+
+    private Topic getTopicFromString(String topicString) {
+        Topic result = null;
+        for (Topic topic : Topic.values()) {
+            if (topic.name().equalsIgnoreCase(topicString)) {
+                result = topic;
+                break;
+            }
+        }
+
+        if(result == null){
+            throw new IllegalArgumentException("The Selected Topic does not exist");
+        }
+
+        return result;
     }
 }
 
