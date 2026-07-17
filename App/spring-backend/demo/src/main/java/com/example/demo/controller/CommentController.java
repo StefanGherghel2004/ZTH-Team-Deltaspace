@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.comment.CommentCreateDto;
+import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.model.Comment;
 import com.example.demo.service.CommentService;
+import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,9 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/addComment")
     @ResponseStatus(HttpStatus.CREATED)
     public Comment addComment (@Valid @RequestBody CommentCreateDto commentDto){
         return commentService.addComment(commentDto);
@@ -36,9 +39,15 @@ public class CommentController {
         return commentService.getAllComments();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deleteComment/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCommentById (@PathVariable Long id) {
         commentService.deleteCommentById(id);
+    }
+
+    @PutMapping("/editComment/{id}")
+    public Comment updateComment (@PathVariable Long id, @Valid @RequestBody CommentUpdateDto updateDto) {
+
+        return commentService.editComment(id,updateDto);
     }
 }
