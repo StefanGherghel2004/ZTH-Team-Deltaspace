@@ -9,7 +9,8 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "posts")
+@Table(name = "posts",
+indexes = {@Index(name = "idx_posts_community_id", columnList = "community_id, created_at DESC" )})
 public class Post extends BaseEntity {
 
     @Column(nullable = false)
