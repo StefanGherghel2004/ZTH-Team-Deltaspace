@@ -2,15 +2,17 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.SQLDelete;
-import tools.jackson.core.ObjectReadContext;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "comments")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comment extends BaseEntity {
 
     @Column(unique = false,nullable = false)
@@ -31,7 +33,4 @@ public class Comment extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "replies", "parentComment"})
     private Comment parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("parentComment")
-    private List<Comment> replies;
 }
