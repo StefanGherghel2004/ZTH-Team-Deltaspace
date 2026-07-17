@@ -69,6 +69,11 @@ public class PostService {
     public Post updatePost(Long id, PostUpdateDto updateDto) {
         Post post = postRepository.findPostById(id)
                 .orElseThrow(()->new PostNotFoundException("Post not found"));
+        User authenticatedUser = userService.getAuthenticatedUser();
+        if(!post.getAuthor().equals(authenticatedUser)){
+            throw new AccessDeniedException("You are not allowed to perform this operation");
+        }
+
         post.setTitle(updateDto.getTitle());
         post.setContent(updateDto.getContent());
         post.setNsfw(updateDto.isNsfw());

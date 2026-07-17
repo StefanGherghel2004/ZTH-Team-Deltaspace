@@ -30,10 +30,7 @@ public class UserService {
 
     public User addUser(User user) {
         user.setId(null);
-
-        if (Period.between(user.getDateOfBirth(), LocalDate.now()).getYears() < MIN_AGE) {
-            throw new UserTooYoungException(MIN_AGE);
-        }
+        validateAge(user.getDateOfBirth());
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
@@ -56,9 +53,8 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
         }
 
-        if (updateDto.getDateOfBirth() != null) {
-            user.setDateOfBirth(updateDto.getDateOfBirth());
-        }
+        validateAge(updateDto.getDateOfBirth());
+        user.setDateOfBirth(updateDto.getDateOfBirth());
 
         return userRepository.save(user);
     }
@@ -81,6 +77,17 @@ public class UserService {
     public User getAuthenticatedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return findByUsername(username);
+    }
+
+    private void validateAge(LocalDate dateOfBirth) {
+
+        if (dateOfBirth == null) {
+            return;
+        }
+
+        if (Period.between(dateOfBirth, LocalDate.now()).getYears() < MIN_AGE) {
+            throw new UserTooYoungException(MIN_AGE);
+        }
     }
 }
 
