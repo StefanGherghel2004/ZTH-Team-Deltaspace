@@ -3,8 +3,12 @@ package com.example.demo.service;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.UserTooYoungException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +26,17 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 public class UserService {
 
+    private static final int MIN_AGE = 13;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     public User addUser(User user) {
         user.setId(null);
+
+        if (Period.between(user.getDateOfBirth(), LocalDate.now()).getYears() < MIN_AGE) {
+            throw new UserTooYoungException(MIN_AGE);
+        }
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);

@@ -44,6 +44,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({
+            UserTooYoungException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
+        var errorResponse = ErrorResponse.builder()
+                .message(e.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .time(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
                                                                                HttpServletRequest request) {
