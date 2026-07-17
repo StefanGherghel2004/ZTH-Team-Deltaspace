@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.Community;
@@ -41,7 +42,7 @@ public class PostService {
 
         if (dto.getCommunityName() != null && !dto.getCommunityName().isBlank()) {
             Community community = communityRepository.findByName(dto.getCommunityName())
-                    .orElseThrow(() -> new RuntimeException("Community not found"));
+                    .orElseThrow(() -> new CommunityNotFoundException("Community not found with name " + dto.getCommunityName()));
             post.setCommunity(community);
         }
 

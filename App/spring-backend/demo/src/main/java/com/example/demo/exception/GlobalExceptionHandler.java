@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
@@ -18,8 +19,14 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
+
+    @ExceptionHandler({
+            CommentNotFoundException.class,
+            PostNotFoundException.class,
+            UserNotFoundException.class,
+            CommunityNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
         var errorResponse = ErrorResponse.builder()
                 .message(e.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
