@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.model.Post;
 import com.example.demo.service.PostService;
 import jakarta.validation.Valid;
@@ -37,6 +38,12 @@ public class PostController {
     @GetMapping("community/{communityName}")
     public List<Post> getCommunityPosts(@PathVariable String communityName){
         return postService.getCommunityPost(communityName);
+    }
+
+    @PutMapping("{id}")
+    public Post updatePost(@PathVariable Long id, @Valid @ModelAttribute PostUpdateDto updateDto){
+        return postService.updatePost(id,updateDto);
+
     }
 
 }
