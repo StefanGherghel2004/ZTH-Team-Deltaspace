@@ -57,4 +57,10 @@ public class PostService {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
     }
+
+    public List<Post> getCommunityPost(String communityName) {
+        Community community = communityRepository.findByName(communityName)
+                .orElseThrow(()->new CommunityNotFoundException("Community not found"));
+        return postRepository.findByCommunityName(communityName);
+    }
 }

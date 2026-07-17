@@ -16,7 +16,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/deltaspacedb
     username: postgres
-    password: Bboymonster12!
+    password: user
   jpa:
     hibernate:
       ddl-auto: update
