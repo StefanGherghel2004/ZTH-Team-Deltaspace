@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.community.CommunityCreateDto;
+import com.example.demo.dto.community.CommunityUpdateDto;
 import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.model.Community;
 import com.example.demo.model.User;
@@ -54,5 +55,23 @@ public class CommunityService {
         Community communityToDelete=communityRepository.findByName(communityName)
             .orElseThrow(()-> new CommunityNotFoundException("Community " + communityName + " not found"));
         communityRepository.delete(communityToDelete);
+    }
+
+    public Community updateCommunity(String communityName, CommunityUpdateDto updateDto){
+        Community community = communityRepository.findByName(communityName)
+                .orElseThrow(()->new CommunityNotFoundException("Community not found"));
+        boolean topicExist=false;
+        for(String topic:Topics){
+            if(topic.equalsIgnoreCase(updateDto.getTopic()))
+                topicExist = true;
+                break;
+        }
+        if(!topicExist){
+            throw new IllegalArgumentException("The Selected Topic does not exist");
+        }
+
+        community.setDescription(updateDto.getDescription());
+        community.setTopic(updateDto.getTopic());
+        return communityRepository.save(community);
     }
 }

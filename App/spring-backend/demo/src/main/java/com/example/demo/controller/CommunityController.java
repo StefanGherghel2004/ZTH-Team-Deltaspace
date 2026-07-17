@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.community.CommunityCreateDto;
+import com.example.demo.dto.community.CommunityUpdateDto;
 import com.example.demo.mapper.CommunityMapper;
 import com.example.demo.model.Community;
 import com.example.demo.repository.CommunityRepository;
@@ -38,5 +39,9 @@ public class CommunityController {
         communityService.deleteCommunityByName(communityName);
     }
 
+    @PutMapping("{communityName}")
+    public Community updateCommunity(@PathVariable String communityName, @Valid @RequestBody CommunityUpdateDto updateDto){
+        return communityService.updateCommunity(communityName,updateDto);
+    }
 
 }
