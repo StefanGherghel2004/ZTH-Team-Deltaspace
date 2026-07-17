@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.community.CommunityCreateDto;
+import com.example.demo.dto.community.CommunityUpdateDto;
 import com.example.demo.mapper.CommunityMapper;
 import com.example.demo.model.Community;
 import com.example.demo.repository.CommunityRepository;
@@ -31,4 +32,22 @@ public class CommunityController {
     public List<Community> listAllCommunities(){
         return communityService.listAllCommunities();
     }
+
+    @DeleteMapping("/{communityName}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCommunity(@PathVariable String communityName){
+        communityService.deleteCommunityByName(communityName);
+    }
+
+    @PutMapping("{communityName}")
+    public Community updateCommunity(@PathVariable String communityName, @Valid @RequestBody CommunityUpdateDto updateDto){
+        return communityService.updateCommunity(communityName,updateDto);
+    }
+
+    @GetMapping("{communityName}")
+    public Community getCommunity(@PathVariable String communityName, @RequestHeader ("X-User-Age") int userAge){
+        return communityService.verifyNsfwCommunities(communityName,userAge);
+
+    }
+
 }

@@ -33,4 +33,10 @@ public class PostController {
     public List<Post> listAllPosts() {
         return postService.getAllPosts();
     }
+
+    @GetMapping("community/{communityName}")
+    public List<Post> getCommunityPosts(@PathVariable String communityName){
+        return postService.getCommunityPost(communityName);
+    }
+
 }

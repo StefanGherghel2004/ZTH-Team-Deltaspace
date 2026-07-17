@@ -1,7 +1,10 @@
 package com.example.demo.dto.comment;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class CommentCreateDto {
 
     @NotBlank(message = "Comment contents cannot be empty.")
@@ -10,7 +13,7 @@ public class CommentCreateDto {
     @NotBlank(message = "Author username is required.")
     private String authorUsername;
 
-    @NotBlank(message = "Comment must be referred to a post.")
+    @NotNull(message = "Comment must be referred to a post.")
     private Long postId;
 
     private Long parentCommentId;
