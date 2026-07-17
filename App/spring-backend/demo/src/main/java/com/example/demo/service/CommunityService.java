@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.community.CommunityCreateDto;
+import com.example.demo.exception.CommunityNotFoundException;
 import com.example.demo.model.Community;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommunityRepository;
@@ -47,5 +48,11 @@ public class CommunityService {
     }
     public List<Community> listAllCommunities(){
         return communityRepository.findAll();
+    }
+
+    public void deleteCommunityByName(String communityName) {
+        Community communityToDelete=communityRepository.findByName(communityName)
+            .orElseThrow(()-> new CommunityNotFoundException("Community " + communityName + " not found"));
+        communityRepository.delete(communityToDelete);
     }
 }

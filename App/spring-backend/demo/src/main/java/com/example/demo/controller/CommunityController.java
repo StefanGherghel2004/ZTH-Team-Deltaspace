@@ -31,4 +31,10 @@ public class CommunityController {
     public List<Community> listAllCommunities(){
         return communityService.listAllCommunities();
     }
+
+    @DeleteMapping("/{communityName}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCommunity(@PathVariable String communityName){
+        communityService.deleteCommunityByName(communityName);
+    }
 }
