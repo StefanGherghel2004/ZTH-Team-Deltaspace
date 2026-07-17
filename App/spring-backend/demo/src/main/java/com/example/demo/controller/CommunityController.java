@@ -37,4 +37,6 @@ public class CommunityController {
     public void deleteCommunity(@PathVariable String communityName){
         communityService.deleteCommunityByName(communityName);
     }
+
+
 }
