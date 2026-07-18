@@ -38,8 +38,8 @@ public class PostService {
         post.setNsfw(dto.isNsfw());
         post.setAuthor(author);
 
-        if (dto.getFile() != null && !dto.getFile().isEmpty()) {
-            String imageUrl = s3ImageService.uploadImage(dto.getFile());
+        if (dto.getImage() != null && !dto.getImage().isEmpty()) {
+            String imageUrl = s3ImageService.uploadImage(dto.getImage());
             post.setImageLink(imageUrl);
         }
 
