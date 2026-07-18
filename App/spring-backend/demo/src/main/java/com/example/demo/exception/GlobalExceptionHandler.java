@@ -68,6 +68,13 @@ public class GlobalExceptionHandler {
                 .body("Max file size exceeded.");
     }
 
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<String> handleFileStorage(FileStorageException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
