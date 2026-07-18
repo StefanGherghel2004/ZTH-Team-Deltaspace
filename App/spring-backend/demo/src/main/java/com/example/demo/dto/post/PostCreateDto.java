@@ -13,5 +13,5 @@ public class PostCreateDto {
 
     private String communityName;
 
-    private MultipartFile file;
+    private MultipartFile image;
 }
