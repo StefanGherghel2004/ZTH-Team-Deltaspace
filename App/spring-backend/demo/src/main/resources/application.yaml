@@ -29,8 +29,8 @@ spring:
 
 aws:
   s3:
-    bucket-name: reddit-clone-deltaspace
-    region: us-east-1
+    bucket-name: reddit-clone-deltaspace-eu
+    region: eu-central-1
   credentials:
     access-key: ${AWS_ACCESS_KEY}
     secret-key: ${AWS_SECRET_KEY}
