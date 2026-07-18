@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,13 +25,8 @@ public class S3ImageService {
     private String region;
 
     public String uploadImage(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("File is empty!");
-        }
-
-        String originalFilename = file.getOriginalFilename();
-        String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
-        String uniqueFileName = UUID.randomUUID().toString() + extension;
+        String extension = getExtension(file);
+        String uniqueFileName = UUID.randomUUID() + extension;
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -46,5 +42,21 @@ public class S3ImageService {
         }
 
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, uniqueFileName);
+    }
+
+    private static @NonNull String getExtension(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty.");
+        }
+
+        String contentType = file.getContentType();
+
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("Invalid file type. Only images are allowed.");
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
+        return extension;
     }
 }
