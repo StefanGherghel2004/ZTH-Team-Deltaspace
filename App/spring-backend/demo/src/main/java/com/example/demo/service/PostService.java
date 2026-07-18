@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.dto.post.PostFeedDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.CommunityNotFoundException;
@@ -53,6 +54,16 @@ public class PostService {
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    public PostFeedDto getRandomizedFeed(String seed,int page,int size){
+        int offset=size*page;
+        List<Post> feedPosts=postRepository.getRandomizedFeed(seed,size,offset);
+
+        PostFeedDto postFeedDto = new PostFeedDto();
+        postFeedDto.setPosts(feedPosts);
+        postFeedDto.setSeed(seed);
+        return postFeedDto;
     }
 
     public Post findById(Long id) {

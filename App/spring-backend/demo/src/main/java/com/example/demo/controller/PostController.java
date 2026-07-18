@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.dto.post.PostFeedDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.model.Post;
 import com.example.demo.service.PostService;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -52,4 +54,6 @@ public class PostController {
     public void deletePostById (@PathVariable Long id) {
         postService.deletePostById(id);
     }
+
+
 }
