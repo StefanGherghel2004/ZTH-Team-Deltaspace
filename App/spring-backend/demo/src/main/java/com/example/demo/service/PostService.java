@@ -88,8 +88,8 @@ public class PostService {
         post.setTitle(updateDto.getTitle());
         post.setContent(updateDto.getContent());
         post.setNsfw(updateDto.isNsfw());
-        if(updateDto.getFile()!=null && !updateDto.getFile().isEmpty()){
-            String imageLink = s3ImageService.uploadImage(updateDto.getFile());
+        if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
+            String imageLink = s3ImageService.uploadImage(updateDto.getImage());
             post.setImageLink(imageLink);
         }
 

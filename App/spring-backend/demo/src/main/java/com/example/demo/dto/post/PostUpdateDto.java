@@ -11,5 +11,5 @@ public class PostUpdateDto {
 
     private String content;
     private boolean nsfw;
-    private MultipartFile file;
+    private MultipartFile image;
 }

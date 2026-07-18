@@ -26,6 +26,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
+    @Column
+    private String profilePictureUrl;
+
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 

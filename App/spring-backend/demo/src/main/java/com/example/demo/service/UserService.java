@@ -26,6 +26,7 @@ public class UserService {
     private static final int MIN_AGE = 13;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3ImageService s3ImageService;
 
 
     public User addUser(User user) {
@@ -53,8 +54,15 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
         }
 
-        validateAge(updateDto.getDateOfBirth());
-        user.setDateOfBirth(updateDto.getDateOfBirth());
+        if (updateDto.getProfilePicture() != null && !updateDto.getProfilePicture().isEmpty()) {
+            String imageUrl = s3ImageService.uploadImage(updateDto.getProfilePicture());
+            user.setProfilePictureUrl(imageUrl);
+        }
+
+        if (updateDto.getDateOfBirth() != null) {
+            validateAge(updateDto.getDateOfBirth());
+            user.setDateOfBirth(updateDto.getDateOfBirth());
+        }
 
         return userRepository.save(user);
     }
