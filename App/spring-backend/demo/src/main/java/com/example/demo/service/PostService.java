@@ -22,9 +22,9 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommunityRepository communityRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
+    private final CommunityService communityService;
 
     public Post createPost(PostCreateDto dto) {
 
@@ -44,8 +44,7 @@ public class PostService {
         }
 
         if (dto.getCommunityName() != null && !dto.getCommunityName().isBlank()) {
-            Community community = communityRepository.findByName(dto.getCommunityName())
-                    .orElseThrow(() -> new CommunityNotFoundException("Community not found with name " + dto.getCommunityName()));
+            Community community = communityService.findByName(dto.getCommunityName());
             post.setCommunity(community);
         }
 
@@ -72,14 +71,12 @@ public class PostService {
     }
 
     public List<Post> getCommunityPosts(String communityName) {
-        Community community = communityRepository.findByName(communityName)
-                .orElseThrow(()->new CommunityNotFoundException("Community not found"));
+        Community community = communityService.findByName(communityName);
         return community.getPosts();
     }
 
     public Post updatePost(Long id, PostUpdateDto updateDto) {
-        Post post = postRepository.findPostById(id)
-                .orElseThrow(()->new PostNotFoundException("Post not found"));
+        Post post = findById(id);
         User authenticatedUser = userService.getAuthenticatedUser();
         if(!post.getAuthor().equals(authenticatedUser)){
             throw new AccessDeniedException("You are not allowed to perform this operation");
@@ -99,9 +96,7 @@ public class PostService {
 
     @Transactional
     public void deletePostById (Long id) {
-        Post post = postRepository.findPostById(id)
-                .orElseThrow(() -> new PostNotFoundException("Post with id: " + id + " was not found"));
-
+        Post post = findById(id);
         if(!post.getAuthor().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this post.");
 

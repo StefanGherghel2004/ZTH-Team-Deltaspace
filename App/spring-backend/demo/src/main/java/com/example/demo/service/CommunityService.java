@@ -80,6 +80,12 @@ public class CommunityService {
         return communityRepository.save(community);
     }
 
+    public Community findByName(String name) {
+        return communityRepository.findByName(name)
+                .orElseThrow(() -> new CommunityNotFoundException("Community not found with name=" + name));
+    }
+
+
     public Community verifyNsfwCommunities(String communityName){
         User authenticatedUser= userService.getAuthenticatedUser();
         int userAge= Period.between(authenticatedUser.getDateOfBirth(), LocalDate.now()).getYears();
