@@ -19,7 +19,7 @@ public class FeedController {
     @GetMapping
     public PostFeedDto getRandomizedFeed(@RequestParam(required = false) String seed, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
         String feedSeed = seed;
-        if(seed.isEmpty() || seed==null){
+        if(seed == null || seed.isEmpty()){
             feedSeed= UUID.randomUUID().toString();
         }
         return postService.getRandomizedFeed(feedSeed,page,size);
