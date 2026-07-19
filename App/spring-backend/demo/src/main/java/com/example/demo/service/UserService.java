@@ -4,6 +4,7 @@ import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.exception.UserTooYoungException;
+import com.example.demo.logger.Logger;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 
@@ -32,6 +33,8 @@ public class UserService {
     public User addUser(User user) {
         user.setId(null);
         validateAge(user.getDateOfBirth());
+
+        Logger.info("Adding new user" + user);
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
