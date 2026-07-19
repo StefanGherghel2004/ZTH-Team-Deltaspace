@@ -23,102 +23,71 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception e){
-        var errorResponse = ErrorResponse.builder()
-                .message(e.getMessage())
-                .status(HttpStatus.FORBIDDEN.value())
-                .time(LocalDateTime.now())
-                .build();
-        return new ResponseEntity<>(errorResponse,HttpStatus.FORBIDDEN);
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.FORBIDDEN, e.getMessage(), request, null);
     }
 
     @ExceptionHandler({
             CommentNotFoundException.class,
             PostNotFoundException.class,
             UserNotFoundException.class,
-            CommunityNotFoundException.class,
+            CommunityNotFoundException.class
     })
-    public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e) {
-        var errorResponse = ErrorResponse.builder()
-                .message(e.getMessage())
-                .status(HttpStatus.NOT_FOUND.value())
-                .time(LocalDateTime.now())
-                .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, e.getMessage(), request, null);
     }
 
     @ExceptionHandler({
             UserTooYoungException.class,
             IllegalArgumentException.class
     })
-    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
-        var errorResponse = ErrorResponse.builder()
-                .message(e.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .time(LocalDateTime.now())
-                .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request, null);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
-        return ResponseEntity
-                .status(HttpStatus.CONTENT_TOO_LARGE)
-                .body("Max file size exceeded.");
+    public ResponseEntity<ErrorResponse> handleMaxSizeException(MaxUploadSizeExceededException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONTENT_TOO_LARGE, "Max file size exceeded.", request, null);
     }
 
     @ExceptionHandler(FileStorageException.class)
-    public ResponseEntity<String> handleFileStorage(FileStorageException ex) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleFileStorage(FileStorageException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request, null);
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
-                                                                               HttpServletRequest request) {
-
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        fieldError -> Objects.requireNonNullElse(
-                                fieldError.getDefaultMessage(),
-                                "Validation failed"
-                        ),
+                        fieldError -> Objects.requireNonNullElse(fieldError.getDefaultMessage(), "Validation failed"),
                         (first, second) -> first
                 ));
 
-        var errorResponse = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message("Validation failed")
-                .errors(errors)
-                .time(LocalDateTime.now())
-                .url(request.getRequestURL().toString())
-                .build();
-
-        return ResponseEntity.badRequest()
-                .body(errorResponse);
+        return buildResponse(HttpStatus.BAD_REQUEST, "Validation failed", request, errors);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDatabaseError(DataIntegrityViolationException ex, HttpServletRequest request) {
-        
-        var errorResponse = ErrorResponse.builder()
-                .message("Db error")
-                .status(HttpStatus.CONFLICT.value())
-                .time(LocalDateTime.now())
-                .url(request.getRequestURL().toString())
-                .errors(Map.of("details", ex.getMostSpecificCause().getMessage()))
-                .build();
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        Map<String, String> errorDetails = Map.of("details", ex.getMostSpecificCause().getMessage());
+        return buildResponse(HttpStatus.CONFLICT, "Database error", request, errorDetails);
     }
 
+    private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, HttpServletRequest request, Map<String, String> errors) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(status.value())
+                .message(message)
+                .time(LocalDateTime.now())
+                .url(request.getRequestURI())
+                .errors(errors)
+                .build();
 
+        return new ResponseEntity<>(errorResponse, status);
+    }
 
     @Data
     @Builder
@@ -127,6 +96,6 @@ public class GlobalExceptionHandler {
         private int status;
         private LocalDateTime time;
         private String url;
-        private Map<String, String> errors;
+        private Map<String, String> errors; // detailed explanation
     }
 }

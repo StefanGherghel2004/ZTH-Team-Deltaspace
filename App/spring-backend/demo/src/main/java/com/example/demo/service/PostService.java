@@ -70,6 +70,7 @@ public class PostService {
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
     }
 
+    @Transactional
     public List<Post> getCommunityPosts(String communityName) {
         Community community = communityService.findByName(communityName);
         return community.getPosts();
