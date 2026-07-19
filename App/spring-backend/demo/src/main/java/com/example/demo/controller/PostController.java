@@ -21,7 +21,6 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
-    private final UserService userService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)

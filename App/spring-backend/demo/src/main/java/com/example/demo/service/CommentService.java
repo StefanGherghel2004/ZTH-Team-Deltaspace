@@ -24,18 +24,14 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final UserService userService;
+    private final PostService postService;
 
     @Transactional
     public Comment addComment (CommentCreateDto commentDto) {
 
         User authorUser = userService.getAuthenticatedUser();
-
-        Post targetPost = postRepository.findById(commentDto.getPostId()).orElseThrow(() ->
-                new PostNotFoundException("Post with id: " + commentDto.getPostId() +
-                        " was not found."));
+        Post targetPost = postService.findById(commentDto.getPostId());
 
         Comment commentToAdd = new Comment();
         commentToAdd.setText(commentDto.getText());
@@ -58,9 +54,7 @@ public class CommentService {
 
     @Transactional
     public void deleteCommentById (Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new CommentNotFoundException("Comment with id: " + " was not found."));
-
+        Comment comment = findById(id);
         if (!comment.getUser().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this comment");
 
@@ -77,9 +71,7 @@ public class CommentService {
 
     @Transactional
     public Comment editComment (Long commentId, CommentUpdateDto updateDto) {
-        Comment updatedComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id: " + commentId +
-                        " was not found."));
+        Comment updatedComment = findById(commentId);
         updatedComment.setText(updateDto.getText());
         return commentRepository.save(updatedComment);
     }
