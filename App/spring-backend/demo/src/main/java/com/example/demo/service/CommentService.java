@@ -61,8 +61,11 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
+    @Transactional
     public List<Comment> getCommentsByPostId(Long postId) {
-        return commentRepository.findByPostId(postId);
+        Post post = postService.findById(postId);
+
+        return post.getComments();
     }
 
     public List<Comment> getAllComments (){

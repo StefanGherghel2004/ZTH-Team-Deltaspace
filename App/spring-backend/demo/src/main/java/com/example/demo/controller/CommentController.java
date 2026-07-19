@@ -18,7 +18,6 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final UserService userService;
 
     @PostMapping("/addComment")
     @ResponseStatus(HttpStatus.CREATED)
