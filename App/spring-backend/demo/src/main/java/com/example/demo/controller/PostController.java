@@ -34,13 +34,11 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> listAllPosts() {
+    public List<Post> getPosts(@RequestParam(required = false) String community) {
+        if (community != null) {
+            return postService.getCommunityPosts(community);
+        }
         return postService.getAllPosts();
-    }
-
-    @GetMapping("community/{communityName}")
-    public List<Post> getCommunityPosts(@PathVariable String communityName){
-        return postService.getCommunityPosts(communityName);
     }
 
     @PutMapping("{id}")
