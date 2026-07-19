@@ -30,9 +30,12 @@ public class CommunityService {
         TECH
     }
 
+    private static final int NSFW_AGE = 18;
+
     private final CommunityRepository communityRepository;
     private final PostRepository postRepository;
     private final UserService userService;
+
     public Community addCommunity(CommunityCreateDto dto){
 
         User author = userService.getAuthenticatedUser();
@@ -85,11 +88,11 @@ public class CommunityService {
 
     public Community verifyNsfwCommunities(String communityName){
         User authenticatedUser= userService.getAuthenticatedUser();
-        int userAge= Period.between(authenticatedUser.getDateOfBirth(), LocalDate.now()).getYears();
-        boolean isNSFW=postRepository.existsByCommunityNameAndNsfwTrue(communityName);
-        if(isNSFW && userAge<18) {
+        int userAge = authenticatedUser.getAge();
+        boolean isNSFW = postRepository.existsByCommunityNameAndNsfwTrue(communityName);
+        if (isNSFW && userAge < NSFW_AGE) {
             throw new AccessDeniedException("This community is marked as NSFW");
-            }
+        }
         return findByName(communityName);
     }
 

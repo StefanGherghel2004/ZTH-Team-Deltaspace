@@ -6,6 +6,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 
 @Data
 @Entity
@@ -31,5 +32,12 @@ public class User extends BaseEntity {
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
+
+    public int getAge() {
+        if (this.dateOfBirth == null) {
+            return 0;
+        }
+        return Period.between(this.dateOfBirth, LocalDate.now()).getYears();
+    }
 
 }
