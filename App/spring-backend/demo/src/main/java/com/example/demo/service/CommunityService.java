@@ -51,8 +51,7 @@ public class CommunityService {
     }
 
     public void deleteCommunityByName(String communityName) {
-        Community communityToDelete=communityRepository.findByName(communityName)
-            .orElseThrow(()-> new CommunityNotFoundException("Community " + communityName + " not found"));
+        Community communityToDelete = findByName(communityName);
         User user = userService.getAuthenticatedUser();
         if(!communityToDelete.getAuthor().equals(user)){
             throw new AccessDeniedException("You are not allowed to perform this operation");
@@ -61,9 +60,7 @@ public class CommunityService {
     }
 
     public Community updateCommunity(String communityName, CommunityUpdateDto updateDto){
-        Community community = communityRepository.findByName(communityName)
-                .orElseThrow(()->new CommunityNotFoundException("Community not found"));
-
+        Community community = findByName(communityName);
         User authenticatedUser = userService.getAuthenticatedUser();
         if(!community.getAuthor().equals(authenticatedUser)) {
             throw new AccessDeniedException("You are not allowed to perform this operation. You are not the owner");
@@ -93,9 +90,7 @@ public class CommunityService {
         if(isNSFW && userAge<18) {
             throw new AccessDeniedException("This community is marked as NSFW");
             }
-        return communityRepository.findByName(communityName)
-                .orElseThrow(()->new CommunityNotFoundException("Community not found"));
-
+        return findByName(communityName);
     }
 
     private Topic getTopicFromString(String topicString) {
