@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
@@ -33,6 +34,7 @@ public class User extends BaseEntity {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
+    @JsonIgnore
     public int getAge() {
         if (this.dateOfBirth == null) {
             return 0;

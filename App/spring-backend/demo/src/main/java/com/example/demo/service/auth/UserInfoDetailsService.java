@@ -15,10 +15,10 @@ public class UserInfoDetailsService implements UserDetailsService {
     private final UserRepository repository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String identifier) {
 
-        User user = repository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username " + username));
+        User user = repository.findByUsernameOrEmail(identifier, identifier)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username or email: " + identifier));
 
         return new UserInfoDetails(user);
     }

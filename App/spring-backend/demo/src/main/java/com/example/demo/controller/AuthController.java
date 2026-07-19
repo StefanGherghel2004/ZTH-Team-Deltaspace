@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,9 +26,14 @@ public class AuthController {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.getUsernameOrEmail(), request.getPassword())
             );
-            return ResponseEntity.ok(jwtService.generateToken(request.getUsername()));
+
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            String jwtToken = jwtService.generateToken(userDetails.getUsername());
+
+            return ResponseEntity.ok(jwtToken);
         } catch (AuthenticationException e) {
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong credentials.");
