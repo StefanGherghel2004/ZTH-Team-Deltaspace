@@ -10,28 +10,27 @@ import java.time.format.DateTimeFormatter;
 @Getter
 public class User {
 
-    private int userID;
-    public static int userCounter = 0;
-
+    private Long id;
     private String username;
     private String email;
     private String password;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
+    private boolean deleted = false;
 
-    public User(String username, String email, String password, String dateOfBirth) {
+    public User(String username, String email, String password, LocalDate dateOfBirth) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
-        userCounter = ExcelWrite.getCurrentId(ExcelWrite.getInstance().userDatabasePath);
-        userID = ++userCounter;
     }
 
     public boolean checkAge(){
         LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate birthday=LocalDate.parse(dateOfBirth, formatter);
-        Period age = Period.between(birthday, today);
+        Period age = Period.between(dateOfBirth, today);
         return age.getYears() >= 18;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

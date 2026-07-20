@@ -1,21 +1,21 @@
 package cli.backend.services;
 
 import cli.backend.User;
-import cli.backend.database.ExcelDelete;
-import cli.backend.database.ExcelRead;
-import cli.backend.database.ExcelWrite;
+import cli.backend.database.UserRepository;
 import cli.backend.exceptions.InvalidUserAccountException;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class UserService {
 
     private static final int MIN_AGE = 13;
+
+    private final UserRepository userRepository;
 
     private static UserService instance;
 
@@ -23,34 +23,21 @@ public class UserService {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
-    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
-    private static ExcelRead  excelRead = ExcelRead.getInstance();
-    private static ExcelDelete excelDelete = ExcelDelete.getInstance();
-    private String filename="App/CLI-backend/databases/UserDatabase.xlsx";
-
     private UserService() {
-        if (excelWrite.getNumberOfEntries(excelWrite.userDatabasePath) == 0) {
-            this.addUser("admin",
-                    "test@admin",
-                    PasswordService.hash("Admin123"),
-                    "01-01-2000");
-        }
+        this.userRepository = UserRepository.getInstance();
     }
 
     public static UserService getInstance() {
-        if (instance == null) {
-            instance = new UserService();
-        }
+        if (instance == null) instance = new UserService();
         return instance;
     }
 
-    public void addUser (String username, String email, String password, String dateOfBirth){
+    public void addUser(String username, String email, String password, String dateOfBirth) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dob = LocalDate.parse(dateOfBirth, formatter);
 
-        User user = new User(username,email,password,dateOfBirth);
-        excelWrite.write(excelWrite.userDatabasePath, List.of(
-                String.valueOf(user.getUserID()),user.getUsername(),user.getEmail(),user.getPassword(),
-                String.valueOf(user.getDateOfBirth())));
-        users.add(user);
+        User user = new User(username, email, password, dob);
+        userRepository.addUser(user);
     }
 
     public boolean validateUsername (String username) {
@@ -84,15 +71,17 @@ public class UserService {
             return false;
         }
     }
-    List<User> users=excelRead.getExcelUsers();
+
     public  User validateUserAccount (String usernameOrEmail, String password)
             throws InvalidUserAccountException {
 
-        for (User user : users) {
+        Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail);
 
-            if ((user.getUsername().equals(usernameOrEmail) || user.getEmail().equals(usernameOrEmail))
-            && PasswordService.verify(password, user.getPassword()))
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (PasswordService.verify(password, user.getPassword())) {
                 return user;
+            }
         }
 
         throw new InvalidUserAccountException("Invalid username/email or password. Please try again.\n");
@@ -103,11 +92,8 @@ public class UserService {
     }
 
 
-    public boolean deleteUser(User currentUser) {
-        boolean isRemoved = users.remove(currentUser);
-        if(isRemoved){
-            excelDelete.deleteRowfromExcel(filename,1,currentUser.getUsername());
-        }
-        return isRemoved;
+    public boolean deleteUser(User user) {
+        userRepository.deleteUserById(user.getId());
+        return true;
     }
 }
