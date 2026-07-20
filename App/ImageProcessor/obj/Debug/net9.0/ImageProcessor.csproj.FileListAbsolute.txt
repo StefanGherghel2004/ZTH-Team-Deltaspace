@@ -32,3 +32,4 @@ C:\Users\stef2\Desktop\COGNYTE\REDDIT\App\ImageProcessor\obj\Debug\net9.0\refint
 C:\Users\stef2\Desktop\COGNYTE\REDDIT\App\ImageProcessor\obj\Debug\net9.0\ImageProcessor.pdb
 C:\Users\stef2\Desktop\COGNYTE\REDDIT\App\ImageProcessor\obj\Debug\net9.0\ImageProcessor.genruntimeconfig.cache
 C:\Users\stef2\Desktop\COGNYTE\REDDIT\App\ImageProcessor\obj\Debug\net9.0\ref\ImageProcessor.dll
+C:\Users\stef2\Desktop\COGNYTE\REDDIT\App\ImageProcessor\bin\Debug\net9.0\SixLabors.ImageSharp.dll

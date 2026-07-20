@@ -1,29 +1,24 @@
 [
   {
     "ContainingType": "ImageProcessor.Controllers.FilterController",
-    "Method": "Filter",
+    "Method": "ApplyFilter",
     "RelativePath": "api/filter",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "file",
+        "Name": "imageFile",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "filter",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ImageProcessor.Controllers.WeatherForecastController",

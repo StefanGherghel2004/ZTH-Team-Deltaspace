@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "1QZUHV/mT+A=",
+  "dgSpecHash": "r4XZEWTIHVI=",
   "success": true,
   "projectFilePath": "C:\\Users\\stef2\\Desktop\\COGNYTE\\REDDIT\\App\\ImageProcessor\\ImageProcessor.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\stef2\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.18\\microsoft.aspnetcore.openapi.9.0.18.nupkg.sha512",
-    "C:\\Users\\stef2\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+    "C:\\Users\\stef2\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\stef2\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
+    "C:\\Users\\stef2\\.nuget\\packages\\sixlabors.imagesharp\\2.1.13\\sixlabors.imagesharp.2.1.13.nupkg.sha512",
+    "C:\\Users\\stef2\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "C:\\Users\\stef2\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }
