@@ -5,6 +5,7 @@ import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.database.ExcelWrite;
 import cli.backend.database.ExcelRead;
+import cli.backend.database.PostRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +16,7 @@ public class PostService {
     private final ExcelRead excelRead = ExcelRead.getInstance();
     private final List<Post> posts= excelRead.getExcelPosts();
     private static PostService instance;
-    private final ExcelWrite excelWrite = ExcelWrite.getInstance();
+    private final PostRepository postRepository = PostRepository.getInstance();
 
     public static PostService getInstance(){
         if(instance==null){
@@ -24,11 +25,11 @@ public class PostService {
         return instance;
     }
 
-    public Post addPost(User user,String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity){
+    public Post addPost(String authorUsername,String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity){
         Community targetCommunity = currentCommunity;
 
-        String targetName = (targetCommunity != null) ? targetCommunity.getNickname() : "u/" + user.getUsername();
-        Post newPost = new Post(user, postTitle, postContents, imageLink, NSFW, targetName);
+        String targetName = (targetCommunity != null) ? targetCommunity.getNickname() : "u/" + authorUsername;
+        Post newPost = new Post(authorUsername, postTitle, postContents, imageLink, NSFW, targetName);
         posts.add(newPost);
         if(targetCommunity != null) {
             targetCommunity.addPost(newPost);
@@ -37,13 +38,7 @@ public class PostService {
         String targetCommunityChecked = (targetCommunity != null) ? targetCommunity.getNickname() : "None";
         String imageLinkChecked = (imageLink != null) ? imageLink : "No image link";
 
-        excelWrite.write(excelWrite.postDatabasePath, List.of(
-                String.valueOf(newPost.getPostID()),
-                user.getUsername(),
-                postTitle,postContents,
-                imageLinkChecked,
-                targetCommunityChecked,
-                String.valueOf(NSFW)));
+        postRepository.addPost(newPost);
 
         return newPost;
     }
@@ -62,7 +57,7 @@ public class PostService {
 
     public Post findPostById(int id){
         for (Post p:posts){
-            if(p.getPostID()==id) {
+            if(p.getId()==id) {
                 return p;
             }
         }
@@ -85,7 +80,7 @@ public class PostService {
             return false;
         }
 
-        if (post.getUser().getUsername().equals(user.getUsername())) {
+        if (post.getAuthorUsername().equals(user.getUsername())) {
             return true;
         }
 

@@ -1,5 +1,8 @@
 package cli.backend.loggers;
 
+import lombok.Setter;
+
+@Setter
 public class ConsoleLogger implements Loggable {
 
     private LogLevel level;
