@@ -14,7 +14,7 @@ namespace ImageProcessor.Service
             var pixelData = new byte[image.Width * image.Height * 4];
             image.CopyPixelDataTo(pixelData);
 
-            applyFilter(pixelData, type);
+            ApplyFilter(pixelData, type);
 
             using var finalImage = Image.LoadPixelData<Rgba32>(pixelData, image.Width, image.Height);
             using var outStream = new MemoryStream();
@@ -33,7 +33,7 @@ namespace ImageProcessor.Service
             }
         }
 
-        private void applyFilter(byte[] pixels, FilterType type)
+        private void ApplyFilter(byte[] pixels, FilterType type)
         {
             switch (type)
             {
