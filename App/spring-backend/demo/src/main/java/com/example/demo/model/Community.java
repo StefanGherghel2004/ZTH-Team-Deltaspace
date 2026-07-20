@@ -1,0 +1,35 @@
+package com.example.demo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@Entity
+@Table(name = "communities")
+public class Community extends BaseEntity {
+
+    @Column(unique = true, nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String topic;
+
+    @Column
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User author;
+
+    // CascadeType.ALL ensures community deletion also removes all associated posts.
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Post> posts = new ArrayList<>();
+
+}

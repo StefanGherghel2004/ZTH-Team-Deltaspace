@@ -1,0 +1,106 @@
+package com.example.demo.service;
+
+import com.example.demo.dto.post.PostCreateDto;
+import com.example.demo.dto.post.PostFeedDto;
+import com.example.demo.dto.post.PostUpdateDto;
+import com.example.demo.exception.AccessDeniedException;
+import com.example.demo.exception.notfound.CommunityNotFoundException;
+import com.example.demo.exception.notfound.PostNotFoundException;
+import com.example.demo.model.Community;
+import com.example.demo.model.Post;
+import com.example.demo.model.User;
+import com.example.demo.repository.CommunityRepository;
+import com.example.demo.repository.PostRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class PostService {
+
+    private final PostRepository postRepository;
+    private final UserService userService;
+    private final S3ImageService s3ImageService;
+    private final CommunityService communityService;
+
+    public Post createPost(PostCreateDto dto) {
+
+        User author = userService.getAuthenticatedUser();
+
+        // TO DO add check if user is deleted
+
+        Post post = new Post();
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
+        post.setNsfw(dto.isNsfw());
+        post.setAuthor(author);
+
+        if (dto.getImage() != null && !dto.getImage().isEmpty()) {
+            String imageUrl = s3ImageService.uploadImage(dto.getImage());
+            post.setImageLink(imageUrl);
+        }
+
+        if (dto.getCommunityName() != null && !dto.getCommunityName().isBlank()) {
+            Community community = communityService.findByName(dto.getCommunityName());
+            post.setCommunity(community);
+        }
+
+        return postRepository.save(post);
+    }
+
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
+    }
+
+    public PostFeedDto getRandomizedFeed(String seed,int page,int size){
+        int offset=size*page;
+        List<Post> feedPosts=postRepository.getRandomizedFeed(seed,size,offset);
+
+        PostFeedDto postFeedDto = new PostFeedDto();
+        postFeedDto.setPosts(feedPosts);
+        postFeedDto.setSeed(seed);
+        return postFeedDto;
+    }
+
+    public Post findById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
+    }
+
+    @Transactional
+    public List<Post> getCommunityPosts(String communityName) {
+        Community community = communityService.findByName(communityName);
+        return community.getPosts();
+    }
+
+    public Post updatePost(Long id, PostUpdateDto updateDto) {
+        Post post = findById(id);
+        User authenticatedUser = userService.getAuthenticatedUser();
+        if(!post.getAuthor().equals(authenticatedUser)){
+            throw new AccessDeniedException("You are not allowed to perform this operation");
+        }
+
+        post.setTitle(updateDto.getTitle());
+        post.setContent(updateDto.getContent());
+        post.setNsfw(updateDto.isNsfw());
+        if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
+            String imageLink = s3ImageService.uploadImage(updateDto.getImage());
+            post.setImageLink(imageLink);
+        }
+
+
+        return postRepository.save(post);
+    }
+
+    @Transactional
+    public void deletePostById (Long id) {
+        Post post = findById(id);
+        if(!post.getAuthor().equals(userService.getAuthenticatedUser()))
+            throw new AccessDeniedException("You are not the author of this post.");
+
+        postRepository.delete(post);
+    }
+}

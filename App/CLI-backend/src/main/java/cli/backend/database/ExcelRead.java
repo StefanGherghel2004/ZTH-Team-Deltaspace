@@ -50,7 +50,7 @@ public class ExcelRead {
         }
     }
 
-    public List<String>     getColumnValues(String filename, int columnIndex) {
+    public List<String> getColumnValues(String filename, int columnIndex) {
         List<String> columnValues = new ArrayList<>();
         try (FileInputStream file = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(file)) {

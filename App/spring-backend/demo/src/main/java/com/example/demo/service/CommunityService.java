@@ -1,0 +1,115 @@
+package com.example.demo.service;
+
+import com.example.demo.dto.community.CommunityCreateDto;
+import com.example.demo.dto.community.CommunityUpdateDto;
+import com.example.demo.exception.notfound.CommunityNotFoundException;
+import com.example.demo.model.Community;
+import com.example.demo.exception.AccessDeniedException;
+import com.example.demo.model.User;
+import com.example.demo.repository.CommunityRepository;
+import com.example.demo.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class CommunityService {
+
+    public enum Topic {
+        FOOD,
+        GAMING,
+        ART,
+        SCIENCE,
+        TECH
+    }
+
+    private static final int NSFW_AGE = 18;
+
+    private final CommunityRepository communityRepository;
+    private final PostRepository postRepository;
+    private final UserService userService;
+
+    public Community addCommunity(CommunityCreateDto dto){
+
+        User author = userService.getAuthenticatedUser();
+        Topic topic = getTopicFromString(dto.getTopic());
+
+        Community community = new Community();
+        community.setAuthor(author);
+        community.setName(dto.getTitle());
+        community.setTopic(topic.name());
+        community.setDescription(dto.getDescription());
+
+        return communityRepository.save(community);
+    }
+    public List<Community> listAllCommunities(){
+        return communityRepository.findAll();
+    }
+
+    public void deleteCommunityByName(String communityName) {
+        Community communityToDelete = findByName(communityName);
+        User user = userService.getAuthenticatedUser();
+        if(!communityToDelete.getAuthor().equals(user)){
+            throw new AccessDeniedException("You are not allowed to perform this operation");
+        }
+        communityRepository.delete(communityToDelete);
+    }
+
+    public Community updateCommunity(String communityName, CommunityUpdateDto updateDto){
+        Community community = findByName(communityName);
+        User authenticatedUser = userService.getAuthenticatedUser();
+        if(!community.getAuthor().equals(authenticatedUser)) {
+            throw new AccessDeniedException("You are not allowed to perform this operation. You are not the owner");
+        }
+
+        Topic topic;
+        if (updateDto.getTopic() != null) {
+            topic = getTopicFromString(updateDto.getTopic());
+            community.setTopic(topic.name());
+        }
+
+        community.setDescription(updateDto.getDescription());
+        community.setTopic(updateDto.getTopic());
+        return communityRepository.save(community);
+    }
+
+    public Community findByName(String name) {
+        return communityRepository.findByName(name)
+                .orElseThrow(() -> new CommunityNotFoundException("Community not found with name=" + name));
+    }
+
+
+    public Community verifyNsfwCommunities(String communityName){
+        User authenticatedUser= userService.getAuthenticatedUser();
+        int userAge = authenticatedUser.getAge();
+        boolean isNSFW = postRepository.existsByCommunityNameAndNsfwTrue(communityName);
+        if (isNSFW && userAge < NSFW_AGE) {
+            throw new AccessDeniedException("This community is marked as NSFW");
+        }
+        return findByName(communityName);
+    }
+
+    private Topic getTopicFromString(String topicString) {
+        Topic result = null;
+        for (Topic topic : Topic.values()) {
+            if (topic.name().equalsIgnoreCase(topicString)) {
+                result = topic;
+                break;
+            }
+        }
+
+        if(result == null){
+            throw new IllegalArgumentException("The Selected Topic does not exist");
+        }
+
+        return result;
+    }
+}
+
