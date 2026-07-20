@@ -63,7 +63,8 @@ public class PostRepository {
 
     public void addPost(Post post) {
         try (Connection connection = databaseConnection.getDatabaseConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(addPostQuery)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(addPostQuery,
+                     Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, post.getAuthorUsername());
             preparedStatement.setString(2, post.getPostTitle());
@@ -73,7 +74,15 @@ public class PostRepository {
             preparedStatement.setBoolean(6, post.isNSFW());
 
             preparedStatement.executeUpdate();
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    post.setId(generatedKeys.getLong(1));
+                }
+            }
+
             Logger.info("Successfully added new post: " + post.getPostTitle());
+
         } catch (SQLException e) {
             Logger.severe("Failed to add post: " + e.getMessage());
         }
