@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Community.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Community.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/ExcelRead.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/ExcelRead.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/CommunityDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/CommunityDatabase.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,61 +39,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0000017797488443" />
-      <entry key="S60" value="1.0053357212666645" />
-      <entry key="M2" value="1.368975475266238" />
-      <entry key="M5" value="8.034145411527422" />
-      <entry key="M10" value="27.981283814673315" />
-      <entry key="M15" value="49.64976969186604" />
-      <entry key="M30" value="109.08227417465626" />
-      <entry key="H1" value="186.3608146492116" />
-      <entry key="H2" value="254.96294841850315" />
-      <entry key="H4" value="301.7804241046199" />
-      <entry key="D1" value="349.382335829956" />
-      <entry key="W1" value="358.4589921726809" />
+      <entry key="MS100" value="7.263550006539128E-98" />
+      <entry key="MS500" value="4.7052728463627785E-20" />
+      <entry key="S2" value="2.4155919430832814E-5" />
+      <entry key="S5" value="0.02392496278489092" />
+      <entry key="S10" value="0.2571962024063477" />
+      <entry key="S30" value="1.5911073591839289" />
+      <entry key="S60" value="4.68464279602841" />
+      <entry key="M2" value="12.882905018763868" />
+      <entry key="M5" value="37.43259084657481" />
+      <entry key="M10" value="65.01416172579397" />
+      <entry key="M15" value="81.80691498734093" />
+      <entry key="M30" value="119.56327151955648" />
+      <entry key="H1" value="190.6346101414971" />
+      <entry key="H2" value="284.86980214006513" />
+      <entry key="H4" value="367.1235121920747" />
+      <entry key="D1" value="465.88535833450265" />
+      <entry key="W1" value="486.45289314407046" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="3.2850541520170563E-96" />
-      <entry key="S5" value="9.701665356556098E-39" />
-      <entry key="S10" value="1.5721029389664215E-19" />
-      <entry key="S30" value="1.7610090586220165E-6" />
-      <entry key="S60" value="0.004221781547359755" />
-      <entry key="M2" value="0.23856985203681763" />
-      <entry key="M5" value="3.5752969372258714" />
-      <entry key="M10" value="11.962635117902119" />
-      <entry key="M15" value="20.482927176997343" />
-      <entry key="M30" value="41.79513991417867" />
-      <entry key="H1" value="66.32703710075894" />
-      <entry key="H2" value="86.33513658419241" />
-      <entry key="H4" value="99.35334071966487" />
-      <entry key="D1" value="112.18557513886557" />
-      <entry key="W1" value="114.59252872881054" />
+      <entry key="MS100" value="1.000000000000015" />
+      <entry key="MS500" value="1.001723971901723" />
+      <entry key="S2" value="1.2502277381796514" />
+      <entry key="S5" value="1.8224263038126955" />
+      <entry key="S10" value="2.2698533493102078" />
+      <entry key="S30" value="3.255874719545843" />
+      <entry key="S60" value="6.081157801993617" />
+      <entry key="M2" value="11.82783936209693" />
+      <entry key="M5" value="23.25839053505289" />
+      <entry key="M10" value="32.94700761664635" />
+      <entry key="M15" value="38.34348169656566" />
+      <entry key="M30" value="50.949779552806234" />
+      <entry key="H1" value="74.805486310913" />
+      <entry key="H2" value="104.95458406295164" />
+      <entry key="H4" value="130.29356140667835" />
+      <entry key="D1" value="159.885068410378" />
+      <entry key="W1" value="165.95586447458052" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.2973017787506803" />
-      <entry key="MS500" value="0.7845840978967508" />
-      <entry key="S2" value="0.9411522295050682" />
-      <entry key="S5" value="0.9760317607762247" />
-      <entry key="S10" value="0.987943197140516" />
-      <entry key="S30" value="0.9959682556031898" />
-      <entry key="S60" value="1.0074233006015507" />
-      <entry key="M2" value="1.6030943792618482" />
-      <entry key="M5" value="11.58718719035296" />
-      <entry key="M10" value="39.90610010107664" />
-      <entry key="M15" value="70.0889782126613" />
-      <entry key="M30" value="150.8318231495024" />
-      <entry key="H1" value="252.65111989864465" />
-      <entry key="H2" value="341.273976041894" />
-      <entry key="H4" value="401.1198322643693" />
-      <entry key="D1" value="461.5652793530086" />
-      <entry key="W1" value="473.0511366488707" />
+      <entry key="MS100" value="2.1310560953518434E-6" />
+      <entry key="MS500" value="0.07402382229678839" />
+      <entry key="S2" value="0.7102432349673675" />
+      <entry key="S5" value="1.522937508421829" />
+      <entry key="S10" value="2.322722803881436" />
+      <entry key="S30" value="4.740605198824844" />
+      <entry key="S60" value="10.658895403198501" />
+      <entry key="M2" value="24.593556684863792" />
+      <entry key="M5" value="60.57895549999414" />
+      <entry key="M10" value="97.8725169899829" />
+      <entry key="M15" value="120.07852817340897" />
+      <entry key="M30" value="170.4624676424112" />
+      <entry key="H1" value="265.40124795903614" />
+      <entry key="H2" value="389.7963979315584" />
+      <entry key="H4" value="497.3994709392352" />
+      <entry key="D1" value="625.76678892038" />
+      <entry key="W1" value="652.4082172671112" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -123,34 +123,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "serban-backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
-      <module name="CLI-backend" />
+      <module name="Deltaspace" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="cli.backend.*" />
@@ -160,6 +160,17 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Deltaspace" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Deltaspace" />
+      <option name="filePath" />
+      <method v="2" />
     </configuration>
     <recent_temporary>
       <list>

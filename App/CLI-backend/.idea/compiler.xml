@@ -15,8 +15,12 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
+        <module name="Deltaspace" />
         <module name="CLI-backend" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CLI-backend" target="25" />
+    </bytecodeTargetLevel>
   </component>
 </project>

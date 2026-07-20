@@ -12,7 +12,7 @@ import java.util.List;
 public class CommunityDatabase {
     String url = "jdbc:postgresql://localhost:5432/cli-backend-db"; // Database details
     String username = "postgres"; // MySQL credentials
-    String password = "parola_ta";
+    String password = "Mihai_123";
     private static CommunityDatabase instance;
 
     public static CommunityDatabase getInstance(){

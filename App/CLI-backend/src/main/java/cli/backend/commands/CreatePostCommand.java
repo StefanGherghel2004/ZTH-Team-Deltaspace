@@ -16,6 +16,7 @@ public class CreatePostCommand implements Command {
         Console console = Console.getInstance();
         CommunityService communityService = CommunityService.getInstance();
         PostService postService = PostService.getInstance();
+        CheckImage checkImage = CheckImage.getInstance();
 
         console.info("Welcome to the post creation page.");
         Community targetCommunity = app.getCurrentCommunity();
@@ -38,9 +39,9 @@ public class CreatePostCommand implements Command {
         String postTitle = console.getStringInput("Please enter post title:");
         String postContents = console.getStringInput("Please enter post contents:");
 
-        String imageLink = console.getStringInput("Please enter image link (or press Enter to skip):", true);
-        if (imageLink.isEmpty()) {
-            imageLink = null;
+        String imagePath= console.getStringInput("Please enter image path (or press Enter to skip):", true);
+        if (imagePath.isEmpty()) {
+            imagePath = null;
         }
 
         boolean NSFW = console.getUserConfirmation("Is your post NSFW? [yes/no]");
@@ -48,12 +49,19 @@ public class CreatePostCommand implements Command {
         if (NSFW && !app.getCurrentUser().checkAge()) {
             console.error("You must be at least 18 years old to create an NSFW post.");
         } else {
-            Post newPost = postService.addPost(app.getCurrentUser(), postTitle, postContents,
-                    imageLink, NSFW, targetCommunity);
-            console.success("Post created successfully!");
-            app.setCurrentPost(newPost);
-            app.setCurrentState(AppHandler.State.ON_POST);
+            try{
+                String savedImagePath=checkImage.processAndSaveImage(imagePath);
+                    Post newPost = postService.addPost(app.getCurrentUser(), postTitle, postContents,
+                            savedImagePath, NSFW, targetCommunity);
+                    console.success("Post created successfully!");
+                    app.setCurrentPost(newPost);
+                    app.setCurrentState(AppHandler.State.ON_POST);
+                }catch (IllegalArgumentException | java.io.IOException e) {
+                console.error("Post creation aborted. Please try again with a valid image.");
+            }
         }
+
         return true;
+
     }
 }
