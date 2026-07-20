@@ -27,7 +27,7 @@ public class DeleteCommentCommand implements Command {
 
         if (confirm) {
 
-            boolean removed = commentService.deleteComment(currentPost, currentComment);
+            boolean removed = commentService.deleteComment(currentComment);
 
             if (removed) {
 

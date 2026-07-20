@@ -24,14 +24,15 @@ public class ShowFeedCommand implements Command {
         }
 
         for(Post post: posts) {
-            console.info("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Community: " + post.getCommunityName());
+            console.info("ID: " + post.getId() + " | Title: " + post.getPostTitle()
+                    + " | Community: " + post.getCommunityName());
         }
 
         String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);
 
         if (!input.isEmpty()) {
             try {
-                int id = Integer.parseInt(input);
+                Long id = Long.parseLong(input);
                 Post foundPost = postService.findPostById(id);
                 if (foundPost != null) {
                     if (foundPost.isNSFW() && !app.getCurrentUser().checkAge()) {

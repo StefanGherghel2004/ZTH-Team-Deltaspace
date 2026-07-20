@@ -181,8 +181,8 @@ public class ExcelRead {
                     postCommunityNameCell = "u/" + postUserCell;
                 }
 
-                Post post = new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
-                post.setPostID(Integer.parseInt(postIDCell));
+                Post post = new Post(user.getUsername(), postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+                post.setId(Long.parseLong(postIDCell));
                 excelPosts.add(post);
 
                 // Allocate post to the cached community instance
@@ -242,8 +242,8 @@ public class ExcelRead {
                     postCommunityNameCell = "u/" + postUserCell;
                 }
 
-                Post post = new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
-                post.setPostID(Integer.parseInt(postIDCell));
+                Post post = new Post(user.getUsername(), postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+                post.setId(Long.parseLong(postIDCell));
 
                 // Allocate post to the target community
                 for (Community c : communities) {

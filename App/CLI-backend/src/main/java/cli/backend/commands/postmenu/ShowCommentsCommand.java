@@ -19,7 +19,7 @@ public class ShowCommentsCommand implements Command {
         Console console = Console.getInstance();
         Post currentPost = app.getCurrentPost();
 
-        Map<Integer, List<Comment>> commentTree = CommentService.getInstance().getCommentTree(currentPost);
+        Map<Long, List<Comment>> commentTree = CommentService.getInstance().getCommentTree(currentPost);
 
         if (commentTree.isEmpty()) {
             console.info("(No comments yet. Be the first to reply!)");
@@ -27,19 +27,20 @@ public class ShowCommentsCommand implements Command {
         }
 
         console.info("\n--- Discussion Thread ---");
-        printThread(-1, commentTree, 0, console);
+        printThread(0L, commentTree, 0, console);
 
         console.getStringInput("Press Enter to return to the post menu...", true);
         return true;
     }
 
-    private void printThread(int parentId, Map<Integer, List<Comment>> commentTree, int depth, Console console) {
+    private void printThread(Long parentId, Map<Long, List<Comment>> commentTree, int depth, Console console) {
         List<Comment> replies = commentTree.get(parentId);
         if (replies != null) {
             for (Comment reply : replies) {
                 String indent = "    ".repeat(depth);
                 String branch = depth > 0 ? "|_ " : "";
-                console.info(indent + branch + "[" + reply.getUsername() + "]: " + reply.getText() + "  (ID: " + reply.getId() + ")");
+                console.info(indent + branch + "[" + reply.getAuthorUsername() + "]: "
+                        + reply.getText() + "  (ID: " + reply.getId() + ")");
                 printThread(reply.getId(), commentTree, depth + 1, console);
             }
         }

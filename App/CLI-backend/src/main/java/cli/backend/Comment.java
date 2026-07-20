@@ -6,30 +6,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Comment {
+    private Long id;
+    private Long postId;
+    private String authorUsername;
     private String text;
-    private User user;
-    private int idPost;
-    private int idComment;
-    private int idParent = -1;
+    private Long idParent = 0L;
 
-    public Comment(String text, User user, int IdPost){
-        this.text=text;
-        this.user=user;
-        this.idPost=IdPost;
-    }
-
-    public String getUsername(){
-
-        return user.getUsername();
-    }
-
-    public int getId(){
-
-        return idComment;
-    }
-
-    public int getCommentPostId () {
-
-        return idPost;
+    public Comment(String text, String authorUsername, Long postId){
+        this.text = text;
+        this.authorUsername = authorUsername;
+        this.postId = postId;
     }
 }

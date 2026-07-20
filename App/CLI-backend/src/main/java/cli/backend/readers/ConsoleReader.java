@@ -37,6 +37,20 @@ public class ConsoleReader {
         }
     }
 
+    public Long readLong () {
+
+        while (true) {
+
+            String inputLong = scanner.nextLine().trim();
+
+            try{
+                return Long.parseLong(inputLong);
+            } catch (NumberFormatException e) {
+                System.out.println(Color.textRed("Please enter a valid number."));
+            }
+        }
+    }
+
     //Reads a string value and returns it only if it is an integer and in a specific range
     public int readIntInRange (int min, int max) {
 

@@ -48,7 +48,7 @@ public class CreatePostCommand implements Command {
         if (NSFW && !app.getCurrentUser().checkAge()) {
             console.error("You must be at least 18 years old to create an NSFW post.");
         } else {
-            Post newPost = postService.addPost(app.getCurrentUser(), postTitle, postContents,
+            Post newPost = postService.addPost(app.getCurrentUser().getUsername(), postTitle, postContents,
                     imageLink, NSFW, targetCommunity);
             console.success("Post created successfully!");
             app.setCurrentPost(newPost);
