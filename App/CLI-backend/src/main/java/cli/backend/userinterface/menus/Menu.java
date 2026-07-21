@@ -28,7 +28,7 @@ public abstract class Menu {
             formattedOptions.add(entry.getKey() + ". " + entry.getValue().getDescription());
         }
 
-        String menuBox = BoxPadder.formatWithGradient(
+        String menuBox = BoxPadder.formatWithGradientBorder(
                 formattedOptions,
                 title,
                 Theme.PRIMARY_GRADIENT_START,

@@ -37,24 +37,39 @@ public class Color {
     }
 
     public static String applyGradientToText(String textBox, int[] startRGB, int[] endRGB) {
+        return processGradient(textBox, startRGB, endRGB, false);
+    }
+
+    public static String applyBorderGradientToText(String textBox, int[] startRGB, int[] endRGB) {
+        return processGradient(textBox, startRGB, endRGB, true);
+    }
+
+    private static String processGradient(String textBox, int[] startRGB, int[] endRGB, boolean bordersOnly) {
         if (textBox == null || textBox.isEmpty()) {
             return "";
         }
 
         String[] lines = textBox.split("\r?\n");
         StringBuilder gradientBox = new StringBuilder();
-
         int maxSteps = Math.max(1, lines.length - 1);
 
         for (int i = 0; i < lines.length; i++) {
-
             int r = startRGB[0] + (endRGB[0] - startRGB[0]) * i / maxSteps;
             int g = startRGB[1] + (endRGB[1] - startRGB[1]) * i / maxSteps;
             int b = startRGB[2] + (endRGB[2] - startRGB[2]) * i / maxSteps;
 
-            String coloredLine = Color.textRGB(r, g, b, lines[i]);
-            gradientBox.append(coloredLine).append("\n");
+            String line = lines[i];
 
+            if (bordersOnly && i > 0 && i < lines.length - 1) {
+                String leftBorder = textRGB(r, g, b, line.substring(0, 1));
+                String innerText = line.substring(1, line.length() - 1);
+                String rightBorder = textRGB(r, g, b, line.substring(line.length() - 1));
+
+                gradientBox.append(leftBorder).append(innerText).append(rightBorder).append("\n");
+            }
+            else {
+                gradientBox.append(textRGB(r, g, b, line)).append("\n");
+            }
         }
 
         return gradientBox.toString();
