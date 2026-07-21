@@ -11,9 +11,6 @@ import java.util.List;
 public class CommunityService {
 
     private static CommunityService instance;
-    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
-    private static ExcelRead excelRead= ExcelRead.getInstance();
-    private  static ExcelDelete excelDelete= ExcelDelete.getInstance();
     private static CommunityRepository communityRepository = CommunityRepository.getInstance();
     public static CommunityService getInstance(){
         if(instance==null){

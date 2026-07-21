@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Community {
-    ExcelRead excelRead= ExcelRead.getInstance();
     private Long id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

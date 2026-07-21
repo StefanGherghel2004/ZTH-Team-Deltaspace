@@ -3,7 +3,6 @@ package cli.backend.commands.startmenu;
 
 import cli.backend.commands.Command;
 import cli.backend.duplicates.CheckDuplicate;
-import cli.backend.duplicates.EmailDuplicate;
 import cli.backend.duplicates.UserDuplicate;
 import cli.backend.readers.Console;
 import cli.backend.services.PasswordService;
@@ -16,9 +15,7 @@ public class RegisterCommand implements Command {
     public boolean execute() {
         Console console = Console.getInstance();
         UserService userService = UserService.getInstance();
-        ExcelWrite excelWrite = ExcelWrite.getInstance();
         CheckDuplicate userCheck=new UserDuplicate();
-        CheckDuplicate emailCheck=new EmailDuplicate();
 
 
         console.info("Welcome to the registration page.");
