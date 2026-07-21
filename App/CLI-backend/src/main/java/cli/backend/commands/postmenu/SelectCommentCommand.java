@@ -2,18 +2,25 @@ package cli.backend.commands.postmenu;
 
 import cli.backend.Comment;
 import cli.backend.commands.Command;
+import cli.backend.database.CommentRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.readers.Console;
 import cli.backend.readers.ConsoleReader;
 
 public class SelectCommentCommand implements Command {
+    private static CommentRepository commentRepository = CommentRepository.getInstance();
+
     @Override
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
         Console console = Console.getInstance();
 
-        int commentId = console.getIntInput("Enter Comment ID to select: ");
-        Comment foundComment = app.getCurrentPost().findCommentById(commentId);
+        Long commentId = console.getLongInput("Enter Comment ID to select: ");
+        Comment foundComment = commentRepository
+                .findCommentsByPostId(app.getCurrentPost().getId()).stream()
+                .filter(comment -> comment.getId().equals(commentId))
+                .findFirst()
+                .orElse(null);
 
         if (foundComment != null) {
             app.setCurrentComment(foundComment);

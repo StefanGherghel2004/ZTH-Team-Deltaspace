@@ -1,10 +1,8 @@
 package cli.backend.services;
-
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
-import cli.backend.database.ExcelWrite;
-import cli.backend.database.ExcelRead;
+import cli.backend.database.PostRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,66 +10,53 @@ import java.util.List;
 
 public class PostService {
 
-    private final ExcelRead excelRead = ExcelRead.getInstance();
-    private final List<Post> posts= excelRead.getExcelPosts();
     private static PostService instance;
-    private final ExcelWrite excelWrite = ExcelWrite.getInstance();
+    private final PostRepository postRepository = PostRepository.getInstance();
 
-    public static PostService getInstance(){
-        if(instance==null){
+    public static synchronized PostService getInstance(){
+        if(instance == null){
             instance = new PostService();
         }
         return instance;
     }
 
-    public Post addPost(User user,String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity){
-        Community targetCommunity = currentCommunity;
+    public Post addPost(String authorUsername, String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity){
+        String targetName = (currentCommunity != null) ?
+                currentCommunity.getNickname() : "u/" + authorUsername;
 
-        String targetName = (targetCommunity != null) ? targetCommunity.getNickname() : "u/" + user.getUsername();
-        Post newPost = new Post(user, postTitle, postContents, imageLink, NSFW, targetName);
-        posts.add(newPost);
-        if(targetCommunity != null) {
-            targetCommunity.addPost(newPost);
+        Post newPost = new Post(authorUsername, postTitle, postContents, imageLink, NSFW, targetName);
+
+        postRepository.addPost(newPost);
+
+        if(currentCommunity != null) {
+            currentCommunity.addPost(newPost);
         }
-
-        String targetCommunityChecked = (targetCommunity != null) ? targetCommunity.getNickname() : "None";
-        String imageLinkChecked = (imageLink != null) ? imageLink : "No image link";
-
-        excelWrite.write(excelWrite.postDatabasePath, List.of(
-                String.valueOf(newPost.getPostID()),
-                user.getUsername(),
-                postTitle,postContents,
-                imageLinkChecked,
-                targetCommunityChecked,
-                String.valueOf(NSFW)));
 
         return newPost;
     }
 
-    public List<Post> getRandomizedFeed(List<Post> posts){
-        if(posts==null || posts.isEmpty()){
+    public List<Post> getPosts(){
+        return postRepository.findAll();
+    }
+
+    public List<Post> getRandomizedFeed(List<Post> feedPosts){
+        if(feedPosts == null || feedPosts.isEmpty()){
             return new ArrayList<>();
         }
-        List<Post> randomizedList = new ArrayList<>(posts);
+        List<Post> randomizedList = new ArrayList<>(feedPosts);
         Collections.shuffle(randomizedList);
         return randomizedList;
     }
-    public List<Post> getPosts(){
-        return posts;
-    }
 
-    public Post findPostById(int id){
-        for (Post p:posts){
-            if(p.getPostID()==id) {
-                return p;
-            }
-        }
-        return null;
+    public Post findPostById(Long id){
+        if (id == null)
+            return null;
+        return postRepository.findById(id);
     }
 
     public void deletePost(Post postToDelete) {
-        posts.remove(postToDelete);
-
+        if (postToDelete == null || postToDelete.getId() == null) return;
+        postRepository.deletePostById(postToDelete.getId());
         Community community = CommunityService.getInstance()
                 .getCommunityByName(postToDelete.getCommunityName());
         if (community != null) {
@@ -79,20 +64,10 @@ public class PostService {
         }
     }
 
-
     public boolean canUserDeletePost(User user, Post post, Community community) {
-        if (user == null || post == null) {
-            return false;
-        }
+        if (user == null || post == null) return false;
+        if (post.getAuthorUsername().equals(user.getUsername())) return true;
 
-        if (post.getUser().getUsername().equals(user.getUsername())) {
-            return true;
-        }
-
-        if (community != null && community.getCommunityCreator().equals(user.getUsername())) {
-            return true;
-        }
-        
-        return false;
+        return community != null && community.getCommunityCreator().equals(user.getUsername());
     }
 }

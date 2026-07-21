@@ -21,7 +21,7 @@ public class PostMenu extends Menu {
         addOption(menuIndex++, "Select comment (Reply)", new SelectCommentCommand());
         addOption(menuIndex++,"Delete Post", new DeletePostCommand());
 
-        if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getUser().getUsername())) {
+        if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getAuthorUsername())) {
             addOption(menuIndex++, "Back to Main Menu", new BackCommand());
         } else {
             addOption(menuIndex++, "Back to Community", new BackCommand());
@@ -30,9 +30,9 @@ public class PostMenu extends Menu {
 
     @Override
     public void showMenu() {
-        System.out.println("ID:        " + currentPost.getPostID());
+        System.out.println("ID:        " + currentPost.getId());
         System.out.println("Community: " + currentPost.getCommunityName());
-        System.out.println("Author:    u/" + currentPost.getUser().getUsername());
+        System.out.println("Author:    u/" + currentPost.getAuthorUsername());
         System.out.println("Title:     " + currentPost.getPostTitle());
         System.out.println("NSFW:      " + (currentPost.isNSFW() ? "Yes" : "No"));
         System.out.println(currentPost.getPostContents());

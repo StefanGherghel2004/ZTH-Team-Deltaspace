@@ -23,7 +23,7 @@ public class ShowPostsInCommunityCommand implements Command {
         }
 
         for (Post post : communityPosts) {
-            console.info("ID: " + post.getPostID() + " | Title: " + post.getPostTitle() + " | Author: " + post.getUser().getUsername());
+            console.info("ID: " + post.getId() + " | Title: " + post.getPostTitle() + " | Author: " + post.getAuthorUsername());
         }
 
         String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);

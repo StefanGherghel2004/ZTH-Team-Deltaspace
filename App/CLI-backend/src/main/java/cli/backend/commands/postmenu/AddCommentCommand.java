@@ -15,7 +15,7 @@ public class AddCommentCommand implements Command {
         while (true) {
             String text = console.getStringInput("Write comment: ");
             try {
-                CommentService.getInstance().addComment(app.getCurrentUser(), app.getCurrentPost(), text);
+                CommentService.getInstance().addComment(app.getCurrentUser().getUsername(), app.getCurrentPost(), text);
                 console.success("Comment added successfully!");
                 break;
             } catch (EmptyCommentException e) {
