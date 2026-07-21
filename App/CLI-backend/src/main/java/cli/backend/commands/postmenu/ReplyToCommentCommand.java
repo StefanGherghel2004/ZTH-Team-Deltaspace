@@ -17,7 +17,7 @@ public class ReplyToCommentCommand implements Command {
 
         try {
             CommentService.getInstance().replyToComment(
-                    app.getCurrentUser(), app.getCurrentPost(), app.getCurrentComment(), text);
+                    app.getCurrentUser().getUsername(), app.getCurrentPost(), app.getCurrentComment(), text);
             console.success("Reply added successfully!");
         } catch (EmptyCommentException e) {
             console.error(e.getMessage());

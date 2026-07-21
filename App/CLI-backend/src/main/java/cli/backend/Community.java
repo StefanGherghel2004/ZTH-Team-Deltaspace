@@ -18,7 +18,7 @@ public class Community {
     private LocalDateTime updatedAt;
     private String nickname;
     private String topic;
-    private List<Post> posts =new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
     private String description;
     private String communityCreator;
 
@@ -46,7 +46,7 @@ public class Community {
 
     public Post findPostById(int id) {
         for (Post post : posts) {
-            if (post.getPostID() == id) {
+            if (post.getId() == id) {
                 return post;
             }
         }

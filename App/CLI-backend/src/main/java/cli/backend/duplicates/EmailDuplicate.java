@@ -5,7 +5,7 @@ import cli.backend.database.ExcelRead;
 import java.util.List;
 
 public class EmailDuplicate implements CheckDuplicate {
-    private static final String filePath="App/CLI-backend/databases/UserDatabase.xlsx";
+    private static final String filePath="databases/UserDatabase.xlsx";
     private static final int emailColumn=2;
     ExcelRead excelRead = ExcelRead.getInstance();
     @Override

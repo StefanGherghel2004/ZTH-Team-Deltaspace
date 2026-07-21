@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ExcelRead {
@@ -75,7 +76,7 @@ public class ExcelRead {
     }
 
     public List<User> getExcelUsers() {
-        String filename = "App/CLI-backend/databases/UserDatabase.xlsx";
+        String filename = "databases/UserDatabase.xlsx";
         List<User> excelUsers = new ArrayList<>();
 
         try (FileInputStream file = new FileInputStream(filename);
@@ -92,10 +93,12 @@ public class ExcelRead {
                 String emailCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String passwordCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String dateOfBirthCell = formatter.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                LocalDate localDate = LocalDate.parse(dateOfBirthCell);
+
                 if (userNameCell.isEmpty()) {
                     continue;
                 }
-                excelUsers.add(new User(userNameCell, emailCell, passwordCell, dateOfBirthCell));
+                excelUsers.add(new User(userNameCell, emailCell, passwordCell, localDate));
             }
         } catch (IOException e) {
             System.out.println("File not found");
@@ -106,7 +109,7 @@ public class ExcelRead {
     }
 
     public List<Community> getExcelCommunities() {
-        String filename = "App/CLI-backend/databases/CommunityDatabase.xlsx";
+        String filename = "databases/CommunityDatabase.xlsx";
         List<Community> excelCommunities = new ArrayList<>();
 
         try (FileInputStream file = new FileInputStream(filename);
@@ -140,7 +143,7 @@ public class ExcelRead {
 
     // FIXED: Reads posts, maps users and updates communities IN-MEMORY efficiently
     public List<Post> getExcelPosts() {
-        String filename = "App/CLI-backend/databases/PostDatabase.xlsx";
+        String filename = "databases/PostDatabase.xlsx";
         List<Post> excelPosts = new ArrayList<>();
 
         // Cache these collections outside of the loop so we don't hit the disk constantly!
@@ -181,8 +184,8 @@ public class ExcelRead {
                     postCommunityNameCell = "u/" + postUserCell;
                 }
 
-                Post post = new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
-                post.setPostID(Integer.parseInt(postIDCell));
+                Post post = new Post(user.getUsername(), postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+                post.setId(Long.parseLong(postIDCell));
                 excelPosts.add(post);
 
                 // Allocate post to the cached community instance
@@ -202,7 +205,7 @@ public class ExcelRead {
 
     // FIXED: Reads all posts and returns the list of communities with posts successfully attached
     public List<Community> getCommunityExcelPosts() {
-        String filename = "App/CLI-backend/databases/PostDatabase.xlsx";
+        String filename = "databases/PostDatabase.xlsx";
         List<User> excelUsers = getExcelUsers();
         List<Community> communities = getExcelCommunities();
 
@@ -242,8 +245,8 @@ public class ExcelRead {
                     postCommunityNameCell = "u/" + postUserCell;
                 }
 
-                Post post = new Post(user, postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
-                post.setPostID(Integer.parseInt(postIDCell));
+                Post post = new Post(user.getUsername(), postTitleCell, postContentCell, postImageLinkCell, isNSFW, postCommunityNameCell);
+                post.setId(Long.parseLong(postIDCell));
 
                 // Allocate post to the target community
                 for (Community c : communities) {
