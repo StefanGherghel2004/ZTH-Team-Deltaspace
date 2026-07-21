@@ -1,8 +1,8 @@
 package cli.backend.exceptions;
 
 public class InvalidUserAccountException extends Exception {
-    public InvalidUserAccountException(String message) {
+    public InvalidUserAccountException() {
 
-      super(message);
+      super("Invalid username/email or password.");
     }
 }

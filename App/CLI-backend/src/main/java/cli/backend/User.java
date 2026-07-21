@@ -1,11 +1,13 @@
 package cli.backend;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.Period;
 
 @Getter
+@Setter
 public class User {
 
     private Long id;
@@ -28,7 +30,4 @@ public class User {
         return age.getYears() >= 18;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 }

@@ -81,6 +81,7 @@ public class UserRepository {
                             rs.getDate("date_of_birth").toLocalDate()
                     );
                     user.setId(rs.getLong("id"));
+                    user.setDeleted(rs.getBoolean("deleted"));
                     return Optional.of(user);
                 }
             }

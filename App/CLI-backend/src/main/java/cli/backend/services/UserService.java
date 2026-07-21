@@ -2,6 +2,7 @@ package cli.backend.services;
 
 import cli.backend.User;
 import cli.backend.database.UserRepository;
+import cli.backend.exceptions.DeletedAccountException;
 import cli.backend.exceptions.InvalidUserAccountException;
 
 import java.time.LocalDate;
@@ -73,18 +74,23 @@ public class UserService {
     }
 
     public  User validateUserAccount (String usernameOrEmail, String password)
-            throws InvalidUserAccountException {
+            throws InvalidUserAccountException, DeletedAccountException {
 
         Optional<User> userOptional = userRepository.findByUsernameOrEmail(usernameOrEmail);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+
+            if (user.isDeleted()) {
+                throw new DeletedAccountException();
+            }
+
             if (PasswordService.verify(password, user.getPassword())) {
                 return user;
             }
         }
 
-        throw new InvalidUserAccountException("Invalid username/email or password. Please try again.\n");
+        throw new InvalidUserAccountException();
     }
 
     public  boolean validate(String user, String regex) {

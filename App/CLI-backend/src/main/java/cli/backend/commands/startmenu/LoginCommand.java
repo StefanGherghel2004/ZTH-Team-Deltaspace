@@ -25,7 +25,7 @@ public class LoginCommand implements Command {
             app.setCurrentUser(user);
             app.setCurrentState(AppHandler.State.LOGGED_IN);
             return true;
-        } catch (InvalidUserAccountException e) {
+        } catch (Exception e) {
             console.error(e.getMessage());
         }
 

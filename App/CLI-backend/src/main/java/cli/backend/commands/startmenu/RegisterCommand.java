@@ -17,8 +17,6 @@ public class RegisterCommand implements Command {
         UserService userService = UserService.getInstance();
         CheckDuplicate userCheck=new UserDuplicate();
 
-
-
         console.info("Welcome to the registration page.");
 
         String username;
