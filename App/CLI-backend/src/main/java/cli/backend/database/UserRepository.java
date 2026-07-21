@@ -65,7 +65,7 @@ public class UserRepository {
     }
 
     public Optional<User> findByUsernameOrEmail(String identifier) {
-        String query = "SELECT * FROM users WHERE (username = ? OR email = ?) AND deleted = false";
+        String query = "SELECT * FROM users WHERE (username = ? OR email = ?)";
         try (Connection connection = databaseConnection.getDatabaseConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
@@ -89,4 +89,6 @@ public class UserRepository {
         }
         return Optional.empty();
     }
+
+
 }

@@ -1,12 +1,9 @@
 package cli.backend.database;
 
-import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import static cli.backend.loggers.LogLevel.INFO;
-import static cli.backend.loggers.LogLevel.WARNING;
 
 public class DatabaseConnection {
 

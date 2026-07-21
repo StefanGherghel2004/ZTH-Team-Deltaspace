@@ -1,14 +1,9 @@
 package cli.backend.commands.startmenu;
 
-
-import cli.backend.User;
 import cli.backend.commands.Command;
-import cli.backend.database.ExcelRead;
-import cli.backend.database.ExcelWrite;
 import cli.backend.duplicates.CheckDuplicate;
 import cli.backend.duplicates.EmailDuplicate;
 import cli.backend.duplicates.UserDuplicate;
-import cli.backend.readers.ConsoleReader;
 import cli.backend.readers.Console;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
@@ -20,8 +15,7 @@ public class RegisterCommand implements Command {
     public boolean execute() {
         Console console = Console.getInstance();
         UserService userService = UserService.getInstance();
-        ExcelWrite excelWrite = ExcelWrite.getInstance();
-        CheckDuplicate userCheck=new UserDuplicate();
+        CheckDuplicate userCheck = new UserDuplicate();
         CheckDuplicate emailCheck=new EmailDuplicate();
 
 
