@@ -1,2 +1,0 @@
-WARNING:Database connection failed!
-WARNING:FATAL: no PostgreSQL user name specified in startup packet
