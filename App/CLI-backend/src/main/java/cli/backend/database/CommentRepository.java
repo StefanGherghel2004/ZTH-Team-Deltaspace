@@ -26,6 +26,8 @@ public class CommentRepository {
         VALUES (?, ?, ?, ?);
         """;
 
+    private static final String updateCommentQuery = "UPDATE comments SET comment_text = ? WHERE id = ?;";
+
     private static final String deleteCommentQuery = "DELETE FROM comments WHERE id = ?;";
     private static final String selectByPostQuery = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at ASC;";
 
@@ -137,5 +139,29 @@ public class CommentRepository {
         }
 
         return null;
+    }
+
+    public void updateComment(Comment comment) {
+        if (comment == null || comment.getId() == null) {
+            Logger.severe("Cannot update a comment without a valid ID.");
+            return;
+        }
+
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateCommentQuery)) {
+
+            preparedStatement.setString(1, comment.getText());
+            preparedStatement.setLong(2, comment.getId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                Logger.info("Successfully updated comment ID: " + comment.getId());
+            } else {
+                Logger.info("No comment found with ID: " + comment.getId() + " to update.");
+            }
+        } catch (SQLException e) {
+            Logger.severe("Failed to update comment ID " + comment.getId() + ": " + e.getMessage());
+        }
     }
 }

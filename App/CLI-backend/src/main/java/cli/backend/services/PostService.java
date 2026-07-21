@@ -55,7 +55,6 @@ public class PostService {
     }
 
     public void deletePost(Post postToDelete) {
-
         if (postToDelete == null || postToDelete.getId() == null) return;
         postRepository.deletePostById(postToDelete.getId());
         Community community = CommunityService.getInstance()

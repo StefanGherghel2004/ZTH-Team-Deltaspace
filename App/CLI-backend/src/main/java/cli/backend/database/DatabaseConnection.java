@@ -1,6 +1,7 @@
 package cli.backend.database;
 
 import cli.backend.loggers.ConsoleLogger;
+import cli.backend.loggers.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +14,6 @@ public class DatabaseConnection {
     private static final String username = System.getenv("POSTGRES_USERNAME");
     private static final String password = System.getenv("POSTGRES_PASSWORD");
     private static final String dbDriver = "org.postgresql.Driver";
-    private static final ConsoleLogger consoleLogger = new ConsoleLogger(INFO);
 
     private static DatabaseConnection instance = null;
 
@@ -30,11 +30,11 @@ public class DatabaseConnection {
         try {
             Class.forName(dbDriver);
             Connection databaseConnection = DriverManager.getConnection(jdbcURL, username, password);
-            consoleLogger.log(INFO,"Database connection was successful!");
+            Logger.info("Database connection was successful!");
             return databaseConnection;
         } catch (Exception e ){
-            consoleLogger.log(WARNING,"Database connection failed!");
-            consoleLogger.log(WARNING,e.getMessage());
+            Logger.warning("Database connection failed!");
+            Logger.warning(e.getMessage());
             return null;
         }
     }
