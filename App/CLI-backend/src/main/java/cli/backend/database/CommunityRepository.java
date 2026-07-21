@@ -9,15 +9,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommunityDatabase {
+public class CommunityRepository {
     String url = "jdbc:postgresql://localhost:5432/cli-backend-db"; // Database details
     String username = "postgres"; // MySQL credentials
     String password = "${POSTGRES-PASSWORD}";
-    private static CommunityDatabase instance;
 
-    public static CommunityDatabase getInstance(){
+    private static DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+    private static CommunityRepository instance;
+
+    public static CommunityRepository getInstance(){
         if(instance==null) {
-            instance=new CommunityDatabase();
+            instance=new CommunityRepository();
         }
         return  instance;
     }
@@ -27,7 +29,7 @@ public class CommunityDatabase {
             INSERT INTO public.communities (created_at, updated_at, name, topic, description, user_id)
             VALUES (?, ?, ?, ?, ?, ?)
         """;
-        try(Connection conn = DriverManager.getConnection(url,username,password);
+        try(Connection conn = databaseConnection.getDatabaseConnection();
             PreparedStatement stm = conn.prepareStatement(sql)){
             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
             stm.setTimestamp(1,now);
@@ -35,7 +37,7 @@ public class CommunityDatabase {
             stm.setString(3,community.getNickname());
             stm.setString(4,community.getTopic());
             stm.setString(5,community.getDescription());
-            stm.setString(6,community.getCommunityCreator());
+            stm.setLong(6,community.getCommunityCreator());
 
             stm.executeUpdate();
 
@@ -49,7 +51,7 @@ public class CommunityDatabase {
         String sql = """
                     DELETE FROM public.communities where name=?
                 """;
-        try(Connection conn = DriverManager.getConnection(url,username,password);
+        try(Connection conn = databaseConnection.getDatabaseConnection();
             PreparedStatement stm = conn.prepareStatement(sql)){
             stm.setString(1,communityName);
             int rowsAffected = stm.executeUpdate();
@@ -67,7 +69,7 @@ public class CommunityDatabase {
         String sql = """
                     SELECT * from public.communities;
                 """;
-        try(Connection conn = DriverManager.getConnection(url,username,password);
+        try(Connection conn = databaseConnection.getDatabaseConnection();
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery(sql)){
             while(rs.next()) {
@@ -76,7 +78,7 @@ public class CommunityDatabase {
                 String description = rs.getString("description");
 
                 Long id = rs.getLong("id");
-                String communityCreator = rs.getString("user_id");
+                Long communityCreator = rs.getLong("user_id");
                 Timestamp createdAt = rs.getTimestamp("created_at");
                 Timestamp updatedAt = rs.getTimestamp("updated_at");
 

@@ -1,10 +1,8 @@
 package cli.backend.services;
 
-import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.Post;
-import cli.backend.User;
-import cli.backend.database.CommunityDatabase;
+import cli.backend.database.CommunityRepository;
 import cli.backend.database.ExcelDelete;
 import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
@@ -19,7 +17,7 @@ public class CommunityService {
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
     private static ExcelRead excelRead= ExcelRead.getInstance();
     private  static ExcelDelete excelDelete= ExcelDelete.getInstance();
-    private static CommunityDatabase communityDatabase = CommunityDatabase.getInstance();
+    private static CommunityRepository communityRepository = CommunityRepository.getInstance();
     public static CommunityService getInstance(){
         if(instance==null){
             instance = new CommunityService();
@@ -34,7 +32,7 @@ public class CommunityService {
             "Art",
             "Tech"
     );
-    private final List<Community> communities=communityDatabase.getDBCommunities();
+    private final List<Community> communities= communityRepository.getDBCommunities();
 
 
     public List<Community> getCommunities(){
@@ -57,12 +55,12 @@ public class CommunityService {
         return name;
     }
 
-    public void addCommunity(String communityCreator, String name, String topic, String description)
+    public void addCommunity(Long communityCreator, String name, String topic, String description)
             throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
             Community community = new Community(communityCreator, topic, name, description);
             communities.add(community);
-            communityDatabase.addCommunity(community);
+            communityRepository.addCommunity(community);
         }
         else {
             throw new InvalidCommunityException("Invalid topic. Please choose from the available topics.");
@@ -81,7 +79,7 @@ public class CommunityService {
             for (Post p : postsToDelete) {
                 PostService.getInstance().deletePost(p);
             }
-            boolean dataBaseDeleted = communityDatabase.deleteCommunity(community.getNickname());
+            boolean dataBaseDeleted = communityRepository.deleteCommunity(community.getNickname());
         }
 
         return isRemoved;
