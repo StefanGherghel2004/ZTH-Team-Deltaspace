@@ -42,6 +42,8 @@ build/
 
 logs/
 
+databases/*xlsx
+
 ### Environment Variables & Secrets ###
 .env
 .env.local
