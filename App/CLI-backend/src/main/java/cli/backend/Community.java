@@ -1,7 +1,5 @@
 package cli.backend;
 
-import cli.backend.database.ExcelDelete;
-import cli.backend.database.ExcelRead;
 import lombok.Getter;
 import lombok.Setter;
 

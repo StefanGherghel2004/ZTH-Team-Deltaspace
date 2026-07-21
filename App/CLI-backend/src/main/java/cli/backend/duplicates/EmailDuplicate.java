@@ -1,7 +1,5 @@
 package cli.backend.duplicates;
 
-import cli.backend.database.ExcelRead;
-
 import java.util.List;
 
 public class EmailDuplicate implements CheckDuplicate {
