@@ -6,38 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Comment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Community.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Post.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/BackCommand$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/BackCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/Command.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/CreatePostCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/communitymenu/DeleteCommunityCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/CreateCommunityCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/LogoutCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/ShowCommunitiesCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/ShowFeedCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/AddCommentCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/DeleteCommentCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/DeletePostCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ReplyToCommentCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/SelectCommentCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ShowCommentsCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/DeleteUserCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/LoginCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/QuitCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/handlers/AppHandler$State.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/handlers/AppHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/loggers/LogLevel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/readers/Console.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/readers/ConsoleReader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/userinterface/menus/Menu.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/userinterface/menus/MenuOption.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,6 +146,10 @@
 }</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="POSTGRES_PASSWORD" value="Bboymonster12!" />
+        <env name="POSTGRES_USERNAME" value="postgres" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
       <module name="Deltaspace" />
       <extension name="coverage">
