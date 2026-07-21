@@ -1,14 +1,11 @@
 package cli.backend.commands.mainmenu;
 
 import cli.backend.commands.Command;
-import cli.backend.database.ExcelRead;
 import cli.backend.duplicates.CheckDuplicate;
 import cli.backend.duplicates.CommunityDuplicate;
 import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.handlers.AppHandler;
-import cli.backend.loggers.ConsoleLogger;
 import cli.backend.readers.Console;
-import cli.backend.readers.ConsoleReader;
 import cli.backend.services.CommunityService;
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class CreateCommunityCommand implements Command {
         String description = console.getStringInput("Please Enter Community Description");
 
         try {
-            communityService.addCommunity(appHandler.getCurrentUser().getUsername(), communityName, selectedTopic, description);
+            communityService.addCommunity(appHandler.getCurrentUser().getId(), communityName, selectedTopic, description);
             console.success("Community " + communityName + " successfully created.");
             appHandler.setCurrentCommunity(communityService.getCommunityByName(communityName));
             appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);

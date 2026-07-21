@@ -1,8 +1,8 @@
 package cli.backend.commands.startmenu;
 
+
 import cli.backend.commands.Command;
 import cli.backend.duplicates.CheckDuplicate;
-import cli.backend.duplicates.EmailDuplicate;
 import cli.backend.duplicates.UserDuplicate;
 import cli.backend.readers.Console;
 import cli.backend.services.PasswordService;
@@ -15,8 +15,8 @@ public class RegisterCommand implements Command {
     public boolean execute() {
         Console console = Console.getInstance();
         UserService userService = UserService.getInstance();
-        CheckDuplicate userCheck = new UserDuplicate();
-        CheckDuplicate emailCheck=new EmailDuplicate();
+        CheckDuplicate userCheck=new UserDuplicate();
+
 
 
         console.info("Welcome to the registration page.");
@@ -45,7 +45,7 @@ public class RegisterCommand implements Command {
             console.error("Invalid email format. Must be like 'user@domain.com'.");
             continue;
         }
-        if(emailCheck.isDuplicate(email)) {
+        if(userCheck.isDuplicate(email)) {
             console.error("Email already exists. Please use a different email address.");
             continue;
         }

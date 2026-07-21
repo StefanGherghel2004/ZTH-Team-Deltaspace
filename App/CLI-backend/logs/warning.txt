@@ -1,0 +1,2 @@
+WARNING:Database connection failed!
+WARNING:FATAL: password authentication failed for user "DELL"

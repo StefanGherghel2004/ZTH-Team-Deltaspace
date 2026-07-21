@@ -24,7 +24,7 @@ public class CommunityMenu extends Menu {
         addOption(menuIndex++, "Return to Main Menu", new BackCommand());
 
         if (List.of(currentCommunity.getCommunityCreator(),"admin")
-                .contains(appHandler.getCurrentUser().getUsername()))
+                .contains(appHandler.getCurrentUser().getId()))
             addOption(menuIndex++, "Delete community", new DeleteCommunityCommand());
     }
 

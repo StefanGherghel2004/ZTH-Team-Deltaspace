@@ -39,4 +39,11 @@ build/
 ### Mac OS ###
 .DS_Store
 
+
 logs/
+
+### Environment Variables & Secrets ###
+.env
+.env.local
+.env.*.local
+*.env

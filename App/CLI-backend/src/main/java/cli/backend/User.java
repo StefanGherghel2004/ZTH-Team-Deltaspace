@@ -1,11 +1,9 @@
 package cli.backend;
 
-import cli.backend.database.ExcelWrite;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 public class User {
