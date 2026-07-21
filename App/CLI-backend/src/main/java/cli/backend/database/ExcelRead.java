@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ExcelRead {
@@ -92,10 +93,12 @@ public class ExcelRead {
                 String emailCell = formatter.formatCellValue(row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String passwordCell = formatter.formatCellValue(row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
                 String dateOfBirthCell = formatter.formatCellValue(row.getCell(4, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK));
+                LocalDate localDate = LocalDate.parse(dateOfBirthCell);
+
                 if (userNameCell.isEmpty()) {
                     continue;
                 }
-                excelUsers.add(new User(userNameCell, emailCell, passwordCell, dateOfBirthCell));
+                excelUsers.add(new User(userNameCell, emailCell, passwordCell, localDate));
             }
         } catch (IOException e) {
             System.out.println("File not found");
