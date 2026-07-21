@@ -1,7 +1,5 @@
 package cli.backend;
 
-import cli.backend.database.ExcelDelete;
-import cli.backend.database.ExcelRead;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Community {
-    ExcelRead excelRead= ExcelRead.getInstance();
     private Long id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

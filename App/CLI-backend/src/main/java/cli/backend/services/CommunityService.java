@@ -3,9 +3,6 @@ package cli.backend.services;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.database.CommunityRepository;
-import cli.backend.database.ExcelDelete;
-import cli.backend.database.ExcelRead;
-import cli.backend.database.ExcelWrite;
 import cli.backend.exceptions.InvalidCommunityException;
 
 import java.util.ArrayList;
@@ -14,9 +11,6 @@ import java.util.List;
 public class CommunityService {
 
     private static CommunityService instance;
-    private static ExcelWrite excelWrite = ExcelWrite.getInstance();
-    private static ExcelRead excelRead= ExcelRead.getInstance();
-    private  static ExcelDelete excelDelete= ExcelDelete.getInstance();
     private static CommunityRepository communityRepository = CommunityRepository.getInstance();
     public static CommunityService getInstance(){
         if(instance==null){

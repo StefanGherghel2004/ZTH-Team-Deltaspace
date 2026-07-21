@@ -1,16 +1,13 @@
 package cli.backend.database;
 
-import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import static cli.backend.loggers.LogLevel.INFO;
-import static cli.backend.loggers.LogLevel.WARNING;
 
 public class DatabaseConnection {
 
-    private static final String jdbcURL = "jdbc:postgresql://localhost:5432/deltaspacedb";
+    private static final String jdbcURL = "jdbc:postgresql://localhost:5432/deltaspacedb2";
     private static final String username = System.getenv("POSTGRES_USERNAME");
     private static final String password = System.getenv("POSTGRES_PASSWORD");
     private static final String dbDriver = "org.postgresql.Driver";
