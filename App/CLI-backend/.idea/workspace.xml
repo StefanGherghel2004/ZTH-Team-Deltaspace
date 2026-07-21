@@ -146,6 +146,9 @@
 }</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="POSTGRES_PASSWORD" value="Mihai_123" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
       <module name="Deltaspace" />
       <extension name="coverage">
@@ -186,6 +189,8 @@
       <workItem from="1784541501702" duration="8757000" />
       <workItem from="1784564150008" duration="1374000" />
       <workItem from="1784571629269" duration="26000" />
+      <workItem from="1784571687727" duration="106000" />
+      <workItem from="1784622026507" duration="3032000" />
     </task>
     <servers />
   </component>
