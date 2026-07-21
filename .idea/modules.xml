@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ZTH-Team-Deltaspace.iml" filepath="$PROJECT_DIR$/.idea/ZTH-Team-Deltaspace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZTH-Team-Deltaspace.iml" filepath="$PROJECT_DIR$/ZTH-Team-Deltaspace.iml" />
     </modules>
   </component>
 </project>

@@ -4,6 +4,7 @@ import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
+import cli.backend.database.CommunityDatabase;
 import cli.backend.database.ExcelDelete;
 import cli.backend.database.ExcelRead;
 import cli.backend.database.ExcelWrite;
@@ -18,6 +19,7 @@ public class CommunityService {
     private static ExcelWrite excelWrite = ExcelWrite.getInstance();
     private static ExcelRead excelRead= ExcelRead.getInstance();
     private  static ExcelDelete excelDelete= ExcelDelete.getInstance();
+    private static CommunityDatabase communityDatabase = CommunityDatabase.getInstance();
     public static CommunityService getInstance(){
         if(instance==null){
             instance = new CommunityService();
@@ -32,7 +34,7 @@ public class CommunityService {
             "Art",
             "Tech"
     );
-    private final List<Community> communities=excelRead.getCommunityExcelPosts();
+    private final List<Community> communities=communityDatabase.getDBCommunities();
 
 
     public List<Community> getCommunities(){
@@ -58,10 +60,9 @@ public class CommunityService {
     public void addCommunity(String communityCreator, String name, String topic, String description)
             throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
-            communities.add(new Community(communityCreator, topic, name, description));
-            excelWrite.write("App/CLI-backend/databases/CommunityDatabase.xlsx",List.of(
-                    name,topic,description,communityCreator
-            ));
+            Community community = new Community(communityCreator, topic, name, description);
+            communities.add(community);
+            communityDatabase.addCommunity(community);
         }
         else {
             throw new InvalidCommunityException("Invalid topic. Please choose from the available topics.");
@@ -80,7 +81,7 @@ public class CommunityService {
             for (Post p : postsToDelete) {
                 PostService.getInstance().deletePost(p);
             }
-            boolean excelDeleted = excelDelete.deleteRowfromExcel("App/CLI-backend/databases/CommunityDatabase.xlsx", 0, community.getNickname());
+            boolean dataBaseDeleted = communityDatabase.deleteCommunity(community.getNickname());
         }
 
         return isRemoved;

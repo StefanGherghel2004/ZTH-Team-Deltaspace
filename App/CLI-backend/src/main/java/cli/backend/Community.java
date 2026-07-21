@@ -5,6 +5,7 @@ import cli.backend.database.ExcelRead;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,9 @@ import java.util.List;
 @Setter
 public class Community {
     ExcelRead excelRead= ExcelRead.getInstance();
+    private Long id;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String nickname;
     private String topic;
     private List<Post> posts = new ArrayList<>();
@@ -24,6 +28,16 @@ public class Community {
         this.nickname=nickname;
         this.description =description;
         this.communityCreator = communityCreator;
+    }
+
+    public Community(Long id, String nickname, String topic, String description, String communityCreator, LocalDateTime createdAt, LocalDateTime updatedAt){
+        this.id=id;
+        this.nickname = nickname;
+        this.topic = topic;
+        this.description = description;
+        this.communityCreator = communityCreator;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public void addPost(Post post){
