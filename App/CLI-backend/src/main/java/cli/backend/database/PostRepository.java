@@ -192,4 +192,32 @@ public class PostRepository {
         }
         return null;
     }
+
+    public List<Post> getCommunityPosts(String communityName){
+        String searchPosts= "Select * from public.posts where community_name=?;";
+        List<Post> communityPosts = new ArrayList<>();
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(searchPosts)) {
+            preparedStatement.setString(1,communityName);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                   Post post =new Post(
+                            resultSet.getString("author_username"),
+                            resultSet.getString("post_title"),
+                            resultSet.getString("post_contents"),
+                            resultSet.getString("image_link"),
+                            resultSet.getBoolean("nsfw"),
+                            resultSet.getString("community_name")
+
+                    );
+                    post.setId(resultSet.getLong("id"));
+                    communityPosts.add(post);
+                }
+
+            }
+        }catch (SQLException e) {
+            Logger.severe("Failed to find Post: " + e.getMessage());
+        }
+        return communityPosts;
+    }
 }

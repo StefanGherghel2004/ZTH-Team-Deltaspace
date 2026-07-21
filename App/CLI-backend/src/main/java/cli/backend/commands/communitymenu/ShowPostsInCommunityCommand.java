@@ -2,6 +2,7 @@ package cli.backend.commands.communitymenu;
 
 import cli.backend.Post;
 import cli.backend.commands.Command;
+import cli.backend.database.PostRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.ConsoleLogger;
 import cli.backend.loggers.LogLevel;
@@ -14,9 +15,10 @@ public class ShowPostsInCommunityCommand implements Command {
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
         Console console = Console.getInstance();
+        PostRepository postRepository = PostRepository.getInstance();
         console.info("\n--- Posts in " + app.getCurrentCommunity().getNickname() + " ---");
-        List<Post> communityPosts = app.getCurrentCommunity().getPosts();
-
+         String communityName = app.getCurrentCommunity().getNickname();
+        List<Post> communityPosts = postRepository.getCommunityPosts(communityName);
         if (communityPosts.isEmpty()) {
             console.info("No posts in this r/");
             return true;
