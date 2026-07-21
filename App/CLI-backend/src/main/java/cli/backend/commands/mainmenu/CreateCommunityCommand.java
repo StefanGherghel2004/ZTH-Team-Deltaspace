@@ -40,7 +40,7 @@ public class CreateCommunityCommand implements Command {
         String description = console.getStringInput("Please Enter Community Description");
 
         try {
-            communityService.addCommunity(appHandler.getCurrentUser().getUsername(), communityName, selectedTopic, description);
+            communityService.addCommunity(appHandler.getCurrentUser().getId(), communityName, selectedTopic, description);
             console.success("Community " + communityName + " successfully created.");
             appHandler.setCurrentCommunity(communityService.getCommunityByName(communityName));
             appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
