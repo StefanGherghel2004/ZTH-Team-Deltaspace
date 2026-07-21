@@ -6,42 +6,38 @@
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/databases/UserDatabase.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/databases/UserDatabase.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/warning.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logs/warning.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Comment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Comment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Community.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Community.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Post.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Post.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/CreatePostCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/CreatePostCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/ShowFeedCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/ShowFeedCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/AddCommentCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/AddCommentCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/DeleteCommentCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/DeleteCommentCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ReplyToCommentCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ReplyToCommentCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/SelectCommentCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/SelectCommentCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ShowCommentsCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ShowCommentsCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/CommunityDatabase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/database/CommunityDatabase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelRead.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelRead.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelWrite.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelWrite.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/CommunityDuplicate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/CommunityDuplicate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/EmailDuplicate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/EmailDuplicate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/UserDuplicate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/UserDuplicate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/loggers/ConsoleLogger.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/loggers/ConsoleLogger.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/loggers/LogLevel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/loggers/LogLevel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/loggers/Logger.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/loggers/Logger.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/parsers/excelparsers/ExcelParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/parsers/excelparsers/UserParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/readers/Console.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/readers/Console.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/readers/ConsoleReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/readers/ConsoleReader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/services/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/services/CommentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/services/PostService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/services/PostService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/services/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/services/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/userinterface/menus/PostMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/userinterface/menus/PostMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Comment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Community.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Post.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/BackCommand$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/BackCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/Command.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/CreatePostCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/communitymenu/DeleteCommunityCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/CreateCommunityCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/LogoutCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/ShowCommunitiesCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/ShowFeedCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/AddCommentCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/DeleteCommentCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/DeletePostCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ReplyToCommentCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/SelectCommentCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/postmenu/ShowCommentsCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/DeleteUserCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/LoginCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/QuitCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/handlers/AppHandler$State.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/handlers/AppHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/loggers/LogLevel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/readers/Console.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/readers/ConsoleReader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/userinterface/menus/Menu.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/userinterface/menus/MenuOption.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,36 +152,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <envs>
-        <env name="POSTGRES_PASSWORD" value="Bboymonster12!" />
-        <env name="POSTGRES_USERNAME" value="postgres" />
-      </envs>
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
       <module name="Deltaspace" />
       <extension name="coverage">
