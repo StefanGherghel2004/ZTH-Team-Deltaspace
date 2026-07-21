@@ -31,6 +31,11 @@ public class Color {
     private static final String BG_MAGENTA = "\u001b[45m";
     private static final String BG_CYAN = "\u001b[46m";
 
+    public static String textRGB(int r, int g, int b, String message) {
+        String rgbCode = String.format("\u001b[38;2;%d;%d;%dm", r, g, b);
+        return apply(rgbCode, message);
+    }
+
     private static String apply(String code, String message) {
         return code + message + RESET;
     }
