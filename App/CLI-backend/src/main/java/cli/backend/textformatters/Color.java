@@ -36,6 +36,30 @@ public class Color {
         return apply(rgbCode, message);
     }
 
+    public static String applyGradientToText(String textBox, int[] startRGB, int[] endRGB) {
+        if (textBox == null || textBox.isEmpty()) {
+            return "";
+        }
+
+        String[] lines = textBox.split("\r?\n");
+        StringBuilder gradientBox = new StringBuilder();
+
+        int maxSteps = Math.max(1, lines.length - 1);
+
+        for (int i = 0; i < lines.length; i++) {
+
+            int r = startRGB[0] + (endRGB[0] - startRGB[0]) * i / maxSteps;
+            int g = startRGB[1] + (endRGB[1] - startRGB[1]) * i / maxSteps;
+            int b = startRGB[2] + (endRGB[2] - startRGB[2]) * i / maxSteps;
+
+            String coloredLine = Color.textRGB(r, g, b, lines[i]);
+            gradientBox.append(coloredLine).append("\n");
+
+        }
+
+        return gradientBox.toString();
+    }
+
     private static String apply(String code, String message) {
         return code + message + RESET;
     }

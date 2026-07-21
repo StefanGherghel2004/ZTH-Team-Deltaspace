@@ -52,6 +52,13 @@ public class BoxPadder {
 
     }
 
+    public static String formatWithGradient(List<String> lines, String title, int[] startRGB, int[] endRGB) {
+
+        String plainBox = format(lines, title);
+
+        return Color.applyGradientToText(plainBox, startRGB, endRGB);
+    }
+
     private static void addLines(List<String> lines) {
         for (String line : lines) {
             sb.append(VERTICAL)

@@ -3,6 +3,8 @@ package cli.backend.userinterface.menus;
 import cli.backend.commands.Command;
 import cli.backend.readers.Console;
 import cli.backend.textformatters.BoxPadder;
+import cli.backend.textformatters.Theme;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,11 +14,8 @@ import java.util.Map;
 public abstract class Menu {
 
     protected Map<Integer, MenuOption> options = new LinkedHashMap<>();
+    @Setter
     protected String title = "";
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     protected void addOption(int key, String description, Command command) {
         options.put(key, new MenuOption(description, command));
@@ -29,7 +28,13 @@ public abstract class Menu {
             formattedOptions.add(entry.getKey() + ". " + entry.getValue().getDescription());
         }
 
-        String menuBox = BoxPadder.format(formattedOptions, title);
+        String menuBox = BoxPadder.formatWithGradient(
+                formattedOptions,
+                title,
+                Theme.PRIMARY_GRADIENT_START,
+                Theme.PRIMARY_GRADIENT_END
+        );
+
         Console.getInstance().info(menuBox);
     }
 
