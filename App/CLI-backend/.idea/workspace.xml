@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logs/info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/warning.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logs/warning.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,10 +149,6 @@
 }</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <envs>
-        <env name="POSTGRES_PASSWORD" value="Bboymonster12!" />
-        <env name="POSTGRES_USERNAME" value="postgres" />
-      </envs>
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
       <module name="Deltaspace" />
       <extension name="coverage">

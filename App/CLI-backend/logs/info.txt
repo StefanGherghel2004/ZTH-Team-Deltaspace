@@ -1,6 +1,0 @@
-INFO:Database connection was successful!
-INFO:Database connection was successful!
-INFO:Database connection was successful!
-INFO:Database connection was successful!
-INFO:Database connection was successful!
-INFO:Database connection was successful!
