@@ -5,42 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/databases/UserDatabase.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/databases/UserDatabase.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Community.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Community.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/CreateCommunityCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/CreateCommunityCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/startmenu/RegisterCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/startmenu/RegisterCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/CommunityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/CommunityRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/DatabaseInitialize.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/ExcelDelete.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/ExcelRead.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/ExcelWrite.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/CommunityDuplicate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/CommunityDuplicate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/EmailDuplicate.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/UserDuplicate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/UserDuplicate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Community.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Community.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/Post.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/Post.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/CreateCommunityCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/mainmenu/CreateCommunityCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/RegisterCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/commands/startmenu/RegisterCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/DatabaseInitialize.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelDelete.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelRead.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/database/ExcelWrite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/CommunityDuplicate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/CommunityDuplicate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/EmailDuplicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/UserDuplicate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/duplicates/UserDuplicate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/services/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/services/CommentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/services/CommunityService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/services/CommunityService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cli/backend/services/PostService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cli/backend/services/PostService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logs/info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/warning.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logs/warning.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,61 +39,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000000002267782" />
-      <entry key="S2" value="1.0039554371364297" />
-      <entry key="S5" value="1.1515338940468052" />
-      <entry key="S10" value="1.6882870846559117" />
-      <entry key="S30" value="3.1695738640774276" />
-      <entry key="S60" value="3.9829739610016213" />
-      <entry key="M2" value="4.731401336670194" />
-      <entry key="M5" value="6.101823979491136" />
-      <entry key="M10" value="11.728279735154558" />
-      <entry key="M15" value="21.980310199169523" />
-      <entry key="M30" value="59.33077041269247" />
-      <entry key="H1" value="134.37434936978966" />
-      <entry key="H2" value="242.2745381824974" />
-      <entry key="H4" value="344.7290965730782" />
-      <entry key="D1" value="476.52218608944844" />
-      <entry key="W1" value="505.04560129419906" />
+      <entry key="MS100" value="7.263550006539128E-98" />
+      <entry key="MS500" value="4.7052728463627785E-20" />
+      <entry key="S2" value="2.4155919430832814E-5" />
+      <entry key="S5" value="0.02392496278489092" />
+      <entry key="S10" value="0.2571962024063477" />
+      <entry key="S30" value="1.5911073591839289" />
+      <entry key="S60" value="4.68464279602841" />
+      <entry key="M2" value="12.882905018763868" />
+      <entry key="M5" value="37.43259084657481" />
+      <entry key="M10" value="65.01416172579397" />
+      <entry key="M15" value="81.80691498734093" />
+      <entry key="M30" value="119.56327151955648" />
+      <entry key="H1" value="190.6346101414971" />
+      <entry key="H2" value="284.86980214006513" />
+      <entry key="H4" value="367.1235121920747" />
+      <entry key="D1" value="465.88535833450265" />
+      <entry key="W1" value="486.45289314407046" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="5.189549941024611E-296" />
-      <entry key="S5" value="1.7105424510627306E-118" />
-      <entry key="S10" value="2.600931530292974E-59" />
-      <entry key="S30" value="7.696604166041774E-20" />
-      <entry key="S60" value="6.174333486238049E-10" />
-      <entry key="M2" value="6.566233179561148E-5" />
-      <entry key="M5" value="0.1345556877182967" />
-      <entry key="M10" value="2.473598211374711" />
-      <entry key="M15" value="6.966637784136199" />
-      <entry key="M30" value="22.39101574328315" />
-      <entry key="H1" value="50.49757469030325" />
-      <entry key="H2" value="87.62356204015117" />
-      <entry key="H4" value="121.08961675418936" />
-      <entry key="D1" value="162.64183753062008" />
-      <entry key="W1" value="171.47139244938225" />
+      <entry key="MS100" value="1.000000000000015" />
+      <entry key="MS500" value="1.001723971901723" />
+      <entry key="S2" value="1.2502277381796514" />
+      <entry key="S5" value="1.8224263038126955" />
+      <entry key="S10" value="2.2698533493102078" />
+      <entry key="S30" value="3.255874719545843" />
+      <entry key="S60" value="6.081157801993617" />
+      <entry key="M2" value="11.82783936209693" />
+      <entry key="M5" value="23.25839053505289" />
+      <entry key="M10" value="32.94700761664635" />
+      <entry key="M15" value="38.34348169656566" />
+      <entry key="M30" value="50.949779552806234" />
+      <entry key="H1" value="74.805486310913" />
+      <entry key="H2" value="104.95458406295164" />
+      <entry key="H4" value="130.29356140667835" />
+      <entry key="D1" value="159.885068410378" />
+      <entry key="W1" value="165.95586447458052" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.0633724674868768" />
-      <entry key="MS500" value="0.5759438212606116" />
-      <entry key="S2" value="0.8742667774620329" />
-      <entry key="S5" value="1.0859637964114022" />
-      <entry key="S10" value="1.6373453341908952" />
-      <entry key="S30" value="3.1377963838926" />
-      <entry key="S60" value="3.9631811057295825" />
-      <entry key="M2" value="4.719758062780973" />
-      <entry key="M5" value="6.229296334074982" />
-      <entry key="M10" value="14.190103509402384" />
-      <entry key="M15" value="28.92947401997037" />
-      <entry key="M30" value="81.69659078907307" />
-      <entry key="H1" value="184.8440009666978" />
-      <entry key="H2" value="329.873834056847" />
-      <entry key="H4" value="465.8018922094996" />
-      <entry key="D1" value="639.1602444091895" />
-      <entry key="W1" value="676.516424154766" />
+      <entry key="MS100" value="2.1310560953518434E-6" />
+      <entry key="MS500" value="0.07402382229678839" />
+      <entry key="S2" value="0.7102432349673675" />
+      <entry key="S5" value="1.522937508421829" />
+      <entry key="S10" value="2.322722803881436" />
+      <entry key="S30" value="4.740605198824844" />
+      <entry key="S60" value="10.658895403198501" />
+      <entry key="M2" value="24.593556684863792" />
+      <entry key="M5" value="60.57895549999414" />
+      <entry key="M10" value="97.8725169899829" />
+      <entry key="M15" value="120.07852817340897" />
+      <entry key="M30" value="170.4624676424112" />
+      <entry key="H1" value="265.40124795903614" />
+      <entry key="H2" value="389.7963979315584" />
+      <entry key="H4" value="497.3994709392352" />
+      <entry key="D1" value="625.76678892038" />
+      <entry key="W1" value="652.4082172671112" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -165,7 +133,7 @@
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;serban-backend&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -175,16 +143,12 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <envs>
-        <env name="POSTGRES_PASSWORD" value="Mihai_123" />
-        <env name="POSTGRES_USERNAME" value="postgres" />
-      </envs>
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
       <module name="Deltaspace" />
       <extension name="coverage">
