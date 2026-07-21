@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 
 public class DatabaseConnection {
 
-    private static final String jdbcURL = "jdbc:postgresql://localhost:5432/deltaspacedb";
+    private static final String jdbcURL = "jdbc:postgresql://localhost:5432/deltaspacedb2";
     private static final String username = System.getenv("POSTGRES_USERNAME");
     private static final String password = System.getenv("POSTGRES_PASSWORD");
     private static final String dbDriver = "org.postgresql.Driver";

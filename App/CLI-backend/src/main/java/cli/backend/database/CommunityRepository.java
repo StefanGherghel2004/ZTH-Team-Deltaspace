@@ -2,6 +2,7 @@ package cli.backend.database;
 
 import cli.backend.Community;
 import cli.backend.Post;
+import cli.backend.loggers.Logger;
 import cli.backend.services.PostService;
 
 import java.sql.*;
@@ -16,6 +17,29 @@ public class CommunityRepository {
 
     private static DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
     private static CommunityRepository instance;
+
+    private static final String createTableQuery = """
+        CREATE TABLE IF NOT EXISTS communities (
+            id SERIAL PRIMARY KEY,
+            description VARCHAR(255),
+            name VARCHAR(255) NOT NULL,
+            user_id BIGINT,
+            topic VARCHAR(255),
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+        """;
+    private CommunityRepository(){
+        try{Connection connection = databaseConnection.getDatabaseConnection();
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(createTableQuery);
+                Logger.info("Community table verified/created successfully.");
+            }
+        } catch (Exception e) {
+            Logger.severe("Failed to initialize community table:" + e.getMessage());
+        }
+    }
+
 
     public static CommunityRepository getInstance(){
         if(instance==null) {

@@ -1,0 +1,15 @@
+INFO:Database connection was successful!
+INFO:Database connection was successful!
+INFO:Database connection was successful!
+INFO:Database connection was successful!
+INFO:Community table verified/created successfully.
+INFO:Database connection was successful!
+INFO:Database connection was successful!
+INFO:Database connection was successful!
+INFO:Database connection was successful!
+INFO:Posts table verified/created successfully.
+INFO:Database connection was successful!
+INFO:Successfully added new post: salut ba bossule
+INFO:Database connection was successful!
+INFO:Comments table verified/created successfully.
+INFO:Database connection was successful!
