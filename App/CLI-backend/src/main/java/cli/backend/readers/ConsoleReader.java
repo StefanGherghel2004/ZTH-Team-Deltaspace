@@ -1,6 +1,6 @@
 package cli.backend.readers;
 
-import cli.backend.textformatters.Color;
+import cli.backend.userinterface.textformatters.Color;
 
 import java.util.Scanner;
 

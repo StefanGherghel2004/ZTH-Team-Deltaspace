@@ -1,8 +1,8 @@
 package cli.backend.readers;
 
 import cli.backend.handlers.AppHandler;
-import cli.backend.textformatters.Color;
-import cli.backend.textformatters.Theme;
+import cli.backend.userinterface.textformatters.Color;
+import cli.backend.userinterface.textformatters.Theme;
 
 import java.util.List;
 

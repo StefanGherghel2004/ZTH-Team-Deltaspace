@@ -1,4 +1,4 @@
-package cli.backend.textformatters;
+package cli.backend.userinterface.textformatters;
 
 public class Color {
 

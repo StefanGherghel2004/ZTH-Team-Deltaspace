@@ -3,7 +3,7 @@ package cli.backend.userinterface.menus;
 import cli.backend.commands.startmenu.LoginCommand;
 import cli.backend.commands.startmenu.QuitCommand;
 import cli.backend.commands.startmenu.RegisterCommand;
-import cli.backend.textformatters.Theme;
+import cli.backend.userinterface.textformatters.Theme;
 
 
 public class StartMenu extends Menu{
