@@ -4,7 +4,7 @@ package cli.backend.commands.startmenu;
 import cli.backend.commands.Command;
 import cli.backend.duplicates.CheckDuplicate;
 import cli.backend.duplicates.UserDuplicate;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
 

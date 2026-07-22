@@ -3,8 +3,7 @@ package cli.backend.commands.mainmenu;
 import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
-import cli.backend.readers.ConsoleReader;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PostService;
 import java.util.List;
 

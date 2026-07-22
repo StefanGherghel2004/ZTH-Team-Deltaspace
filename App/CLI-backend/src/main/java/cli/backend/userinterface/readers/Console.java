@@ -1,4 +1,4 @@
-package cli.backend.readers;
+package cli.backend.userinterface.readers;
 
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.textformatters.Color;

@@ -3,7 +3,7 @@ package cli.backend.commands.communitymenu;
 import cli.backend.Community;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommunityService;
 
 

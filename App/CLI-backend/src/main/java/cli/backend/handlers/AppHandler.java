@@ -5,7 +5,7 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.commands.Command;
-import cli.backend.readers.ConsoleReader;
+import cli.backend.userinterface.readers.ConsoleReader;
 import cli.backend.userinterface.menus.*;
 
 public class AppHandler {

@@ -4,10 +4,8 @@ import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.database.PostRepository;
 import cli.backend.handlers.AppHandler;
-import cli.backend.loggers.ConsoleLogger;
-import cli.backend.loggers.LogLevel;
-import cli.backend.readers.Console;
-import cli.backend.readers.ConsoleReader;
+import cli.backend.userinterface.readers.Console;
+
 import java.util.List;
 
 public class ShowPostsInCommunityCommand implements Command {

@@ -4,8 +4,7 @@ import cli.backend.Comment;
 import cli.backend.commands.Command;
 import cli.backend.database.CommentRepository;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
-import cli.backend.readers.ConsoleReader;
+import cli.backend.userinterface.readers.Console;
 
 public class SelectCommentCommand implements Command {
     private static CommentRepository commentRepository = CommentRepository.getInstance();

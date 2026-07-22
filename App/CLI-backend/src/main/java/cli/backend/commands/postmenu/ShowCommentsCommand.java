@@ -4,11 +4,9 @@ import cli.backend.Comment;
 import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommentService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

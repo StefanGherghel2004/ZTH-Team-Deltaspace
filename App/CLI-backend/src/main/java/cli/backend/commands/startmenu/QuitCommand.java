@@ -2,7 +2,7 @@ package cli.backend.commands.startmenu;
 
 
 import cli.backend.commands.Command;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 
 public class QuitCommand implements Command {
     @Override

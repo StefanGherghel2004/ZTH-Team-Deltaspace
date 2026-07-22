@@ -5,7 +5,7 @@ import cli.backend.duplicates.CheckDuplicate;
 import cli.backend.duplicates.CommunityDuplicate;
 import cli.backend.exceptions.InvalidCommunityException;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommunityService;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package cli.backend.userinterface.menus;
 
 import cli.backend.commands.Command;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.textformatters.BoxPadder;
 import cli.backend.userinterface.textformatters.Theme;
 import lombok.Setter;

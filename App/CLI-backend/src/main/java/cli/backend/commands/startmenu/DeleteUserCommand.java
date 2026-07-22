@@ -3,7 +3,7 @@ package cli.backend.commands.startmenu;
 import cli.backend.User;
 import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.UserService;
 
 public class DeleteUserCommand implements Command {

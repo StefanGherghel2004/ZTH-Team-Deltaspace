@@ -3,7 +3,7 @@ package cli.backend.commands.postmenu;
 import cli.backend.commands.Command;
 import cli.backend.exceptions.EmptyCommentException;
 import cli.backend.handlers.AppHandler;
-import cli.backend.readers.Console;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommentService;
 
 public class AddCommentCommand implements Command {
