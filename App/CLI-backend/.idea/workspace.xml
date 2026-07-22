@@ -6,9 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/logs/info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/ShowFeedCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/ShowFeedCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/PostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/PostService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/PostMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/PostMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +25,7 @@
     </persistenceIdMap>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="89" />
+    <option name="cachedIndexableFilesCount" value="79" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -40,60 +44,60 @@
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000000716507718" />
-      <entry key="S2" value="1.0273324473893024" />
-      <entry key="S5" value="1.3589666405139493" />
-      <entry key="S10" value="1.847232909989454" />
-      <entry key="S30" value="2.5151223628119" />
-      <entry key="S60" value="3.063131126517762" />
-      <entry key="M2" value="4.856588249723156" />
-      <entry key="M5" value="13.37888751458319" />
-      <entry key="M10" value="33.83956755248065" />
-      <entry key="M15" value="53.85738830015829" />
-      <entry key="M30" value="102.2428126870351" />
-      <entry key="H1" value="181.9283443501483" />
-      <entry key="H2" value="286.9822772413986" />
-      <entry key="H4" value="381.6235958719648" />
-      <entry key="D1" value="498.839165689344" />
-      <entry key="W1" value="523.6980890573506" />
+      <entry key="MS500" value="1.0000000000000007" />
+      <entry key="S2" value="1.0002521997979703" />
+      <entry key="S5" value="1.0547382030569596" />
+      <entry key="S10" value="1.3304834588208245" />
+      <entry key="S30" value="2.097320428384899" />
+      <entry key="S60" value="2.5044682093436714" />
+      <entry key="M2" value="3.060774357358654" />
+      <entry key="M5" value="4.817332585722188" />
+      <entry key="M10" value="9.182619207962428" />
+      <entry key="M15" value="16.417022424112943" />
+      <entry key="M30" value="46.60496534330642" />
+      <entry key="H1" value="121.11363226704604" />
+      <entry key="H2" value="260.71050911548843" />
+      <entry key="H4" value="431.33439624779675" />
+      <entry key="D1" value="704.9925031737561" />
+      <entry key="W1" value="772.0688516354285" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.5954379794318668E-6" />
-      <entry key="MS500" value="0.08848865320007218" />
-      <entry key="S2" value="0.8854084384492457" />
-      <entry key="S5" value="1.4392896348273614" />
-      <entry key="S10" value="1.695769083828873" />
-      <entry key="S30" value="1.913686253612823" />
-      <entry key="S60" value="2.3840691581551" />
-      <entry key="M2" value="4.2428569818813235" />
-      <entry key="M5" value="10.92937243755003" />
-      <entry key="M10" value="22.268060668254325" />
-      <entry key="M15" value="31.623631863834117" />
-      <entry key="M30" value="51.693044161899685" />
-      <entry key="H1" value="80.99972744712217" />
-      <entry key="H2" value="116.43978037666805" />
-      <entry key="H4" value="146.7910593753599" />
-      <entry key="D1" value="183.12387159805832" />
-      <entry key="W1" value="190.6940972052005" />
+      <entry key="MS100" value="1.2199309900371686E-45" />
+      <entry key="MS500" value="1.164980130324857E-9" />
+      <entry key="S2" value="0.009060603745163326" />
+      <entry key="S5" value="0.24621661459409525" />
+      <entry key="S10" value="0.8079361171202737" />
+      <entry key="S30" value="1.9025325472617975" />
+      <entry key="S60" value="2.4353407625837282" />
+      <entry key="M2" value="3.448368193582447" />
+      <entry key="M5" value="6.971689789084119" />
+      <entry key="M10" value="11.827528225293205" />
+      <entry key="M15" value="17.382238803422844" />
+      <entry key="M30" value="37.23195490582543" />
+      <entry key="H1" value="78.76774442062177" />
+      <entry key="H2" value="144.36712693875924" />
+      <entry key="H4" value="215.8019430444791" />
+      <entry key="D1" value="321.63634013101955" />
+      <entry key="W1" value="346.5918793323391" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="8.396456282914342E-5" />
-      <entry key="MS500" value="0.18603465511470466" />
-      <entry key="S2" value="1.3495859636421843" />
-      <entry key="S5" value="2.474855779567747" />
-      <entry key="S10" value="3.346086813419537" />
-      <entry key="S30" value="4.3497768304481434" />
-      <entry key="S60" value="5.398627209119078" />
-      <entry key="M2" value="9.057906496528327" />
-      <entry key="M5" value="24.264392900323237" />
-      <entry key="M10" value="56.05809858259339" />
-      <entry key="M15" value="85.43106672557911" />
-      <entry key="M30" value="153.89105528487963" />
-      <entry key="H1" value="262.89003949494395" />
-      <entry key="H2" value="403.3932691534596" />
-      <entry key="H4" value="528.3960204708982" />
-      <entry key="D1" value="681.9590793463852" />
-      <entry key="W1" value="714.3915953922854" />
+      <entry key="MS100" value="8.404774099602906E-11" />
+      <entry key="MS500" value="0.009658400678102304" />
+      <entry key="S2" value="0.3197315798143002" />
+      <entry key="S5" value="0.8825502719399246" />
+      <entry key="S10" value="1.8326279178786498" />
+      <entry key="S30" value="3.8317967536403867" />
+      <entry key="S60" value="4.839285879493047" />
+      <entry key="M2" value="6.446441870886839" />
+      <entry key="M5" value="11.747930856560695" />
+      <entry key="M10" value="20.976355623250456" />
+      <entry key="M15" value="33.765312113836664" />
+      <entry key="M30" value="83.79891252344714" />
+      <entry key="H1" value="199.84008042991047" />
+      <entry key="H2" value="405.0391574852833" />
+      <entry key="H4" value="647.1072981248294" />
+      <entry key="D1" value="1026.621565218535" />
+      <entry key="W1" value="1118.6596088121207" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -105,6 +109,18 @@
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectSessionTemplates">
+    <option name="inlineTemplate">
+      <template>
+        <option name="modeId" value="InlineAgent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
     <option name="panelTemplate">
       <template>
         <option name="modeId" value="Agent" />
@@ -123,30 +139,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "serban-backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
@@ -196,6 +212,7 @@
       <workItem from="1784571687727" duration="106000" />
       <workItem from="1784622026507" duration="3032000" />
       <workItem from="1784639065571" duration="297000" />
+      <workItem from="1784715826055" duration="8755000" />
     </task>
     <servers />
   </component>

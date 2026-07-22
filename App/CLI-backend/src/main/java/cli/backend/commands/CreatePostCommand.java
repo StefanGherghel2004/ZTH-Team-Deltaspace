@@ -52,7 +52,7 @@ public class CreatePostCommand implements Command {
             try{
                 String savedImagePath=checkImage.processAndSaveImage(imagePath);
                     Post newPost = postService.addPost(app.getCurrentUser().getUsername(), postTitle, postContents,
-                            savedImagePath, NSFW, targetCommunity);
+                            savedImagePath, NSFW, targetCommunity,0,0);
                     console.success("Post created successfully!");
                     app.setCurrentPost(newPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
