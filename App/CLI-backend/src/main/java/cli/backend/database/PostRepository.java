@@ -12,7 +12,8 @@ public class PostRepository {
     private static PostRepository instance = null;
 
     private static final String createTableQuery = """
-        CREATE TABLE IF NOT EXISTS posts (
+        
+            CREATE TABLE IF NOT EXISTS posts (
             id SERIAL PRIMARY KEY,
             author_username VARCHAR(100) NOT NULL,
             post_title VARCHAR(255) NOT NULL,
@@ -21,7 +22,9 @@ public class PostRepository {
             community_name VARCHAR(100),
             nsfw BOOLEAN DEFAULT FALSE,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            upVotes int,
+            downVotes int
         );
         """;
 
@@ -30,14 +33,17 @@ public class PostRepository {
             VALUES (?, ?, ?, ?, ?, ?);
             """;
 
-    private static final String updatePostQuery = """
-        UPDATE posts 
-        SET post_title = ?, 
-            post_contents = ?, 
-            image_link = ?, 
-            community_name = ?, 
-            nsfw = ?, 
-            updated_at = CURRENT_TIMESTAMP
+    private static final String updatePostQuery =
+            """
+        
+            UPDATE posts 
+        SET post_title = ?,
+                    post_contents = ?, 
+            image_link = ?,
+                    community_name = ?, 
+            nsfw = ?,
+                    updated_at =
+            CURRENT_TIMESTAMP
         WHERE id = ?;
         """;
 
@@ -152,7 +158,9 @@ public class PostRepository {
                         resultSet.getString("post_contents"),
                         resultSet.getString("image_link"),
                         resultSet.getBoolean("nsfw"),
-                        resultSet.getString("community_name")
+                        resultSet.getString("community_name"),
+                        resultSet.getInt("upVotes"),
+                        resultSet.getInt("downVotes")
                 );
 
                 post.setId(resultSet.getLong("id"));
@@ -180,7 +188,9 @@ public class PostRepository {
                             resultSet.getString("post_contents"),
                             resultSet.getString("image_link"),
                             resultSet.getBoolean("nsfw"),
-                            resultSet.getString("community_name")
+                            resultSet.getString("community_name"),
+                            resultSet.getInt("upVotes"),
+                            resultSet.getInt("downVotes")
                     );
 
                     post.setId(resultSet.getLong("id"));
@@ -198,16 +208,18 @@ public class PostRepository {
         List<Post> communityPosts = new ArrayList<>();
         try (Connection connection = databaseConnection.getDatabaseConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(searchPosts)) {
-            preparedStatement.setString(1,communityName);
+            preparedStatement. setString(1,communityName);
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
+                    while (resultSet.next()) {
                    Post post =new Post(
                             resultSet.getString("author_username"),
                             resultSet.getString("post_title"),
                             resultSet.getString("post_contents"),
                             resultSet.getString("image_link"),
                             resultSet.getBoolean("nsfw"),
-                            resultSet.getString("community_name")
+                            resultSet.getString("community_name"),
+                            resultSet.getInt("upVotes"),
+                            resultSet.getInt("downVotes")
 
                     );
                     post.setId(resultSet.getLong("id"));
@@ -219,5 +231,29 @@ public class PostRepository {
             Logger.severe("Failed to find Post: " + e.getMessage());
         }
         return communityPosts;
+    }
+
+    public void modifyUpVote (Long id, Integer vote){
+        String query="Update posts set upVotes=? where id=?;";
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1,vote);
+            preparedStatement.setLong(2,id);
+            preparedStatement.executeUpdate();
+    }catch (SQLException e) {
+            Logger.severe("Failed to update vote: " + e.getMessage());
+        }
+    }
+
+    public void modifyDownVote (Long id, Integer vote){
+        String query="Update posts set downVotes=? where id=?;";
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1,vote);
+            preparedStatement.setLong(2,id);
+            preparedStatement.executeUpdate();
+        }catch (SQLException e) {
+            Logger.severe("Failed to update vote: " + e.getMessage());
+        }
     }
 }
