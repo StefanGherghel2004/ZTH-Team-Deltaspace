@@ -1,0 +1,27 @@
+package cli.backend.commands.postmenu;
+
+import cli.backend.Post;
+import cli.backend.commands.Command;
+import cli.backend.handlers.AppHandler;
+import cli.backend.readers.Console;
+import cli.backend.services.PostService;
+
+import java.util.List;
+
+public class DownVoteCommand implements Command {
+
+    @Override
+    public boolean execute() {
+
+        AppHandler app = AppHandler.getInstance();
+        Console console = Console.getInstance();
+        Post currentPost = app.getCurrentPost();
+        PostService postService = PostService.getInstance();
+        Integer upvotes = currentPost.getUpVotes();
+
+        postService.downVote(app.getCurrentPost(),app.getCurrentUser());
+
+        return true;
+
+    }
+}

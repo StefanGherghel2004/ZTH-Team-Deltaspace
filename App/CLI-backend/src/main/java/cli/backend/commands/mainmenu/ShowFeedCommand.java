@@ -25,7 +25,7 @@ public class ShowFeedCommand implements Command {
 
         for(Post post: posts) {
             console.info("ID: " + post.getId() + " | Title: " + post.getPostTitle()
-                    + " | Community: " + post.getCommunityName());
+                    + " | Community: " + post.getCommunityName()+" | Upvotes:"+ post.getUpVotes()+" | DownVotes:"+post.getDownVotes());
         }
 
         String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);

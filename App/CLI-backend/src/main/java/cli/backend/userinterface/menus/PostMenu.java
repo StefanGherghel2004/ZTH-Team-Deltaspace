@@ -2,10 +2,7 @@ package cli.backend.userinterface.menus;
 
 import cli.backend.Post;
 import cli.backend.commands.*;
-import cli.backend.commands.postmenu.AddCommentCommand;
-import cli.backend.commands.postmenu.DeletePostCommand;
-import cli.backend.commands.postmenu.SelectCommentCommand;
-import cli.backend.commands.postmenu.ShowCommentsCommand;
+import cli.backend.commands.postmenu.*;
 
 public class PostMenu extends Menu {
 
@@ -19,6 +16,8 @@ public class PostMenu extends Menu {
         addOption(menuIndex++, "Show comments", new ShowCommentsCommand());
         addOption(menuIndex++, "Add comment", new AddCommentCommand());
         addOption(menuIndex++, "Select comment (Reply)", new SelectCommentCommand());
+        addOption(menuIndex++,"UpVote", new UpVoteCommand());
+        addOption(menuIndex++,"DownVote",new DownVoteCommand());
         addOption(menuIndex++,"Delete Post", new DeletePostCommand());
 
         if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getAuthorUsername())) {
@@ -35,6 +34,8 @@ public class PostMenu extends Menu {
         System.out.println("Author:    u/" + currentPost.getAuthorUsername());
         System.out.println("Title:     " + currentPost.getPostTitle());
         System.out.println("NSFW:      " + (currentPost.isNSFW() ? "Yes" : "No"));
+        System.out.println("UpVotes:   " + currentPost.getUpVotes());
+        System.out.println("DownVotes: " + currentPost.getDownVotes());
         System.out.println(currentPost.getPostContents());
         super.showMenu();
     }
