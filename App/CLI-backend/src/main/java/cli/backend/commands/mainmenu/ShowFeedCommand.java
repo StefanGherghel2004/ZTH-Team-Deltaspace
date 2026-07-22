@@ -5,6 +5,8 @@ import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PostService;
+import cli.backend.userinterface.views.UIPost;
+
 import java.util.List;
 
 public class ShowFeedCommand implements Command {
@@ -14,17 +16,14 @@ public class ShowFeedCommand implements Command {
         PostService postService = PostService.getInstance();
         Console console = Console.getInstance();
 
-        console.info("\n--- Your Feed ---");
+        UIPost uiPost = UIPost.getInstance();
         List<Post> posts = postService.getPosts();
 
-        if (posts.isEmpty()) {
-            console.getStringInput("Feed is empty.\nPress Enter to return...", true);
-            return true;
-        }
+        uiPost.showFeed(posts);
 
-        for(Post post: posts) {
-            console.info("ID: " + post.getId() + " | Title: " + post.getPostTitle()
-                    + " | Community: " + post.getCommunityName()+" | Upvotes:"+ post.getUpVotes()+" | DownVotes:"+post.getDownVotes());
+        if (posts.isEmpty()) {
+            console.getStringInput("Press Enter to return...", true);
+            return true;
         }
 
         String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);
