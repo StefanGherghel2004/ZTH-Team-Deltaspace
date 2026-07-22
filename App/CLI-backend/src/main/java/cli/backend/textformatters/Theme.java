@@ -18,4 +18,10 @@ public class Theme {
             PRIMARY_GRADIENT_START,
             PRIMARY_GRADIENT_END
     );
+
+    public static final String PROMPT = Color.textBrightCyan("» ");
+
+    public static String formatUsername(String username) {
+        return Color.textCyan(username);
+    }
 }
