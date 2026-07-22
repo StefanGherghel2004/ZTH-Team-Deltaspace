@@ -10,9 +10,9 @@ public class StartMenu extends Menu{
 
     public StartMenu() {
         setTitle("Welcome to Deltaspace platform");
-        addOption(1, "Register", new RegisterCommand());
-        addOption(2, "Login", new LoginCommand());
-        addOption(3, "Quit", new QuitCommand());
+        addOption("Register", new RegisterCommand());
+        addOption("Login", new LoginCommand());
+        addOption("Quit", new QuitCommand());
     }
 
     @Override

@@ -17,8 +17,9 @@ public abstract class Menu {
     @Setter
     protected String title = "";
 
-    protected void addOption(int key, String description, Command command) {
-        options.put(key, new MenuOption(description, command));
+    protected void addOption(String description, Command command) {
+        int nextKey = options.size() + 1;
+        options.put(nextKey, new MenuOption(description, command));
     }
 
     public void showMenu() {

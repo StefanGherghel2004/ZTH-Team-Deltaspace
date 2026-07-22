@@ -10,20 +10,19 @@ public class PostMenu extends Menu {
 
     public PostMenu(Post currentPost) {
         this.currentPost = currentPost;
-        int menuIndex = 1;
 
         setTitle("Post Actions");
-        addOption(menuIndex++, "Show comments", new ShowCommentsCommand());
-        addOption(menuIndex++, "Add comment", new AddCommentCommand());
-        addOption(menuIndex++, "Select comment (Reply)", new SelectCommentCommand());
-        addOption(menuIndex++,"UpVote", new UpVoteCommand());
-        addOption(menuIndex++,"DownVote",new DownVoteCommand());
-        addOption(menuIndex++,"Delete Post", new DeletePostCommand());
+        addOption("Show comments", new ShowCommentsCommand());
+        addOption("Add comment", new AddCommentCommand());
+        addOption("Select comment (Reply)", new SelectCommentCommand());
+        addOption("UpVote", new UpVoteCommand());
+        addOption("DownVote",new DownVoteCommand());
+        addOption("Delete Post", new DeletePostCommand());
 
         if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getAuthorUsername())) {
-            addOption(menuIndex++, "Back to Main Menu", new BackCommand());
+            addOption("Back to Main Menu", new BackCommand());
         } else {
-            addOption(menuIndex++, "Back to Community", new BackCommand());
+            addOption("Back to Community", new BackCommand());
         }
     }
 

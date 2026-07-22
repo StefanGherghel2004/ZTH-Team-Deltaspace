@@ -16,16 +16,15 @@ public class CommunityMenu extends Menu {
 
     public CommunityMenu(Community currentCommunity) {
         this.currentCommunity = currentCommunity;
-        int menuIndex = 1;
 
         setTitle(currentCommunity.getNickname());
-        addOption(menuIndex++, "View Posts", new ShowPostsInCommunityCommand());
-        addOption(menuIndex++, "Add Post", new CreatePostCommand());
-        addOption(menuIndex++, "Return to Main Menu", new BackCommand());
+        addOption("View Posts", new ShowPostsInCommunityCommand());
+        addOption("Add Post", new CreatePostCommand());
+        addOption("Return to Main Menu", new BackCommand());
 
         if (List.of(currentCommunity.getCommunityCreator(),"admin")
                 .contains(appHandler.getCurrentUser().getId()))
-            addOption(menuIndex++, "Delete community", new DeleteCommunityCommand());
+            addOption("Delete community", new DeleteCommunityCommand());
     }
 
     @Override

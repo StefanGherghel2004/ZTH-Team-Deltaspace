@@ -11,12 +11,12 @@ public class MainMenu extends Menu{
 
     public MainMenu() {
         setTitle("Main Menu");
-        addOption(1, "Show feed", new ShowFeedCommand());
-        addOption(2, "Create community", new CreateCommunityCommand());
-        addOption(3, "Create Post", new CreatePostCommand());
-        addOption(4, "Show communities", new ShowCommunitiesCommand());
-        addOption(5, "Logout", new LogoutCommand());
-        addOption(6,"Delete Account",new DeleteUserCommand());
+        addOption("Show feed", new ShowFeedCommand());
+        addOption("Create community", new CreateCommunityCommand());
+        addOption("Create Post", new CreatePostCommand());
+        addOption("Show communities", new ShowCommunitiesCommand());
+        addOption("Logout", new LogoutCommand());
+        addOption("Delete Account",new DeleteUserCommand());
     }
 
     @Override
