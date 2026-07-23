@@ -20,7 +20,7 @@ public class ShowFeedCommand implements Command {
         List<Post> posts = postService.getFeedFromRepository();
         UIPost uiPost = UIPost.getInstance();
 
-        uiPost.showFeed(posts, app.getCurrentUser());
+        uiPost.showFeed(posts);
 
         if (posts.isEmpty()) {
             console.getStringInput("Press Enter to return...", true);

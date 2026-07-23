@@ -61,11 +61,17 @@ public class BoxPadder {
 
     private static void addLines(List<String> lines) {
         for (String line : lines) {
+            int visibleLength = Color.stripAnsi(line).length();
+
+            int spacesNeeded = Math.max(0, (WIDTH - 1) - visibleLength);
+
+
             sb.append(VERTICAL)
-                .append(" ")
-                .append(String.format("%-" + (WIDTH - 1) + "s", line))
-                .append(VERTICAL)
-                .append("\n");
+                    .append(" ")
+                    .append(line)
+                    .repeat(" ", spacesNeeded)
+                    .append(VERTICAL)
+                    .append("\n");
         }
     }
 
