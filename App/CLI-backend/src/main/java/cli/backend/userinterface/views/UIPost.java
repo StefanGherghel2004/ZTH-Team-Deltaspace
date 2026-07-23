@@ -2,12 +2,17 @@ package cli.backend.userinterface.views;
 
 
 import cli.backend.Post;
+import cli.backend.User;
+import cli.backend.services.UserService;
+import cli.backend.services.VoteService;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.textformatters.BoxPadder;
+import cli.backend.userinterface.textformatters.Color;
 import cli.backend.userinterface.textformatters.TextWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
 
@@ -28,24 +33,39 @@ public class UIPost {
         return instance;
     }
 
-    public void showFeed(List<Post> posts) {
+    public void showFeed(List<Post> posts, User user) {
         if (posts.isEmpty()) {
             console.info("No posts yet. Create the first one!");
             return;
         }
 
+        Map<Long, Integer> userVotes = VoteService.getInstance().getAllUserVotes(user);
+
         for (Post post : posts) {
-            showPostSimple(post);
+            Integer userVote = userVotes.get(post.getId());
+
+            showPostSimple(post, userVote);
         }
     }
 
-    public void showPostSimple(Post post) {
-        String postLine = String.format("ID: %d | Title: %s | Author: %s | Up %d | Down %d",
+    public void showPostSimple(Post post, Integer vote) {
+        String upVoteStr = "^ " + post.getUpVotes();
+        String downVoteStr = "v " + post.getDownVotes();
+
+        if (vote != null) {
+            if (vote == 1) {
+                upVoteStr = Color.textGreen(upVoteStr);
+            } else if (vote == -1) {
+                downVoteStr = Color.textRed(downVoteStr);
+            }
+        }
+
+        String postLine = String.format("ID: %d | Title: %s | Author: %s | %s | %s",
                 post.getId(),
                 post.getPostTitle(),
                 post.getAuthorUsername(),
-                post.getUpVotes(),
-                post.getDownVotes());
+                upVoteStr,
+                downVoteStr);
 
         console.info(postLine);
     }
@@ -60,6 +80,7 @@ public class UIPost {
         List<String> wrappedContent = TextWrapper.wrap(post.getPostContents(), MAX_TEXT_WIDTH);
         lines.addAll(wrappedContent);
 
+        lines.add("");
         lines.add("Up " + post.getUpVotes() + " | Down " + post.getDownVotes());
 
         String boxedPost = BoxPadder.format(lines, title);

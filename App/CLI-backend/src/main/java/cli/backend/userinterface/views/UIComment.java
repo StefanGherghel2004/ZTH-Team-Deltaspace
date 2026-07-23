@@ -4,6 +4,7 @@ import cli.backend.Comment;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.textformatters.BoxPadder;
 import cli.backend.userinterface.textformatters.TextWrapper;
+import cli.backend.userinterface.textformatters.Theme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Map;
 import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
 
 public class UIComment {
+
+    private static final int MAX_PREVIEW_LENGTH = 40;
 
     private static UIComment instance;
     private final Console console;
@@ -44,8 +47,18 @@ public class UIComment {
             for (Comment reply : replies) {
                 String indent = "    ".repeat(depth);
                 String branch = depth > 0 ? "|_ " : "";
-                console.info(indent + branch + "[" + reply.getAuthorUsername() + "]: "
-                        + reply.getText() + "  (ID: " + reply.getId() + ")");
+
+                // replace newline with space for oneline text
+                String safeText = reply.getText().replace("\n", " ");
+
+                if (safeText.length() > MAX_PREVIEW_LENGTH) {
+                    safeText = safeText.substring(0, MAX_PREVIEW_LENGTH) + "...";
+                }
+
+                console.info(indent + branch + "[" +
+                        Theme.formatUsername(reply.getAuthorUsername()) + "]: "
+                        + safeText + "  (ID: " + reply.getId() + ")");
+
                 printThread(reply.getId(), commentTree, depth + 1);
             }
         }

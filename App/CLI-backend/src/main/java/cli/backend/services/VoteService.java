@@ -58,5 +58,9 @@ public class VoteService {
         postRepository.modifyDownVote(currentPost.getId(), currentPost.getDownVotes());
     }
 
+    public java.util.Map<Long, Integer> getAllUserVotes(User user) {
+        return voteRepository.getAllVotesForUser(user.getId());
+    }
+
 
 }

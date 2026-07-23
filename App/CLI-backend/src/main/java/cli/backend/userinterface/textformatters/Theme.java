@@ -5,6 +5,7 @@ public class Theme {
     public static final int[] PRIMARY_GRADIENT_START = {212, 0, 255};
     public static final int[] PRIMARY_GRADIENT_END = {0, 229, 255};
 
+    // constant related to the WIDTH in BoxPadder used for all the menus
     public static final int MAX_TEXT_WIDTH = 42;
 
     private static final String RAW_LOGO = """
