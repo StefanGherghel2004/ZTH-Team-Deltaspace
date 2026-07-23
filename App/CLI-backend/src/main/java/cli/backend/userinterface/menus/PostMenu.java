@@ -21,7 +21,7 @@ public class PostMenu extends Menu {
         addOption("Delete Post", new DeletePostCommand());
         addOption("Edit Post", new OpenEditPostMenuCommand());
 
-        if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getAuthorUsername())) {
+        if(currentPost.getCommunityName() == null) {
             addOption("Back to Main Menu", new BackCommand());
         } else {
             addOption("Back to Community", new BackCommand());

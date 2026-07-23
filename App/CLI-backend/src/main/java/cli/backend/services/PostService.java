@@ -13,7 +13,6 @@ public class PostService {
 
     private static PostService instance;
     private final PostRepository postRepository = PostRepository.getInstance();
-    private final VoteRepository voteRepository = VoteRepository.getInstance();
 
     public static synchronized PostService getInstance(){
         if(instance == null){
@@ -23,8 +22,7 @@ public class PostService {
     }
 
     public Post addPost(String authorUsername, String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity,Integer upVotes, Integer downVotes){
-        String targetName = (currentCommunity != null) ?
-                currentCommunity.getNickname() : "u/" + authorUsername;
+        String targetName = (currentCommunity != null) ? currentCommunity.getNickname() : null;
 
         Post newPost = new Post(authorUsername, postTitle, postContents, imageLink, NSFW, targetName,upVotes,downVotes);
 
@@ -35,19 +33,6 @@ public class PostService {
         }
 
         return newPost;
-    }
-
-    public List<Post> getPosts(){
-        return postRepository.findAll();
-    }
-
-    public List<Post> getRandomizedFeed(List<Post> feedPosts){
-        if(feedPosts == null || feedPosts.isEmpty()){
-            return new ArrayList<>();
-        }
-        List<Post> randomizedList = new ArrayList<>(feedPosts);
-        Collections.shuffle(randomizedList);
-        return randomizedList;
     }
 
     public Post findPostById(Long id){
