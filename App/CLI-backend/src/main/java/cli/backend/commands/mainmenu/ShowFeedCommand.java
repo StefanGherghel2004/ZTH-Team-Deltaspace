@@ -23,7 +23,6 @@ public class ShowFeedCommand implements Command {
         uiPost.showFeed(posts);
 
         if (posts.isEmpty()) {
-            console.getStringInput("Press Enter to return...", true);
             return true;
         }
 

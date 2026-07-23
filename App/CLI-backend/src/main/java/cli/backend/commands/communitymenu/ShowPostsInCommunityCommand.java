@@ -5,6 +5,7 @@ import cli.backend.commands.Command;
 import cli.backend.database.PostRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
+import cli.backend.userinterface.views.UIPost;
 
 import java.util.List;
 
@@ -14,16 +15,13 @@ public class ShowPostsInCommunityCommand implements Command {
         AppHandler app = AppHandler.getInstance();
         Console console = Console.getInstance();
         PostRepository postRepository = PostRepository.getInstance();
-        console.info("\n--- Posts in " + app.getCurrentCommunity().getNickname() + " ---");
-         String communityName = app.getCurrentCommunity().getNickname();
+        String communityName = app.getCurrentCommunity().getNickname();
         List<Post> communityPosts = postRepository.getCommunityPosts(communityName);
-        if (communityPosts.isEmpty()) {
-            console.info("No posts in this r/");
-            return true;
-        }
 
-        for (Post post : communityPosts) {
-            console.info("ID: " + post.getId() + " | Title: " + post.getPostTitle() + " | Author: " + post.getAuthorUsername()+" | Upvotes:"+ post.getUpVotes()+" | DownVotes:"+post.getDownVotes());
+        UIPost.getInstance().showFeed(communityPosts, communityName);
+
+        if (communityPosts.isEmpty()) {
+            return true;
         }
 
         String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);

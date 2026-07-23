@@ -38,18 +38,30 @@ public class UIPost {
     }
 
     public void showFeed(List<Post> posts) {
+        showFeed(posts, null);
+    }
+
+    public void showFeed(List<Post> posts, String communityName) {
+        if (communityName != null) {
+            console.info("\n--- Posts in " + communityName + " ---");
+        } else {
+            console.info("\n--- Global Feed ---");
+        }
+
         if (posts.isEmpty()) {
-            console.info("No posts yet. Create the first one!");
+            if (communityName != null) {
+                console.info("No posts in this r/. Be the first to post!");
+            } else {
+                console.info("No posts yet. Create the first one!");
+            }
             return;
         }
 
         User user = AppHandler.getInstance().getCurrentUser();
-
         Map<Long, Integer> userVotes = VoteService.getInstance().getAllUserVotes(user);
 
         for (Post post : posts) {
             Integer userVote = userVotes.get(post.getId());
-
             showPostSimple(post, userVote);
         }
     }
