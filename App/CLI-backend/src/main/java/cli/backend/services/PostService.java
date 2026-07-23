@@ -120,4 +120,8 @@ public class PostService {
             return false;
         return post.getAuthorUsername().equals(user.getUsername());
     }
+
+    public List<Post> getFeedFromRepository () {
+        return postRepository.findAll();
+    }
 }

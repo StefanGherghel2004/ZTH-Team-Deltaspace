@@ -14,10 +14,9 @@ public class ShowFeedCommand implements Command {
         AppHandler app = AppHandler.getInstance();
         PostService postService = PostService.getInstance();
         Console console = Console.getInstance();
-        PostRepository postRepository = PostRepository.getInstance();
 
         console.info("\n--- Your Feed ---");
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postService.getFeedFromRepository();
 
         if (posts.isEmpty()) {
             console.getStringInput("Feed is empty.\nPress Enter to return...", true);
