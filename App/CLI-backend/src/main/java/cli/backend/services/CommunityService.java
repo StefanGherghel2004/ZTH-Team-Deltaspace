@@ -12,6 +12,7 @@ public class CommunityService {
 
     private static CommunityService instance;
     private static CommunityRepository communityRepository = CommunityRepository.getInstance();
+
     public static CommunityService getInstance(){
         if(instance==null){
             instance = new CommunityService();
@@ -26,14 +27,14 @@ public class CommunityService {
             "Art",
             "Tech"
     );
-    private final List<Community> communities= communityRepository.getDBCommunities();
-
 
     public List<Community> getCommunities(){
-        return communities;
+        return communityRepository.getDBCommunities();
     }
 
     public Community getCommunityByName(String name){
+        List<Community> communities = communityRepository.getDBCommunities();
+
         for (Community c:communities){
             if(c.getNickname().equalsIgnoreCase(name)){
                 return c;
@@ -53,7 +54,6 @@ public class CommunityService {
             throws InvalidCommunityException {
         if (TOPICS.contains(topic)) {
             Community community = new Community(communityCreator, topic, name, description);
-            communities.add(community);
             communityRepository.addCommunity(community);
         }
         else {
@@ -66,17 +66,7 @@ public class CommunityService {
             return false;
         }
 
-        boolean isRemoved = communities.remove(community);
-
-        if (isRemoved) {
-            List<Post> postsToDelete = community.getPosts();
-            for (Post p : postsToDelete) {
-                PostService.getInstance().deletePost(p);
-            }
-            boolean dataBaseDeleted = communityRepository.deleteCommunity(community.getNickname());
-        }
-
-        return isRemoved;
+        return communityRepository.deleteCommunity(community.getNickname());
     }
     public List<String> getAvailableTopics(){
         return new ArrayList<>(TOPICS);

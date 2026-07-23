@@ -22,7 +22,7 @@ public class CommunityRepository {
         CREATE TABLE IF NOT EXISTS communities (
             id SERIAL PRIMARY KEY,
             description VARCHAR(255),
-            name VARCHAR(255) NOT NULL,
+            name VARCHAR(255) UNIQUE NOT NULL,
             user_id BIGINT,
             topic VARCHAR(255),
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

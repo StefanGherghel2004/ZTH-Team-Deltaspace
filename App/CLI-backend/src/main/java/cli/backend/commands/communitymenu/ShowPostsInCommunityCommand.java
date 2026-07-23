@@ -4,6 +4,7 @@ import cli.backend.Post;
 import cli.backend.commands.Command;
 import cli.backend.database.PostRepository;
 import cli.backend.handlers.AppHandler;
+import cli.backend.services.PostService;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.views.UIPost;
 
@@ -29,8 +30,8 @@ public class ShowPostsInCommunityCommand implements Command {
         if (input.isEmpty()) return true;
 
         try {
-            int id = Integer.parseInt(input);
-            Post currentPost = app.getCurrentCommunity().findPostById(id);
+            long id = Long.parseLong(input);
+            Post currentPost = PostService.getInstance().findPostById(id);
 
             if (currentPost != null) {
                 if (currentPost.isNSFW() && !app.getCurrentUser().checkAge()) {

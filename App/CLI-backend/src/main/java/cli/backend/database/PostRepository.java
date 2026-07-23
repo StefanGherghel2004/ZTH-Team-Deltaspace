@@ -19,7 +19,7 @@ public class PostRepository {
             post_title VARCHAR(255) NOT NULL,
             post_contents TEXT,
             image_link VARCHAR(500),
-            community_name VARCHAR(100),
+            community_name VARCHAR(100) REFERENCES communities(name) ON DELETE CASCADE,
             nsfw BOOLEAN DEFAULT FALSE,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

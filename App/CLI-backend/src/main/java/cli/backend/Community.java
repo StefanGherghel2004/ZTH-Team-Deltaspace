@@ -15,7 +15,6 @@ public class Community {
     private LocalDateTime updatedAt;
     private String nickname;
     private String topic;
-    private List<Post> posts = new ArrayList<>();
     private String description;
     private Long communityCreator;
 
@@ -37,38 +36,13 @@ public class Community {
         this.updatedAt = updatedAt;
     }
 
-    public void addPost(Post post){
-        posts.add(post);
-    }
-
-    public Post findPostById(int id) {
-        for (Post post : posts) {
-            if (post.getId() == id) {
-                return post;
-            }
-        }
-        return null;
-    }
 
     @Override
     public String toString() {
         return "Community{" +
                 "nickname=r/"  + nickname + '\'' +
                 ", topic='" + topic + '\'' +
-                ", posts=" + posts +
                 ", description='" + description + '\'' +
                 '}';
-    }
-
-    public void deletePost(Post post){
-        posts.remove(post);
-    }
-
-    public boolean hasNSFWPost() {
-        for (Post p:posts){
-            if(p.isNSFW())
-                return true;
-        }
-        return false;
     }
 }

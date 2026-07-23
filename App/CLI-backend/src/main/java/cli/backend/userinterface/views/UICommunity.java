@@ -31,9 +31,11 @@ public class UICommunity {
         }
 
         for (Community c : communities) {
-            if (c.hasNSFWPost() && !user.checkAge()) {
-                continue;
-            }
+
+            //
+            //if (c.hasNSFWPost() && !user.checkAge()) {
+            //    continue;
+            //}
 
             showCommunitySimple(c);
         }

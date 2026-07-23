@@ -27,11 +27,6 @@ public class PostService {
         Post newPost = new Post(authorUsername, postTitle, postContents, imageLink, NSFW, targetName,upVotes,downVotes);
 
         postRepository.addPost(newPost);
-
-        if(currentCommunity != null) {
-            currentCommunity.addPost(newPost);
-        }
-
         return newPost;
     }
 
@@ -41,14 +36,9 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public void deletePost(Post postToDelete) {
-        if (postToDelete == null || postToDelete.getId() == null) return;
-        postRepository.deletePostById(postToDelete.getId());
-        Community community = CommunityService.getInstance()
-                .getCommunityByName(postToDelete.getCommunityName());
-        if (community != null) {
-            community.deletePost(postToDelete);
-        }
+    public void deletePost(Post post) {
+        if (post == null || post.getId() == null) return;
+        postRepository.deletePostById(post.getId());
     }
 
     public boolean canUserDeletePost(User user, Post post, Community community) {
