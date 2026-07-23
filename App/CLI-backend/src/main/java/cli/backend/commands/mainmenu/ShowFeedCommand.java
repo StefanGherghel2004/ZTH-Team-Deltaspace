@@ -7,6 +7,7 @@ import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PostService;
 import cli.backend.userinterface.views.UIPost;
 
+
 import java.util.List;
 
 public class ShowFeedCommand implements Command {
@@ -16,8 +17,8 @@ public class ShowFeedCommand implements Command {
         PostService postService = PostService.getInstance();
         Console console = Console.getInstance();
 
+        List<Post> posts = postService.getFeedFromRepository();
         UIPost uiPost = UIPost.getInstance();
-        List<Post> posts = postService.getPosts();
 
         uiPost.showFeed(posts);
 

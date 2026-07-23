@@ -94,10 +94,10 @@ public class PostRepository {
         }
     }
 
-    public void updatePost(Post post) {
+    public boolean updatePost(Post post) {
         if (post.getId() == null) {
             Logger.severe("Cannot update a post without an ID.");
-            return;
+            return false;
         }
 
         try (Connection connection = databaseConnection.getDatabaseConnection();
@@ -114,11 +114,14 @@ public class PostRepository {
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 Logger.info("Successfully updated post ID: " + post.getId());
+                return true;
             } else {
                 Logger.info("No post found with ID: " + post.getId() + " to update.");
+                return false;
             }
         } catch (SQLException e) {
             Logger.severe("Failed to update post: " + e.getMessage());
+            return false;
         }
     }
 

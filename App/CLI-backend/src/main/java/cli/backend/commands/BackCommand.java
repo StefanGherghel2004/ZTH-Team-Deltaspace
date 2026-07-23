@@ -27,8 +27,12 @@ public class BackCommand implements Command {
                 app.setCurrentState(AppHandler.State.LOGGED_IN);
                 break;
 
+            case EDIT_POST:
+                app.setCurrentState(AppHandler.State.ON_POST);
+                break;
+
             default:
-                System.out.println("Cum a ajuns aici");
+                System.out.println("Cum a ajuns aici?");
         }
 
         return true;
