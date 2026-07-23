@@ -48,7 +48,7 @@ public class VoteRepository {
                 if (resultSet.next()) {
                     return resultSet.getInt("value");
                 }
-                return null; // no vote exists
+                return null;
             }
         } catch (SQLException e) {
             Logger.severe("Failed to fetch vote: " + e.getMessage());
@@ -101,6 +101,24 @@ public class VoteRepository {
         } catch (SQLException e) {
             Logger.severe("Failed to delete vote: " + e.getMessage());
             return false;
+        }
+    }
+
+    public Integer getUserVote(long postId,long userId){
+        String query="select value from votes where post_id=? and user_id=?;";
+        try(Connection connection = databaseConnection.getDatabaseConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+                statement.setLong(1,postId);
+                statement.setLong(2,userId);
+                try(ResultSet resultSet= statement.executeQuery()){
+                    if(resultSet.next()){
+                        return  resultSet.getInt("Value");
+                    }
+                }
+                return null;
+        }catch (SQLException e){
+            Logger.severe("Failed to get vote : "+ e.getMessage());
+            return null;
         }
     }
 }
