@@ -37,7 +37,7 @@ public class CreatePostCommand implements Command {
         }
 
         String postTitle = console.getStringInput("Please enter post title:");
-        String postContents = console.getStringInput("Please enter post contents:");
+        String postContents = console.getMultiLineInput("Please enter post contents:");
 
         String imagePath= console.getStringInput("Please enter image path (or press Enter to skip):", true);
         if (imagePath.isEmpty()) {

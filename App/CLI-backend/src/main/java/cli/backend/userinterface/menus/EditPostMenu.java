@@ -3,6 +3,7 @@ package cli.backend.userinterface.menus;
 import cli.backend.Post;
 import cli.backend.commands.BackCommand;
 import cli.backend.commands.postmenu.*;
+import cli.backend.userinterface.views.UIPost;
 
 public class EditPostMenu extends Menu{
     Post currentPost;
@@ -18,11 +19,7 @@ public class EditPostMenu extends Menu{
 
     @Override
     public void showMenu() {
-        System.out.println("--- EDITING POST ---");
-        System.out.println("Title:  " + currentPost.getPostTitle());
-        System.out.println("NSFW:   " + (currentPost.isNSFW() ? "Yes" : "No"));
-        System.out.println("Content: " + currentPost.getPostContents());
-        System.out.println("--------------------");
+        UIPost.getInstance().showPostExpanded(currentPost);
         super.showMenu();
     }
 }

@@ -30,9 +30,8 @@ public class EditPostCommand implements Command {
         }
         switch (editType) {
             case "contents" -> {
-                String newContents = console.getStringInput(
-                        "Please enter your new contents for this post:",
-                        false);
+                String newContents = console.getMultiLineInput(
+                        "Please enter your new contents for this post:");
                 postToEdit.setPostContents(newContents);
             }
 

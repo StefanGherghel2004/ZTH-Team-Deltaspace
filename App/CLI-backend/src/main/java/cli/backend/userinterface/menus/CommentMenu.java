@@ -7,6 +7,7 @@ import cli.backend.commands.postmenu.DeleteCommentCommand;
 import cli.backend.commands.postmenu.ReplyToCommentCommand;
 import cli.backend.handlers.AppHandler;
 import cli.backend.services.CommentService;
+import cli.backend.userinterface.views.UIComment;
 
 public class CommentMenu extends Menu {
 
@@ -30,6 +31,7 @@ public class CommentMenu extends Menu {
 
     @Override
     public void showMenu() {
+        UIComment.getInstance().showComment(currentComment);
         super.showMenu();
     }
 }
