@@ -6,11 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Post.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/ShowFeedCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/ShowFeedCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/BackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/BackCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/database/PostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/AppHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/AppHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/PostService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/PostMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/PostMenu.java" afterDir="false" />
     </list>
@@ -149,7 +147,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "copilot.chat.legacySessionMetadata.migrated": "true",
-    "git-widget-placeholder": "serban-backend",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend",
     "node.js.detected.package.eslint": "true",
@@ -165,10 +163,6 @@
 }]]></component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <envs>
-        <env name="POSTGRES_USERNAME" value="postgres" />
-        <env name="POSTGRES_PASSWORD" value="Mihai_123" />
-      </envs>
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
       <module name="Deltaspace" />
       <extension name="coverage">

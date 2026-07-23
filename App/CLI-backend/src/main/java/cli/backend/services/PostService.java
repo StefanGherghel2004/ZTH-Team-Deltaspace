@@ -114,4 +114,10 @@ public class PostService {
         postRepository.modifyUpVote(currentPost.getId(), currentPost.getUpVotes());
         postRepository.modifyDownVote(currentPost.getId(), currentPost.getDownVotes());
     }
+
+    public boolean canUserEditPost (User user, Post post) {
+        if (user == null || post == null)
+            return false;
+        return post.getAuthorUsername().equals(user.getUsername());
+    }
 }

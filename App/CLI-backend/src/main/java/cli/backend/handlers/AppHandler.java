@@ -15,6 +15,7 @@ public class AppHandler {
         LOGGED_IN,
         ON_COMMUNITY,
         ON_POST,
+        EDIT_POST,
         ON_COMMENT
     }
 
@@ -58,6 +59,7 @@ public class AppHandler {
             case LOGGED_IN -> new MainMenu();
             case ON_COMMUNITY -> new CommunityMenu(currentCommunity);
             case ON_POST -> new PostMenu(currentPost);
+            case EDIT_POST -> new EditPostMenu(currentPost);
             case ON_COMMENT -> new CommentMenu(currentComment);
         };
     }
