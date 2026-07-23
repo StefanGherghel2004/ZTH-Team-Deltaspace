@@ -2,6 +2,7 @@ package cli.backend.commands.mainmenu;
 
 import cli.backend.Post;
 import cli.backend.commands.Command;
+import cli.backend.database.PostRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PostService;
@@ -13,9 +14,10 @@ public class ShowFeedCommand implements Command {
         AppHandler app = AppHandler.getInstance();
         PostService postService = PostService.getInstance();
         Console console = Console.getInstance();
+        PostRepository postRepository = PostRepository.getInstance();
 
         console.info("\n--- Your Feed ---");
-        List<Post> posts = postService.getPosts();
+        List<Post> posts = postRepository.findAll();
 
         if (posts.isEmpty()) {
             console.getStringInput("Feed is empty.\nPress Enter to return...", true);

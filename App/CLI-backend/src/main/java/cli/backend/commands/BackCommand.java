@@ -32,7 +32,7 @@ public class BackCommand implements Command {
                 break;
 
             default:
-                System.out.println("Cum a ajuns aici");
+                System.out.println("Cum a ajuns aici?");
         }
 
         return true;
