@@ -36,6 +36,11 @@ public class Color {
         return apply(rgbCode, message);
     }
 
+    public static String stripAnsi(String text) {
+        if (text == null) return "";
+        return text.replaceAll("\u001B\\[[;\\d]*m", "");
+    }
+
     public static String applyGradientToText(String textBox, int[] startRGB, int[] endRGB) {
         return processGradient(textBox, startRGB, endRGB, false);
     }

@@ -4,6 +4,7 @@ import cli.backend.User;
 import cli.backend.loggers.Logger;
 
 import java.sql.*;
+import java.util.Map;
 
 public class VoteRepository {
     private static DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
@@ -120,5 +121,25 @@ public class VoteRepository {
             Logger.severe("Failed to get vote : "+ e.getMessage());
             return null;
         }
+    }
+
+    public Map<Long, Integer> getAllVotesForUser(long userId) {
+        java.util.Map<Long, Integer> userVotes = new java.util.HashMap<>();
+        String query = "SELECT post_id, value FROM votes WHERE user_id = ?";
+
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setLong(1, userId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    userVotes.put(resultSet.getLong("post_id"), resultSet.getInt("value"));
+                }
+            }
+        } catch (SQLException e) {
+            Logger.severe("Failed to fetch all user votes: " + e.getMessage());
+        }
+        return userVotes;
     }
 }

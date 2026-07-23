@@ -13,10 +13,7 @@ public class DownVoteCommand implements Command {
     public boolean execute() {
 
         AppHandler app = AppHandler.getInstance();
-        Console console = Console.getInstance();
-        Post currentPost = app.getCurrentPost();
         VoteService voteService = VoteService.getInstance();
-        Integer upvotes = currentPost.getUpVotes();
 
         voteService.downVote(app.getCurrentPost(),app.getCurrentUser());
 

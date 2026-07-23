@@ -82,4 +82,29 @@ public class ConsoleReader {
         }
     }
 
+    public String readMultiLine(boolean allowEmpty) {
+        while (true) {
+            StringBuilder content = new StringBuilder();
+
+            while (true) {
+                System.out.print("> ");
+                String line = scanner.nextLine();
+
+                if (line.trim().equalsIgnoreCase(":done")) {
+                    break;
+                }
+
+                content.append(line).append("\n");
+            }
+
+            String result = content.toString().trim();
+
+            if (allowEmpty || !result.isEmpty()) {
+                return result;
+            }
+
+            System.out.println(Color.textRed("Input cannot be empty. Try again."));
+        }
+    }
+
 }

@@ -12,7 +12,7 @@ public class ReplyToCommentCommand implements Command {
         AppHandler app = AppHandler.getInstance();
         Console console = Console.getInstance();
 
-        String text = console.getStringInput("Write reply");
+        String text = console.getMultiLineInput("Write reply");
 
         try {
             CommentService.getInstance().replyToComment(

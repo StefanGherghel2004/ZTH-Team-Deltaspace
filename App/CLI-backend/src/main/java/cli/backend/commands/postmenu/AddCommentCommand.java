@@ -13,7 +13,7 @@ public class AddCommentCommand implements Command {
         Console console = Console.getInstance();
 
         while (true) {
-            String text = console.getStringInput("Write comment: ");
+            String text = console.getMultiLineInput("Write comment: ");
             try {
                 CommentService.getInstance().addComment(app.getCurrentUser().getUsername(), app.getCurrentPost(), text);
                 console.success("Comment added successfully!");

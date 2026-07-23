@@ -5,6 +5,9 @@ import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommunityService;
+import cli.backend.userinterface.views.UICommunity;
+
+import java.util.List;
 
 public class ShowCommunitiesCommand implements Command {
     @Override
@@ -12,18 +15,13 @@ public class ShowCommunitiesCommand implements Command {
         AppHandler app = AppHandler.getInstance();
         CommunityService communityService = CommunityService.getInstance();
         Console console = Console.getInstance();
+        UICommunity uiCommunity = UICommunity.getInstance();
+        List<Community> communities = communityService.getCommunities();
 
-        console.info("\n--- Communities ---");
-        if (communityService.getCommunities().isEmpty()) {
-            console.info("No communities created.");
+        uiCommunity.showCommunitiesList(communities, app.getCurrentUser());
+
+        if (communities.isEmpty()) {
             return true;
-        }
-
-        for (Community c : communityService.getCommunities()) {
-            if(c.hasNSFWPost() && !app.getCurrentUser().checkAge()){
-                continue;
-            }
-            console.info(c.getNickname());
         }
 
         String communityName = console.getStringInput("Choose a community (or press Enter to go back): ", true);

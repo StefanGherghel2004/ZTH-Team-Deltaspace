@@ -2,10 +2,12 @@ package cli.backend.commands.mainmenu;
 
 import cli.backend.Post;
 import cli.backend.commands.Command;
-import cli.backend.database.PostRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PostService;
+import cli.backend.userinterface.views.UIPost;
+
+
 import java.util.List;
 
 public class ShowFeedCommand implements Command {
@@ -15,17 +17,13 @@ public class ShowFeedCommand implements Command {
         PostService postService = PostService.getInstance();
         Console console = Console.getInstance();
 
-        console.info("\n--- Your Feed ---");
         List<Post> posts = postService.getFeedFromRepository();
+        UIPost uiPost = UIPost.getInstance();
+
+        uiPost.showFeed(posts);
 
         if (posts.isEmpty()) {
-            console.getStringInput("Feed is empty.\nPress Enter to return...", true);
             return true;
-        }
-
-        for(Post post: posts) {
-            console.info("ID: " + post.getId() + " | Title: " + post.getPostTitle()
-                    + " | Community: " + post.getCommunityName()+" | Upvotes:"+ post.getUpVotes()+" | DownVotes:"+post.getDownVotes());
         }
 
         String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);

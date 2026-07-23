@@ -3,6 +3,7 @@ package cli.backend.userinterface.menus;
 import cli.backend.Post;
 import cli.backend.commands.*;
 import cli.backend.commands.postmenu.*;
+import cli.backend.userinterface.views.UIPost;
 
 public class PostMenu extends Menu {
 
@@ -20,7 +21,7 @@ public class PostMenu extends Menu {
         addOption("Delete Post", new DeletePostCommand());
         addOption("Edit Post", new OpenEditPostMenuCommand());
 
-        if(currentPost.getCommunityName().equalsIgnoreCase("u/" + currentPost.getAuthorUsername())) {
+        if(currentPost.getCommunityName() == null) {
             addOption("Back to Main Menu", new BackCommand());
         } else {
             addOption("Back to Community", new BackCommand());
@@ -29,14 +30,7 @@ public class PostMenu extends Menu {
 
     @Override
     public void showMenu() {
-        System.out.println("ID:        " + currentPost.getId());
-        System.out.println("Community: " + currentPost.getCommunityName());
-        System.out.println("Author:    u/" + currentPost.getAuthorUsername());
-        System.out.println("Title:     " + currentPost.getPostTitle());
-        System.out.println("NSFW:      " + (currentPost.isNSFW() ? "Yes" : "No"));
-        System.out.println("UpVotes:   " + currentPost.getUpVotes());
-        System.out.println("DownVotes: " + currentPost.getDownVotes());
-        System.out.println(currentPost.getPostContents());
+        UIPost.getInstance().showPostExpanded(currentPost);
         super.showMenu();
     }
 }

@@ -35,6 +35,13 @@ public class Console {
         System.out.print(prefix);
     }
 
+    public String getMultiLineInput(String prompt) {
+        System.out.println(prompt);
+        System.out.println(Color.textCyan("(Type your text. Press Enter for a new line. Type ':done' on an empty line to finish)"));
+
+        return reader.readMultiLine(false);
+    }
+
     public String getStringInput(String prompt) {
         System.out.println(prompt);
         printPromptPrefix();
