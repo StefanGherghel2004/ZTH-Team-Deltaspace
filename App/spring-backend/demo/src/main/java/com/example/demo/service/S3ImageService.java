@@ -30,11 +30,17 @@ public class S3ImageService {
     public String uploadImage(MultipartFile file, String filter) {
         try {
             String extension = getExtension(file);
-
             byte[] imageBytes;
-            if (filter != null && !filter.isEmpty()) {
-                imageBytes = imageEditService.edit(file, filter);
-            } else {
+
+            try {
+
+                if (filter != null && !filter.isEmpty()) {
+                    imageBytes = imageEditService.edit(file, filter);
+                } else {
+                    imageBytes = file.getBytes();
+                }
+            } catch (Exception e) {
+                // edit service is down so fallback to original image
                 imageBytes = file.getBytes();
             }
 
