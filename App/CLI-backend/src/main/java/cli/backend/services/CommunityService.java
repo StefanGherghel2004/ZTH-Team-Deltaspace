@@ -1,11 +1,13 @@
 package cli.backend.services;
 
 import cli.backend.Community;
+import cli.backend.User;
 import cli.backend.repositories.CommunityRepository;
 import cli.backend.exceptions.InvalidCommunityException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommunityService {
 
@@ -72,4 +74,12 @@ public class CommunityService {
     }
 
 
+    public boolean canUserEditCommunity(User currentUser, Community currentCommunity) {
+        return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreator());
+    }
+
+    public boolean canUserDeletePost(User currentUser, Community currentCommunity) {
+        return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreator());
+
+    }
 }

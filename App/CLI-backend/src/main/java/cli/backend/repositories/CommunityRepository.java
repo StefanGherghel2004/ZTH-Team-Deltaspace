@@ -113,4 +113,29 @@ public class CommunityRepository {
         }
         return dbCommunities;
     }
+
+    public boolean updateCommunity(Community currentCommunity) {
+        String query="update communities set name=?, description = ?, topic=?,updated_at=current_timestamp where id=?;";
+
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, currentCommunity.getNickname());
+            preparedStatement.setString(2, currentCommunity.getDescription());
+            preparedStatement.setString(3, currentCommunity.getTopic());
+            preparedStatement.setLong(4, currentCommunity.getId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                Logger.info("Successfully updated Community: " + currentCommunity.getNickname());
+                return true;
+            } else {
+                Logger.info("No post found with name: " + currentCommunity.getNickname() + " to update.");
+                return false;
+            }
+        }catch (SQLException e){
+            Logger.severe("Failed to update community: " + e.getMessage());
+            return false;
+        }
+        }
 }

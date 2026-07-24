@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/CreatePostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/BackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/BackCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/DeleteCommunityCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/DeleteCommunityCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/AppHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/handlers/AppHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/CommunityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/CommunityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/CommunityMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/CommunityMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +34,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/../.." value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="McpProjectServerCommands">
@@ -36,61 +47,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="0.0098204574184113" />
-      <entry key="MS500" value="0.42988270657916233" />
-      <entry key="S2" value="1.2438261970126039" />
-      <entry key="S5" value="1.8454473814397898" />
-      <entry key="S10" value="2.269807775378729" />
-      <entry key="S30" value="2.730099610424439" />
-      <entry key="S60" value="3.329078527669432" />
-      <entry key="M2" value="5.369421928011864" />
-      <entry key="M5" value="10.884722351498164" />
-      <entry key="M10" value="18.91514548498464" />
-      <entry key="M15" value="26.335420470704726" />
-      <entry key="M30" value="50.013270942952126" />
-      <entry key="H1" value="110.53312743051383" />
-      <entry key="H2" value="242.57887218644666" />
-      <entry key="H4" value="427.2149085410783" />
-      <entry key="D1" value="758.9716502006909" />
-      <entry key="W1" value="845.4367769832465" />
+      <entry key="MS100" value="6.197554428127285E-32" />
+      <entry key="MS500" value="5.760251582455062E-7" />
+      <entry key="S2" value="0.0398557926593928" />
+      <entry key="S5" value="0.5374702125203283" />
+      <entry key="S10" value="1.4496425764543872" />
+      <entry key="S30" value="3.445006270081804" />
+      <entry key="S60" value="5.513884611500739" />
+      <entry key="M2" value="9.336023280256992" />
+      <entry key="M5" value="18.537156330185702" />
+      <entry key="M10" value="33.12206897969464" />
+      <entry key="M15" value="48.43044643534851" />
+      <entry key="M30" value="90.0532284784664" />
+      <entry key="H1" value="162.11250326376413" />
+      <entry key="H2" value="299.21941062036035" />
+      <entry key="H4" value="499.0104217492079" />
+      <entry key="D1" value="886.776354329606" />
+      <entry key="W1" value="992.7416101280394" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000011107765068" />
-      <entry key="S2" value="1.0324643469780521" />
-      <entry key="S5" value="1.2538415252173816" />
-      <entry key="S10" value="1.5038270565402634" />
-      <entry key="S30" value="1.8116668059993204" />
-      <entry key="S60" value="2.3398513513810286" />
-      <entry key="M2" value="4.862993271841251" />
-      <entry key="M5" value="13.541837409296752" />
-      <entry key="M10" value="25.316503898715958" />
-      <entry key="M15" value="34.723141317820065" />
-      <entry key="M30" value="58.52939155635068" />
-      <entry key="H1" value="102.15459791207032" />
-      <entry key="H2" value="174.60368764739658" />
-      <entry key="H4" value="260.6117167112562" />
-      <entry key="D1" value="399.4456152560581" />
-      <entry key="W1" value="433.86088193183787" />
+      <entry key="MS500" value="1.0001667827682752" />
+      <entry key="S2" value="1.15229439888918" />
+      <entry key="S5" value="1.6917931708478784" />
+      <entry key="S10" value="2.1847362752889166" />
+      <entry key="S30" value="3.518800496434879" />
+      <entry key="S60" value="5.61397844401103" />
+      <entry key="M2" value="8.54431686755869" />
+      <entry key="M5" value="15.516966073861179" />
+      <entry key="M10" value="28.982986640042558" />
+      <entry key="M15" value="43.666110857357765" />
+      <entry key="M30" value="84.25754978105287" />
+      <entry key="H1" value="147.10566000893" />
+      <entry key="H2" value="237.93485584467513" />
+      <entry key="H4" value="344.2898459135176" />
+      <entry key="D1" value="522.3373359933063" />
+      <entry key="W1" value="567.8303204918383" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.018964950377052155" />
-      <entry key="MS500" value="0.8150090796390052" />
-      <entry key="S2" value="2.043982192284756" />
-      <entry key="S5" value="2.9488395921001898" />
-      <entry key="S10" value="3.665928170429973" />
-      <entry key="S30" value="4.491853385528033" />
-      <entry key="S60" value="5.629518210633481" />
-      <entry key="M2" value="10.180360221033993" />
-      <entry key="M5" value="24.366217125134263" />
-      <entry key="M10" value="44.17581486119447" />
-      <entry key="M15" value="61.00746404585725" />
-      <entry key="M30" value="108.49787694798628" />
-      <entry key="H1" value="212.64489917646404" />
-      <entry key="H2" value="417.1426321704075" />
-      <entry key="H4" value="687.7952562313839" />
-      <entry key="D1" value="1158.4089081253514" />
-      <entry key="W1" value="1279.2963532672052" />
+      <entry key="MS100" value="0.003670010739117232" />
+      <entry key="MS500" value="0.3257950254673642" />
+      <entry key="S2" value="0.8719229358115048" />
+      <entry key="S5" value="1.9366870410997223" />
+      <entry key="S10" value="3.3651120911757286" />
+      <entry key="S30" value="6.7767340175892" />
+      <entry key="S60" value="10.984754363293401" />
+      <entry key="M2" value="17.774551384520567" />
+      <entry key="M5" value="33.97712348328016" />
+      <entry key="M10" value="62.02963541226331" />
+      <entry key="M15" value="92.01892382274185" />
+      <entry key="M30" value="174.2350264159832" />
+      <entry key="H1" value="309.15154878440967" />
+      <entry key="H2" value="537.0988926219652" />
+      <entry key="H4" value="843.2590021864219" />
+      <entry key="D1" value="1409.1029028254225" />
+      <entry key="W1" value="1560.5702448658142" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -132,30 +143,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "serban-backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/serba/AppData/Roaming/SPB_Data/ZTH-Team-Deltaspace/App/CLI-backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="cli.backend.Main" />
@@ -172,6 +183,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
