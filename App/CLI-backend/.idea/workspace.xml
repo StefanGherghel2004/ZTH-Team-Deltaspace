@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/EditUserCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/mainmenu/EditUserCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/readers/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/readers/Console.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
