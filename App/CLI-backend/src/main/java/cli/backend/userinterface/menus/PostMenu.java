@@ -13,6 +13,9 @@ public class PostMenu extends Menu {
         this.currentPost = currentPost;
 
         setTitle("Post Actions");
+        if (currentPost.getImageLink() != null) {
+            addOption("Open Image", new OpenImageCommand());
+        }
         addOption("Show comments", new ShowCommentsCommand());
         addOption("Add comment", new AddCommentCommand());
         addOption("Select comment (Reply)", new SelectCommentCommand());

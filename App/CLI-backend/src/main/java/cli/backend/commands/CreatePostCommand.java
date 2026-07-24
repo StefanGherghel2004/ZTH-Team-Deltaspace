@@ -8,6 +8,8 @@ import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PostService;
 
+import java.io.IOException;
+
 
 public class CreatePostCommand implements Command {
     @Override
@@ -45,19 +47,23 @@ public class CreatePostCommand implements Command {
             imagePath = null;
         }
 
+        String imageFilter = console.getStringInput("Please enter filter (or press Enter to skip):", true);
+        if (imageFilter.isEmpty()) {
+            imageFilter = null;
+        }
+
         boolean NSFW = console.getUserConfirmation("Is your post NSFW? [yes/no]");
 
         if (NSFW && !app.getCurrentUser().checkAge()) {
             console.error("You must be at least 18 years old to create an NSFW post.");
         } else {
             try{
-                String savedImagePath=checkImage.processAndSaveImage(imagePath);
                     Post newPost = postService.addPost(app.getCurrentUser().getUsername(), postTitle, postContents,
-                            savedImagePath, NSFW, targetCommunity,0,0);
+                            imagePath, imageFilter, NSFW, targetCommunity);
                     console.success("Post created successfully!");
                     app.setCurrentPost(newPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
-                }catch (IllegalArgumentException | java.io.IOException e) {
+                }catch (IllegalArgumentException | IOException e) {
                 console.error(e.getMessage());
                 Logger.severe("Post could not be created :" + e.getMessage());
             }

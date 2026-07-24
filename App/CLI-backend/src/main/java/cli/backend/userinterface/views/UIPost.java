@@ -21,6 +21,7 @@ public class UIPost {
 
     private static final String UPVOTE_SYMBOL = "▲ ";
     private static final String DOWNVOTE_SYMBOL = "▼ ";
+    private static final String IMAGE_SYMBOL = "[IMG]";
 
     private static UIPost instance;
 
@@ -89,6 +90,11 @@ public class UIPost {
 
         List<String> wrappedContent = TextWrapper.wrap(post.getPostContents(), MAX_TEXT_WIDTH);
         lines.addAll(wrappedContent);
+
+        if (post.getImageLink() != null) {
+            lines.add("");
+            lines.add(IMAGE_SYMBOL);
+        }
 
         lines.add("");
         lines.add(formatVotes(post, vote));

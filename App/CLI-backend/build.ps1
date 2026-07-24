@@ -1,18 +1,19 @@
 $ErrorActionPreference = "Stop"
 
+$DOCKER_USER = "stefangherghel"
 $IMAGE_NAME = "deltaspace"
 $IMAGE_VERSION = "latest"
 
-Write-Host "### Pasul 1: Construirea imaginii Docker... ###" -ForegroundColor Blue
+Write-Host "### Pasul 1: Building image... ###" -ForegroundColor Blue
 docker build -t "${IMAGE_NAME}:${IMAGE_VERSION}" .
-if ($LASTEXITCODE -ne 0) { throw "Eroare la construirea imaginii Docker!" }
+if ($LASTEXITCODE -ne 0) { throw "Error while building image" }
 
-Write-Host "`n### Pasul 2: Salvarea imaginii Docker intr-o arhiva tar... ###" -ForegroundColor Blue
-docker save -o "${IMAGE_NAME}.tar" "${IMAGE_NAME}:${IMAGE_VERSION}"
-if ($LASTEXITCODE -ne 0) { throw "Eroare la salvarea imaginii Docker!" }
+Write-Host "`n### Pasul 2: Tag image for Docker Hub ###" -ForegroundColor Blue
+docker tag "${IMAGE_NAME}:${IMAGE_VERSION}" "${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_VERSION}"
+if ($LASTEXITCODE -ne 0) { throw "Error while adding tag!" }
 
-Write-Host "`n### Pasul 3: Crearea arhivei proiectului... ###" -ForegroundColor Blue
-tar -czvf "${IMAGE_NAME}-with-code.tar.gz" "${IMAGE_NAME}.tar" Dockerfile build.ps1 pom.xml src
-if ($LASTEXITCODE -ne 0) { throw "Eroare la arhivare!" }
+Write-Host "`n### Pasul 3: Push image on Docker Hub ###" -ForegroundColor Blue
+docker push "${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_VERSION}"
+if ($LASTEXITCODE -ne 0) { throw "Error while pushing image" }
 
-Write-Host "`n### Proces finalizat cu succes! ###" -ForegroundColor Green
+Write-Host "`n### Done! ###" -ForegroundColor Green

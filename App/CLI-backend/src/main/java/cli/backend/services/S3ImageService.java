@@ -1,10 +1,9 @@
-package com.example.demo.service;
+package cli.backend.services;
 
-import com.example.demo.exception.FileStorageException;
+import cli.backend.exceptions.FileStorageException;
+import cli.backend.userinterface.readers.Console;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -14,33 +13,35 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 import java.io.IOException;
 import java.util.UUID;
 
-@Service
+
 @RequiredArgsConstructor
 public class S3ImageService {
 
     private final S3Client s3Client;
     private final ImageEditService imageEditService;
 
-    @Value("${aws.s3.bucket-name}")
-    private String bucketName;
-
-    @Value("${aws.s3.region}")
-    private String region;
+    private static final String BUCKET_NAME = "reddit-clone-deltaspace-eu";
+    private static final String REGION = "eu-central-1";
 
     public String uploadImage(MultipartFile file, String filter) {
+        if (file == null ) {
+            return null;
+        }
+
         try {
             String extension = getExtension(file);
+
             byte[] imageBytes;
 
             try {
-
                 if (filter != null && !filter.isEmpty()) {
                     imageBytes = imageEditService.edit(file, filter);
                 } else {
                     imageBytes = file.getBytes();
                 }
             } catch (Exception e) {
-                // edit service is down so fallback to original image
+
+                Console.getInstance().error("Edit service is down. Uploading original image");
                 imageBytes = file.getBytes();
             }
 
@@ -56,7 +57,7 @@ public class S3ImageService {
 
     private String uploadBytes(byte[] data, String fileName, String contentType) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(BUCKET_NAME)
                 .key(fileName)
                 .contentType(contentType)
                 .build();
@@ -67,7 +68,7 @@ public class S3ImageService {
             throw new FileStorageException("Error from S3 upload service: " + e.awsErrorDetails().errorMessage());
         }
 
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", BUCKET_NAME, REGION, fileName);
     }
 
     private static @NonNull String getExtension(MultipartFile file) {

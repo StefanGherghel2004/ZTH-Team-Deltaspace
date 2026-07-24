@@ -58,7 +58,7 @@ public class UserService {
         }
 
         if (updateDto.getProfilePicture() != null && !updateDto.getProfilePicture().isEmpty()) {
-            String imageUrl = s3ImageService.uploadImage(updateDto.getProfilePicture());
+            String imageUrl = s3ImageService.uploadImage(updateDto.getProfilePicture(), null);
             user.setProfilePictureUrl(imageUrl);
         }
 

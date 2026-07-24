@@ -4,6 +4,7 @@ import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.exception.notfound.UserNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,11 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "This token expired.", request, null);
+    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception e, HttpServletRequest request) {
