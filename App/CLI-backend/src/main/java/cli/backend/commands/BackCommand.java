@@ -31,6 +31,8 @@ public class BackCommand implements Command {
                 app.setCurrentState(AppHandler.State.ON_POST);
                 break;
 
+            case EDIT_COMMUNITY:
+                app.setCurrentState(AppHandler.State.ON_COMMUNITY);
             case EDIT_USER:
                 app.setCurrentState(AppHandler.State.LOGGED_IN);
                 break;
