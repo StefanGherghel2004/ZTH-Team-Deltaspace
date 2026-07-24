@@ -39,7 +39,7 @@ public class PostService {
         post.setAuthor(author);
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-            String imageUrl = s3ImageService.uploadImage(dto.getImage());
+            String imageUrl = s3ImageService.uploadImage(dto.getImage(), dto.getFilter());
             post.setImageLink(imageUrl);
         }
 
@@ -87,7 +87,7 @@ public class PostService {
         post.setContent(updateDto.getContent());
         post.setNsfw(updateDto.isNsfw());
         if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
-            String imageLink = s3ImageService.uploadImage(updateDto.getImage());
+            String imageLink = s3ImageService.uploadImage(updateDto.getImage(), updateDto.getFilter());
             post.setImageLink(imageLink);
         }
 

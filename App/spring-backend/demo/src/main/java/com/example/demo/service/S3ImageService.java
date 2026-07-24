@@ -19,6 +19,7 @@ import java.util.UUID;
 public class S3ImageService {
 
     private final S3Client s3Client;
+    private final ImageEditService imageEditService;
 
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
@@ -26,26 +27,41 @@ public class S3ImageService {
     @Value("${aws.s3.region}")
     private String region;
 
-    public String uploadImage(MultipartFile file) {
-        String extension = getExtension(file);
-        String uniqueFileName = UUID.randomUUID() + extension;
+    public String uploadImage(MultipartFile file, String filter) {
+        try {
+            String extension = getExtension(file);
 
+            byte[] imageBytes;
+            if (filter != null && !filter.isEmpty()) {
+                imageBytes = imageEditService.edit(file, filter);
+            } else {
+                imageBytes = file.getBytes();
+            }
+
+            String uniqueFileName = UUID.randomUUID() + extension;
+
+            return uploadBytes(imageBytes, uniqueFileName, file.getContentType());
+
+        } catch (IOException e) {
+            throw new FileStorageException("Error parsing file for upload: " + e.getMessage());
+        }
+
+    }
+
+    private String uploadBytes(byte[] data, String fileName, String contentType) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key(uniqueFileName)
-                .contentType(file.getContentType())
+                .key(fileName)
+                .contentType(contentType)
                 .build();
 
-
         try {
-            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-        } catch (IOException e) {
-            throw new FileStorageException("Error parsing file for upload");
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(data));
         } catch (S3Exception e) {
             throw new FileStorageException("Error from S3 upload service: " + e.awsErrorDetails().errorMessage());
         }
 
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, uniqueFileName);
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
     }
 
     private static @NonNull String getExtension(MultipartFile file) {

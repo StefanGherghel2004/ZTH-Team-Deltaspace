@@ -11,6 +11,8 @@ public class PostCreateDto {
     private String content;
     private boolean nsfw;
 
+    private String filter;
+
     private String communityName;
 
     private MultipartFile image;
