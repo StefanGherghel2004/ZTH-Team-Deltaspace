@@ -12,9 +12,8 @@ public class MainMenu extends Menu{
         addOption("Create community", new CreateCommunityCommand());
         addOption("Create Post", new CreatePostCommand());
         addOption("Show communities", new ShowCommunitiesCommand());
-        addOption("Logout", new LogoutCommand());
         addOption("Edit Account", new OpenEditUserMenuCommand());
-        addOption("Delete Account",new DeleteUserCommand());
+        addOption("Logout", new LogoutCommand());
     }
 
     @Override

@@ -96,7 +96,7 @@ public class EditUserCommand implements Command {
 
             default -> {
                 console.error("Invalid edit operation: " + editType);
-                app.setCurrentState(AppHandler.State.LOGGED_IN);
+                app.setCurrentState(AppHandler.State.EDIT_USER);
                 return true;
             }
         }
@@ -109,7 +109,7 @@ public class EditUserCommand implements Command {
             console.error("Failed to update user in database.");
         }
 
-        app.setCurrentState(AppHandler.State.LOGGED_IN);
+        app.setCurrentState(AppHandler.State.EDIT_USER);
         return true;
     }
 }
