@@ -1,10 +1,7 @@
 package cli.backend.userinterface.menus;
 
 import cli.backend.commands.*;
-import cli.backend.commands.mainmenu.CreateCommunityCommand;
-import cli.backend.commands.mainmenu.LogoutCommand;
-import cli.backend.commands.mainmenu.ShowCommunitiesCommand;
-import cli.backend.commands.mainmenu.ShowFeedCommand;
+import cli.backend.commands.mainmenu.*;
 import cli.backend.commands.startmenu.DeleteUserCommand;
 
 public class MainMenu extends Menu{
@@ -15,8 +12,8 @@ public class MainMenu extends Menu{
         addOption("Create community", new CreateCommunityCommand());
         addOption("Create Post", new CreatePostCommand());
         addOption("Show communities", new ShowCommunitiesCommand());
+        addOption("Edit Account", new OpenEditUserMenuCommand());
         addOption("Logout", new LogoutCommand());
-        addOption("Delete Account",new DeleteUserCommand());
     }
 
     @Override

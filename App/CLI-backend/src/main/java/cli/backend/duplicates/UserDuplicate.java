@@ -1,6 +1,6 @@
 package cli.backend.duplicates;
 
-import cli.backend.database.UserRepository;
+import cli.backend.repositories.UserRepository;
 
 
 public class UserDuplicate implements  CheckDuplicate{

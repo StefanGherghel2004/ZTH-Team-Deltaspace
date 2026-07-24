@@ -23,7 +23,7 @@ public class DeleteCommunityCommand implements Command {
 
         boolean confirmation = console.getUserConfirmation("Are you sure you want to delete this community? (yes/no): ");
 
-        if (confirmation) {
+        if (confirmation && communityService.canUserDeletePost(appHandler.getCurrentUser(),currentCommunity)) {
             boolean removed = communityService.deleteCommunity(currentCommunity);
 
             if (removed) {

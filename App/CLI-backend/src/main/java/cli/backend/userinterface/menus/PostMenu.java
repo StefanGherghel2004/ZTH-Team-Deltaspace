@@ -18,7 +18,6 @@ public class PostMenu extends Menu {
         addOption("Select comment (Reply)", new SelectCommentCommand());
         addOption("UpVote", new UpVoteCommand());
         addOption("DownVote",new DownVoteCommand());
-        addOption("Delete Post", new DeletePostCommand());
         addOption("Edit Post", new OpenEditPostMenuCommand());
 
         if(currentPost.getCommunityName() == null) {

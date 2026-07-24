@@ -1,5 +1,5 @@
 package cli.backend;
-import cli.backend.database.*;
+import cli.backend.repositories.*;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.*;
 import java.io.IOException;

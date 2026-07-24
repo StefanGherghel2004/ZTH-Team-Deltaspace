@@ -3,6 +3,7 @@ package cli.backend.commands;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.handlers.AppHandler;
+import cli.backend.loggers.Logger;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommunityService;
 import cli.backend.services.PostService;
@@ -57,7 +58,8 @@ public class CreatePostCommand implements Command {
                     app.setCurrentPost(newPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
                 }catch (IllegalArgumentException | java.io.IOException e) {
-                console.error("Post creation aborted. Please try again with a valid image.");
+                console.error(e.getMessage());
+                Logger.severe("Post could not be created :" + e.getMessage());
             }
         }
 

@@ -5,6 +5,7 @@ import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.commands.Command;
+import cli.backend.userinterface.menus.EditUserMenu;
 import cli.backend.userinterface.readers.ConsoleReader;
 import cli.backend.userinterface.menus.*;
 
@@ -14,8 +15,10 @@ public class AppHandler {
         NOT_LOGGED_IN,
         LOGGED_IN,
         ON_COMMUNITY,
+        EDIT_COMMUNITY,
         ON_POST,
         EDIT_POST,
+        EDIT_USER,
         ON_COMMENT
     }
 
@@ -58,8 +61,10 @@ public class AppHandler {
             case NOT_LOGGED_IN -> new StartMenu();
             case LOGGED_IN -> new MainMenu();
             case ON_COMMUNITY -> new CommunityMenu(currentCommunity);
+            case EDIT_COMMUNITY -> new EditCommunityMenu(currentCommunity);
             case ON_POST -> new PostMenu(currentPost);
             case EDIT_POST -> new EditPostMenu(currentPost);
+            case EDIT_USER -> new EditUserMenu(currentUser);
             case ON_COMMENT -> new CommentMenu(currentComment);
         };
     }

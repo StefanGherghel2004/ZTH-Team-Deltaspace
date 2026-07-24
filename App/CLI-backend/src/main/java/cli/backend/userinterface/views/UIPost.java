@@ -19,8 +19,8 @@ import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
 
 public class UIPost {
 
-    private static final String UPVOTE_SYMBOL = "[+] ";
-    private static final String DOWNVOTE_SYMBOL = "[-] ";
+    private static final String UPVOTE_SYMBOL = "▲ ";
+    private static final String DOWNVOTE_SYMBOL = "▼ ";
 
     private static UIPost instance;
 

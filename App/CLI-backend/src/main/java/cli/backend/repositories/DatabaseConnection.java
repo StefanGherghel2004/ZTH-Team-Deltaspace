@@ -1,4 +1,4 @@
-package cli.backend.database;
+package cli.backend.repositories;
 
 import cli.backend.loggers.Logger;
 

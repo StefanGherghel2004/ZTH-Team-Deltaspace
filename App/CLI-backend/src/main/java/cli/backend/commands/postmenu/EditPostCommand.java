@@ -2,7 +2,7 @@ package cli.backend.commands.postmenu;
 
 import cli.backend.Post;
 import cli.backend.commands.Command;
-import cli.backend.database.PostRepository;
+import cli.backend.repositories.PostRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.services.PostService;
 import cli.backend.userinterface.readers.Console;

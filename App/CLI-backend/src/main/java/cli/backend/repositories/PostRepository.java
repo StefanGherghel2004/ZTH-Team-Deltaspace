@@ -1,4 +1,4 @@
-package cli.backend.database;
+package cli.backend.repositories;
 
 import cli.backend.Post;
 import cli.backend.loggers.Logger;
@@ -19,7 +19,7 @@ public class PostRepository {
             post_title VARCHAR(255) NOT NULL,
             post_contents TEXT,
             image_link VARCHAR(500),
-            community_name VARCHAR(100) REFERENCES communities(name) ON DELETE CASCADE,
+            community_name VARCHAR(100) REFERENCES communities(name) ON DELETE CASCADE ON UPDATE CASCADE,
             nsfw BOOLEAN DEFAULT FALSE,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -35,17 +35,15 @@ public class PostRepository {
 
     private static final String updatePostQuery =
             """
-        
             UPDATE posts 
-        SET post_title = ?,
-                    post_contents = ?, 
-            image_link = ?,
-                    community_name = ?, 
-            nsfw = ?,
-                    updated_at =
-            CURRENT_TIMESTAMP
-        WHERE id = ?;
-        """;
+            SET post_title = ?,
+                post_contents = ?, 
+                image_link = ?,
+                community_name = ?, 
+                nsfw = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?;
+            """;
 
     private static final String deletePostByIdQuery = "DELETE FROM posts WHERE id = ?;";
 

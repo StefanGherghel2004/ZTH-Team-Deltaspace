@@ -1,8 +1,7 @@
 package cli.backend.duplicates;
 
 import cli.backend.Community;
-import cli.backend.database.CommentRepository;
-import cli.backend.database.CommunityRepository;
+import cli.backend.repositories.CommunityRepository;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package cli.backend.services;
 
 import cli.backend.Post;
 import cli.backend.User;
-import cli.backend.database.PostRepository;
-import cli.backend.database.VoteRepository;
+import cli.backend.repositories.PostRepository;
+import cli.backend.repositories.VoteRepository;
 
 public class VoteService {
     private static VoteService instance;
