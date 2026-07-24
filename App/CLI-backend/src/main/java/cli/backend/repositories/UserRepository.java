@@ -99,7 +99,7 @@ public class UserRepository {
             return false;
         }
         String updateUserQuery = """
-            UPDATE posts 
+            UPDATE users
             SET username = ?,
                 email = ?, 
                 password = ?,
@@ -115,6 +115,8 @@ public class UserRepository {
             preparedStatement.setString(2,user.getEmail());
             preparedStatement.setString(3,user.getPassword());
             preparedStatement.setDate(4,Date.valueOf(user.getDateOfBirth()));
+
+            preparedStatement.setLong(5,user.getId());
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {

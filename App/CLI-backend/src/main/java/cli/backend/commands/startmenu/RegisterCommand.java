@@ -39,14 +39,14 @@ public class RegisterCommand implements Command {
         String email;
         while(true){
             email = console.getStringInput("Please enter your email address:");
-        if(!userService.validateEmail(email)) {
-            console.error("Invalid email format. Must be like 'user@domain.com'.");
-            continue;
-        }
-        if(userCheck.isDuplicate(email)) {
-            console.error("Email already exists. Please use a different email address.");
-            continue;
-        }
+            if(!userService.validateEmail(email)) {
+                console.error("Invalid email format. Must be like 'user@domain.com'.");
+                continue;
+            }
+            if(userCheck.isDuplicate(email)) {
+                console.error("Email already exists. Please use a different email address.");
+                continue;
+            }
 
             break;
         }
