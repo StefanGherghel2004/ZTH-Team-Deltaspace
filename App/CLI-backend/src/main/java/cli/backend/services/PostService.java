@@ -2,14 +2,28 @@ package cli.backend.services;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
+import cli.backend.commands.CheckImage;
+import cli.backend.config.S3ClientFactory;
 import cli.backend.repositories.PostRepository;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
+import java.io.IOException;
 import java.util.List;
 
 public class PostService {
 
     private static PostService instance;
     private final PostRepository postRepository = PostRepository.getInstance();
+
+    private final ImageEditService imageEditService;
+    private final S3ImageService s3ImageService;
+
+    private PostService() {
+        S3Client s3Client = S3ClientFactory.createS3Client();
+        this.imageEditService = new ImageEditService();
+        this.s3ImageService = new S3ImageService(s3Client, imageEditService);
+    }
 
     public static synchronized PostService getInstance(){
         if(instance == null){
@@ -18,10 +32,15 @@ public class PostService {
         return instance;
     }
 
-    public Post addPost(String authorUsername, String postTitle, String postContents, String imageLink, boolean NSFW, Community currentCommunity,Integer upVotes, Integer downVotes){
+    public Post addPost(String authorUsername, String postTitle, String postContents,
+                        String imagePath, String imageFilter, boolean NSFW, Community
+                                currentCommunity) throws IOException {
         String targetName = (currentCommunity != null) ? currentCommunity.getNickname() : null;
 
-        Post newPost = new Post(authorUsername, postTitle, postContents, imageLink, NSFW, targetName,upVotes,downVotes);
+        MultipartFile file = CheckImage.getInstance().convertToMultipartFile(imagePath);
+        String imageLink = s3ImageService.uploadImage(file, imageFilter);
+        Post newPost = new Post(authorUsername, postTitle, postContents,
+                imageLink, NSFW, targetName, 0, 0);
 
         postRepository.addPost(newPost);
         return newPost;

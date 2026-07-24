@@ -1,14 +1,18 @@
 package cli.backend.commands;
 
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 public class CheckImage {
 
+    private static final int MAX_SIZE = 5;
     private static CheckImage instance;
+
     public static CheckImage getInstance(){
         if(instance==null){
             instance=new CheckImage();
@@ -16,39 +20,44 @@ public class CheckImage {
         return instance;
     }
 
-    public String processAndSaveImage(String filePath) throws  IOException{
-        if(filePath==null || filePath.trim().isEmpty()){
+    public MultipartFile convertToMultipartFile(String filePath) throws IOException {
+        if (filePath == null || filePath.trim().isEmpty()) {
             return null;
         }
-        Path sourcePath = Paths.get(filePath);
 
-        if(!Files.exists(sourcePath) || Files.isDirectory(sourcePath)){
+        Path path = Paths.get(filePath);
+        if (!Files.exists(path) || Files.isDirectory(path)) {
             throw new IllegalArgumentException("File does not exist");
         }
 
-        if(!checkDimension(sourcePath)){
-            throw new IllegalArgumentException("File size exceeds 2MB limit!");
+        String originalFilename = path.getFileName().toString();
+        if (!checkFormat(originalFilename.toLowerCase())) {
+            throw new IllegalArgumentException("File type not supported. Only PNG, JPG, and JPEG are allowed.");
         }
 
-        String name = sourcePath.getFileName().toString().toLowerCase();
-        if(!checkFormat(name)){
-            throw  new IllegalArgumentException("File type not supported");
+        if (!checkDimension(path)) {
+            throw new IllegalArgumentException("File size exceeds " + MAX_SIZE + "MB");
         }
 
-        Path assetsDir = Paths.get("assets", "images");
-        Files.createDirectories(assetsDir);
+        byte[] fileBytes = Files.readAllBytes(path);
+        String contentType = "image/jpeg";
+        String lowerName = originalFilename.toLowerCase();
+        if (lowerName.endsWith(".png")) {
+            contentType = "image/png";
+        }
 
-        String newFileName = System.currentTimeMillis() + "_" + sourcePath.getFileName();
-        Path targetPath = assetsDir.resolve(newFileName);
-        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-        return targetPath.toString();
+        return new MockMultipartFile(
+                "file",
+                originalFilename,
+                contentType,
+                fileBytes
+        );
     }
 
     public boolean checkDimension(Path path) throws IOException {
         long size = Files.size(path);
         double MBsize= (double) size /1024/1024;
-        return !(MBsize > 2);
+        return !(MBsize > MAX_SIZE);
     }
 
     public boolean checkFormat(String name) {
