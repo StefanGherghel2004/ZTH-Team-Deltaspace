@@ -14,6 +14,7 @@ public class EditPostMenu extends Menu{
         setTitle("Edit post actions");
         addOption("Edit post contents", new EditPostCommand("contents"));
         addOption("Edit post nsfw tag", new EditPostCommand("nsfw"));
+        addOption("Delete Post", new DeletePostCommand());
         addOption("Back to post", new BackCommand());
     }
 
