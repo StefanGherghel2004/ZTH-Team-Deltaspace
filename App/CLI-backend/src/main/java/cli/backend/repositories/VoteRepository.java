@@ -1,6 +1,5 @@
-package cli.backend.database;
+package cli.backend.repositories;
 
-import cli.backend.User;
 import cli.backend.loggers.Logger;
 
 import java.sql.*;

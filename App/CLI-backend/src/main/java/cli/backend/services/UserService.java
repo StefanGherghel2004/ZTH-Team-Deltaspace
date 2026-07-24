@@ -1,7 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.User;
-import cli.backend.database.UserRepository;
+import cli.backend.repositories.UserRepository;
 import cli.backend.exceptions.DeletedAccountException;
 import cli.backend.exceptions.InvalidUserAccountException;
 

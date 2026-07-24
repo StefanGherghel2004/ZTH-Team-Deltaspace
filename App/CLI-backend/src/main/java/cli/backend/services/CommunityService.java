@@ -1,8 +1,7 @@
 package cli.backend.services;
 
 import cli.backend.Community;
-import cli.backend.Post;
-import cli.backend.database.CommunityRepository;
+import cli.backend.repositories.CommunityRepository;
 import cli.backend.exceptions.InvalidCommunityException;
 
 import java.util.ArrayList;

@@ -5,11 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0fab6f0-e2b4-4182-aa1c-7782ec0b107f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/EditPostMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/EditPostMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/PostMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/menus/PostMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/views/UIPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/userinterface/views/UIPost.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/communitymenu/ShowPostsInCommunityCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/postmenu/EditPostCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/postmenu/EditPostCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/commands/postmenu/SelectCommentCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/commands/postmenu/SelectCommentCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/CommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/CommentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/CommunityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/CommunityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/PostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/database/VoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/repositories/VoteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/CommunityDuplicate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/CommunityDuplicate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/UserDuplicate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/duplicates/UserDuplicate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/CommunityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/PostService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cli/backend/services/VoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cli/backend/services/VoteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

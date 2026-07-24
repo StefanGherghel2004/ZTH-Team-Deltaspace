@@ -1,9 +1,7 @@
-package cli.backend.database;
+package cli.backend.repositories;
 
 import cli.backend.Community;
-import cli.backend.Post;
 import cli.backend.loggers.Logger;
-import cli.backend.services.PostService;
 
 import java.sql.*;
 import java.time.LocalDateTime;

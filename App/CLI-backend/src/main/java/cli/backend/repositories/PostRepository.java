@@ -1,4 +1,4 @@
-package cli.backend.database;
+package cli.backend.repositories;
 
 import cli.backend.Post;
 import cli.backend.loggers.Logger;
@@ -35,17 +35,15 @@ public class PostRepository {
 
     private static final String updatePostQuery =
             """
-        
             UPDATE posts 
-        SET post_title = ?,
-                    post_contents = ?, 
-            image_link = ?,
-                    community_name = ?, 
-            nsfw = ?,
-                    updated_at =
-            CURRENT_TIMESTAMP
-        WHERE id = ?;
-        """;
+            SET post_title = ?,
+                post_contents = ?, 
+                image_link = ?,
+                community_name = ?, 
+                nsfw = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?;
+            """;
 
     private static final String deletePostByIdQuery = "DELETE FROM posts WHERE id = ?;";
 

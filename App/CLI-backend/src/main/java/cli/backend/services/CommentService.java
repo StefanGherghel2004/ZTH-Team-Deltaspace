@@ -4,7 +4,7 @@ import cli.backend.Comment;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
-import cli.backend.database.CommentRepository;
+import cli.backend.repositories.CommentRepository;
 import cli.backend.exceptions.EmptyCommentException;
 
 import java.util.ArrayList;

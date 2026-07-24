@@ -2,11 +2,8 @@ package cli.backend.services;
 import cli.backend.Community;
 import cli.backend.Post;
 import cli.backend.User;
-import cli.backend.database.PostRepository;
-import cli.backend.database.VoteRepository;
+import cli.backend.repositories.PostRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PostService {
