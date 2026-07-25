@@ -15,6 +15,9 @@ import static cli.backend.userinterface.textformatters.Theme.formatTopic;
 
 public class UICommunity {
 
+    private final static String HEADER_COMMUNITIES = "\n--- Communities ---";
+    private final static String NO_COMMUNITIES = "No communities created.";
+
     private static UICommunity instance;
     private final Console console;
 
@@ -30,10 +33,10 @@ public class UICommunity {
     }
 
     public void showCommunitiesList(List<Community> communities, User user) {
-        console.info("\n--- Communities ---");
+        console.info(HEADER_COMMUNITIES);
 
         if (communities.isEmpty()) {
-            console.info("No communities created.");
+            console.info(NO_COMMUNITIES);
             return;
         }
 
