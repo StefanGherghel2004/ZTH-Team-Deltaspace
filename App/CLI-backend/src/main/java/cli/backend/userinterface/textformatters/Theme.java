@@ -27,4 +27,19 @@ public class Theme {
     public static String formatUsername(String username) {
         return Color.textCyan(username);
     }
+
+    public static String formatTopic(String topic) {
+        if (topic == null) return "N/A";
+
+        String colorTopic = switch (topic.toLowerCase()) {
+            case "food" -> Color.textYellow(topic);
+            case "gaming" -> Color.textRed(topic);
+            case "science" -> Color.textBrightMagenta(topic);
+            case "art" -> Color.textMagenta(topic);
+            case "tech" -> Color.textBrightBlue(topic);
+            default -> topic;
+        };
+
+        return colorTopic;
+    }
 }

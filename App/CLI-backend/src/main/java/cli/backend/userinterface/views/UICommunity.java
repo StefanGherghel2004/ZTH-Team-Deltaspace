@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
+import static cli.backend.userinterface.textformatters.Theme.formatTopic;
 
 public class UICommunity {
 
@@ -52,7 +53,7 @@ public class UICommunity {
         AppHandler app = AppHandler.getInstance();
         User user = app.getCurrentUser();
 
-        lines.add("Topic: "+c.getTopic());
+        lines.add("Topic: "+ formatTopic(c.getTopic()));
         lines.add("");
 
         List<String> wrappedContent = TextWrapper.wrap(c.getDescription(),MAX_TEXT_WIDTH);
@@ -65,6 +66,6 @@ public class UICommunity {
     }
 
     public void showCommunitySimple(Community c) {
-        console.info(c.getNickname() + " | Topic: " + c.getTopic());
+        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic()));
     }
 }
