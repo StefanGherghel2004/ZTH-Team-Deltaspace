@@ -37,7 +37,7 @@ public abstract class Menu {
                 Theme.PRIMARY_GRADIENT_END
         );
 
-        Console.getInstance().info(menuBox);
+        Console.getInstance().info("\n" + menuBox);
     }
 
     public Command getCommand(int choice) {

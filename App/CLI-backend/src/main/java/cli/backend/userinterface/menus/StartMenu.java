@@ -17,7 +17,7 @@ public class StartMenu extends Menu{
 
     @Override
     public void showMenu(){
-        System.out.println("\n" + Theme.LOGO);
+        System.out.print("\n" + Theme.LOGO);
         super.showMenu();
     }
 }
