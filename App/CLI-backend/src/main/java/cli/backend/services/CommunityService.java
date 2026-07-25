@@ -82,4 +82,8 @@ public class CommunityService {
         return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreator());
 
     }
+
+    public Community getCommunityByName(Community c){
+       return communityRepository.findByName(c.getNickname());
+    }
 }

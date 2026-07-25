@@ -8,6 +8,7 @@ import cli.backend.commands.communitymenu.EditCommunityCommand;
 import cli.backend.commands.communitymenu.OpenEditCommunityCommand;
 import cli.backend.commands.communitymenu.ShowPostsInCommunityCommand;
 import cli.backend.handlers.AppHandler;
+import cli.backend.userinterface.views.UICommunity;
 
 import java.util.List;
 
@@ -15,16 +16,18 @@ public class CommunityMenu extends Menu {
 
     private AppHandler appHandler = AppHandler.getInstance();
     private Community currentCommunity;
-
+    private UICommunity uiCommunity = UICommunity.getInstance();
     public CommunityMenu(Community currentCommunity) {
         this.currentCommunity = currentCommunity;
 
-        setTitle(currentCommunity.getNickname());
+        setTitle("Community options");
         addOption("View Posts", new ShowPostsInCommunityCommand());
         addOption("Add Post", new CreatePostCommand());
         addOption("Return to Main Menu", new BackCommand());
-        addOption("Edit Community",new OpenEditCommunityCommand());
 
+        if (List.of(currentCommunity.getCommunityCreator(), "admin").contains(appHandler.getCurrentUser().getId())) {
+            addOption("Edit Community", new OpenEditCommunityCommand());
+        }
         if (List.of(currentCommunity.getCommunityCreator(),"admin")
                 .contains(appHandler.getCurrentUser().getId()))
             addOption("Delete community", new DeleteCommunityCommand());
@@ -32,6 +35,7 @@ public class CommunityMenu extends Menu {
 
     @Override
     public void showMenu() {
+        uiCommunity.showCommunityExpanded(currentCommunity);
         super.showMenu();
     }
 }
