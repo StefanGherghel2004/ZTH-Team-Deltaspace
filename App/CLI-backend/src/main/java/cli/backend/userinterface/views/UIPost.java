@@ -4,7 +4,6 @@ package cli.backend.userinterface.views;
 import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.handlers.AppHandler;
-import cli.backend.services.UserService;
 import cli.backend.services.VoteService;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.textformatters.BoxPadder;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
+import static cli.backend.userinterface.textformatters.Theme.*;
 
 public class UIPost {
 
@@ -23,10 +22,11 @@ public class UIPost {
     private static final String NO_POSTS_COMMUNITY = "No posts in this r/. Be the first to post!";
     private static final String NO_POSTS_GLOBAL = "No posts yet. Create the first one!";
 
-    private static final String HEADER_COMMUNITY_FEED = "\n--- Posts in %s ---";
-    private static final String HEADER_GLOBAL_FEED = "\n--- Global Feed ---";
+    private static final String TITLE_COMMUNITY_FEED = "Posts in %s";
+    private static final String TITLE_GLOBAL_FEED = "Global Feed";
 
-    private static final String FORMAT_POST_SIMPLE = "ID: %d | Title: %s | Author: %s | %s";
+    // this limits the length of the fields for a standard length
+    private static final String FORMAT_POST_SIMPLE = "ID: %-4d | Title: %-10.10s | Author: %-8.8s | %s";
 
     // symbols
     private static final String UPVOTE_SYMBOL = "▲ ";
@@ -54,9 +54,10 @@ public class UIPost {
 
     public void showFeed(List<Post> posts, String communityName) {
         if (communityName != null) {
-            console.info(String.format(HEADER_COMMUNITY_FEED, communityName));
+            String title = String.format(TITLE_COMMUNITY_FEED, communityName);
+            console.info(header(title));
         } else {
-            console.info(HEADER_GLOBAL_FEED);
+            console.info(header(TITLE_GLOBAL_FEED));
         }
 
         if (posts.isEmpty()) {
@@ -75,6 +76,8 @@ public class UIPost {
             Integer userVote = userVotes.get(post.getId());
             showPostSimple(post, userVote);
         }
+
+        console.info(footer());
     }
 
     public void showPostSimple(Post post, Integer vote) {
@@ -105,6 +108,12 @@ public class UIPost {
             lines.add("");
             lines.add(IMAGE_SYMBOL);
         }
+
+        if (post.getCommunityName() != null) {
+            lines.add("");
+            lines.add(post.getCommunityName());
+        }
+
         lines.add("");
         lines.add(formatVotes(post, vote));
 

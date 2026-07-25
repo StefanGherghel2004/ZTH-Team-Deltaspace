@@ -10,12 +10,11 @@ import cli.backend.userinterface.textformatters.TextWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
-import static cli.backend.userinterface.textformatters.Theme.formatTopic;
+import static cli.backend.userinterface.textformatters.Theme.*;
 
 public class UICommunity {
 
-    private final static String HEADER_COMMUNITIES = "\n--- Communities ---";
+    private final static String HEADER_TITLE = "Communities";
     private final static String NO_COMMUNITIES = "No communities created.";
 
     private static UICommunity instance;
@@ -33,7 +32,7 @@ public class UICommunity {
     }
 
     public void showCommunitiesList(List<Community> communities, User user) {
-        console.info(HEADER_COMMUNITIES);
+        console.info(header(HEADER_TITLE));
 
         if (communities.isEmpty()) {
             console.info(NO_COMMUNITIES);
@@ -49,6 +48,8 @@ public class UICommunity {
 
             showCommunitySimple(c);
         }
+
+        console.info(footer());
     }
     public void showCommunityExpanded(Community c){
         String title = c.getNickname();
