@@ -47,9 +47,13 @@ public class CreatePostCommand implements Command {
             imagePath = null;
         }
 
-        String imageFilter = console.getStringInput("Please enter filter (or press Enter to skip):", true);
-        if (imageFilter.isEmpty()) {
-            imageFilter = null;
+        String imageFilter = null;
+
+        if (imagePath != null) {
+            imageFilter = console.getStringInput("Please enter filter (or press Enter to skip):", true);
+            if (imageFilter.isEmpty()) {
+                imageFilter = null;
+            }
         }
 
         boolean NSFW = console.getUserConfirmation("Is your post NSFW? [yes/no]");
