@@ -3,6 +3,7 @@ package cli.backend.userinterface.menus;
 import cli.backend.commands.Command;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.textformatters.BoxPadder;
+import cli.backend.userinterface.textformatters.Capitalise;
 import cli.backend.userinterface.textformatters.Theme;
 import lombok.Setter;
 
@@ -26,12 +27,12 @@ public abstract class Menu {
         List<String> formattedOptions = new ArrayList<>();
 
         for (Map.Entry<Integer, MenuOption> entry : options.entrySet()) {
-            formattedOptions.add(entry.getKey() + ". " + entry.getValue().getDescription());
+            formattedOptions.add(Capitalise.format(entry.getKey() + ". " + entry.getValue().getDescription()));
         }
 
         String menuBox = BoxPadder.formatWithGradientBorder(
                 formattedOptions,
-                title,
+                Capitalise.format(title),
                 Theme.PRIMARY_GRADIENT_START,
                 Theme.PRIMARY_GRADIENT_END
         );

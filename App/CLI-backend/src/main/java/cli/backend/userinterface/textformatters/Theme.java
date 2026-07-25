@@ -8,6 +8,8 @@ public class Theme {
     // constant related to the WIDTH in BoxPadder used for all the menus
     public static final int MAX_TEXT_WIDTH = 42;
 
+    public static final int HEADER_WIDTH = 47;
+
     private static final String RAW_LOGO = """
         ██████╗ ███████╗██╗  ████████╗ █████╗ ███████╗██████╗  █████╗  ██████╗███████╗
         ██╔══██╗██╔════╝██║  ╚══██╔══╝██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝
@@ -26,5 +28,33 @@ public class Theme {
 
     public static String formatUsername(String username) {
         return Color.textCyan(username);
+    }
+
+    public static String formatTopic(String topic) {
+        if (topic == null) return "N/A";
+
+        String colorTopic = switch (topic.toLowerCase()) {
+            case "food" -> Color.textYellow(topic);
+            case "gaming" -> Color.textRed(topic);
+            case "science" -> Color.textBrightMagenta(topic);
+            case "art" -> Color.textMagenta(topic);
+            case "tech" -> Color.textBrightBlue(topic);
+            default -> topic;
+        };
+
+        return colorTopic;
+    }
+
+    public static String header(String title) {
+        String paddedTitle = " " + title + " ";
+        int dashesCount = Math.max(0, (HEADER_WIDTH - paddedTitle.length()) / 2);
+
+        String dashes = "-".repeat(dashesCount);
+
+        return "\n" + dashes + paddedTitle + dashes;
+    }
+
+    public static String footer() {
+        return "-".repeat(HEADER_WIDTH) + "\n";
     }
 }

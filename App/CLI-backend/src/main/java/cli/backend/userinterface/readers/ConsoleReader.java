@@ -6,6 +6,15 @@ import java.util.Scanner;
 
 public class ConsoleReader {
 
+    public static final String MULTILINE_STOP_SYM = ":delta";
+    private static final String INPUT_CURSOR = Color.textCyan("> ");
+
+    private static final String ERR_INVALID_NUMBER = Color.textRed("Please enter a valid number.");
+    private static final String ERR_EMPTY_INPUT = Color.textRed("Input cannot be empty. Try again.");
+    private static final String ERR_OUT_OF_RANGE = Color.textRed("Invalid option. Please enter a number between %d and %d.");
+
+    private static final String PROMPT_RANGE = "Choose an option (%d-%d): ";
+
     private final Scanner scanner;
     private static ConsoleReader instance = null;
 
@@ -32,7 +41,7 @@ public class ConsoleReader {
             try{
                 return Integer.parseInt(inputInteger);
             } catch (NumberFormatException e) {
-                System.out.println(Color.textRed("Please enter a valid number."));
+                System.out.println(ERR_INVALID_NUMBER);
             }
         }
     }
@@ -46,7 +55,7 @@ public class ConsoleReader {
             try{
                 return Long.parseLong(inputLong);
             } catch (NumberFormatException e) {
-                System.out.println(Color.textRed("Please enter a valid number."));
+                System.out.println(ERR_INVALID_NUMBER);
             }
         }
     }
@@ -55,14 +64,14 @@ public class ConsoleReader {
     public int readIntInRange (int min, int max) {
 
         while (true) {
-            System.out.print("Choose an option (" + min + "-" + max + "): ");
+            System.out.printf(PROMPT_RANGE, min, max);
             int value = this.readInt();
+            System.out.println();
             if (value >= min && value <= max) {
                 return value;
             }
             else
-                System.out.println(Color.textRed("Invalid option. Please enter a number between" +
-                        " " + min + " and " + max + "."));
+                System.out.printf((ERR_OUT_OF_RANGE) + "\n", min, max);
         }
     }
 
@@ -78,7 +87,7 @@ public class ConsoleReader {
                 return input;
             }
 
-            System.out.println(Color.textRed("Input cannot be empty. Try again."));
+            System.out.println(ERR_EMPTY_INPUT);
         }
     }
 
@@ -87,10 +96,10 @@ public class ConsoleReader {
             StringBuilder content = new StringBuilder();
 
             while (true) {
-                System.out.print("> ");
+                System.out.print(INPUT_CURSOR);
                 String line = scanner.nextLine();
 
-                if (line.trim().equalsIgnoreCase(":done")) {
+                if (line.trim().equalsIgnoreCase(MULTILINE_STOP_SYM)) {
                     break;
                 }
 
@@ -103,7 +112,7 @@ public class ConsoleReader {
                 return result;
             }
 
-            System.out.println(Color.textRed("Input cannot be empty. Try again."));
+            System.out.println(ERR_EMPTY_INPUT);
         }
     }
 

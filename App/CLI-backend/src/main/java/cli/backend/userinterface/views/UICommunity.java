@@ -10,9 +10,12 @@ import cli.backend.userinterface.textformatters.TextWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
+import static cli.backend.userinterface.textformatters.Theme.*;
 
 public class UICommunity {
+
+    private final static String HEADER_TITLE = "Communities";
+    private final static String NO_COMMUNITIES = "No communities created.";
 
     private static UICommunity instance;
     private final Console console;
@@ -29,10 +32,10 @@ public class UICommunity {
     }
 
     public void showCommunitiesList(List<Community> communities, User user) {
-        console.info("\n--- Communities ---");
+        console.info(header(HEADER_TITLE));
 
         if (communities.isEmpty()) {
-            console.info("No communities created.");
+            console.info(NO_COMMUNITIES);
             return;
         }
 
@@ -45,6 +48,8 @@ public class UICommunity {
 
             showCommunitySimple(c);
         }
+
+        console.info(footer());
     }
     public void showCommunityExpanded(Community c){
         String title = c.getNickname();
@@ -52,7 +57,7 @@ public class UICommunity {
         AppHandler app = AppHandler.getInstance();
         User user = app.getCurrentUser();
 
-        lines.add("Topic: "+c.getTopic());
+        lines.add("Topic: "+ formatTopic(c.getTopic()));
         lines.add("");
 
         List<String> wrappedContent = TextWrapper.wrap(c.getDescription(),MAX_TEXT_WIDTH);
@@ -65,6 +70,6 @@ public class UICommunity {
     }
 
     public void showCommunitySimple(Community c) {
-        console.info(c.getNickname() + " | Topic: " + c.getTopic());
+        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic()));
     }
 }

@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
+import static cli.backend.userinterface.textformatters.Theme.*;
 
 public class UIComment {
 
+    private static final String NO_COMMENTS = "(No comments yet. Be the first to reply!)";
+    private static final String HEADER_TITLE = "Discussion Thread";
     private static final int MAX_PREVIEW_LENGTH = 40;
 
     private static UIComment instance;
@@ -32,13 +34,16 @@ public class UIComment {
 
     public void showCommentTree(Map<Long, List<Comment>> commentTree) {
         if (commentTree == null || commentTree.isEmpty()) {
-            console.info("(No comments yet. Be the first to reply!)");
+            console.info(NO_COMMENTS);
             return;
         }
 
-        console.info("\n--- Discussion Thread ---");
+        String header = header(HEADER_TITLE);
+        String footer = footer();
 
+        console.info(header);
         printThread(0L, commentTree, 0);
+        console.info(footer);
     }
 
     private void printThread(Long parentId, Map<Long, List<Comment>> commentTree, int depth) {

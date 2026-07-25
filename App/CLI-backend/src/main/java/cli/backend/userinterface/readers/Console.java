@@ -9,7 +9,15 @@ import cli.backend.userinterface.textformatters.Theme;
 
 import java.util.List;
 
+import static cli.backend.userinterface.readers.ConsoleReader.MULTILINE_STOP_SYM;
+
 public class Console {
+
+    private static final String MULTILINE_INSTRUCTION =
+            Color.textCyan("(Type your text. Press Enter for a new line. Type '"
+                    + MULTILINE_STOP_SYM
+                    + "' on an empty line to finish)");
+
     private static Console instance;
     private ConsoleReader reader;
     UserService userService = UserService.getInstance();
@@ -42,7 +50,7 @@ public class Console {
 
     public String getMultiLineInput(String prompt) {
         System.out.println(prompt);
-        System.out.println(Color.textCyan("(Type your text. Press Enter for a new line. Type ':done' on an empty line to finish)"));
+        System.out.println(MULTILINE_INSTRUCTION);
 
         return reader.readMultiLine(false);
     }
