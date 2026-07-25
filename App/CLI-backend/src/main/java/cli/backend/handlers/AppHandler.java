@@ -9,7 +9,11 @@ import cli.backend.userinterface.menus.EditUserMenu;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.readers.ConsoleReader;
 import cli.backend.userinterface.menus.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class AppHandler {
 
     public enum State {
@@ -70,41 +74,4 @@ public class AppHandler {
         };
     }
 
-    public State getCurrentState() {
-        return currentState;
-    }
-    public void setCurrentState(State currentState) {
-        this.currentState = currentState;
-    }
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public Community getCurrentCommunity() {
-        return currentCommunity;
-    }
-
-    public void setCurrentCommunity(Community currentCommunity) {
-        this.currentCommunity = currentCommunity;
-    }
-
-    public Post getCurrentPost() {
-        return currentPost;
-    }
-
-    public void setCurrentPost(Post currentPost) {
-        this.currentPost = currentPost;
-    }
-
-    public Comment getCurrentComment() {
-        return currentComment;
-    }
-
-    public void setCurrentComment(Comment currentComment) {
-        this.currentComment = currentComment;
-    }
 }
