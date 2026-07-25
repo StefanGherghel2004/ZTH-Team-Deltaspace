@@ -55,7 +55,7 @@ public class EditCommunityCommand implements Command {
             case"topic" -> {
                 List<String> topics = communityService.getAvailableTopics();
                 console.printIndexList("Topics", topics);
-                int choice = console.getIntInRangeInput(1, topics.size(), "");
+                int choice = console.getIntInRangeInput(1, topics.size());
                 String newSelectedTopic = topics.get(choice - 1);
                 currentCommunity.setTopic(newSelectedTopic);
             }

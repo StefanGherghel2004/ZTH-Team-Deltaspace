@@ -6,6 +6,7 @@ import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.commands.Command;
 import cli.backend.userinterface.menus.EditUserMenu;
+import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.readers.ConsoleReader;
 import cli.backend.userinterface.menus.*;
 
@@ -29,7 +30,7 @@ public class AppHandler {
     private Comment currentComment;
 
     private static AppHandler instance;
-    private static ConsoleReader consoleReader = ConsoleReader.getInstance();
+    private static final Console console = Console.getInstance();
 
     private AppHandler() {
 
@@ -48,7 +49,7 @@ public class AppHandler {
             Menu currentMenu = getMenuForCurrentState();
 
             currentMenu.showMenu();
-            int choice = consoleReader.readIntInRange(1, currentMenu.getOptionsCount());
+            int choice = console.getIntInRangeInput(1, currentMenu.getOptionsCount());
             Command command = currentMenu.getCommand(choice);
             if (command != null) {
                 isActive = command.execute();

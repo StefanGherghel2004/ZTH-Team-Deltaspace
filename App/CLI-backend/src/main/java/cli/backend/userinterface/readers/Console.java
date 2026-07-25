@@ -79,8 +79,7 @@ public class Console {
         return reader.readLong();
     }
 
-    public int getIntInRangeInput(int min, int max, String prompt) {
-        System.out.println(prompt);
+    public int getIntInRangeInput(int min, int max) {
         printPromptPrefix();
         return reader.readIntInRange(min, max);
     }

@@ -66,7 +66,6 @@ public class ConsoleReader {
         while (true) {
             System.out.printf(PROMPT_RANGE, min, max);
             int value = this.readInt();
-            System.out.println();
             if (value >= min && value <= max) {
                 return value;
             }
