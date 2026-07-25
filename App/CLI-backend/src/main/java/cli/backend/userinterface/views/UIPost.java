@@ -19,6 +19,16 @@ import static cli.backend.userinterface.textformatters.Theme.MAX_TEXT_WIDTH;
 
 public class UIPost {
 
+    // constants for UI
+    private static final String NO_POSTS_COMMUNITY = "No posts in this r/. Be the first to post!";
+    private static final String NO_POSTS_GLOBAL = "No posts yet. Create the first one!";
+
+    private static final String HEADER_COMMUNITY_FEED = "\n--- Posts in %s ---";
+    private static final String HEADER_GLOBAL_FEED = "\n--- Global Feed ---";
+
+    private static final String FORMAT_POST_SIMPLE = "ID: %d | Title: %s | Author: %s | %s";
+
+    // symbols
     private static final String UPVOTE_SYMBOL = "▲ ";
     private static final String DOWNVOTE_SYMBOL = "▼ ";
     private static final String IMAGE_SYMBOL = "[IMG]";
@@ -44,16 +54,16 @@ public class UIPost {
 
     public void showFeed(List<Post> posts, String communityName) {
         if (communityName != null) {
-            console.info("\n--- Posts in " + communityName + " ---");
+            console.info(String.format(HEADER_COMMUNITY_FEED, communityName));
         } else {
-            console.info("\n--- Global Feed ---");
+            console.info(HEADER_GLOBAL_FEED);
         }
 
         if (posts.isEmpty()) {
             if (communityName != null) {
-                console.info("No posts in this r/. Be the first to post!");
+                console.info(NO_POSTS_COMMUNITY);
             } else {
-                console.info("No posts yet. Create the first one!");
+                console.info(NO_POSTS_GLOBAL);
             }
             return;
         }
@@ -70,7 +80,7 @@ public class UIPost {
     public void showPostSimple(Post post, Integer vote) {
         String formattedVotes = formatVotes(post, vote);
 
-        String postLine = String.format("ID: %d | Title: %s | Author: %s | %s",
+        String postLine = String.format(FORMAT_POST_SIMPLE,
                 post.getId(),
                 post.getPostTitle(),
                 post.getAuthorUsername(),
