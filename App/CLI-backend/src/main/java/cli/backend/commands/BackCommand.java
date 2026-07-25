@@ -1,12 +1,15 @@
 package cli.backend.commands;
 
+import cli.backend.Community;
 import cli.backend.handlers.AppHandler;
+import cli.backend.services.CommunityService;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class BackCommand implements Command {
     @Override
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
-
+        CommunityService communityService = CommunityService.getInstance();
         switch (app.getCurrentState()) {
             case ON_COMMENT:
                 app.setCurrentComment(null);
@@ -14,12 +17,14 @@ public class BackCommand implements Command {
                 break;
 
             case ON_POST:
-                app.setCurrentPost(null);
-                if (app.getCurrentCommunity() != null) {
+                if (app.getCurrentPost().getCommunityName()!= null) {
+                    Community community = communityService.getCommunityByName(app.getCurrentPost().getCommunityName());
+                    app.setCurrentCommunity(community);
                     app.setCurrentState(AppHandler.State.ON_COMMUNITY);
                 } else {
                     app.setCurrentState(AppHandler.State.LOGGED_IN);
                 }
+                app.setCurrentPost(null);
                 break;
 
             case ON_COMMUNITY:

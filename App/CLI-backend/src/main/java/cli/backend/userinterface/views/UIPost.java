@@ -95,7 +95,6 @@ public class UIPost {
             lines.add("");
             lines.add(IMAGE_SYMBOL);
         }
-
         lines.add("");
         lines.add(formatVotes(post, vote));
 

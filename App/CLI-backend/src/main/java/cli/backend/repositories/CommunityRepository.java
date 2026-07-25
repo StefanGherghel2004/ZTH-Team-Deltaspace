@@ -138,4 +138,34 @@ public class CommunityRepository {
             return false;
         }
         }
+
+    public Community findByName(String name) {
+        String query = "Select * from communities where name=?;";
+        try (Connection connection = databaseConnection.getDatabaseConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, name);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    String nickname = rs.getString("name");
+                    String topic = rs.getString("topic");
+                    String description = rs.getString("description");
+
+                    Long id = rs.getLong("id");
+                    Long communityCreator = rs.getLong("user_id");
+                    Timestamp createdAt = rs.getTimestamp("created_at");
+                    Timestamp updatedAt = rs.getTimestamp("updated_at");
+
+
+                    return new Community(id, nickname, topic, description, communityCreator, createdAt.toLocalDateTime(), updatedAt.toLocalDateTime());
+                }
+            }
+
+
+        } catch (SQLException e) {
+            Logger.severe("Failed to find community by name: " + e.getMessage());
+            return null;
+        }
+        return null;
+    }
 }
