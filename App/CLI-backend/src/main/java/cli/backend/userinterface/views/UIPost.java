@@ -11,6 +11,7 @@ import cli.backend.userinterface.textformatters.Color;
 import cli.backend.userinterface.textformatters.TextWrapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class UIPost {
     private static final String TITLE_GLOBAL_FEED = "Global Feed";
 
     // this limits the length of the fields for a standard length
-    private static final String FORMAT_POST_SIMPLE = "ID: %-4d | Title: %-10.10s | Author: %-8.8s | %s";
+    private static final String FORMAT_POST_SIMPLE = "ID: %-4d | Title: %-12.12s | Author: %-10.10s | %s";
 
     // symbols
     private static final String UPVOTE_SYMBOL = "▲ ";
