@@ -8,6 +8,8 @@ import cli.backend.services.PostService;
 import cli.backend.userinterface.views.UIPost;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ShowFeedCommand implements Command {
@@ -19,8 +21,10 @@ public class ShowFeedCommand implements Command {
 
         List<Post> posts = postService.getFeedFromRepository();
         UIPost uiPost = UIPost.getInstance();
+        List<Post> shuffledPosts = new ArrayList<>(posts);
+        Collections.shuffle(shuffledPosts);
 
-        uiPost.showFeed(posts);
+        uiPost.showFeed(shuffledPosts);
 
         if (posts.isEmpty()) {
             return true;
