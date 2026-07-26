@@ -7,10 +7,10 @@ import java.sql.DriverManager;
 
 public class DatabaseConnection {
 
-    private static final String jdbcURL = System.getenv("POSTGRES_URL");
-    private static final String username = System.getenv("POSTGRES_USERNAME");
-    private static final String password = System.getenv("POSTGRES_PASSWORD");
-    private static final String dbDriver = "org.postgresql.Driver";
+    private static final String POSTGRES_URL = System.getenv("POSTGRES_URL");
+    private static final String POSTGRES_USERNAME = System.getenv("POSTGRES_USERNAME");
+    private static final String POSTGRES_PASSWORD = System.getenv("POSTGRES_PASSWORD");
+    private static final String POSTGRES_DRIVER = "org.postgresql.Driver";
 
     private static DatabaseConnection instance = null;
 
@@ -25,8 +25,11 @@ public class DatabaseConnection {
 
     public Connection getDatabaseConnection() {
         try {
-            Class.forName(dbDriver);
-            Connection databaseConnection = DriverManager.getConnection(jdbcURL, username, password);
+            if (POSTGRES_URL == null || POSTGRES_USERNAME == null || POSTGRES_PASSWORD == null)
+                throw new IllegalArgumentException("Set your environment variables for POSTGRES!");
+
+            Class.forName(POSTGRES_DRIVER);
+            Connection databaseConnection = DriverManager.getConnection(POSTGRES_URL, POSTGRES_USERNAME, POSTGRES_PASSWORD);
             Logger.info("Database connection was successful!");
             return databaseConnection;
         } catch (Exception e ){
