@@ -19,7 +19,7 @@ public class Console {
                     + MULTILINE_STOP_SYM
                     + "' on an empty line to finish)");
     private static final String BACK_COMMAND_INSTRUCTION = Color.textCyan("(Enter the required input" +
-            " or type :back to go to the previous page.)");
+            " or type :back on an empty line to cancel and go to the previous page)");
 
     private static Console instance;
     private ConsoleReader reader;
@@ -52,6 +52,7 @@ public class Console {
     }
 
     public String getMultiLineInput(String prompt) {
+        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         System.out.println(MULTILINE_INSTRUCTION);
 
@@ -59,24 +60,28 @@ public class Console {
     }
 
     public String getStringInput(String prompt) {
+        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readString();
     }
 
     public String getStringInput(String prompt, boolean allowEmpty) {
+        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readString(allowEmpty);
     }
 
     public int getIntInput(String prompt) {
+        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readInt();
     }
 
     public Long getLongInput(String prompt) {
+        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readLong();
@@ -88,6 +93,7 @@ public class Console {
     }
 
     public boolean getUserConfirmation(String prompt) {
+        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         String confirm = reader.readString();
@@ -158,7 +164,8 @@ public class Console {
     public String getValidPasswordInput () {
         String password;
         while (true) {
-            password = getStringInput("Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):");
+            password = getStringInput(
+                    "Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):");
 
             if(userService.validatePassword(password)) {
                 return password;
@@ -170,12 +177,14 @@ public class Console {
     public String getValidDateOfBirthInput () {
         String dateOfBirth;
         while (true) {
-            dateOfBirth = getStringInput("Please enter your date of birth (DD-MM-YYYY): ");
+            dateOfBirth = getStringInput(
+                    "Please enter your date of birth (DD-MM-YYYY):");
 
             if (userService.validateDateOfBirth(dateOfBirth)) {
                 return dateOfBirth;
             }
-            error("Invalid date of birth format. Ensure the format is correct (e.g., 15-08-2010) and that you are at least 13 years old.");
+            error("Invalid date of birth format. Ensure the format is correct " +
+                    "(e.g., 15-08-2010) and that you are at least 13 years old.");
         }
     }
 }
