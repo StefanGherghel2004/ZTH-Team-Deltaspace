@@ -20,7 +20,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/addComment")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Comment addComment (@Valid @RequestBody CommentCreateDto commentDto){
         return commentService.addComment(commentDto);
@@ -39,13 +39,13 @@ public class CommentController {
         return commentService.getAllComments();
     }
 
-    @DeleteMapping("/deleteComment/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCommentById (@PathVariable UUID id) {
         commentService.deleteCommentById(id);
     }
 
-    @PutMapping("/editComment/{id}")
+    @PutMapping("/{id}")
     public Comment updateComment (@PathVariable UUID id, @Valid @RequestBody CommentUpdateDto updateDto) {
 
         return commentService.editComment(id,updateDto);
