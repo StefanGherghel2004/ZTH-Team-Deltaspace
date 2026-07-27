@@ -2,6 +2,7 @@ package cli.backend.commands.mainmenu;
 
 import cli.backend.Post;
 import cli.backend.commands.Command;
+import cli.backend.exceptions.BackNavigationException;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PostService;
@@ -29,26 +30,30 @@ public class ShowFeedCommand implements Command {
         if (posts.isEmpty()) {
             return true;
         }
+        try {
+            String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);
 
-        String input = console.getStringInput("Choose a post [ID] (or press Enter to go back): ", true);
-
-        if (!input.isEmpty()) {
-            try {
-                Long id = Long.parseLong(input);
-                Post foundPost = postService.findPostById(id);
-                if (foundPost != null) {
-                    if (foundPost.isNSFW() && !app.getCurrentUser().checkAge()) {
-                        console.error("This post is marked as NSFW. You must be at least 18 years old to view it.");
+            if (!input.isEmpty()) {
+                try {
+                    Long id = Long.parseLong(input);
+                    Post foundPost = postService.findPostById(id);
+                    if (foundPost != null) {
+                        if (foundPost.isNSFW() && !app.getCurrentUser().checkAge()) {
+                            console.error("This post is marked as NSFW. You must be at least 18 years old to view it.");
+                        } else {
+                            app.setCurrentPost(foundPost);
+                            app.setCurrentState(AppHandler.State.ON_POST);
+                        }
                     } else {
-                        app.setCurrentPost(foundPost);
-                        app.setCurrentState(AppHandler.State.ON_POST);
+                        console.error("Post not found!");
                     }
-                } else {
-                    console.error("Post not found!");
+                } catch (NumberFormatException e) {
+                    console.error("Invalid ID format!");
                 }
-            } catch (NumberFormatException e) {
-                console.error("Invalid ID format!");
             }
+        }
+        catch (BackNavigationException backNavigationException){
+            console.info(backNavigationException.getMessage());
         }
         return true;
     }

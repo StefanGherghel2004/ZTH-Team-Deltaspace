@@ -2,6 +2,7 @@ package cli.backend.commands;
 
 import cli.backend.Community;
 import cli.backend.Post;
+import cli.backend.exceptions.BackNavigationException;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.Logger;
 import cli.backend.userinterface.readers.Console;
@@ -23,54 +24,57 @@ public class CreatePostCommand implements Command {
 
         console.info("Welcome to the post creation page.");
         Community targetCommunity = app.getCurrentCommunity();
-
-        if (targetCommunity == null) {
-            String input = console.getStringInput("Please enter the community in which you would" +
-                " like to post \n(or press Enter to post to u/" + app.getCurrentUser().getUsername() + "):", true);
-
-            if (input.isEmpty()) {
-                console.info("Posting to your profile (u/" + app.getCurrentUser().getUsername() + ").");
-            } else {
-                String communityName = communityService.formatName(input);
-                targetCommunity = communityService.getCommunityByName(communityName);
-                if (targetCommunity == null) {
-                    console.error("Community not found! Posting to your profile instead.");
+        try {
+            if (targetCommunity == null) {
+                String input = console.getStringInput("Please enter the community in which you would" +
+                        " like to post \n(or press Enter to post to u/" + app.getCurrentUser().getUsername() + "):", true);
+                if (input.isEmpty()) {
+                    console.info("Posting to your profile (u/" + app.getCurrentUser().getUsername() + ").");
+                } else {
+                    String communityName = communityService.formatName(input);
+                    targetCommunity = communityService.getCommunityByName(communityName);
+                    if (targetCommunity == null) {
+                        console.error("Community not found! Posting to your profile instead.");
+                    }
                 }
             }
-        }
 
-        String postTitle = console.getStringInput("Please enter post title:");
-        String postContents = console.getMultiLineInput("Please enter post contents:");
+            String postTitle = console.getStringInput("Please enter post title:");
+            String postContents = console.getMultiLineInput("Please enter post contents:");
 
-        String imagePath= console.getStringInput("Please enter image path (or press Enter to skip):", true);
-        if (imagePath.isEmpty()) {
-            imagePath = null;
-        }
-
-        String imageFilter = null;
-
-        if (imagePath != null) {
-            imageFilter = console.getStringInput("Please enter filter (or press Enter to skip):", true);
-            if (imageFilter.isEmpty()) {
-                imageFilter = null;
+            String imagePath = console.getStringInput("Please enter image path (or press Enter to skip):", true);
+            if (imagePath.isEmpty()) {
+                imagePath = null;
             }
-        }
 
-        boolean NSFW = console.getUserConfirmation("Is your post NSFW? [yes/no]");
+            String imageFilter = null;
 
-        if (NSFW && !app.getCurrentUser().checkAge()) {
-            console.error("You must be at least 18 years old to create an NSFW post.");
-        } else {
-            try{
+            if (imagePath != null) {
+                imageFilter = console.getStringInput("Please enter filter (or press Enter to skip):", true);
+                if (imageFilter.isEmpty()) {
+                    imageFilter = null;
+                }
+            }
+
+            boolean NSFW = console.getUserConfirmation("Is your post NSFW? [yes/no]");
+
+            if (NSFW && !app.getCurrentUser().checkAge()) {
+                console.error("You must be at least 18 years old to create an NSFW post.");
+            } else {
+                try {
                     Post newPost = postService.addPost(app.getCurrentUser().getUsername(), postTitle, postContents,
                             imagePath, imageFilter, NSFW, targetCommunity);
                     console.success("Post created successfully!");
                     app.setCurrentPost(newPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
-                }catch (IllegalArgumentException | IOException e) {
-                console.error(e.getMessage());
-                Logger.severe("Post could not be created :" + e.getMessage());
+                } catch (IllegalArgumentException | IOException e) {
+                    console.error(e.getMessage());
+                    Logger.severe("Post could not be created: " + e.getMessage());
+                }
             }
+        }
+        catch (BackNavigationException backNavigationException){
+            console.info(backNavigationException.getMessage());
         }
 
         return true;

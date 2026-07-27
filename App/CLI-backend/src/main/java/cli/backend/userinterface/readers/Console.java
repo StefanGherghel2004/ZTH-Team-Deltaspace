@@ -1,5 +1,6 @@
 package cli.backend.userinterface.readers;
 
+import cli.backend.commands.BackCommand;
 import cli.backend.duplicates.CheckDuplicate;
 import cli.backend.duplicates.UserDuplicate;
 import cli.backend.handlers.AppHandler;
@@ -17,6 +18,8 @@ public class Console {
             Color.textCyan("(Type your text. Press Enter for a new line. Type '"
                     + MULTILINE_STOP_SYM
                     + "' on an empty line to finish)");
+    private static final String BACK_COMMAND_INSTRUCTION = Color.textCyan("(Enter the required input" +
+            " or type :back to go to the previous page.)");
 
     private static Console instance;
     private ConsoleReader reader;
@@ -138,6 +141,7 @@ public class Console {
         String email;
         while(true){
             email = getStringInput("Please enter your email address:");
+
             if(!userService.validateEmail(email)) {
                 error("Invalid email format. Must be like 'user@domain.com'.");
                 continue;
@@ -155,6 +159,7 @@ public class Console {
         String password;
         while (true) {
             password = getStringInput("Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):");
+
             if(userService.validatePassword(password)) {
                 return password;
             }
@@ -166,6 +171,7 @@ public class Console {
         String dateOfBirth;
         while (true) {
             dateOfBirth = getStringInput("Please enter your date of birth (DD-MM-YYYY): ");
+
             if (userService.validateDateOfBirth(dateOfBirth)) {
                 return dateOfBirth;
             }

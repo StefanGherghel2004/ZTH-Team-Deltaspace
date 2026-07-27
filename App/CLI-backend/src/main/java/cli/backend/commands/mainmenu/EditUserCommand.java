@@ -2,6 +2,7 @@ package cli.backend.commands.mainmenu;
 
 import cli.backend.User;
 import cli.backend.commands.Command;
+import cli.backend.exceptions.BackNavigationException;
 import cli.backend.handlers.AppHandler;
 import cli.backend.repositories.UserRepository;
 import cli.backend.services.PasswordService;
@@ -26,44 +27,48 @@ public class EditUserCommand implements Command {
 
 
         User userToEdit = app.getCurrentUser();
+        try {
+            switch (editType) {
+                case "username" -> {
+                    String newUsername = console.getValidUsernameInput();
+                    userToEdit.setUsername(newUsername);
+                }
 
-        switch (editType){
-            case "username" -> {
-                String newUsername = console.getValidUsernameInput();
-                userToEdit.setUsername(newUsername);
+                case "email" -> {
+                    String newEmail = console.getValidEmailInput();
+                    userToEdit.setEmail(newEmail);
+                }
+
+                case "password" -> {
+                    String newPassword = console.getValidPasswordInput();
+                    userToEdit.setPassword(PasswordService.hash(newPassword));
+                }
+
+                case "dateOfBirth" -> {
+                    String newDateOfBirth = console.getValidDateOfBirthInput();
+                    userToEdit.setDateOfBirth(LocalDate.parse(newDateOfBirth, formatter));
+                }
+
+                default -> {
+                    console.error("Invalid edit operation: " + editType);
+                    app.setCurrentState(AppHandler.State.EDIT_USER);
+                    return true;
+                }
             }
 
-            case "email" -> {
-                String newEmail = console.getValidEmailInput();
-                userToEdit.setEmail(newEmail);
+            boolean updated = userRepository.updateUser(userToEdit);
+
+            if (updated) {
+                console.success("User updated successfully!");
+            } else {
+                console.error("Failed to update user in database.");
             }
 
-            case "password" -> {
-                String newPassword = console.getValidPasswordInput();
-                userToEdit.setPassword(PasswordService.hash(newPassword));
-            }
-
-            case "dateOfBirth" -> {
-                String newDateOfBirth = console.getValidDateOfBirthInput();
-                userToEdit.setDateOfBirth(LocalDate.parse(newDateOfBirth, formatter));
-            }
-
-            default -> {
-                console.error("Invalid edit operation: " + editType);
-                app.setCurrentState(AppHandler.State.EDIT_USER);
-                return true;
-            }
+            app.setCurrentState(AppHandler.State.EDIT_USER);
         }
-
-        boolean updated = userRepository.updateUser(userToEdit);
-
-        if (updated) {
-            console.success("User updated successfully!");
-        } else {
-            console.error("Failed to update user in database.");
+        catch (BackNavigationException backNavigationException){
+            console.info(backNavigationException.getMessage());
         }
-
-        app.setCurrentState(AppHandler.State.EDIT_USER);
         return true;
     }
 }

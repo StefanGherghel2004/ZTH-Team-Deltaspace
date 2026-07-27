@@ -2,6 +2,7 @@ package cli.backend.commands.postmenu;
 
 import cli.backend.Post;
 import cli.backend.commands.Command;
+import cli.backend.exceptions.BackNavigationException;
 import cli.backend.repositories.PostRepository;
 import cli.backend.handlers.AppHandler;
 import cli.backend.services.PostService;
@@ -22,34 +23,38 @@ public class EditPostCommand implements Command {
         PostRepository postRepository = PostRepository.getInstance();
 
         Post postToEdit = app.getCurrentPost();
+        try {
+            switch (editType) {
+                case "contents" -> {
+                    String newContents = console.getMultiLineInput(
+                            "Please enter your new contents for this post:");
+                    postToEdit.setPostContents(newContents);
+                }
 
-        switch (editType) {
-            case "contents" -> {
-                String newContents = console.getMultiLineInput(
-                        "Please enter your new contents for this post:");
-                postToEdit.setPostContents(newContents);
+                case "nsfw" -> {
+                    boolean newNsfw = console.getUserConfirmation("Is your post NSFW? [yes/no]");
+                    postToEdit.setNSFW(newNsfw);
+                }
+
+                default -> {
+                    console.error("Invalid edit operation: " + editType);
+                    app.setCurrentState(AppHandler.State.ON_POST);
+                    return true;
+                }
+            }
+            boolean updated = postRepository.updatePost(postToEdit);
+
+            if (updated) {
+                console.success("Post updated successfully!");
+            } else {
+                console.error("Failed to update post in database.");
             }
 
-            case "nsfw" -> {
-                boolean newNsfw = console.getUserConfirmation("Is your post NSFW? [yes/no]");
-                postToEdit.setNSFW(newNsfw);
-            }
-
-            default -> {
-                console.error("Invalid edit operation: " + editType);
-                app.setCurrentState(AppHandler.State.ON_POST);
-                return true;
-            }
+            app.setCurrentState(AppHandler.State.ON_POST);
         }
-        boolean updated = postRepository.updatePost(postToEdit);
-
-        if (updated) {
-            console.success("Post updated successfully!");
-        } else {
-            console.error("Failed to update post in database.");
+        catch (BackNavigationException backNavigationException){
+            console.info(backNavigationException.getMessage());
         }
-
-        app.setCurrentState(AppHandler.State.ON_POST);
         return true;
     }
 }

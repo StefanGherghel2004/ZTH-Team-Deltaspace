@@ -4,6 +4,7 @@ import cli.backend.Community;
 import cli.backend.commands.Command;
 import cli.backend.duplicates.CheckDuplicate;
 import cli.backend.duplicates.CommunityDuplicate;
+import cli.backend.exceptions.BackNavigationException;
 import cli.backend.handlers.AppHandler;
 import cli.backend.loggers.Logger;
 import cli.backend.repositories.CommentRepository;
@@ -33,43 +34,46 @@ public class EditCommunityCommand implements Command {
             appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
             return true;
         }
-
-        switch (editType){
-            case"description" ->{
-                String newDescription = console.getMultiLineInput("Please enter yout new description for this community:");
-                currentCommunity.setDescription(newDescription);
-            }
-            case "name" ->{
-                String newCommunityName;
-                while(true){
-                    newCommunityName = console.getStringInput("Please enter community name:");
-                    newCommunityName = communityService.formatName(newCommunityName);
-                    if(communityCheck.isDuplicate(newCommunityName)){
-                        console.error("Community name already exists. Please choose a different name.");
-                        continue;
-                    }
-                    break;
+        try {
+            switch (editType) {
+                case "description" -> {
+                    String newDescription = console.getMultiLineInput("Please enter yout new description for this community:");
+                    currentCommunity.setDescription(newDescription);
                 }
-                currentCommunity.setNickname(newCommunityName);
+                case "name" -> {
+                    String newCommunityName;
+                    while (true) {
+                        newCommunityName = console.getStringInput("Please enter community name:");
+                        newCommunityName = communityService.formatName(newCommunityName);
+                        if (communityCheck.isDuplicate(newCommunityName)) {
+                            console.error("Community name already exists. Please choose a different name.");
+                            continue;
+                        }
+                        break;
+                    }
+                    currentCommunity.setNickname(newCommunityName);
+                }
+                case "topic" -> {
+                    List<String> topics = communityService.getAvailableTopics();
+                    console.printIndexList("Topics", topics);
+                    int choice = console.getIntInRangeInput(1, topics.size());
+                    String newSelectedTopic = topics.get(choice - 1);
+                    currentCommunity.setTopic(newSelectedTopic);
+                }
             }
-            case"topic" -> {
-                List<String> topics = communityService.getAvailableTopics();
-                console.printIndexList("Topics", topics);
-                int choice = console.getIntInRangeInput(1, topics.size());
-                String newSelectedTopic = topics.get(choice - 1);
-                currentCommunity.setTopic(newSelectedTopic);
+            boolean updated = communityRepository.updateCommunity(currentCommunity);
+            if (updated) {
+                console.success("Community updated successfully!");
+                Logger.info("Community updated successfully!");
+            } else {
+                console.error("Community failed to update");
+                Logger.severe("Community failed to update");
             }
+            appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
         }
-        boolean updated = communityRepository.updateCommunity(currentCommunity);
-        if(updated){
-            console.success("Community updated successfully!");
-            Logger.info("Community updated successfully!");
+        catch (BackNavigationException backNavigationException){
+            console.info(backNavigationException.getMessage());
         }
-        else{
-            console.error("Community failed to update");
-            Logger.severe("Community failed to update");
-        }
-        appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
         return true;
     }
 }

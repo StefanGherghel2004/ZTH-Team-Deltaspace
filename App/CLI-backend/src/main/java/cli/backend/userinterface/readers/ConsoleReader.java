@@ -1,5 +1,7 @@
 package cli.backend.userinterface.readers;
 
+import cli.backend.exceptions.BackNavigationException;
+import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.textformatters.Color;
 
 import java.util.Scanner;
@@ -8,6 +10,7 @@ public class ConsoleReader {
 
     public static final String MULTILINE_STOP_SYM = ":delta";
     private static final String INPUT_CURSOR = Color.textCyan("> ");
+    private static final String BACK_SYM = ":back";
 
     private static final String ERR_INVALID_NUMBER = Color.textRed("Please enter a valid number.");
     private static final String ERR_EMPTY_INPUT = Color.textRed("Input cannot be empty. Try again.");
@@ -37,6 +40,8 @@ public class ConsoleReader {
         while (true) {
 
             String inputInteger = scanner.nextLine().trim();
+            if (BACK_SYM.equalsIgnoreCase(inputInteger))
+                throw new BackNavigationException();
 
             try{
                 return Integer.parseInt(inputInteger);
@@ -51,6 +56,8 @@ public class ConsoleReader {
         while (true) {
 
             String inputLong = scanner.nextLine().trim();
+            if (BACK_SYM.equalsIgnoreCase(inputLong))
+                throw new BackNavigationException();
 
             try{
                 return Long.parseLong(inputLong);
@@ -66,6 +73,8 @@ public class ConsoleReader {
         while (true) {
             System.out.printf(PROMPT_RANGE, min, max);
             int value = this.readInt();
+            if (BACK_SYM.equalsIgnoreCase(String.valueOf(value)))
+                throw new BackNavigationException();
             if (value >= min && value <= max) {
                 return value;
             }
@@ -81,7 +90,8 @@ public class ConsoleReader {
     public String readString(boolean allowEmpty) {
         while (true) {
             String input = scanner.nextLine().trim();
-                
+            if (BACK_SYM.equalsIgnoreCase(input))
+                throw new BackNavigationException();
             if (allowEmpty || !input.isEmpty()) {
                 return input;
             }
@@ -97,6 +107,8 @@ public class ConsoleReader {
             while (true) {
                 System.out.print(INPUT_CURSOR);
                 String line = scanner.nextLine();
+                if (BACK_SYM.equalsIgnoreCase(line))
+                    throw new BackNavigationException();
 
                 if (line.trim().equalsIgnoreCase(MULTILINE_STOP_SYM)) {
                     break;
@@ -114,5 +126,4 @@ public class ConsoleReader {
             System.out.println(ERR_EMPTY_INPUT);
         }
     }
-
 }
