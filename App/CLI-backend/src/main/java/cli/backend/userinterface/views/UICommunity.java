@@ -3,6 +3,7 @@ package cli.backend.userinterface.views;
 import cli.backend.Community;
 import cli.backend.User;
 import cli.backend.handlers.AppHandler;
+import cli.backend.services.CommunityService;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.userinterface.textformatters.BoxPadder;
 import cli.backend.userinterface.textformatters.TextWrapper;
@@ -19,6 +20,7 @@ public class UICommunity {
 
     private static UICommunity instance;
     private final Console console;
+    private final static CommunityService communityService = CommunityService.getInstance();
 
     private UICommunity() {
         this.console = Console.getInstance();
@@ -70,6 +72,7 @@ public class UICommunity {
     }
 
     public void showCommunitySimple(Community c) {
-        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic()));
+        String NSFW=communityService.hasNSFWPosts(c);
+        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic())+ " | "+formatNSFW(NSFW));
     }
 }

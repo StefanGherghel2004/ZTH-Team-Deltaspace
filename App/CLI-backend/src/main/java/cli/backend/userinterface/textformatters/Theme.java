@@ -54,6 +54,15 @@ public class Theme {
         return "\n" + dashes + paddedTitle + dashes;
     }
 
+    public static String formatNSFW(String NSFW){
+        String fullNSFW="NSFW: "+NSFW;
+        String coloredNSFW=switch (NSFW){
+            case "Yes"->Color.textOrange(fullNSFW);
+            default -> fullNSFW;
+        };
+        return coloredNSFW;
+    }
+
     public static String footer() {
         return "-".repeat(HEADER_WIDTH) + "\n";
     }

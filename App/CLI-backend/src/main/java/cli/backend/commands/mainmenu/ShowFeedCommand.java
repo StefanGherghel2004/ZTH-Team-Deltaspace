@@ -38,7 +38,7 @@ public class ShowFeedCommand implements Command {
                 Post foundPost = postService.findPostById(id);
                 if (foundPost != null) {
                     if (foundPost.isNSFW() && !app.getCurrentUser().checkAge()) {
-                        console.error("NSFW Post. You must be 18+.");
+                        console.error("This post is marked as NSFW. You must be at least 18 years old to view it.");
                     } else {
                         app.setCurrentPost(foundPost);
                         app.setCurrentState(AppHandler.State.ON_POST);

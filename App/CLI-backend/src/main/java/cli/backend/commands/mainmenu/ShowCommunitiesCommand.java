@@ -5,6 +5,7 @@ import cli.backend.commands.Command;
 import cli.backend.handlers.AppHandler;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.CommunityService;
+import cli.backend.userinterface.textformatters.Color;
 import cli.backend.userinterface.views.UICommunity;
 
 import java.util.List;
@@ -29,6 +30,14 @@ public class ShowCommunitiesCommand implements Command {
         if (!communityName.isEmpty()) {
             Community foundCommunity = communityService.getCommunityByName(communityName);
             if (foundCommunity != null) {
+                if(communityService.hasNSFWPosts(foundCommunity).equalsIgnoreCase("Yes")){
+                    String warningNSFW = Color.textOrange("This community contains NSFW posts! Are you sure you want to proceed?[yes/no]");
+                    String confirmation = console.getStringInput(warningNSFW,false);
+                    if(confirmation.equalsIgnoreCase("No")){
+                         app.setCurrentState(AppHandler.State.LOGGED_IN);
+                         return true;
+                    }
+                }
                 app.setCurrentCommunity(foundCommunity);
                 app.setCurrentState(AppHandler.State.ON_COMMUNITY);
             } else {
