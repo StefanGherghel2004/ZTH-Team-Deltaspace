@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class CommentCreateDto {
 
@@ -11,7 +13,7 @@ public class CommentCreateDto {
     private String text;
 
     @NotNull(message = "Comment must be referred to a post.")
-    private Long postId;
+    private UUID postId;
 
-    private Long parentCommentId;
+    private UUID parentCommentId;
 }

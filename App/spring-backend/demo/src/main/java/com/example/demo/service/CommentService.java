@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -47,13 +48,13 @@ public class CommentService {
         return commentRepository.save(commentToAdd);
     }
 
-    public Comment findById (Long id) {
+    public Comment findById (UUID id) {
         return commentRepository.findById(id).orElseThrow(() ->
                 new CommentNotFoundException("Comment with id: " + id + " was not found."));
     }
 
     @Transactional
-    public void deleteCommentById (Long id) {
+    public void deleteCommentById (UUID id) {
         Comment comment = findById(id);
         if (!comment.getUser().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this comment");
@@ -62,7 +63,7 @@ public class CommentService {
     }
 
     @Transactional
-    public List<Comment> getCommentsByPostId(Long postId) {
+    public List<Comment> getCommentsByPostId(UUID postId) {
         Post post = postService.findById(postId);
 
         return post.getComments();
@@ -73,7 +74,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment editComment (Long commentId, CommentUpdateDto updateDto) {
+    public Comment editComment (UUID commentId, CommentUpdateDto updateDto) {
         Comment updatedComment = findById(commentId);
         updatedComment.setText(updateDto.getText());
         return commentRepository.save(updatedComment);

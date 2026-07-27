@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -65,7 +66,7 @@ public class PostService {
         return postFeedDto;
     }
 
-    public Post findById(Long id) {
+    public Post findById(UUID id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
     }
@@ -76,7 +77,7 @@ public class PostService {
         return community.getPosts();
     }
 
-    public Post updatePost(Long id, PostUpdateDto updateDto) {
+    public Post updatePost(UUID id, PostUpdateDto updateDto) {
         Post post = findById(id);
         User authenticatedUser = userService.getAuthenticatedUser();
         if(!post.getAuthor().equals(authenticatedUser)){
@@ -96,7 +97,7 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePostById (Long id) {
+    public void deletePostById (UUID id) {
         Post post = findById(id);
         if(!post.getAuthor().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this post.");

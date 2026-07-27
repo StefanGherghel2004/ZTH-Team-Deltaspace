@@ -4,6 +4,9 @@ import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.exception.notfound.UserNotFoundException;
+import com.example.demo.response.ApiError;
+import com.example.demo.response.ApiResponse;
+import com.example.demo.response.ErrorDetail;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,13 +30,13 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, "This token expired.", request, null);
+    public ResponseEntity<ApiResponse<Void>> handleExpiredJwtException(ExpiredJwtException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "This token expired.", request, null);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.FORBIDDEN, e.getMessage(), request, null);
+    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), request, null);
     }
 
     @ExceptionHandler({
@@ -41,67 +45,63 @@ public class GlobalExceptionHandler {
             UserNotFoundException.class,
             CommunityNotFoundException.class
     })
-    public ResponseEntity<ErrorResponse> handleNotFoundException(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.NOT_FOUND, e.getMessage(), request, null);
+    public ResponseEntity<ApiResponse<Void>> handleNotFoundException(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), request, null);
     }
 
     @ExceptionHandler({
             UserTooYoungException.class,
             IllegalArgumentException.class
     })
-    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request, null);
+    public ResponseEntity<ApiResponse<Void>> handleBadRequest(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", e.getMessage(), request, null);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ErrorResponse> handleMaxSizeException(MaxUploadSizeExceededException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.CONTENT_TOO_LARGE, "Max file size exceeded.", request, null);
+    public ResponseEntity<ApiResponse<Void>> handleMaxSizeException(MaxUploadSizeExceededException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONTENT_TOO_LARGE, "PAYLOAD_TOO_LARGE", "Max file size exceeded.", request, null);
     }
 
     @ExceptionHandler(FileStorageException.class)
-    public ResponseEntity<ErrorResponse> handleFileStorage(FileStorageException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request, null);
+    public ResponseEntity<ApiResponse<Void>> handleFileStorage(FileStorageException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_STORAGE_ERROR", e.getMessage(), request, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        Map<String, String> errors = ex.getBindingResult()
+    public ResponseEntity<ApiResponse<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        List<ErrorDetail> details = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .collect(Collectors.toMap(
-                        FieldError::getField,
-                        fieldError -> Objects.requireNonNullElse(fieldError.getDefaultMessage(), "Validation failed"),
-                        (first, second) -> first
-                ));
+                .map(error -> new ErrorDetail(
+                        error.getField(),
+                        error.getDefaultMessage() != null ? error.getDefaultMessage() : "Validation failed"
+                ))
+                .collect(Collectors.toList());
 
-        return buildResponse(HttpStatus.BAD_REQUEST, "Validation failed", request, errors);
+        return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "Datele furnizate nu sunt valide", request, details);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponse> handleDatabaseError(DataIntegrityViolationException ex, HttpServletRequest request) {
-        Map<String, String> errorDetails = Map.of("details", ex.getMostSpecificCause().getMessage());
-        return buildResponse(HttpStatus.CONFLICT, "Database error", request, errorDetails);
+    public ResponseEntity<ApiResponse<Void>> handleDatabaseError(DataIntegrityViolationException ex, HttpServletRequest request) {
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("database", ex.getMostSpecificCause().getMessage())
+        );
+        return buildResponse(HttpStatus.CONFLICT, "CONFLICT", "Database conflict error", request, details);
     }
 
-    private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, HttpServletRequest request, Map<String, String> errors) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .status(status.value())
-                .message(message)
-                .time(LocalDateTime.now())
-                .url(request.getRequestURI())
-                .errors(errors)
-                .build();
 
-        return new ResponseEntity<>(errorResponse, status);
-    }
+    private ResponseEntity<ApiResponse<Void>> buildResponse(
+            HttpStatus status,
+            String code,
+            String message,
+            HttpServletRequest request,
+            List<ErrorDetail> details) {
 
-    @Data
-    @Builder
-    public static class ErrorResponse {
-        private String message;
-        private int status;
-        private LocalDateTime time;
-        private String url;
-        private Map<String, String> errors; // detailed explanation
+
+        ApiError apiError = new ApiError(code, message, details);
+
+        ApiResponse<Void> response = ApiResponse.error(apiError, request.getRequestURI());
+
+        return ResponseEntity.status(status).body(response);
     }
 }

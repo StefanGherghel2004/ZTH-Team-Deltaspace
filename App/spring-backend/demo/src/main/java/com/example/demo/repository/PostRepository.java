@@ -8,12 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByCommunityName(String name);
     boolean existsByCommunityNameAndNsfwTrue(String name);
-    Optional<Post> findPostById(Long id);
+    Optional<Post> findById(UUID id);
     @Query (value ="SELECT * FROM posts ORDER BY MD5(CONCAT(id,:seed)) LIMIT :limit OFFSET :offset",nativeQuery=true)
     List<Post> getRandomizedFeed (@Param("seed") String seed, @Param("limit") int limit, @Param("offset") int offset);
 }

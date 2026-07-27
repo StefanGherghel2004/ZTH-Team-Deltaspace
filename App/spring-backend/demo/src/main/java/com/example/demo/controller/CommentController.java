@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -26,12 +27,12 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public Comment getCommentById (@PathVariable Long id) {
+    public Comment getCommentById (@PathVariable UUID id) {
         return commentService.findById(id);
     }
 
     @GetMapping
-    public List<Comment> getComments(@RequestParam(required = false) Long postId) {
+    public List<Comment> getComments(@RequestParam(required = false) UUID postId) {
         if (postId != null) {
             return commentService.getCommentsByPostId(postId);
         }
@@ -40,12 +41,12 @@ public class CommentController {
 
     @DeleteMapping("/deleteComment/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCommentById (@PathVariable Long id) {
+    public void deleteCommentById (@PathVariable UUID id) {
         commentService.deleteCommentById(id);
     }
 
     @PutMapping("/editComment/{id}")
-    public Comment updateComment (@PathVariable Long id, @Valid @RequestBody CommentUpdateDto updateDto) {
+    public Comment updateComment (@PathVariable UUID id, @Valid @RequestBody CommentUpdateDto updateDto) {
 
         return commentService.editComment(id,updateDto);
     }
