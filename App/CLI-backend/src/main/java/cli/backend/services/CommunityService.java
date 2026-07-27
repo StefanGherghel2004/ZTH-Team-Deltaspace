@@ -1,9 +1,11 @@
 package cli.backend.services;
 
 import cli.backend.Community;
+import cli.backend.Post;
 import cli.backend.User;
 import cli.backend.repositories.CommunityRepository;
 import cli.backend.exceptions.InvalidCommunityException;
+import cli.backend.repositories.PostRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class CommunityService {
 
     private static CommunityService instance;
     private static CommunityRepository communityRepository = CommunityRepository.getInstance();
+    private static PostRepository postRepository = PostRepository.getInstance();
 
     public static CommunityService getInstance(){
         if(instance==null){
@@ -85,5 +88,15 @@ public class CommunityService {
 
     public Community getCommunityByName(Community c){
        return communityRepository.findByName(c.getNickname());
+    }
+
+    public String hasNSFWPosts(Community c){
+        List<Post> communityPosts = postRepository.getCommunityPosts(c.getNickname());
+        for(Post p:communityPosts){
+           if(p.isNSFW()) {
+               return "Yes";
+           }
+        }
+        return "No";
     }
 }

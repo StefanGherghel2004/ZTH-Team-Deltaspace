@@ -7,6 +7,7 @@ public class Color {
     private static final String TEXT_RED = "\u001b[31m";
     private static final String TEXT_GREEN = "\u001b[32m";
     private static final String TEXT_YELLOW = "\u001b[33m";
+    private static final String TEXT_ORANGE = "\u001b[38;2;255;165;0m";
 
     private static final String TEXT_BLACK = "\u001b[30m";
     private static final String TEXT_WHITE = "\u001b[37m";
@@ -133,6 +134,7 @@ public class Color {
         return apply(TEXT_BRIGHT_CYAN, m);
     }
 
+    public static String textOrange(String m){return apply(TEXT_ORANGE, m); }
 
     // background color methods
     public static String bgRed(String m) {
