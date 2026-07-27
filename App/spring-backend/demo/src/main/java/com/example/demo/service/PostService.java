@@ -41,7 +41,7 @@ public class PostService {
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
             String imageUrl = s3ImageService.uploadImage(dto.getImage(), dto.getFilter());
-            post.setImageLink(imageUrl);
+            post.setImageUrl(imageUrl);
         }
 
         if (dto.getCommunityName() != null && !dto.getCommunityName().isBlank()) {
@@ -89,7 +89,7 @@ public class PostService {
         post.setNsfw(updateDto.isNsfw());
         if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
             String imageLink = s3ImageService.uploadImage(updateDto.getImage(), updateDto.getFilter());
-            post.setImageLink(imageLink);
+            post.setImageUrl(imageLink);
         }
 
 

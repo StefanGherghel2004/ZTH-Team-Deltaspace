@@ -20,7 +20,7 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private String imageLink;
+    private String imageUrl;
     private boolean nsfw;
 
     @ManyToOne(fetch = FetchType.LAZY)

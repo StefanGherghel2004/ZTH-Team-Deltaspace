@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostFeedDto;
 import com.example.demo.dto.post.PostUpdateDto;
+import com.example.demo.dto.post.response.PostResponseDto;
+import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Post;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.PostService;
@@ -23,23 +25,29 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+    private final PostMapper postMapper;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<Post>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
+    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
 
+        PostResponseDto response = postMapper.toDto(createdPost);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(createdPost));
+                .body(ApiResponse.success(response));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Post>> getPostById(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
         Post post = postService.findById(id);
-        return ResponseEntity.ok(ApiResponse.success(post));
+
+        PostResponseDto response = postMapper.toDto(post);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Post>>> getPosts(@RequestParam(required = false) String subreddit) {
+    public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPosts(@RequestParam(required = false) String subreddit) {
         List<Post> posts;
         if (subreddit != null && !subreddit.trim().isEmpty()) {
             posts = postService.getCommunityPosts(subreddit);
@@ -47,12 +55,18 @@ public class PostController {
             posts = postService.getAllPosts();
         }
 
-        return ResponseEntity.ok(ApiResponse.success(posts));
+        List<PostResponseDto> response = posts.stream()
+                .map(postMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @PutMapping("/{id}")
-    public Post updatePost(@PathVariable UUID id, @Valid @ModelAttribute PostUpdateDto updateDto){
-        return postService.updatePost(id,updateDto);
+    public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @ModelAttribute PostUpdateDto updateDto){
+        PostResponseDto response = postMapper.toDto(postService.updatePost(id, updateDto));
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     // this is 200 OK because 204 DELETED would not have a body and the docs specify this body
