@@ -43,7 +43,7 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth", "/api/users/addUser").permitAll()
+                        .requestMatchers("/api/auth", "/api/users/addUser", "/filters").permitAll()
                         .anyRequest().authenticated()
                 )
 
