@@ -25,7 +25,9 @@ public class CheckImage {
             return null;
         }
 
-        Path path = Paths.get(filePath);
+        String cleanPath = filePath.replace("\"", "");
+
+        Path path = Paths.get(cleanPath);
         if (!Files.exists(path) || Files.isDirectory(path)) {
             throw new IllegalArgumentException("File does not exist");
         }
