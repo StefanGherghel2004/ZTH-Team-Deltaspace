@@ -57,11 +57,10 @@ public class PostService {
         postRepository.deletePostById(post.getId());
     }
 
-    public boolean canUserDeletePost(User user, Post post, Community community) {
-        if (user == null || post == null) return false;
-        if (post.getAuthorUsername().equals(user.getUsername())) return true;
+    public boolean canUserDeletePost(User user, Community community) {
+        if (user == null || community == null) return false;
 
-        return community != null && community.getCommunityCreator().equals(user.getUsername());
+        return community.getCommunityCreatorId().equals(user.getId());
     }
 
     public boolean canUserEditPost (User user, Post post) {

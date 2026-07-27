@@ -1,6 +1,7 @@
 package cli.backend.repositories;
 
 import cli.backend.Post;
+import cli.backend.User;
 import cli.backend.loggers.Logger;
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class PostRepository {
 
     private static final DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
     private static PostRepository instance = null;
+    private static UserRepository userRepository = UserRepository.getInstance();
 
     private static final String createTableQuery = """
         

@@ -4,7 +4,6 @@ import cli.backend.Community;
 import cli.backend.commands.BackCommand;
 import cli.backend.commands.CreatePostCommand;
 import cli.backend.commands.communitymenu.DeleteCommunityCommand;
-import cli.backend.commands.communitymenu.EditCommunityCommand;
 import cli.backend.commands.communitymenu.OpenEditCommunityCommand;
 import cli.backend.commands.communitymenu.ShowPostsInCommunityCommand;
 import cli.backend.handlers.AppHandler;
@@ -25,10 +24,10 @@ public class CommunityMenu extends Menu {
         addOption("Add Post", new CreatePostCommand());
         addOption("Return to Main Menu", new BackCommand());
 
-        if (List.of(currentCommunity.getCommunityCreator(), "admin").contains(appHandler.getCurrentUser().getId())) {
+        if (List.of(currentCommunity.getCommunityCreatorId(), "admin").contains(appHandler.getCurrentUser().getId())) {
             addOption("Edit Community", new OpenEditCommunityCommand());
         }
-        if (List.of(currentCommunity.getCommunityCreator(),"admin")
+        if (List.of(currentCommunity.getCommunityCreatorId(),"admin")
                 .contains(appHandler.getCurrentUser().getId()))
             addOption("Delete community", new DeleteCommunityCommand());
     }

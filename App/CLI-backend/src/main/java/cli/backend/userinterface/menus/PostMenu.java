@@ -3,6 +3,8 @@ package cli.backend.userinterface.menus;
 import cli.backend.Post;
 import cli.backend.commands.*;
 import cli.backend.commands.postmenu.*;
+import cli.backend.handlers.AppHandler;
+import cli.backend.services.PostService;
 import cli.backend.userinterface.views.UIPost;
 
 public class PostMenu extends Menu {
@@ -11,6 +13,8 @@ public class PostMenu extends Menu {
 
     public PostMenu(Post currentPost) {
         this.currentPost = currentPost;
+        PostService postService = PostService.getInstance();
+        AppHandler appHandler = AppHandler.getInstance();
 
         setTitle("Post Actions");
         if (currentPost.getImageLink() != null) {
@@ -21,7 +25,10 @@ public class PostMenu extends Menu {
         addOption("Select comment (Reply)", new SelectCommentCommand());
         addOption("UpVote", new UpVoteCommand());
         addOption("DownVote",new DownVoteCommand());
-        addOption("Edit Post", new OpenEditPostMenuCommand());
+        if(postService.canUserEditPost(appHandler.getCurrentUser(),currentPost))
+            addOption("Edit Post", new OpenEditPostMenuCommand());
+        if (postService.canUserDeletePost(appHandler.getCurrentUser(), appHandler.getCurrentCommunity()))
+            addOption("Delete Post", new DeletePostCommand());
 
         if(currentPost.getCommunityName() == null) {
             addOption("Back to Main Menu", new BackCommand());

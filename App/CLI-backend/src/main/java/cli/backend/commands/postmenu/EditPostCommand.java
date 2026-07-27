@@ -23,11 +23,6 @@ public class EditPostCommand implements Command {
 
         Post postToEdit = app.getCurrentPost();
 
-        if (!postService.canUserEditPost(app.getCurrentUser(),postToEdit)) {
-            console.error("You cannot edit this post as you are not the owner.");
-            app.setCurrentState(AppHandler.State.ON_POST);
-            return true;
-        }
         switch (editType) {
             case "contents" -> {
                 String newContents = console.getMultiLineInput(

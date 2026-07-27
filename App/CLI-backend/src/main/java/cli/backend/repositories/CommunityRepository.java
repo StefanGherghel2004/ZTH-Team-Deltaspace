@@ -59,7 +59,7 @@ public class CommunityRepository {
             stm.setString(3,community.getNickname());
             stm.setString(4,community.getTopic());
             stm.setString(5,community.getDescription());
-            stm.setLong(6,community.getCommunityCreator());
+            stm.setLong(6,community.getCommunityCreatorId());
 
             stm.executeUpdate();
 

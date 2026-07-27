@@ -17,12 +17,6 @@ public class DeletePostCommand implements Command {
         Post postToDelete = app.getCurrentPost();
         Community currentCommunity = app.getCurrentCommunity();
 
-        if (!postService.canUserDeletePost(app.getCurrentUser(), postToDelete, currentCommunity)) {
-            console.error("You cannot delete this post as you are not the owner.");
-            returnToPreviousState(app, currentCommunity);
-            return true;
-        }
-
         boolean confirm = console.getUserConfirmation("Are you sure you want to delete this post? (yes/no): ");
 
         if (confirm) {

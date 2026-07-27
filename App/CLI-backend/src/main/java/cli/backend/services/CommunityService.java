@@ -75,11 +75,11 @@ public class CommunityService {
 
 
     public boolean canUserEditCommunity(User currentUser, Community currentCommunity) {
-        return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreator());
+        return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreatorId());
     }
 
     public boolean canUserDeletePost(User currentUser, Community currentCommunity) {
-        return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreator());
+        return Objects.equals(currentUser.getId(), currentCommunity.getCommunityCreatorId());
 
     }
 
