@@ -22,7 +22,6 @@ public class CommunityMenu extends Menu {
         setTitle("Community options");
         addOption("View Posts", new ShowPostsInCommunityCommand());
         addOption("Add Post", new CreatePostCommand());
-        addOption("Return to Main Menu", new BackCommand());
 
         if (List.of(currentCommunity.getCommunityCreatorId(), "admin").contains(appHandler.getCurrentUser().getId())) {
             addOption("Edit Community", new OpenEditCommunityCommand());
@@ -30,6 +29,8 @@ public class CommunityMenu extends Menu {
         if (List.of(currentCommunity.getCommunityCreatorId(),"admin")
                 .contains(appHandler.getCurrentUser().getId()))
             addOption("Delete community", new DeleteCommunityCommand());
+
+        addOption("Return to Main Menu", new BackCommand());
     }
 
     @Override
