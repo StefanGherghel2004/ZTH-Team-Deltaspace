@@ -1,6 +1,8 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -9,28 +11,20 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class User {
-
-
     private UUID id;
     private String username;
     private String email;
     private String password;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     private String token;
     private boolean deleted = false;
 
-    public User(String username, String email, String password, LocalDate dateOfBirth) {
+    public User(String username, String email, String password, String dateOfBirth) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
     }
-
-    public boolean checkAge(){
-        LocalDate today = LocalDate.now();
-        Period age = Period.between(dateOfBirth, today);
-        return age.getYears() >= 18;
-    }
-
 }
