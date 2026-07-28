@@ -17,6 +17,7 @@ public abstract class Menu {
     protected Map<Integer, MenuOption> options = new LinkedHashMap<>();
     @Setter
     protected String title = "";
+    protected String BACK_COMMAND_INSTRUCTIONS = "You can always type ':back' on an empty line in order to escape a action.";
 
     protected void addOption(String description, Command command) {
         int nextKey = options.size() + 1;
@@ -29,7 +30,6 @@ public abstract class Menu {
         for (Map.Entry<Integer, MenuOption> entry : options.entrySet()) {
             formattedOptions.add(Capitalise.format(entry.getKey() + ". " + entry.getValue().getDescription()));
         }
-
         String menuBox = BoxPadder.formatWithGradientBorder(
                 formattedOptions,
                 Capitalise.format(title),
@@ -37,7 +37,7 @@ public abstract class Menu {
                 Theme.PRIMARY_GRADIENT_END
         );
 
-        Console.getInstance().info("\n" + menuBox);
+        Console.getInstance().info("\n" + menuBox + BACK_COMMAND_INSTRUCTIONS);
     }
 
     public Command getCommand(int choice) {

@@ -15,8 +15,9 @@ public class ConsoleReader {
     private static final String ERR_INVALID_NUMBER = "Please enter a valid number.";
     private static final String ERR_EMPTY_INPUT = "Input cannot be empty. Try again.";
     private static final String ERR_OUT_OF_RANGE = Color.textRed("Invalid option. Please enter a number between %d and %d.");
-
+    private static final String ERR_BACK_COMMAND = "You cannot use the back command in a menu please select a valid option.";
     private static final String PROMPT_RANGE = "Choose an option (%d-%d): ";
+
 
     private final Scanner scanner;
     private static ConsoleReader instance = null;
@@ -80,7 +81,7 @@ public class ConsoleReader {
                 } else
                     System.out.printf((ERR_OUT_OF_RANGE) + "\n", min, max);
             } catch(BackNavigationException backNavigationException){
-                console.error("You cannot use the back command in a menu please select a valid option.");
+                console.error(ERR_BACK_COMMAND);
             }
         }
     }

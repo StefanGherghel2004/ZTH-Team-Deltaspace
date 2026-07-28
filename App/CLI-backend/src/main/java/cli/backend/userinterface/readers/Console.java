@@ -18,8 +18,6 @@ public class Console {
             Color.textCyan("(Type your text. Press Enter for a new line. Type '"
                     + MULTILINE_STOP_SYM
                     + "' on an empty line to finish)");
-    private static final String BACK_COMMAND_INSTRUCTION = Color.textCyan("(Enter the required input" +
-            " or type :back on an empty line to cancel and go to the previous page)");
 
     private static Console instance;
     private ConsoleReader reader;
@@ -52,7 +50,6 @@ public class Console {
     }
 
     public String getMultiLineInput(String prompt) {
-        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         System.out.println(MULTILINE_INSTRUCTION);
 
@@ -60,28 +57,24 @@ public class Console {
     }
 
     public String getStringInput(String prompt) {
-        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readString();
     }
 
     public String getStringInput(String prompt, boolean allowEmpty) {
-        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readString(allowEmpty);
     }
 
     public int getIntInput(String prompt) {
-        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readInt();
     }
 
     public Long getLongInput(String prompt) {
-        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         return reader.readLong();
@@ -93,7 +86,6 @@ public class Console {
     }
 
     public boolean getUserConfirmation(String prompt) {
-        System.out.println(BACK_COMMAND_INSTRUCTION);
         System.out.println(prompt);
         printPromptPrefix();
         String confirm = reader.readString();
