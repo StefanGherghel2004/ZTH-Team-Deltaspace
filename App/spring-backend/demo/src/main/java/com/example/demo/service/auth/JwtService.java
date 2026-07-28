@@ -28,7 +28,7 @@ public class JwtService {
         return Jwts.builder().
                 claims(claims).
                 subject(username).                                                   // 3 hours for testing
-                issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 180))
+                issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 3))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

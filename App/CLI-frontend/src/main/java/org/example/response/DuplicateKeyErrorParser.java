@@ -1,4 +1,4 @@
-package org.example.commands;
+package org.example.response;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ErrorUtils {
+public class DuplicateKeyErrorParser {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final Pattern KEY_PATTERN = Pattern.compile("Key \\((.*?)\\)=\\((.*?)\\)");

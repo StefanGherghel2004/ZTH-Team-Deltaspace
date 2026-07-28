@@ -38,7 +38,6 @@ public class LoginCommand implements Command {
 
                 if (response != null) {
                     String token = response.token();
-                    Console.getInstance().error(token);
                     User user = response.user();
 
                     app.setJwtToken(token);
