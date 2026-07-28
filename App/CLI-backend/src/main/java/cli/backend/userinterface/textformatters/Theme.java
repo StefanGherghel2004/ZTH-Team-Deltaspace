@@ -37,7 +37,7 @@ public class Theme {
             case "food" -> Color.textYellow(topic);
             case "gaming" -> Color.textRed(topic);
             case "science" -> Color.textBrightMagenta(topic);
-            case "art" -> Color.textMagenta(topic);
+            case "art" -> Color.textGreen(topic);
             case "tech" -> Color.textBrightBlue(topic);
             default -> topic;
         };
