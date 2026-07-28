@@ -18,6 +18,8 @@ public class UICommunity {
     private final static String HEADER_TITLE = "Communities";
     private final static String NO_COMMUNITIES = "No communities created.";
 
+    private static final String FORMAT_COMMUNITY_SIMPLE = "%-12.12s | %s";
+
     private static UICommunity instance;
     private final Console console;
     private final static CommunityService communityService = CommunityService.getInstance();
@@ -73,6 +75,8 @@ public class UICommunity {
 
     public void showCommunitySimple(Community c) {
         String NSFW=communityService.hasNSFWPosts(c);
-        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic())+ " | "+formatNSFW(NSFW));
+
+        String comWithoutName = "Topic: " + formatTopic(c.getTopic()) + " | " + formatNSFW(NSFW);
+        console.info(String.format(FORMAT_COMMUNITY_SIMPLE, c.getNickname(), comWithoutName));
     }
 }
