@@ -26,7 +26,7 @@ public class PostMenu extends Menu {
 //        if(postService.canUserEditPost(appHandler.getCurrentUser(),currentPost))
 //            addOption("Edit Post", new OpenEditPostMenuCommand());
 //        if (postService.canUserDeletePost(appHandler.getCurrentUser(), appHandler.getCurrentCommunity()))
-//            addOption("Delete Post", new DeletePostCommand());
+         addOption("Delete Post", new DeletePostCommand());
 
         if(currentPost.getSubreddit() == null) {
             addOption("Back to Main Menu", new BackCommand());
