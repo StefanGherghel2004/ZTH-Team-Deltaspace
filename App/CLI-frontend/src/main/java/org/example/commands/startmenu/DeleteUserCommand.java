@@ -19,7 +19,7 @@ public class DeleteUserCommand implements Command {
         boolean confirmation = console.getUserConfirmation(
                 "Are you sure you want to delete your account? (yes/no): ");
         if(confirmation){
-            boolean removed = userApiClient.deleteUser(currentUser.getUsername(),currentUser.getToken());
+            boolean removed = userApiClient.deleteUser(currentUser.getUsername(),appHandler.getJwtToken());
             if(removed){
                 appHandler.setCurrentState(AppHandler.State.NOT_LOGGED_IN);
                 appHandler.setCurrentUser(null);

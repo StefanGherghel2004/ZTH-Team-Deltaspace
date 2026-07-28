@@ -1,14 +1,11 @@
 package org.example.commands.startmenu;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.apiclients.UserApiClient;
 import org.example.commands.Command;
-
+import org.example.response.DuplicateKeyErrorParser;
 import org.example.exceptions.BackNavigationException;
 import org.example.userinterface.readers.Console;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
@@ -44,7 +41,7 @@ public class RegisterCommand implements Command {
             console.info(backNavigationException.getMessage());
         }
         catch (HttpClientErrorException.Conflict e) {
-            String friendlyError = ErrorUtils.extractDuplicateKeyError(e);
+            String friendlyError = DuplicateKeyErrorParser.extractDuplicateKeyError(e);
             console.error(friendlyError);
 
         } catch (HttpClientErrorException e) {
