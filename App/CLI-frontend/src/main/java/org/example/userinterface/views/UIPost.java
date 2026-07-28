@@ -107,7 +107,7 @@ public class UIPost {
 
         if (post.getSubreddit() != null) {
             lines.add("");
-            lines.add(post.getSubreddit());
+            lines.add("r/" + post.getSubreddit());
         }
 
         lines.add("");
