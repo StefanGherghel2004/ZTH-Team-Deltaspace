@@ -106,7 +106,7 @@ public class UIPost {
         lines.add("Author: " + post.getAuthor());
         lines.add("");
 
-        List<String> wrappedContent = TextWrapper.wrap(post.getPostContents(), MAX_TEXT_WIDTH);
+        List<String> wrappedContent = TextWrapper.wrap(post.getContent(), MAX_TEXT_WIDTH);
         lines.addAll(wrappedContent);
 
         if (post.getImageUrl() != null) {

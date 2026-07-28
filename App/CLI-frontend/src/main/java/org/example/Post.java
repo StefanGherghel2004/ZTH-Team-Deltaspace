@@ -13,7 +13,7 @@ public class Post {
     private UUID id;
     private String author;
     private String title;
-    private String postContents;
+    private String content;
     private String imageUrl;
     private String subreddit;
     private Integer upVotes;
@@ -21,11 +21,11 @@ public class Post {
     private boolean NSFW;
 
     //Constructor
-    public Post (String author, String postTitle, String postContents, String imageUrl, boolean NSFW, String subreddit,Integer upVotes, Integer downVotes) {
+    public Post (String author, String postTitle, String content, String imageUrl, boolean NSFW, String subreddit,Integer upVotes, Integer downVotes) {
         this.author = author;
         this.imageUrl = imageUrl;
         this.title = postTitle;
-        this.postContents = postContents;
+        this.content = content;
         this.NSFW = NSFW;
         this.subreddit = subreddit;
         this.upVotes=upVotes;
@@ -36,9 +36,9 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", authorUsername='" + author + '\'' +
-                ", postTitle='" + title + '\'' +
-                ", postContents='" + postContents + '\'' +
+                ", author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", communityName='" + subreddit + '\'' +
                 ", upVotes=" + upVotes +
