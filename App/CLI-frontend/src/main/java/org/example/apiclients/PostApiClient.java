@@ -10,11 +10,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class PostApiClient {
 
@@ -132,5 +128,31 @@ public class PostApiClient {
             System.err.println("Delete failed due to network error: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean votePost(Post post, String voteType, String token) {
+        try {
+            Map<String, String> body = new HashMap<>();
+            body.put("voteType", voteType);
+
+            ApiResponse<Map<String, Object>> response = restClient.put()
+                    .uri("/api/posts/{id}/vote", post.getId())
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<ApiResponse<Map<String, Object>>>() {});
+
+            if (response != null && response.isSuccess() && response.getData() != null) {
+                Map<String, Object> data = response.getData();
+                post.setUpvotes((Integer) data.get("upvotes"));
+                post.setDownvotes((Integer) data.get("downvotes"));
+                post.setUserVote((String) data.get("userVote"));
+                return true;
+            }
+        } catch (Exception e) {
+            System.err.println("Error sending vote: " + e.getMessage());
+        }
+        return false;
     }
 }

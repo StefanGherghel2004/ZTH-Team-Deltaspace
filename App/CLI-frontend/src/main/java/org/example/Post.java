@@ -16,8 +16,9 @@ public class Post {
     private String content;
     private String imageUrl;
     private String subreddit;
-    private Integer upVotes;
-    private Integer downVotes;
+    private Integer upvotes;
+    private Integer downvotes;
+    private String userVote;
     private boolean NSFW;
 
     //Constructor
@@ -28,8 +29,8 @@ public class Post {
         this.content = content;
         this.NSFW = NSFW;
         this.subreddit = subreddit;
-        this.upVotes=upVotes;
-        this.downVotes=downVotes;
+        this.upvotes=upVotes;
+        this.downvotes=downVotes;
     }
 
     @Override
@@ -41,8 +42,8 @@ public class Post {
                 ", content='" + content + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", communityName='" + subreddit + '\'' +
-                ", upVotes=" + upVotes +
-                ", downVotes=" + downVotes +
+                ", upVotes=" + upvotes +
+                ", downVotes=" + downvotes +
                 ", NSFW=" + NSFW +
                 '}';
     }
