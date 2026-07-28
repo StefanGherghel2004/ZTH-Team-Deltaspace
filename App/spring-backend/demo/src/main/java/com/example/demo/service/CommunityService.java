@@ -38,7 +38,7 @@ public class CommunityService {
 
     public Community addCommunity(CommunityCreateDto dto){
 
-        User author = null;
+        User author = userService.getAuthenticatedUser();
         Topic topic = getTopicFromString(dto.getTopic());
 
         Community community = new Community();
@@ -77,6 +77,7 @@ public class CommunityService {
 
         community.setDescription(updateDto.getDescription());
         community.setTopic(updateDto.getTopic());
+        community.setName(updateDto.getName());
         return communityRepository.save(community);
     }
 
