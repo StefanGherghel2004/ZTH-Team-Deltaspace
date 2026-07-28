@@ -19,12 +19,12 @@ public class EditUserCommand implements Command {
     }
     @Override
     public boolean execute() {
-        AppHandler app = AppHandler.getInstance();
+        AppHandler appHandler = AppHandler.getInstance();
         Console console = Console.getInstance();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         UserApiClient userApiClient = UserApiClient.getInstance();
 
-        User userToEdit = app.getCurrentUser();
+        User userToEdit = appHandler.getCurrentUser();
         String oldUsername = userToEdit.getUsername();
         try {
             switch (editType) {
@@ -50,7 +50,7 @@ public class EditUserCommand implements Command {
 
                 default -> {
                     console.error("Invalid edit operation: " + editType);
-                    app.setCurrentState(AppHandler.State.EDIT_USER);
+                    appHandler.setCurrentState(AppHandler.State.EDIT_USER);
                     return true;
                 }
             }
@@ -60,9 +60,9 @@ public class EditUserCommand implements Command {
                     "password",userToEdit.getPassword(),
                     "dateOfBirth",userToEdit.getDateOfBirth()
             );
-            userApiClient.updateUser(oldUsername,payload);
+            userApiClient.updateUser(oldUsername,payload, appHandler.getJwtToken());
             console.success("User updated successfully!");
-            app.setCurrentState(AppHandler.State.EDIT_USER);
+            appHandler.setCurrentState(AppHandler.State.EDIT_USER);
         }
         catch (BackNavigationException backNavigationException){
             console.info(backNavigationException.getMessage());

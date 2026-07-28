@@ -53,6 +53,24 @@ public class UserService {
             throw new AccessDeniedException("This account is not yours.");
         }
 
+        if (updateDto.getUsername() != null && !updateDto.getUsername().isBlank()
+                && !updateDto.getUsername().equals(user.getUsername())) {
+
+            if (userRepository.findByUsername(updateDto.getUsername()).isPresent()) {
+                throw new IllegalArgumentException("Username '" + updateDto.getUsername() + "' is already taken.");
+            }
+            user.setUsername(updateDto.getUsername());
+        }
+
+        if (updateDto.getEmail() != null && !updateDto.getEmail().isBlank()
+                && !updateDto.getEmail().equalsIgnoreCase(user.getEmail())) {
+
+            if (userRepository.findByEmail(updateDto.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("Email '" + updateDto.getEmail() + "' is already in use.");
+            }
+            user.setEmail(updateDto.getEmail());
+        }
+
         if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
         }
@@ -76,8 +94,14 @@ public class UserService {
     }
 
     public User findByUsernameOrEmail(String usernameOrEmail) {
-        return userRepository.findByUsername(usernameOrEmail)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + usernameOrEmail));
+        return userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail)
+                .orElseThrow(() -> new UserNotFoundException(
+                        "User not found with username or email: " + usernameOrEmail));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email + "."));
     }
 
     public void deleteUserByUsername(String username) {

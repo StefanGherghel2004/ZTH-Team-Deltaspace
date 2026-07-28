@@ -71,7 +71,14 @@ public class UserApiClient {
                 .body(new ParameterizedTypeReference<List<User>>() {});
     }
 
-    public User updateUser(String username, Map<String, Object> updateFields) {
+    public User updateUser(String username, Map<String, Object> updateFields, String token) {
+        if (token == null || token.isBlank() || token.equalsIgnoreCase("null")) {
+            System.err.println("Update failed: No active JWT session. Please log in first.");
+            return null;
+        }
+
+        String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         updateFields.forEach((key, value) -> {
             if (value != null) {
@@ -79,12 +86,21 @@ public class UserApiClient {
             }
         });
 
-        return restClient.put()
-                .uri("/api/users/{username}", username)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body)
-                .retrieve()
-                .body(User.class);
+        try {
+            return restClient.put()
+                    .uri("/api/users/{username}", username)
+                    .header("Authorization", "Bearer " + cleanToken)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(body)
+                    .retrieve()
+                    .body(User.class);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            System.err.println("Update failed: Invalid or expired token.");
+            return null;
+        } catch (HttpClientErrorException.Forbidden e) {
+            System.err.println("Update failed: You don't have permission to perform this action.");
+            return null;
+        }
     }
 
     public boolean deleteUser(String username, String token) {
