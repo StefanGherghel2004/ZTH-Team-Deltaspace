@@ -15,6 +15,7 @@ public class User {
     private String email;
     private String password;
     private LocalDate dateOfBirth;
+    private String token;
     private boolean deleted = false;
 
     public User(String username, String email, String password, LocalDate dateOfBirth) {
