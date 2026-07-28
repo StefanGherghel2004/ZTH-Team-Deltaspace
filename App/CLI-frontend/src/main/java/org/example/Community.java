@@ -4,27 +4,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class Community {
-    private Long id;
+    private UUID id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String nickname;
     private String topic;
     private String description;
-    private Long communityCreatorId;
+    private UUID communityCreatorId;
 
 
-    public Community(Long communityCreator, String topic,String nickname,String description){
+    public Community(UUID communityCreator, String topic,String nickname,String description){
         this.topic=topic;
         this.nickname=nickname;
         this.description =description;
         this.communityCreatorId = communityCreator;
     }
 
-    public Community(Long id, String nickname, String topic, String description, Long communityCreator, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Community(UUID id, String nickname, String topic, String description, UUID communityCreator, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id=id;
         this.nickname = nickname;
         this.topic = topic;

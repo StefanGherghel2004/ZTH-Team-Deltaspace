@@ -9,6 +9,7 @@ import org.example.userinterface.textformatters.Theme;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.example.userinterface.textformatters.Theme.*;
 
@@ -42,11 +43,11 @@ public class UIComment {
         String footer = footer();
 
         console.info(header);
-        printThread(0L, commentTree, 0);
+        printThread(new UUID(0L,0L), commentTree, 0);
         console.info(footer);
     }
 
-    private void printThread(Long parentId, Map<Long, List<Comment>> commentTree, int depth) {
+    private void printThread(UUID parentId, Map<Long, List<Comment>> commentTree, int depth) {
         List<Comment> replies = commentTree.get(parentId);
         if (replies != null) {
             for (Comment reply : replies) {

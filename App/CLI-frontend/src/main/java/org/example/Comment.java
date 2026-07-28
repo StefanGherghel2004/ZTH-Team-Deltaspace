@@ -3,16 +3,18 @@ package org.example;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class Comment {
-    private Long id;
-    private Long postId;
+    private UUID id;
+    private UUID postId;
     private String authorUsername;
     private String text;
-    private Long idParent = 0L;
+    private UUID idParent;
 
-    public Comment(String text, String authorUsername, Long postId){
+    public Comment(String text, String authorUsername, UUID postId){
         this.text = text;
         this.authorUsername = authorUsername;
         this.postId = postId;

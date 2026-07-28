@@ -3,10 +3,12 @@ package org.example;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class Post {
-    private Long id;
+    private UUID id;
     private String authorUsername;
     private String postTitle;
     private String postContents;
