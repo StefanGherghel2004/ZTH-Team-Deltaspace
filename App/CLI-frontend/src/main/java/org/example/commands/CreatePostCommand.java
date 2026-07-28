@@ -32,7 +32,7 @@ public class CreatePostCommand implements Command {
 
             String communityName = null;
             if (targetCommunity != null) {
-                communityName = targetCommunity.getNickname(); // Sau getName(), cum l-ai definit
+                communityName = targetCommunity.getNickname();
             } else {
                 String input = console.getStringInput("Please enter the community in which you would" +
                         " like to post \n(or press Enter to post to u/" + app.getCurrentUser().getUsername() + "):", true);
@@ -87,7 +87,7 @@ public class CreatePostCommand implements Command {
                         postData.add("image", fileResource);
                     }
                 } catch (IllegalArgumentException | IOException e) {
-                    console.error("Image error: " + e.getMessage());
+                    console.error(e.getMessage());
                     return true;
                 }
             }

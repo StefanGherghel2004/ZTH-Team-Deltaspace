@@ -10,10 +10,10 @@ public class EditCommunityMenu extends  Menu{
         this.currentCommunity=currentCommunity;
 
         setTitle("Edit Community Menu");
-//        addOption("Edit Name", new EditCommunityCommand("name"));
-//        addOption("Edit Topic" , new EditCommunityCommand("topic"));
-//        addOption("Edit Description",new EditCommunityCommand("description"));
-//        addOption("Return to Community", new BackCommand());
+        addOption("Edit Name", new EditCommunityCommand("name"));
+        addOption("Edit Topic" , new EditCommunityCommand("topic"));
+        addOption("Edit Description",new EditCommunityCommand("description"));
+        addOption("Return to Community", new BackCommand());
     }
 
 }

@@ -32,8 +32,8 @@ public class DeleteCommunityCommand implements Command {
                         .uri("/api/communities/{communityName}", currentCommunity.getNickname())
                         .headers(headers -> {
 
-                            if (appHandler.getCurrentUser().getToken() != null) {
-                                headers.setBearerAuth(appHandler.getCurrentUser().getToken());
+                            if (appHandler.getJwtToken()!= null) {
+                                headers.setBearerAuth(appHandler.getJwtToken());
                             }
                         })
                         .retrieve()

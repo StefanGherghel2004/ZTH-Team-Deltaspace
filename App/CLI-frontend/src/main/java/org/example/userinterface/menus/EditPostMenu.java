@@ -12,9 +12,8 @@ public class EditPostMenu extends Menu{
         this.currentPost = currentPost;
 
         setTitle("Edit post actions");
-//        addOption("Edit post contents", new EditPostCommand("contents"));
-//        addOption("Edit post NSFW tag", new EditPostCommand("nsfw"));
-        addOption("Delete Post", new DeletePostCommand());
+        addOption("Edit post title", new EditPostCommand("title"));
+        addOption("Edit post content", new EditPostCommand("content"));
         addOption("Back to post", new BackCommand());
     }
 

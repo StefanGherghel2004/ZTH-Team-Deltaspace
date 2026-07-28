@@ -5,6 +5,7 @@ import org.example.commands.BackCommand;
 import org.example.commands.postmenu.*;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.views.UIPost;
+import org.example.util.AuthorizationService;
 
 public class PostMenu extends Menu {
 
@@ -23,10 +24,13 @@ public class PostMenu extends Menu {
         addOption("Select comment (Reply)", new SelectCommentCommand());
         addOption("UpVote", new UpVoteCommand());
         addOption("DownVote",new DownVoteCommand());
-//        if(postService.canUserEditPost(appHandler.getCurrentUser(),currentPost))
-//            addOption("Edit Post", new OpenEditPostMenuCommand());
-//        if (postService.canUserDeletePost(appHandler.getCurrentUser(), appHandler.getCurrentCommunity()))
-         addOption("Delete Post", new DeletePostCommand());
+        if (AuthorizationService.canUserEditPost(appHandler.getCurrentUser(), currentPost)) {
+            addOption("Edit Post", new OpenEditPostMenuCommand());
+        }
+
+        if (AuthorizationService.canUserDeletePost(appHandler.getCurrentUser(), currentPost, appHandler.getCurrentCommunity())) {
+            addOption("Delete Post", new DeletePostCommand());
+        }
 
         if(currentPost.getSubreddit() == null) {
             addOption("Back to Main Menu", new BackCommand());

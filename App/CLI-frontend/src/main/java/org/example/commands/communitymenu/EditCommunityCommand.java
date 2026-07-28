@@ -20,6 +20,7 @@ public class EditCommunityCommand implements Command {
 
     private final RestClient restClient = RestClient.builder()
             .baseUrl("http://localhost:8080")
+
             .build();
 
     public EditCommunityCommand(String editType) {
@@ -39,10 +40,13 @@ public class EditCommunityCommand implements Command {
 
         try{
             Map<String,Object> updateDto=new HashMap<>();
+            updateDto.put("name",currentCommunity.getNickname());
+            updateDto.put("description",currentCommunity.getDescription());
+            updateDto.put("topic",currentCommunity.getTopic());
             switch(editType){
                 case "name" -> {
                     String newCommunityName = console.getStringInput("Please enter a new community name",false);
-                    updateDto.put("nickname",newCommunityName);
+                    updateDto.put("name",newCommunityName);
                 }
                 case "description"->{
                     String newDescription = console.getStringInput("Please enter new description",false);
@@ -65,11 +69,11 @@ public class EditCommunityCommand implements Command {
                     .uri("/api/communities/{communityname}",currentCommunity.getNickname())
                     .contentType(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
-                        if (appHandler.getCurrentUser().getToken() != null) {
-                            headers.setBearerAuth(appHandler.getCurrentUser().getToken());
-                        }
-                    })
-                    .body(updateDto) // Spring îl va converti automat în JSON pentru CommunityUpdateDto
+                     if (appHandler.getJwtToken() != null) {
+                    headers.setBearerAuth(appHandler.getJwtToken());
+                     }
+                      })
+                    .body(updateDto)
                     .retrieve()
                     .body(Community.class);
             appHandler.setCurrentCommunity(currentCommunity);
