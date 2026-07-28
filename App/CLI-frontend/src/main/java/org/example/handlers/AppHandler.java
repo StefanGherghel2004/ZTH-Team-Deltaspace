@@ -30,6 +30,7 @@ public class AppHandler {
     private Community currentCommunity;
     private Post currentPost;
     private Comment currentComment;
+    private String jwtToken;
 
     private static AppHandler instance;
     private static final Console console = Console.getInstance();
