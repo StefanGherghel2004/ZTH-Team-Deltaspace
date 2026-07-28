@@ -13,7 +13,6 @@ public class EditUserMenu extends Menu {
         this.currentUser = currentUser;
 
         setTitle("Edit user actions");
-        addOption("Edit username", new EditUserCommand("username"));
         addOption("Edit email", new EditUserCommand("email"));
         addOption("Edit password", new EditUserCommand("password"));
         addOption("Edit date of birth", new EditUserCommand("dateOfBirth"));
