@@ -2,24 +2,18 @@ package org.example.commands.mainmenu;
 
 
 import org.example.Post;
-import org.example.User;
+import org.example.apiclients.PostApiClient;
 import org.example.commands.Command;
 import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
-import org.example.response.ApiResponse;
 import org.example.userinterface.readers.Console;
 import org.example.userinterface.views.UIPost;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShowFeedCommand implements Command {
 
-    private static final String BASE_URL = "http://localhost:8080/api/posts";
-    private final RestClient restClient = RestClient.create();
+    private final PostApiClient postApiClient = PostApiClient.getInstance();
 
     @Override
     public boolean execute() {
@@ -28,23 +22,7 @@ public class ShowFeedCommand implements Command {
         Console console = Console.getInstance();
         UIPost uiPost = UIPost.getInstance();
 
-        List<Post> posts = new ArrayList<>();
-
-        try {
-            ApiResponse<List<Post>> responseWrapper = restClient.get()
-                    .uri(BASE_URL)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + app.getJwtToken())
-                    .retrieve()
-                    .body(new ParameterizedTypeReference<ApiResponse<List<Post>>>() {});
-
-            if (responseWrapper != null && responseWrapper.isSuccess() && responseWrapper.getData() != null) {
-                posts = responseWrapper.getData();
-            }
-
-        } catch (Exception e) {
-            console.error("Failed to load feed from server: " + e.getMessage());
-            return true;
-        }
+        List<Post> posts = postApiClient.getPosts(null, app.getJwtToken());
 
         uiPost.showFeed(posts);
 
@@ -53,13 +31,11 @@ public class ShowFeedCommand implements Command {
         }
 
         try {
-
             String input = console.getStringInput("Choose a post (or press Enter to go back): ", true);
 
             if (!input.isEmpty()) {
                 try {
                     int selectedIndex = Integer.parseInt(input);
-
 
                     if (selectedIndex < 1 || selectedIndex > posts.size()) {
                         console.error("Invalid choice!");
