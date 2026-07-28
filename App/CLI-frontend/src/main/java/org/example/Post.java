@@ -1,31 +1,33 @@
 package org.example;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Post {
     private UUID id;
-    private String authorUsername;
-    private String postTitle;
+    private String author;
+    private String title;
     private String postContents;
-    private String imageLink;
-    private String communityName;
+    private String imageUrl;
+    private String subreddit;
     private Integer upVotes;
     private Integer downVotes;
     private boolean NSFW;
 
     //Constructor
-    public Post (String authorUsername, String postTitle, String postContents, String imageLink, boolean NSFW, String community,Integer upVotes, Integer downVotes) {
-        this.authorUsername = authorUsername;
-        this.imageLink = imageLink;
-        this.postTitle = postTitle;
+    public Post (String author, String postTitle, String postContents, String imageUrl, boolean NSFW, String subreddit,Integer upVotes, Integer downVotes) {
+        this.author = author;
+        this.imageUrl = imageUrl;
+        this.title = postTitle;
         this.postContents = postContents;
         this.NSFW = NSFW;
-        this.communityName = community;
+        this.subreddit = subreddit;
         this.upVotes=upVotes;
         this.downVotes=downVotes;
     }
@@ -34,11 +36,11 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", authorUsername='" + authorUsername + '\'' +
-                ", postTitle='" + postTitle + '\'' +
+                ", authorUsername='" + author + '\'' +
+                ", postTitle='" + title + '\'' +
                 ", postContents='" + postContents + '\'' +
-                ", imageLink='" + imageLink + '\'' +
-                ", communityName='" + communityName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", communityName='" + subreddit + '\'' +
                 ", upVotes=" + upVotes +
                 ", downVotes=" + downVotes +
                 ", NSFW=" + NSFW +

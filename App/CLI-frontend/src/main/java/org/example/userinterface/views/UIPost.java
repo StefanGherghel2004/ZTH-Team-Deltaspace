@@ -24,7 +24,7 @@ public class UIPost {
     private static final String TITLE_GLOBAL_FEED = "Global Feed";
 
     // this limits the length of the fields for a standard length
-    private static final String FORMAT_POST_SIMPLE = "ID: %-4d | Title: %-12.12s | Author: %-10.10s | %s";
+    private static final String FORMAT_POST_SIMPLE = "[%2d] | Title: %-12.12s | Author: %-10.10s | %s";
 
     // symbols
     private static final String UPVOTE_SYMBOL = "▲ ";
@@ -70,46 +70,53 @@ public class UIPost {
         User user = AppHandler.getInstance().getCurrentUser();
 //        Map<Long, Integer> userVotes = VoteService.getInstance().getAllUserVotes(user);
 
-        for (Post post : posts) {
-//            Integer userVote = userVotes.get(post.getId());
-//            showPostSimple(post, userVote);
+//        for (Post post : posts) {
+////            Integer userVote = userVotes.get(post.getId());
+//            showPostSimple(post, 0);
+//        }
+
+        for (int i = 0; i < posts.size(); i++) {
+            Post post = posts.get(i);
+            int displayIndex = i + 1;
+            showPostSimple(post, displayIndex, 0);
         }
 
         console.info(footer());
     }
 
-    public void showPostSimple(Post post, Integer vote) {
+    public void showPostSimple(Post post, int displayIndex, Integer vote) {
         String formattedVotes = formatVotes(post, vote);
 
+
         String postLine = String.format(FORMAT_POST_SIMPLE,
-                post.getId(),
-                post.getPostTitle(),
-                post.getAuthorUsername(),
+                displayIndex,
+                post.getTitle(),
+                post.getAuthor(),
                 formattedVotes);
 
         console.info(postLine);
     }
 
     public void showPostExpanded(Post post) {
-        String title = post.getPostTitle();
+        String title = post.getTitle();
         List<String> lines = new ArrayList<>();
         User user = AppHandler.getInstance().getCurrentUser();
 //        Integer vote = VoteService.getInstance().getUserVoteOnPost(post, user);
 
-        lines.add("Author: " + post.getAuthorUsername());
+        lines.add("Author: " + post.getAuthor());
         lines.add("");
 
         List<String> wrappedContent = TextWrapper.wrap(post.getPostContents(), MAX_TEXT_WIDTH);
         lines.addAll(wrappedContent);
 
-        if (post.getImageLink() != null) {
+        if (post.getImageUrl() != null) {
             lines.add("");
             lines.add(IMAGE_SYMBOL);
         }
 
-        if (post.getCommunityName() != null) {
+        if (post.getSubreddit() != null) {
             lines.add("");
-            lines.add(post.getCommunityName());
+            lines.add(post.getSubreddit());
         }
 
         lines.add("");
