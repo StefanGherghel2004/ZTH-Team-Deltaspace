@@ -38,7 +38,7 @@ public class CommunityService {
 
     public Community addCommunity(CommunityCreateDto dto){
 
-        User author = userService.getAuthenticatedUser();
+        User author = null;
         Topic topic = getTopicFromString(dto.getTopic());
 
         Community community = new Community();

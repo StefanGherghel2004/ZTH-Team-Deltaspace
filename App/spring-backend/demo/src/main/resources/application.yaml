@@ -14,7 +14,7 @@ spring:
 #    console:
 #      enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/deltaspacedb
+    url: jdbc:postgresql://localhost:5432/deltaspacedb3
     username: postgres
     password: ${POSTGRES-PASSWORD}
   jpa:
