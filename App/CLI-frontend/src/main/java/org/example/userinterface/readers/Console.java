@@ -4,6 +4,7 @@ import org.example.commands.UserValidator;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.textformatters.Color;
 import org.example.userinterface.textformatters.Theme;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Console {
     private static Console instance;
     private ConsoleReader reader;
     private static final UserValidator userValidator = UserValidator.getInstance();
+    private static RestClient restClient = RestClient.create();
 
     private Console() {
         this.reader = ConsoleReader.getInstance();
@@ -123,6 +125,7 @@ public class Console {
                 error("Invalid username format. Please try again.");
                 continue;
             }
+
             return username;
         }
     }
