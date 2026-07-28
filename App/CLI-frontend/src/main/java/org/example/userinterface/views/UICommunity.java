@@ -70,6 +70,6 @@ public class UICommunity {
 
     public void showCommunitySimple(Community c) {
 //        String NSFW=communityService.hasNSFWPosts(c);
-//        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic())+ " | "+formatNSFW(NSFW));
-    }
+        String topicFormatted = c.getTopic() != null ? formatTopic(c.getTopic()) : "GENERAL";
+        console.info("r/" + c.getNickname() + " | Topic: " + topicFormatted + " | " + c.getDescription());    }
 }

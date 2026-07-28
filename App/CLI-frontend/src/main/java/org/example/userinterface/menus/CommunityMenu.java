@@ -10,6 +10,8 @@ import org.example.handlers.AppHandler;
 import org.example.userinterface.views.UICommunity;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class CommunityMenu extends Menu {
 
@@ -23,15 +25,18 @@ public class CommunityMenu extends Menu {
         addOption("View Posts", new ShowPostsInCommunityCommand());
         addOption("Add Post", new CreatePostCommand());
 
-        if (List.of(currentCommunity.getCommunityCreatorId(), "admin").contains(appHandler.getCurrentUser().getId())) {
-            addOption("Edit Community", new OpenEditCommunityCommand());
-        }
-        if (List.of(currentCommunity.getCommunityCreatorId(),"admin")
-                .contains(appHandler.getCurrentUser().getId()))
-            addOption("Delete community", new DeleteCommunityCommand());
+        if(appHandler.getCurrentUser()!=null && currentCommunity!=null){
+            UUID currentUserId = appHandler.getCurrentUser().getId();
+            UUID creatorId = currentCommunity.getCommunityCreatorId();
 
-        addOption("Return to Main Menu", new BackCommand());
+        if (creatorId != null && Objects.equals(creatorId, currentUserId)) {
+            addOption("Edit Community", new OpenEditCommunityCommand());
+            addOption("Delete community", new DeleteCommunityCommand());
+        }
     }
+
+    addOption("Return to Main Menu", new BackCommand());
+}
 
     @Override
     public void showMenu() {
