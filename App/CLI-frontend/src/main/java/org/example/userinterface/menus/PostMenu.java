@@ -32,7 +32,7 @@ public class PostMenu extends Menu {
             addOption("Delete Post", new DeletePostCommand());
         }
 
-        if(currentPost.getSubreddit() == null) {
+        if(appHandler.getCurrentCommunity() == null) {
             addOption("Back to Main Menu", new BackCommand());
         } else {
             addOption("Back to Community", new BackCommand());
