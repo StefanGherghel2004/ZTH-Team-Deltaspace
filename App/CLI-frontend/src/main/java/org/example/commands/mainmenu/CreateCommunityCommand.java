@@ -41,18 +41,18 @@ public class CreateCommunityCommand implements Command {
             String selectedTopic = topics.get(choice - 1);
 
             Map<String, Object> createDto = new HashMap<>();
-            createDto.put("nickname", nickname);
+            createDto.put("title", nickname);
             createDto.put("description", description);
             createDto.put("topic", selectedTopic);
 
             Community createdCommunity = restClient.post()
                     .uri("/api/communities")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .headers(headers -> {
+                    /*.headers(headers -> {
                         if (appHandler.getCurrentUser().getToken() != null) {
                             headers.setBearerAuth(appHandler.getCurrentUser().getToken());
                         }
-                    })
+                    })*/
                     .body(createDto)
                     .retrieve()
                     .body(Community.class);
@@ -66,7 +66,6 @@ public class CreateCommunityCommand implements Command {
 
             console.error("Community with this nickname already exists!");
         } catch (HttpClientErrorException.BadRequest e) {
-
             console.error("Invalid community data: " + e.getResponseBodyAsString());
         } catch (HttpClientErrorException.Unauthorized e) {
             console.error("You must be logged in to create a community.");
