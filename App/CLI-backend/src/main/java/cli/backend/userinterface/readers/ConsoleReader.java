@@ -12,14 +12,15 @@ public class ConsoleReader {
     private static final String INPUT_CURSOR = Color.textCyan("> ");
     private static final String BACK_SYM = ":back";
 
-    private static final String ERR_INVALID_NUMBER = Color.textRed("Please enter a valid number.");
-    private static final String ERR_EMPTY_INPUT = Color.textRed("Input cannot be empty. Try again.");
+    private static final String ERR_INVALID_NUMBER = "Please enter a valid number.";
+    private static final String ERR_EMPTY_INPUT = "Input cannot be empty. Try again.";
     private static final String ERR_OUT_OF_RANGE = Color.textRed("Invalid option. Please enter a number between %d and %d.");
 
     private static final String PROMPT_RANGE = "Choose an option (%d-%d): ";
 
     private final Scanner scanner;
     private static ConsoleReader instance = null;
+    private static final Console console = Console.getInstance();
 
     public ConsoleReader () {
 
@@ -46,7 +47,7 @@ public class ConsoleReader {
             try{
                 return Integer.parseInt(inputInteger);
             } catch (NumberFormatException e) {
-                System.out.println(ERR_INVALID_NUMBER);
+                console.error(ERR_INVALID_NUMBER);
             }
         }
     }
@@ -62,7 +63,7 @@ public class ConsoleReader {
             try{
                 return Long.parseLong(inputLong);
             } catch (NumberFormatException e) {
-                System.out.println(ERR_INVALID_NUMBER);
+                console.error(ERR_INVALID_NUMBER);
             }
         }
     }
@@ -72,14 +73,15 @@ public class ConsoleReader {
 
         while (true) {
             System.out.printf(PROMPT_RANGE, min, max);
-            int value = this.readInt();
-            if (BACK_SYM.equalsIgnoreCase(String.valueOf(value)))
-                throw new BackNavigationException();
-            if (value >= min && value <= max) {
-                return value;
+            try {
+                int value = this.readInt();
+                if (value >= min && value <= max) {
+                    return value;
+                } else
+                    System.out.printf((ERR_OUT_OF_RANGE) + "\n", min, max);
+            } catch(BackNavigationException backNavigationException){
+                console.error("You cannot use the back command in a menu please select a valid option.");
             }
-            else
-                System.out.printf((ERR_OUT_OF_RANGE) + "\n", min, max);
         }
     }
 
@@ -95,8 +97,7 @@ public class ConsoleReader {
             if (allowEmpty || !input.isEmpty()) {
                 return input;
             }
-
-            System.out.println(ERR_EMPTY_INPUT);
+                console.error(ERR_EMPTY_INPUT);
         }
     }
 
@@ -123,7 +124,7 @@ public class ConsoleReader {
                 return result;
             }
 
-            System.out.println(ERR_EMPTY_INPUT);
+            console.error(ERR_EMPTY_INPUT);
         }
     }
 }
