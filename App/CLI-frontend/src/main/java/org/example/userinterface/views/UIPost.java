@@ -68,11 +68,11 @@ public class UIPost {
         }
 
         User user = AppHandler.getInstance().getCurrentUser();
-        Map<Long, Integer> userVotes = VoteService.getInstance().getAllUserVotes(user);
+//        Map<Long, Integer> userVotes = VoteService.getInstance().getAllUserVotes(user);
 
         for (Post post : posts) {
-            Integer userVote = userVotes.get(post.getId());
-            showPostSimple(post, userVote);
+//            Integer userVote = userVotes.get(post.getId());
+//            showPostSimple(post, userVote);
         }
 
         console.info(footer());
@@ -94,7 +94,7 @@ public class UIPost {
         String title = post.getPostTitle();
         List<String> lines = new ArrayList<>();
         User user = AppHandler.getInstance().getCurrentUser();
-        Integer vote = VoteService.getInstance().getUserVoteOnPost(post, user);
+//        Integer vote = VoteService.getInstance().getUserVoteOnPost(post, user);
 
         lines.add("Author: " + post.getAuthorUsername());
         lines.add("");
@@ -113,7 +113,7 @@ public class UIPost {
         }
 
         lines.add("");
-        lines.add(formatVotes(post, vote));
+//        lines.add(formatVotes(post, vote));
 
         String boxedPost = BoxPadder.format(lines, title);
         console.info(boxedPost);

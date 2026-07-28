@@ -20,11 +20,9 @@ public class CommentMenu extends Menu {
         addOption("Reply", new ReplyToCommentCommand());
         addOption("Back to Post", new BackCommand());
 
-        CommentService commentService = CommentService.getInstance();
-
-        if (commentService.canUserDeleteComment(appHandler.getCurrentUser(), currentComment, currentCommunity)) {
-            addOption( "Delete comment", new DeleteCommentCommand());
-        }
+        //if (commentService.canUserDeleteComment(appHandler.getCurrentUser(), currentComment, currentCommunity)) {
+          //  addOption( "Delete comment", new DeleteCommentCommand());
+        //}
     }
 
     @Override

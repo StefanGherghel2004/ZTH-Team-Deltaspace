@@ -12,7 +12,6 @@ public class PostMenu extends Menu {
 
     public PostMenu(Post currentPost) {
         this.currentPost = currentPost;
-        PostService postService = PostService.getInstance();
         AppHandler appHandler = AppHandler.getInstance();
 
         setTitle("Post Actions");
@@ -24,10 +23,10 @@ public class PostMenu extends Menu {
         addOption("Select comment (Reply)", new SelectCommentCommand());
         addOption("UpVote", new UpVoteCommand());
         addOption("DownVote",new DownVoteCommand());
-        if(postService.canUserEditPost(appHandler.getCurrentUser(),currentPost))
-            addOption("Edit Post", new OpenEditPostMenuCommand());
-        if (postService.canUserDeletePost(appHandler.getCurrentUser(), appHandler.getCurrentCommunity()))
-            addOption("Delete Post", new DeletePostCommand());
+//        if(postService.canUserEditPost(appHandler.getCurrentUser(),currentPost))
+//            addOption("Edit Post", new OpenEditPostMenuCommand());
+//        if (postService.canUserDeletePost(appHandler.getCurrentUser(), appHandler.getCurrentCommunity()))
+//            addOption("Delete Post", new DeletePostCommand());
 
         if(currentPost.getCommunityName() == null) {
             addOption("Back to Main Menu", new BackCommand());

@@ -2,6 +2,7 @@ package org.example.userinterface.menus;
 import lombok.Setter;
 import org.example.commands.Command;
 import org.example.userinterface.readers.Console;
+import org.example.userinterface.textformatters.BoxPadder;
 import org.example.userinterface.textformatters.Capitalise;
 import org.example.userinterface.textformatters.Theme;
 

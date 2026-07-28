@@ -9,8 +9,6 @@ import org.example.userinterface.textformatters.TextWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static cli.backend.userinterface.textformatters.Theme.*;
 import static org.example.userinterface.textformatters.Theme.*;
 
 public class UICommunity {
@@ -20,7 +18,6 @@ public class UICommunity {
 
     private static UICommunity instance;
     private final Console console;
-    private final static CommunityService communityService = CommunityService.getInstance();
 
     private UICommunity() {
         this.console = Console.getInstance();
@@ -72,7 +69,7 @@ public class UICommunity {
     }
 
     public void showCommunitySimple(Community c) {
-        String NSFW=communityService.hasNSFWPosts(c);
-        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic())+ " | "+formatNSFW(NSFW));
+//        String NSFW=communityService.hasNSFWPosts(c);
+//        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic())+ " | "+formatNSFW(NSFW));
     }
 }

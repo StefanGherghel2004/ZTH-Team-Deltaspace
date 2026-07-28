@@ -3,6 +3,7 @@ package org.example.userinterface.menus;
 import org.example.Post;
 import org.example.commands.BackCommand;
 import org.example.commands.postmenu.*;
+import org.example.userinterface.views.UIPost;
 
 public class EditPostMenu extends Menu{
     Post currentPost;
@@ -11,8 +12,8 @@ public class EditPostMenu extends Menu{
         this.currentPost = currentPost;
 
         setTitle("Edit post actions");
-        addOption("Edit post contents", new EditPostCommand("contents"));
-        addOption("Edit post NSFW tag", new EditPostCommand("nsfw"));
+//        addOption("Edit post contents", new EditPostCommand("contents"));
+//        addOption("Edit post NSFW tag", new EditPostCommand("nsfw"));
         addOption("Delete Post", new DeletePostCommand());
         addOption("Back to post", new BackCommand());
     }
