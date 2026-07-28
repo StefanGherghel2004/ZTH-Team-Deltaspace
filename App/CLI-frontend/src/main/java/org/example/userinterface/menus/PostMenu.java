@@ -15,7 +15,7 @@ public class PostMenu extends Menu {
         AppHandler appHandler = AppHandler.getInstance();
 
         setTitle("Post Actions");
-        if (currentPost.getImageLink() != null) {
+        if (currentPost.getImageUrl() != null) {
             addOption("Open Image", new OpenImageCommand());
         }
         addOption("Show comments", new ShowCommentsCommand());
@@ -28,7 +28,7 @@ public class PostMenu extends Menu {
 //        if (postService.canUserDeletePost(appHandler.getCurrentUser(), appHandler.getCurrentCommunity()))
 //            addOption("Delete Post", new DeletePostCommand());
 
-        if(currentPost.getCommunityName() == null) {
+        if(currentPost.getSubreddit() == null) {
             addOption("Back to Main Menu", new BackCommand());
         } else {
             addOption("Back to Community", new BackCommand());
