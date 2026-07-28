@@ -25,11 +25,12 @@ public class AppHandler {
         ON_COMMENT
     }
 
-    private State currentState = State.NOT_LOGGED_IN;
+    private State currentState = State.LOGGED_IN;
     private User currentUser;
     private Community currentCommunity;
     private Post currentPost;
     private Comment currentComment;
+    private String jwtToken;
 
     private static AppHandler instance;
     private static final Console console = Console.getInstance();

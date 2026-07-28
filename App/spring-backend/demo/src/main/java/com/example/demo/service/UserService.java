@@ -75,6 +75,11 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
     }
 
+    public User findByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findByUsername(usernameOrEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + usernameOrEmail));
+    }
+
     public void deleteUserByUsername(String username) {
         User user = getAuthenticatedUser();
 
