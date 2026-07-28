@@ -4,6 +4,8 @@ import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostFeedDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
+import com.example.demo.dto.vote.VoteRequestDto;
+import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Post;
 import com.example.demo.response.ApiResponse;
@@ -31,7 +33,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
 
-        PostResponseDto response = postMapper.toDto(createdPost);
+        PostResponseDto response = postService.getEnrichedPostDto(createdPost);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
@@ -41,7 +43,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
         Post post = postService.findById(id);
 
-        PostResponseDto response = postMapper.toDto(post);
+        PostResponseDto response = postService.getEnrichedPostDto(post);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -56,15 +58,27 @@ public class PostController {
         }
 
         List<PostResponseDto> response = posts.stream()
-                .map(postMapper::toDto)
+                .map(postService::getEnrichedPostDto)
                 .toList();
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PutMapping("/{id}/vote")
+    public ResponseEntity<ApiResponse<VoteResponseDto>> votePost(
+            @PathVariable UUID id,
+            @Valid @RequestBody VoteRequestDto voteDto) {
+
+        VoteResponseDto response = postService.votePost(id, voteDto.getVoteType());
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @ModelAttribute PostUpdateDto updateDto){
-        PostResponseDto response = postMapper.toDto(postService.updatePost(id, updateDto));
+        Post updatedPost = postService.updatePost(id, updateDto);
+        
+        PostResponseDto response = postService.getEnrichedPostDto(updatedPost);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
