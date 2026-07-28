@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.apiclients.UserApiClient;
 import org.example.commands.Command;
-import org.example.commands.ErrorUtils;
+
 import org.example.exceptions.BackNavigationException;
 import org.example.userinterface.readers.Console;
 import org.springframework.http.MediaType;
