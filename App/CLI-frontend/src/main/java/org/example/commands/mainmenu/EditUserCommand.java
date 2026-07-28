@@ -7,45 +7,43 @@ import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.readers.Console;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
 
 public class EditUserCommand implements Command {
     String editType;
 
-    public EditUserCommand(String editType){
+    public EditUserCommand(String editType) {
         this.editType = editType != null ? editType : "";
     }
+
     @Override
     public boolean execute() {
         AppHandler appHandler = AppHandler.getInstance();
         Console console = Console.getInstance();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         UserApiClient userApiClient = UserApiClient.getInstance();
 
         User userToEdit = appHandler.getCurrentUser();
-        String oldUsername = userToEdit.getUsername();
+        String currentUsername = userToEdit.getUsername();
+
+        // Create a dynamic map holding ONLY the modified field
+        Map<String, Object> payload = new HashMap<>();
+
         try {
             switch (editType) {
-                case "username" -> {
-                    String newUsername = console.getValidUsernameInput();
-                    userToEdit.setUsername(newUsername);
-                }
-
                 case "email" -> {
                     String newEmail = console.getValidEmailInput();
-                    userToEdit.setEmail(newEmail);
+                    payload.put("email", newEmail);
                 }
 
                 case "password" -> {
                     String newPassword = console.getValidPasswordInput();
-                    userToEdit.setPassword(newPassword);
+                    payload.put("password", newPassword);
                 }
 
                 case "dateOfBirth" -> {
                     String newDateOfBirth = console.getValidDateOfBirthInput();
-                    userToEdit.setDateOfBirth(newDateOfBirth);
+                    payload.put("dateOfBirth", newDateOfBirth);
                 }
 
                 default -> {
@@ -54,17 +52,17 @@ public class EditUserCommand implements Command {
                     return true;
                 }
             }
-            Map<String,Object> payload = Map.of(
-                    "username",userToEdit.getUsername(),
-                    "email",userToEdit.getEmail(),
-                    "password",userToEdit.getPassword(),
-                    "dateOfBirth",userToEdit.getDateOfBirth()
-            );
-            userApiClient.updateUser(oldUsername,payload, appHandler.getJwtToken());
-            console.success("User updated successfully!");
+
+            // Only send fields that were actually changed!
+            User updatedUser = userApiClient.updateUser(currentUsername, payload, appHandler.getJwtToken());
+
+            if (updatedUser != null) {
+                appHandler.setCurrentUser(updatedUser); // Update local user state with fresh DB data
+                console.success("User updated successfully!");
+            }
+
             appHandler.setCurrentState(AppHandler.State.EDIT_USER);
-        }
-        catch (BackNavigationException backNavigationException){
+        } catch (BackNavigationException backNavigationException) {
             console.info(backNavigationException.getMessage());
         }
         return true;

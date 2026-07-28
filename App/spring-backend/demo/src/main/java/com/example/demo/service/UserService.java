@@ -53,15 +53,6 @@ public class UserService {
             throw new AccessDeniedException("This account is not yours.");
         }
 
-        if (updateDto.getUsername() != null && !updateDto.getUsername().isBlank()
-                && !updateDto.getUsername().equals(user.getUsername())) {
-
-            if (userRepository.findByUsername(updateDto.getUsername()).isPresent()) {
-                throw new IllegalArgumentException("Username '" + updateDto.getUsername() + "' is already taken.");
-            }
-            user.setUsername(updateDto.getUsername());
-        }
-
         if (updateDto.getEmail() != null && !updateDto.getEmail().isBlank()
                 && !updateDto.getEmail().equalsIgnoreCase(user.getEmail())) {
 
@@ -71,8 +62,9 @@ public class UserService {
             user.setEmail(updateDto.getEmail());
         }
 
-        if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
+        if (updateDto.getPassword() != null && !updateDto.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
+
         }
 
         if (updateDto.getProfilePicture() != null && !updateDto.getProfilePicture().isEmpty()) {

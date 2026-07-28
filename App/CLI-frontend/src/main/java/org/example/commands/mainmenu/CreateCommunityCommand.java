@@ -48,11 +48,11 @@ public class CreateCommunityCommand implements Command {
             Community createdCommunity = restClient.post()
                     .uri("/api/communities")
                     .contentType(MediaType.APPLICATION_JSON)
-                    /*.headers(headers -> {
-                        if (appHandler.getCurrentUser().getToken() != null) {
-                            headers.setBearerAuth(appHandler.getCurrentUser().getToken());
+                    .headers(headers -> {
+                        if (appHandler.getJwtToken() != null) {
+                            headers.setBearerAuth(appHandler.getJwtToken());
                         }
-                    })*/
+                    })
                     .body(createDto)
                     .retrieve()
                     .body(Community.class);
@@ -61,6 +61,7 @@ public class CreateCommunityCommand implements Command {
 
             console.success("Community created successfully!");
             Logger.info("Community '" + nickname + "' created successfully!");
+
 
         } catch (HttpClientErrorException.Conflict e) {
 

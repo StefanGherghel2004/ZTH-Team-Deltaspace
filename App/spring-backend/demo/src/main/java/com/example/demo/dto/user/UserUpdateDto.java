@@ -13,12 +13,6 @@ import java.time.LocalDate;
 @Data
 public class UserUpdateDto {
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username can only contain letters and numbers")
-    private String username;
-
-    @NotBlank(message = "Email is required")
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", message = "Invalid email format")
     private String email;
 
