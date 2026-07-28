@@ -2,7 +2,7 @@ package cli.backend.userinterface.textformatters;
 
 public class Color {
 
-    private static final String RESET = "\u001b[0m";
+    public static final String RESET = "\u001b[0m";
 
     private static final String TEXT_RED = "\u001b[31m";
     private static final String TEXT_GREEN = "\u001b[32m";
