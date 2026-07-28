@@ -15,6 +15,7 @@ import java.time.Period;
 @Table(name = "users")
 // instead of deleting it will update the deleted field
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
+@SQLRestriction("deleted = false")
 public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
