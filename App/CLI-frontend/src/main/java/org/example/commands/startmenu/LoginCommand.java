@@ -6,21 +6,15 @@ import org.example.commands.Command;
 import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.readers.Console;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClient;
-
-import java.util.Map;
 
 public class LoginCommand implements Command {
-
-    private record AuthResponse(String token, User user) {}
 
     @Override
     public boolean execute() {
         AppHandler app = AppHandler.getInstance();
         Console console = Console.getInstance();
-        RestClient restClient = RestClient.create();
+        UserApiClient userApiClient = UserApiClient.getInstance();
 
         console.info("Welcome to the login page.");
         try {
@@ -28,23 +22,17 @@ public class LoginCommand implements Command {
             String password = console.getStringInput("Insert your password:");
 
             try {
-                AuthResponse response = restClient
-                        .post()
-                        .uri("http://localhost:8080/api/auth")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(Map.of("usernameOrEmail", username, "password", password))
-                        .retrieve()
-                        .body(AuthResponse.class);
+                UserApiClient.AuthResponse response = userApiClient.login(username, password);
 
-                if (response != null) {
-                    String token = response.token();
-                    User user = response.user();
-
-                    app.setJwtToken(token);
-                    app.setCurrentUser(user);
+                if (response != null && response.token() != null) {
+                    app.setJwtToken(response.token());
+                    app.setCurrentUser(response.user());
                     app.setCurrentState(AppHandler.State.LOGGED_IN);
-                    console.info("Successfully logged in as " + user.getUsername() + "!");
+
+                    console.info("Successfully logged in as " + response.user().getUsername() + "!");
                     return true;
+                } else {
+                    console.error("Login failed: Invalid server response.");
                 }
 
             } catch (HttpClientErrorException.Unauthorized e) {
