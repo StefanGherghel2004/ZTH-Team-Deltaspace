@@ -1,10 +1,15 @@
 package org.example.commands.startmenu;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.apiclients.UserApiClient;
 import org.example.commands.Command;
+import org.example.commands.ErrorUtils;
 import org.example.exceptions.BackNavigationException;
 import org.example.userinterface.readers.Console;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.Map;
@@ -14,6 +19,7 @@ public class RegisterCommand implements Command {
     public boolean execute() {
         Console console = Console.getInstance();
         RestClient restClient = RestClient.create();
+        UserApiClient userApiClient = UserApiClient.getInstance();
         console.info("Welcome to the registration page.");
         try {
             String username = console.getValidUsernameInput();
@@ -31,17 +37,18 @@ public class RegisterCommand implements Command {
                     "dateOfBirth",dateOfBirth
             );
 
-            restClient.post()
-                    .uri("http://localhost:8080/api/users/addUser")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(payload)
-                    .retrieve()
-                    .body(String.class);
-
+            userApiClient.registerUser(payload);
             console.success("Registration successful! Welcome to our platform.");
         }
         catch (BackNavigationException backNavigationException){
             console.info(backNavigationException.getMessage());
+        }
+        catch (HttpClientErrorException.Conflict e) {
+            String friendlyError = ErrorUtils.extractDuplicateKeyError(e);
+            console.error(friendlyError);
+
+        } catch (HttpClientErrorException e) {
+            console.error("Registration failed: " + e.getResponseBodyAsString());
         }
         return true;
     }

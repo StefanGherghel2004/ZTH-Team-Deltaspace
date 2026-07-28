@@ -1,6 +1,7 @@
 package org.example.commands.startmenu;
 
 import org.example.User;
+import org.example.apiclients.UserApiClient;
 import org.example.commands.Command;
 import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
@@ -37,6 +38,7 @@ public class LoginCommand implements Command {
 
                 if (response != null) {
                     String token = response.token();
+                    Console.getInstance().error(token);
                     User user = response.user();
 
                     app.setJwtToken(token);
