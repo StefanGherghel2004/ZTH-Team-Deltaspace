@@ -1,0 +1,78 @@
+package org.example.userinterface.views;
+
+import org.example.Community;
+import org.example.User;
+import org.example.handlers.AppHandler;
+import org.example.userinterface.readers.Console;
+import org.example.userinterface.textformatters.BoxPadder;
+import org.example.userinterface.textformatters.TextWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static cli.backend.userinterface.textformatters.Theme.*;
+import static org.example.userinterface.textformatters.Theme.*;
+
+public class UICommunity {
+
+    private final static String HEADER_TITLE = "Communities";
+    private final static String NO_COMMUNITIES = "No communities created.";
+
+    private static UICommunity instance;
+    private final Console console;
+    private final static CommunityService communityService = CommunityService.getInstance();
+
+    private UICommunity() {
+        this.console = Console.getInstance();
+    }
+
+    public static UICommunity getInstance() {
+        if (instance == null) {
+            instance = new UICommunity();
+        }
+        return instance;
+    }
+
+    public void showCommunitiesList(List<Community> communities, User user) {
+        console.info(header(HEADER_TITLE));
+
+        if (communities.isEmpty()) {
+            console.info(NO_COMMUNITIES);
+            return;
+        }
+
+        for (Community c : communities) {
+
+            //
+            //if (c.hasNSFWPost() && !user.checkAge()) {
+            //    continue;
+            //}
+
+            showCommunitySimple(c);
+        }
+
+        console.info(footer());
+    }
+    public void showCommunityExpanded(Community c){
+        String title = c.getNickname();
+        List<String> lines=new ArrayList<>();
+        AppHandler app = AppHandler.getInstance();
+        User user = app.getCurrentUser();
+
+        lines.add("Topic: "+ formatTopic(c.getTopic()));
+        lines.add("");
+
+        List<String> wrappedContent = TextWrapper.wrap(c.getDescription(),MAX_TEXT_WIDTH);
+        lines.add("Description: ");
+        lines.addAll(wrappedContent);
+        lines.add("");
+
+        String boxedCommunity= BoxPadder.format(lines,title);
+        console.info(boxedCommunity);
+    }
+
+    public void showCommunitySimple(Community c) {
+        String NSFW=communityService.hasNSFWPosts(c);
+        console.info(c.getNickname() + " | Topic: " + formatTopic(c.getTopic())+ " | "+formatNSFW(NSFW));
+    }
+}
