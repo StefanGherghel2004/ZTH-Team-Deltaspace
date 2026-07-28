@@ -2,6 +2,7 @@ package org.example.commands.mainmenu;
 
 
 import org.example.Post;
+import org.example.User;
 import org.example.commands.Command;
 import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
@@ -9,12 +10,11 @@ import org.example.response.ApiResponse;
 import org.example.userinterface.readers.Console;
 import org.example.userinterface.views.UIPost;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class ShowFeedCommand implements Command {
 
@@ -33,7 +33,7 @@ public class ShowFeedCommand implements Command {
         try {
             ApiResponse<List<Post>> responseWrapper = restClient.get()
                     .uri(BASE_URL)
-//                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + app.getJwtToken())
                     .retrieve()
                     .body(new ParameterizedTypeReference<ApiResponse<List<Post>>>() {});
 
