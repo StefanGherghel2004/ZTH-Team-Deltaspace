@@ -86,8 +86,6 @@ public class ShowCommunitiesCommand implements Command {
                     .retrieve()
                     .body(String.class);
 
-            System.out.println("JSON COMUNITATE: " + rawJson); // <-- VEZI CE Nume Are CHEIA ÎN JSON!
-
             com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
             mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper.readValue(rawJson, Community.class);
