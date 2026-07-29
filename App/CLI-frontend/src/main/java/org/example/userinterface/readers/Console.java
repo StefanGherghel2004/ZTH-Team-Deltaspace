@@ -120,12 +120,10 @@ public class Console {
         String username;
         while(true) {
             username = getStringInput("Please enter your username (3-20 characters, alphanumeric):");
-
             if (!userValidator.validateUsername(username)) {
                 error("Invalid username format. Please try again.");
                 continue;
             }
-
             return username;
         }
     }

@@ -45,7 +45,7 @@ public class RegisterCommand implements Command {
             console.error(friendlyError);
 
         } catch (HttpClientErrorException e) {
-            console.error("Registration failed: " + e.getResponseBodyAsString());
+            console.error("Registration failed: " + e.getMessage());
         }
         return true;
     }

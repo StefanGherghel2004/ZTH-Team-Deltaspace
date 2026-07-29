@@ -34,7 +34,6 @@ public class UserValidator {
     }
 
     public boolean validateUsername (String username) {
-
         return (validate(username,USERNAME_REGEX) && !username.isEmpty());
     }
 
