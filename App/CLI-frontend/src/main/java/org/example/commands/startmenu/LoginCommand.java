@@ -25,6 +25,12 @@ public class LoginCommand implements Command {
                 UserApiClient.AuthResponse response = userApiClient.login(username, password);
 
                 if (response != null && response.token() != null) {
+
+                    if (response.user().isDeleted()) {
+                        console.error("This account is deleted");
+                        return true;
+                    }
+
                     app.setJwtToken(response.token());
                     app.setCurrentUser(response.user());
                     app.setCurrentState(AppHandler.State.LOGGED_IN);
@@ -36,7 +42,7 @@ public class LoginCommand implements Command {
                 }
 
             } catch (HttpClientErrorException.Unauthorized e) {
-                console.error("Login failed: Invalid username/email or password or deleted account.");
+                console.error("Login failed: Invalid username/email or password");
             } catch (Exception e) {
                 console.error("Login error: " + e.getMessage());
             }
