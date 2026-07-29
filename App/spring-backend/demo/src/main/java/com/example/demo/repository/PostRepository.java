@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByCommunityName(String name);
     boolean existsByCommunityNameAndNsfwTrue(String name);
+    List<Post> findAllByOrderByCreatedAtDesc();
     Optional<Post> findById(UUID id);
     @Query (value ="SELECT * FROM posts ORDER BY MD5(CONCAT(id,:seed)) LIMIT :limit OFFSET :offset",nativeQuery=true)
     List<Post> getRandomizedFeed (@Param("seed") String seed, @Param("limit") int limit, @Param("offset") int offset);
