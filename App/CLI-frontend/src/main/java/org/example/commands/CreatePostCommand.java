@@ -13,6 +13,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 
 public class CreatePostCommand implements Command {
 
@@ -56,50 +59,56 @@ public class CreatePostCommand implements Command {
             }
 
             boolean isNsfw = console.getUserConfirmation("Is your post NSFW? [yes/no]: ");
-
-            // check user age for nsfw
-
-            MultiValueMap<String, Object> postData = new LinkedMultiValueMap<>();
-
-            postData.add("title", postTitle);
-            postData.add("content", postContents);
-            postData.add("nsfw", isNsfw);
-
-            if (communityName != null) {
-                postData.add("communityName", communityName);
-            }
-            if (imageFilter != null) {
-                postData.add("filter", imageFilter);
-            }
-
-            if (!imagePath.isEmpty()) {
-                try {
-                    MultipartFile multipartFile = checkImage.convertToMultipartFile(imagePath);
-
-                    if (multipartFile != null) {
-
-                        ByteArrayResource fileResource = new ByteArrayResource(multipartFile.getBytes()) {
-                            @Override
-                            public String getFilename() {
-                                return multipartFile.getOriginalFilename();
-                            }
-                        };
-                        postData.add("image", fileResource);
-                    }
-                } catch (IllegalArgumentException | IOException e) {
-                    console.error(e.getMessage());
-                    return true;
+            if(isNsfw){
+                if(Period.between(LocalDate.parse(app.getCurrentUser().getDateOfBirth()),LocalDate.now()).getYears()<18){
+                    console.error("You must be at least 18 years old to create an NSFW post.");
                 }
             }
+            else {
+                // check user age for nsfw
 
-            Post newPost = postApiClient.createPost(postData, app.getJwtToken());
+                MultiValueMap<String, Object> postData = new LinkedMultiValueMap<>();
 
-            if (newPost != null) {
-                console.success("Post created successfully!");
-                app.setCurrentPost(newPost);
-                app.setCurrentState(AppHandler.State.ON_POST);
-            } else {
-                console.error("Failed to create post. Server returned an unknown error.");
+                postData.add("title", postTitle);
+                postData.add("content", postContents);
+                postData.add("nsfw", isNsfw);
+
+                if (communityName != null) {
+                    postData.add("communityName", communityName);
+                }
+                if (imageFilter != null) {
+                    postData.add("filter", imageFilter);
+                }
+
+                if (!imagePath.isEmpty()) {
+                    try {
+                        MultipartFile multipartFile = checkImage.convertToMultipartFile(imagePath);
+
+                        if (multipartFile != null) {
+
+                            ByteArrayResource fileResource = new ByteArrayResource(multipartFile.getBytes()) {
+                                @Override
+                                public String getFilename() {
+                                    return multipartFile.getOriginalFilename();
+                                }
+                            };
+                            postData.add("image", fileResource);
+                        }
+                    } catch (IllegalArgumentException | IOException e) {
+                        console.error(e.getMessage());
+                        return true;
+                    }
+                }
+
+                Post newPost = postApiClient.createPost(postData, app.getJwtToken());
+
+                if (newPost != null) {
+                    console.success("Post created successfully!");
+                    app.setCurrentPost(newPost);
+                    app.setCurrentState(AppHandler.State.ON_POST);
+                } else {
+                    console.error("Failed to create post. Server returned an unknown error.");
+                }
             }
 
         } catch (BackNavigationException backNavigationException) {
