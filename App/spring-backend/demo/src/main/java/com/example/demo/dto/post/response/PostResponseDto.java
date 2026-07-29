@@ -13,6 +13,12 @@ public class PostResponseDto {
 
     private String author;
 
+    private int upvotes;
+    private int downvotes;
+
+    private String userVote;
+    private int score;
+
     private String subreddit;
 
     private String imageUrl;

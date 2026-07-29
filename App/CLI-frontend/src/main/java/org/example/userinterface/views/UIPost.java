@@ -67,25 +67,18 @@ public class UIPost {
             return;
         }
 
-        User user = AppHandler.getInstance().getCurrentUser();
-//        Map<Long, Integer> userVotes = VoteService.getInstance().getAllUserVotes(user);
-
-//        for (Post post : posts) {
-////            Integer userVote = userVotes.get(post.getId());
-//            showPostSimple(post, 0);
-//        }
-
         for (int i = 0; i < posts.size(); i++) {
             Post post = posts.get(i);
             int displayIndex = i + 1;
-            showPostSimple(post, displayIndex, 0);
+            showPostSimple(post, displayIndex);
         }
 
         console.info(footer());
     }
 
-    public void showPostSimple(Post post, int displayIndex, Integer vote) {
-        String formattedVotes = formatVotes(post, vote);
+    public void showPostSimple(Post post, int displayIndex) {
+        String vote = post.getUserVote();
+        String formattedVotes = formatVotes(post);
 
 
         String postLine = String.format(FORMAT_POST_SIMPLE,
@@ -100,8 +93,6 @@ public class UIPost {
     public void showPostExpanded(Post post) {
         String title = post.getTitle();
         List<String> lines = new ArrayList<>();
-        User user = AppHandler.getInstance().getCurrentUser();
-//        Integer vote = VoteService.getInstance().getUserVoteOnPost(post, user);
 
         lines.add("Author: " + post.getAuthor());
         lines.add("");
@@ -116,24 +107,26 @@ public class UIPost {
 
         if (post.getSubreddit() != null) {
             lines.add("");
-            lines.add(post.getSubreddit());
+            lines.add("r/" + post.getSubreddit());
         }
 
         lines.add("");
-//        lines.add(formatVotes(post, vote));
+        lines.add(formatVotes(post));
 
         String boxedPost = BoxPadder.format(lines, title);
         console.info(boxedPost);
     }
 
-    private String formatVotes(Post post, Integer vote) {
-        String upVoteStr = UPVOTE_SYMBOL + post.getUpVotes();
-        String downVoteStr = DOWNVOTE_SYMBOL + post.getDownVotes();
+    private String formatVotes(Post post) {
+        String upVoteStr = UPVOTE_SYMBOL + post.getUpvotes();
+        String downVoteStr = DOWNVOTE_SYMBOL + post.getDownvotes();
+
+        String vote = post.getUserVote();
 
         if (vote != null) {
-            if (vote == 1) {
+            if (vote.equals("up")) {
                 upVoteStr = Color.textGreen(upVoteStr);
-            } else if (vote == -1) {
+            } else if (vote.equals("down")) {
                 downVoteStr = Color.textRed(downVoteStr);
             }
         }

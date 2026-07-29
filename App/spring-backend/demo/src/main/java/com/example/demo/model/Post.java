@@ -34,6 +34,12 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "community_id")
     private Community community;
 
+    @Column(nullable = false)
+    private int upvotes = 0;
+
+    @Column(nullable = false)
+    private int downvotes = 0;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();

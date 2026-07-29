@@ -20,9 +20,9 @@ public class UserValidator {
 
     private static UserValidator instance;
 
-    private static final String USERNAME_REGEX = "^[a-zA-Z0-9._-]{4,20}$";
+    private static final String USERNAME_REGEX = "^[a-zA-Z0-9._-]{3,20}$";
     private static final String EMAIL_REGEX = "(?i)^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
-    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
 
     private static RestClient restClient = RestClient.create();
 

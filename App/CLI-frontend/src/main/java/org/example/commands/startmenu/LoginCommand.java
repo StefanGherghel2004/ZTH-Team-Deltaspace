@@ -29,7 +29,7 @@ public class LoginCommand implements Command {
                     app.setCurrentUser(response.user());
                     app.setCurrentState(AppHandler.State.LOGGED_IN);
 
-                    console.info("Successfully logged in as " + response.user().getUsername() + "!");
+                    console.success("Successfully logged in as " + response.user().getUsername() + "!");
                     return true;
                 } else {
                     console.error("Login failed: Invalid server response.");

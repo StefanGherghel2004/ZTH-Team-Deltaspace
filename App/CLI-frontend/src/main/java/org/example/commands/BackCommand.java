@@ -15,9 +15,7 @@ public class BackCommand implements Command {
                 break;
 
             case ON_POST:
-                if (app.getCurrentPost().getSubreddit() != null) {
-//                    Community community = communityService.getCommunityByName(app.getCurrentPost().getCommunityName());
-//                    app.setCurrentCommunity(community);
+                if (app.getCurrentCommunity() != null) {
                     app.setCurrentState(AppHandler.State.ON_COMMUNITY);
                 } else {
                     app.setCurrentState(AppHandler.State.LOGGED_IN);

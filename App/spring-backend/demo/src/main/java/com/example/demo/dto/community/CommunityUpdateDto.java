@@ -7,6 +7,7 @@ import lombok.Data;
 public class CommunityUpdateDto {
     private String topic;
     private String description;
+    private String name;
 
 
 }
