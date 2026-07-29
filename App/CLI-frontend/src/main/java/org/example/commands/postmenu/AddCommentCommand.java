@@ -5,6 +5,7 @@ import org.example.Community;
 import org.example.Post;
 import org.example.User;
 import org.example.commands.Command;
+import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
 import org.example.loggers.Logger;
 import org.example.userinterface.readers.Console;
@@ -55,9 +56,11 @@ public class AddCommentCommand implements Command {
             console.success("Comment added successfully!");
 
         }catch (HttpClientErrorException e) {
-        System.out.println("STATUS: " + e.getStatusCode());
-        System.out.println("RESPONSE: " + e.getResponseBodyAsString());
-    }
+            System.out.println("STATUS: " + e.getStatusCode());
+            System.out.println("RESPONSE: " + e.getResponseBodyAsString());
+        } catch (BackNavigationException e) {
+            console.info(e.getMessage());
+        }
         return true;
     }
 }
