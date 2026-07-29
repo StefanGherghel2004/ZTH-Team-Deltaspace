@@ -9,6 +9,8 @@ import org.example.handlers.AppHandler;
 import org.example.userinterface.readers.Console;
 import org.example.userinterface.views.UIPost;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 public class ShowFeedCommand implements Command {
@@ -43,6 +45,14 @@ public class ShowFeedCommand implements Command {
                     }
 
                     Post selectedPost = posts.get(selectedIndex - 1);
+                    if(selectedPost!=null){
+                        if(selectedPost.isNSFW()){
+                            if(Period.between(LocalDate.parse(app.getCurrentUser().getDateOfBirth()),LocalDate.now()).getYears()<18){
+                                console.error("This post is marked as NSFW. You must be at least 18 years old to view it.");
+                                return true;
+                            }
+                        }
+                    }
                     app.setCurrentPost(selectedPost);
                     app.setCurrentState(AppHandler.State.ON_POST);
 
