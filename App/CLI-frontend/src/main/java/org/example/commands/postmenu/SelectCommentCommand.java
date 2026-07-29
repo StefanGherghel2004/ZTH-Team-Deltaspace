@@ -26,8 +26,6 @@ public class SelectCommentCommand implements Command {
 
             app.setCurrentComment(selectedComment);
             app.setCurrentState(AppHandler.State.ON_COMMENT);
-
-            uiComment.showComment(selectedComment);
             console.success("Selected comment by @" + selectedComment.getAuthorUsername());
 
         } catch (BackNavigationException e) {
