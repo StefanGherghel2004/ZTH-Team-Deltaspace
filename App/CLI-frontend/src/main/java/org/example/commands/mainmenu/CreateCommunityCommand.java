@@ -35,6 +35,7 @@ public class CreateCommunityCommand implements Command {
                     "Science",
                     "Art",
                     "Tech");
+            console.info("Please choose a topic from the list below:");
             console.printIndexList("Topics", topics);
 
             int choice = console.getIntInRangeInput(1, topics.size());
@@ -64,7 +65,6 @@ public class CreateCommunityCommand implements Command {
 
 
         } catch (HttpClientErrorException.Conflict e) {
-
             console.error("Community with this nickname already exists!");
         } catch (HttpClientErrorException.BadRequest e) {
             console.error("Invalid community data: " + e.getResponseBodyAsString());

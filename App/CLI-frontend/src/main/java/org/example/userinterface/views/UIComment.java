@@ -63,7 +63,7 @@ public class UIComment {
 
                 console.info(indent + branch + "[" + currentIndex + "] ["+
                         Theme.formatUsername(reply.getAuthorUsername()) + "]: "
-                        + safeText + "  (ID: " + reply.getId() + ")");
+                        + safeText);
 
                 printThread(reply.getId(), commentTree, depth + 1,indexCounter);
             }
@@ -79,5 +79,13 @@ public class UIComment {
 
         String boxedPost = BoxPadder.format(lines, title);
         console.info(boxedPost);
+    }
+
+    public Comment getCommentByIndex(int index) {
+        return indexedComment.get(index);
+    }
+
+    public boolean isValidIndex(int index) {
+        return indexedComment.containsKey(index);
     }
 }

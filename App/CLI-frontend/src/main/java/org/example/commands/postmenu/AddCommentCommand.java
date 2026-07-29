@@ -36,7 +36,7 @@ public class AddCommentCommand implements Command {
             Map<String, Object> createDto = new HashMap<>();
             createDto.put("text",text);
             createDto.put("postId",targetPost.getId());
-            if(!(appHandler.getCurrentComment() ==null)) {
+            if(!(appHandler.getCurrentComment() == null)) {
                 createDto.put("parentCommentId", appHandler.getCurrentComment().getIdParent());
             }
             Comment createdComment = restClient.post()
