@@ -119,7 +119,7 @@ public class Console {
     public String getValidUsernameInput () {
         String username;
         while(true) {
-            username = getStringInput("Please enter your username (4-20 characters, alphanumeric):");
+            username = getStringInput("Please enter your username (3-20 characters, alphanumeric):");
 
             if (!userValidator.validateUsername(username)) {
                 error("Invalid username format. Please try again.");
@@ -148,7 +148,7 @@ public class Console {
         String password;
         while (true) {
             password = getStringInput(
-                    "Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 number):");
+                    "Please enter your password (min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special character):");
 
             if(userValidator.validatePassword(password)) {
                 return password;
