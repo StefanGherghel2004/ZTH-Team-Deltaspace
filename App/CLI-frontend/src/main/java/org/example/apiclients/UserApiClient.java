@@ -1,6 +1,7 @@
 package org.example.apiclients;
 
 import org.example.User;
+import org.example.handlers.AppHandler;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -18,6 +19,7 @@ public class UserApiClient {
 
     private static UserApiClient instance;
     private final RestClient restClient;
+    private static AppHandler appHandler = AppHandler.getInstance();
 
     public record AuthResponse(String token, User user) {}
 
@@ -56,6 +58,7 @@ public class UserApiClient {
         try {
             User user = restClient.get()
                     .uri("/api/users/{username}", username)
+                    .header("Authorization", "Bearer " + appHandler.getJwtToken())
                     .retrieve()
                     .body(User.class);
             return Optional.ofNullable(user);
