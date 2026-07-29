@@ -56,7 +56,7 @@ public class UICommunity {
         AppHandler app = AppHandler.getInstance();
         User user = app.getCurrentUser();
 
-        lines.add("Created By: "+user.getUsername());
+        lines.add("Created By: "+ c.getCommunityCreatorUsername());
         lines.add("Topic: "+ formatTopic(c.getTopic()));
         lines.add("");
 

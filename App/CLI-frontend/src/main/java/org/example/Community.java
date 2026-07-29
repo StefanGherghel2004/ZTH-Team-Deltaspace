@@ -19,10 +19,16 @@ public class Community {
     private String topic;
     private String description;
 
+    private String communityCreatorUsername;
     @JsonProperty("author")
     private void unpackAuthor(Map<String, Object> author) {
-        if (author != null && author.containsKey("id")) {
-            this.communityCreatorId = UUID.fromString(author.get("id").toString());
+        if (author != null) {
+            if (author.containsKey("id")) {
+                this.communityCreatorId = UUID.fromString(author.get("id").toString());
+            }
+            if (author.containsKey("username")) {
+                this.communityCreatorUsername = author.get("username").toString();
+            }
         }
     }
     private UUID communityCreatorId;
@@ -33,6 +39,7 @@ public class Community {
 
     private String createdAt;
     private String updatedAt;
+
 
     public Community(UUID communityCreator, String topic, String nickname, String description, boolean NSFW){
         this.topic = topic;
