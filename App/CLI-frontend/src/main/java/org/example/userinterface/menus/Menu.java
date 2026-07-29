@@ -16,7 +16,8 @@ public abstract class Menu {
     protected Map<Integer, MenuOption> options = new LinkedHashMap<>();
     @Setter
     protected String title = "";
-    protected String BACK_COMMAND_INSTRUCTIONS = "You can always type ':back' on an empty line in order to escape a action.";
+    protected String BACK_COMMAND_INSTRUCTIONS = "You can always type ':back' on an empty line " +
+            "in order to discard changes and escape an action.";
 
     protected void addOption(String description, Command command) {
         int nextKey = options.size() + 1;

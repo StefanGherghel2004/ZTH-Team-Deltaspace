@@ -36,7 +36,7 @@ public class LoginCommand implements Command {
                 }
 
             } catch (HttpClientErrorException.Unauthorized e) {
-                console.error("Login failed: Invalid username/email or password.");
+                console.error("Login failed: Invalid username/email or password or deleted account.");
             } catch (Exception e) {
                 console.error("Login error: " + e.getMessage());
             }
