@@ -15,7 +15,7 @@ public class UICommunity {
 
     private final static String HEADER_TITLE = "Communities";
     private final static String NO_COMMUNITIES = "No communities created.";
-    private static final String FORMAT_COMMUNITY_SIMPLE = "%-12.12s | %s";
+    private static final String FORMAT_COMMUNITY_SIMPLE = "r/%-12.12s | %s";
     private static UICommunity instance;
     private final Console console;
 
@@ -51,7 +51,7 @@ public class UICommunity {
         console.info(footer());
     }
     public void showCommunityExpanded(Community c){
-        String title = c.getNickname();
+        String title = "r/" + c.getNickname();
         List<String> lines=new ArrayList<>();
         AppHandler app = AppHandler.getInstance();
         User user = app.getCurrentUser();
