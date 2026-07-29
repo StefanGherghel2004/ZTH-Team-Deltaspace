@@ -24,7 +24,7 @@ public class UIPost {
     private static final String TITLE_GLOBAL_FEED = "Global Feed";
 
     // this limits the length of the fields for a standard length
-    private static final String FORMAT_POST_SIMPLE = "[%2d] | Title: %-12.12s | Author: %-15.15s | %s";
+    private static final String FORMAT_POST_SIMPLE = "[%2d] | Title: %-15.15s | Author: %-15.15s | %s";
 
     // symbols
     private static final String UPVOTE_SYMBOL = "▲ ";
