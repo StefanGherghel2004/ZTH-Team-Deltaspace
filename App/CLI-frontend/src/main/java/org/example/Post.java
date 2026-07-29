@@ -1,5 +1,6 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,9 @@ public class Post {
     @JsonProperty("downvotes")
     private Integer downvotes;
     private String userVote;
-    private boolean NSFW;
+
+
+    private boolean nsfw;
 
     //Constructor
     public Post (String author, String postTitle, String content, String imageUrl, boolean NSFW, String subreddit,Integer upVotes, Integer downVotes) {
@@ -30,7 +33,7 @@ public class Post {
         this.imageUrl = imageUrl;
         this.title = postTitle;
         this.content = content;
-        this.NSFW = NSFW;
+        this.nsfw = NSFW;
         this.subreddit = subreddit;
         this.upvotes=upVotes;
         this.downvotes=downVotes;
@@ -47,7 +50,7 @@ public class Post {
                 ", communityName='" + subreddit + '\'' +
                 ", upVotes=" + upvotes +
                 ", downVotes=" + downvotes +
-                ", NSFW=" + NSFW +
+                ", NSFW=" + nsfw +
                 '}';
     }
 }

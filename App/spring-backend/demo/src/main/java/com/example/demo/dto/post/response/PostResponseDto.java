@@ -1,5 +1,6 @@
 package com.example.demo.dto.post.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
@@ -11,6 +12,7 @@ public class PostResponseDto {
     private String title;
     private String content;
 
+    private boolean nsfw;
     private String author;
 
     private int upvotes;
