@@ -1,5 +1,6 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,9 @@ public class Post {
     private String content;
     private String imageUrl;
     private String subreddit;
+    @JsonProperty("upvotes")
     private Integer upvotes;
+    @JsonProperty("downvotes")
     private Integer downvotes;
     private String userVote;
     private boolean NSFW;

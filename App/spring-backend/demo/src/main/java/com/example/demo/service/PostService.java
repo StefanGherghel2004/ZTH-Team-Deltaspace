@@ -132,7 +132,8 @@ public class PostService {
 
         // this is filled according to the docs from the frontend not used in CLI
         dto.setScore(post.getUpvotes() - post.getDownvotes());
-
+        dto.setUpvotes(post.getUpvotes());
+        dto.setDownvotes(post.getDownvotes());
         try {
             User currentUser = userService.getAuthenticatedUser();
             Optional<PostVote> voteOpt = postVoteRepository.findByPostAndUser(post, currentUser);
