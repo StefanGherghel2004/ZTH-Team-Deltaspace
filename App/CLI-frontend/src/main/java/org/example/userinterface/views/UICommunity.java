@@ -15,7 +15,7 @@ public class UICommunity {
 
     private final static String HEADER_TITLE = "Communities";
     private final static String NO_COMMUNITIES = "No communities created.";
-    private static final String FORMAT_COMMUNITY_SIMPLE = "r/%-12.12s | %s";
+    private static final String FORMAT_COMMUNITY_SIMPLE = "r/%-20.20s | %s";
     private static UICommunity instance;
     private final Console console;
 
