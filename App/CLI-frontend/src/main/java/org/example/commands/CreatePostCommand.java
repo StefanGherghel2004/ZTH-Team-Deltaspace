@@ -62,9 +62,10 @@ public class CreatePostCommand implements Command {
             if(isNsfw){
                 if(Period.between(LocalDate.parse(app.getCurrentUser().getDateOfBirth()),LocalDate.now()).getYears()<18){
                     console.error("You must be at least 18 years old to create an NSFW post.");
+                    return true;
                 }
+
             }
-            else {
                 // check user age for nsfw
 
                 MultiValueMap<String, Object> postData = new LinkedMultiValueMap<>();
@@ -109,7 +110,7 @@ public class CreatePostCommand implements Command {
                 } else {
                     console.error("Failed to create post. Server returned an unknown error.");
                 }
-            }
+
 
         } catch (BackNavigationException backNavigationException) {
             console.info(backNavigationException.getMessage());

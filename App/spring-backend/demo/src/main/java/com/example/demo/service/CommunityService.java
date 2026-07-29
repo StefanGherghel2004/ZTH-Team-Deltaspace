@@ -92,9 +92,9 @@ public class CommunityService {
         User authenticatedUser= userService.getAuthenticatedUser();
         int userAge = authenticatedUser.getAge();
         boolean isNSFW = postRepository.existsByCommunityNameAndNsfwTrue(communityName);
-        if (isNSFW && userAge < NSFW_AGE) {
-            throw new AccessDeniedException("This community is marked as NSFW");
-        }
+//        if (isNSFW && userAge < NSFW_AGE) {
+//            throw new AccessDeniedException("This community is marked as NSFW");
+//        }
         return findByName(communityName);
     }
 
