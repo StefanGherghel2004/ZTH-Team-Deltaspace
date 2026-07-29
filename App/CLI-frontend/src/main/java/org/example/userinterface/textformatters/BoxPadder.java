@@ -15,41 +15,38 @@ public class BoxPadder {
 
     private static final int WIDTH = 45;
 
-    private static final StringBuilder sb = new StringBuilder();
+    private static final StringBuilder stringBuilder = new StringBuilder();
 
     public static String format(List<String> lines, String title) {
         if (lines == null || lines.isEmpty() || title == null) {
             return "";
         }
 
-        sb.setLength(0);
+        StringBuilder sb = new StringBuilder();
 
-        String spacedTitle = " " + title + " ";
-
-        int totalPadding = Math.max(0, WIDTH - spacedTitle.length());
-        int leftPadding = totalPadding / 2;
-        int rightPadding = totalPadding - leftPadding;
-
-        String centeredTitle = TITLE_PAD.repeat(leftPadding) + spacedTitle
-                + TITLE_PAD.repeat(rightPadding);
-
-
-        // top border
         sb.append(TOP_LEFT)
-            .repeat(HORIZONTAL, WIDTH)
-            .append(TOP_RIGHT).append("\n");
+                .repeat(HORIZONTAL, WIDTH)
+                .append(TOP_RIGHT).append("\n");
 
-        addTitle(centeredTitle);
-        addLines(lines);
+        int maxTitleTextWidth = WIDTH - 4;
+        List<String> titleLines = TextWrapper.wrap(title, maxTitleTextWidth);
 
-        // bottom border
+        for (String titleLine : titleLines) {
+            addTitleLine(sb, titleLine);
+        }
+
+        sb.append(VERTICAL)
+                .repeat(" ", WIDTH)
+                .append(VERTICAL)
+                .append("\n");
+
+        addLines(sb, lines);
+
         sb.append(BOTTOM_LEFT)
-            .repeat(HORIZONTAL, WIDTH)
-            .append(BOTTOM_RIGHT).append("\n");
+                .repeat(HORIZONTAL, WIDTH)
+                .append(BOTTOM_RIGHT).append("\n");
 
         return sb.toString();
-
-
     }
 
     public static String formatWithGradientBorder(List<String> lines, String title, int[] startRGB, int[] endRGB) {
@@ -59,14 +56,29 @@ public class BoxPadder {
         return Color.applyBorderGradientToText(plainBox, startRGB, endRGB);
     }
 
-    private static void addLines(List<String> lines) {
+    private static void addTitleLine(StringBuilder stringBuilder, String titleLine) {
+        String spacedTitle = " " + titleLine + " ";
+
+        int totalPadding = Math.max(0, WIDTH - spacedTitle.length());
+        int leftPadding = totalPadding / 2;
+        int rightPadding = totalPadding - leftPadding;
+
+        String formattedTitle = TITLE_PAD.repeat(leftPadding)
+                + spacedTitle
+                + TITLE_PAD.repeat(rightPadding);
+
+        stringBuilder.append(VERTICAL)
+                .append(formattedTitle)
+                .append(VERTICAL)
+                .append("\n");
+    }
+
+    private static void addLines(StringBuilder stringBuilder, List<String> lines) {
         for (String line : lines) {
             int visibleLength = Color.stripAnsi(line).length();
-
             int spacesNeeded = Math.max(0, (WIDTH - 1) - visibleLength);
 
-
-            sb.append(VERTICAL)
+            stringBuilder.append(VERTICAL)
                     .append(" ")
                     .append(line)
                     .repeat(" ", spacesNeeded)
@@ -74,18 +86,4 @@ public class BoxPadder {
                     .append("\n");
         }
     }
-
-    private static void addTitle(String title) {
-        sb.append(VERTICAL)
-            .append(String.format("%-" + WIDTH + "s", title))
-            .append(VERTICAL)
-            .append("\n");
-
-        // empty row after title
-        sb.append(VERTICAL)
-                .repeat(" ", WIDTH)
-                .append(VERTICAL)
-                .append("\n");
-    }
-
 }
