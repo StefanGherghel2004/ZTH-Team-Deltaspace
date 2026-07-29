@@ -21,6 +21,9 @@ public class Community extends BaseEntity {
     @Column(nullable = false)
     private String topic;
 
+    @Column(name = "nsfw", nullable = true)
+    private Boolean NSFW=false;
+
     @Column
     private String description;
 

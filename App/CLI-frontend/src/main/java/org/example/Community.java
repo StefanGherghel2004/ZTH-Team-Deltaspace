@@ -1,5 +1,6 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,18 +27,22 @@ public class Community {
     }
     private UUID communityCreatorId;
 
+    @JsonProperty("NSFW")
+    @JsonAlias({"nsfw", "isNSFW", "isNsfw"})
+    private boolean NSFW;
 
     private String createdAt;
     private String updatedAt;
 
-    public Community(UUID communityCreator, String topic, String nickname, String description){
+    public Community(UUID communityCreator, String topic, String nickname, String description, boolean NSFW){
         this.topic = topic;
         this.nickname = nickname;
         this.description = description;
         this.communityCreatorId = communityCreator;
+        this.NSFW = NSFW;
     }
 
-    public Community(UUID id, String nickname, String topic, String description, UUID communityCreator, String createdAt, String updatedAt){
+    public Community(UUID id, String nickname, String topic, String description, UUID communityCreator, String createdAt, String updatedAt,boolean NSFW){
         this.id = id;
         this.nickname = nickname;
         this.topic = topic;
@@ -45,6 +50,7 @@ public class Community {
         this.communityCreatorId = communityCreator;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.NSFW = NSFW;
     }
 
     @Override

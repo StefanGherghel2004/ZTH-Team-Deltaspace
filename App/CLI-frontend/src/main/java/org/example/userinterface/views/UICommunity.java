@@ -69,7 +69,12 @@ public class UICommunity {
     }
 
     public void showCommunitySimple(Community c) {
-//        String NSFW=communityService.hasNSFWPosts(c);
-        String comWithoutName = "Topic: " + formatTopic(c.getTopic());
-        console.info("r/"+String.format(FORMAT_COMMUNITY_SIMPLE, c.getNickname(), comWithoutName));    }
+        String NSFW = "No";
+        if (c.isNSFW()) {
+            NSFW = "Yes";
+        }
+
+        String comWithoutName = "Topic: " + formatTopic(c.getTopic()) + " | " + formatNSFW(NSFW);
+        console.info(String.format(FORMAT_COMMUNITY_SIMPLE, c.getNickname(), comWithoutName));
+    }
 }

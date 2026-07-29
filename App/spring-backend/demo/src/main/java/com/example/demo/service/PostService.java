@@ -35,6 +35,7 @@ public class PostService {
     private final CommunityService communityService;
     private final PostVoteRepository postVoteRepository;
     private final PostMapper postMapper;
+    private final CommunityRepository communityRepository;
 
     public Post createPost(PostCreateDto dto) {
 
@@ -57,8 +58,17 @@ public class PostService {
             Community community = communityService.findByName(dto.getCommunityName());
             post.setCommunity(community);
         }
+        Post savedPost =postRepository.save(post);
+        if (savedPost.isNsfw() && savedPost.getCommunity() != null) {
+            Community community = savedPost.getCommunity();
 
-        return postRepository.save(post);
+            if (Boolean.FALSE.equals(community.getNSFW())) {
+                community.setNSFW(true);
+                communityRepository.save(community);
+            }
+        }
+        return  savedPost;
+
     }
 
     @Transactional
@@ -193,7 +203,17 @@ public class PostService {
         }
 
 
-        return postRepository.save(post);
+        Post updatedPost = postRepository.save(post);
+
+        if (updatedPost.isNsfw() && updatedPost.getCommunity() != null) {
+            Community community = updatedPost.getCommunity();
+            if (Boolean.FALSE.equals(community.getNSFW())) {
+                community.setNSFW(true);
+                communityRepository.save(community);
+            }
+        }
+
+        return updatedPost;
     }
 
     @Transactional
@@ -203,5 +223,24 @@ public class PostService {
             throw new AccessDeniedException("You are not the author of this post.");
 
         postRepository.delete(post);
+        postRepository.flush();
+
+        boolean NSFW=post.isNsfw();
+        Community community = post.getCommunity();
+        if(NSFW && community!=null){
+            updateCommunityNSFWStatus(community);
+        }
+
+    }
+
+    private void updateCommunityNSFWStatus(Community community) {
+        if (community == null) return;
+
+        boolean stillHasNsfw = postRepository.existsByCommunityNameAndNsfwTrue(community.getName());
+
+        if (Boolean.TRUE.equals(community.getNSFW()) != stillHasNsfw) {
+            community.setNSFW(stillHasNsfw);
+            communityRepository.save(community);
+        }
     }
 }

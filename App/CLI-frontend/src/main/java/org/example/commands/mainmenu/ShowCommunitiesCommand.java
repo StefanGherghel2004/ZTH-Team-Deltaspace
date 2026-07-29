@@ -6,11 +6,13 @@ import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
 import org.example.loggers.Logger;
 import org.example.userinterface.readers.Console;
+import org.example.userinterface.textformatters.Color;
 import org.example.userinterface.views.UICommunity;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
+import java.awt.*;
 import java.util.List;
 
 public class ShowCommunitiesCommand implements Command {
@@ -45,6 +47,14 @@ public class ShowCommunitiesCommand implements Command {
                 Community selectedCommunity = fetchCommunityByName(communityName, appHandler.getJwtToken());
 
                 if (selectedCommunity != null) {
+                    if(selectedCommunity.isNSFW()){
+                       String warningMessage = Color.textOrange("This community contains NSFW posts! Are you sure you want to proceed?[yes/no]");
+                       String confirmation = console.getStringInput(warningMessage,false);
+                       if(confirmation.equalsIgnoreCase("no")){
+                           appHandler.setCurrentState(AppHandler.State.LOGGED_IN);
+                           return true;
+                       }
+                    }
                     appHandler.setCurrentCommunity(selectedCommunity);
                     appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
                     console.success("Entered community r/" + selectedCommunity.getNickname());
@@ -66,7 +76,7 @@ public class ShowCommunitiesCommand implements Command {
 
     private Community fetchCommunityByName(String name, String token) {
         try {
-            return restClient.get()
+            String rawJson = restClient.get()
                     .uri("/api/communities/{name}", name)
                     .headers(headers -> {
                         if (appHandler.getJwtToken() != null) {
@@ -74,9 +84,13 @@ public class ShowCommunitiesCommand implements Command {
                         }
                     })
                     .retrieve()
-                    .body(Community.class);
-        } catch (HttpClientErrorException.NotFound e) {
-            return null;
+                    .body(String.class);
+
+            System.out.println("JSON COMUNITATE: " + rawJson); // <-- VEZI CE Nume Are CHEIA ÎN JSON!
+
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return mapper.readValue(rawJson, Community.class);
         } catch (Exception e) {
             return null;
         }
