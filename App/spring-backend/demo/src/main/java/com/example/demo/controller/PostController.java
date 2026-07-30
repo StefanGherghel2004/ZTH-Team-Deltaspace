@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.post.PostCreateDto;
-import com.example.demo.dto.post.PostFeedDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteRequestDto;
@@ -10,7 +9,6 @@ import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Post;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.PostService;
-import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

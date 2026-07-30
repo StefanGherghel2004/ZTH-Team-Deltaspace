@@ -18,5 +18,4 @@ public class PostVote extends BaseVote {
     @JoinColumn(name = "post_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
-
 }

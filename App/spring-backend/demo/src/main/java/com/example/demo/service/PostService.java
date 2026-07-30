@@ -6,7 +6,6 @@ import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.AccessDeniedException;
-import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Community;

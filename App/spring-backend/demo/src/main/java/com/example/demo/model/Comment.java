@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Entity
 @Table(name = "comments")
@@ -38,5 +36,9 @@ public class Comment extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "replies", "parentComment"})
     private Comment parentComment;
 
+    @Column(nullable = false)
+    private int upvotes=0;
 
+    @Column(nullable = false)
+    private int downvotes=0;
 }
