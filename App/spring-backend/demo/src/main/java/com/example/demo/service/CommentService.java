@@ -3,15 +3,12 @@ package com.example.demo.service;
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.exception.notfound.CommentNotFoundException;
-import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommentRepository;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,14 +56,36 @@ public class CommentService {
         if (!comment.getUser().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this comment");
 
-        commentRepository.delete(comment);
+        comment.setDeleted(true);
+
+        commentRepository.save(comment);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Comment> getCommentsByPostId(UUID postId) {
         Post post = postService.findById(postId);
 
-        return post.getComments();
+        return post.getComments().stream()
+                .map(this::maskIfDeleted)
+                .toList();
+    }
+
+    private Comment maskIfDeleted(Comment comment) {
+        if (!comment.isDeleted()) {
+            return comment;
+        }
+
+        Comment masked = new Comment();
+        masked.setId(comment.getId());
+        masked.setUser(comment.getUser());
+        masked.setPost(comment.getPost());
+        masked.setCreatedAt(comment.getCreatedAt());
+        masked.setParentComment(comment.getParentComment());
+        masked.setDeleted(true);
+
+        masked.setText("[DELETED]");
+
+        return masked;
     }
 
     public List<Comment> getAllComments (){

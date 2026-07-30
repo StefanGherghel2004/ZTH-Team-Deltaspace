@@ -12,5 +12,4 @@ public class DeltaspaceApp {
 		Logger.init();
 		SpringApplication.run(DeltaspaceApp.class, args);
 	}
-
 }

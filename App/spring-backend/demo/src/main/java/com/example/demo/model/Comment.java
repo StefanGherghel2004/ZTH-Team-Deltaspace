@@ -19,6 +19,9 @@ public class Comment extends BaseEntity {
     @Column(unique = false,nullable = false)
     private String text;
 
+    @Column(name = "deleted", unique = false, nullable = false)
+    private boolean deleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "email", "id",
@@ -34,5 +37,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "parent_comment_id", nullable = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "replies", "parentComment"})
     private Comment parentComment;
+
 
 }
