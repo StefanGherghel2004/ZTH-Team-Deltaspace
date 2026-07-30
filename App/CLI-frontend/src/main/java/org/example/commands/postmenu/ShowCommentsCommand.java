@@ -63,7 +63,7 @@ public class ShowCommentsCommand implements Command {
                 .body(new ParameterizedTypeReference<List<Comment>>() {});
         }catch(Exception e ){
                 Logger.severe("Failed to fetch comments for post ID " + postId + ": " + e.getMessage());
-                console.error("Failed to fetch comments");
+                console.error("Failed to fetch comments" + e.getMessage());
                 return Collections.emptyList();
                 }
     }
