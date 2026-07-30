@@ -40,7 +40,7 @@ public class S3ImageService {
                     imageBytes = file.getBytes();
                 }
             } catch (Exception e) {
-                // edit service is down so fallback to original image
+                // edit service is down or filter not supported so fallback to original image
                 imageBytes = file.getBytes();
             }
 
