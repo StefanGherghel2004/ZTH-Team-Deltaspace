@@ -14,9 +14,8 @@ public class ConsoleLogger implements Loggable {
     @Override
     public void log(LogLevel level, String message) {
 
-        if (this.level != level) {
-            return;
+        if (level.ordinal() >= this.level.ordinal()) {
+            System.out.println(message);
         }
-        System.out.println(message);
     }
 }
