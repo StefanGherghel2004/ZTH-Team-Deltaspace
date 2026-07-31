@@ -30,7 +30,7 @@ public class Logger {
         loggers.add(new FileLogger(LogLevel.WARNING, "warning.txt"));
 
         manager.addLoggers(loggers);
-        manager.start();
+        manager.start(); // start logging thread
     }
 
     public static void debug(String message) {

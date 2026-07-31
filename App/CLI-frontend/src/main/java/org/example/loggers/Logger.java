@@ -12,7 +12,7 @@ public class Logger {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static void logWithLevel(LogLevel level, String message) {
-        manager.log(level, format(level, message));
+        manager.addMessage(new LogMessage(level, format(level, message)));
     }
 
     private static String format(LogLevel level, String message) {
@@ -21,19 +21,16 @@ public class Logger {
         return String.format("[%s] %s: %s", currentTime, level, message);
     }
 
-    private static String addLogLevel(LogLevel level, String message) {
-        return level + ":" + message;
-    }
-
     public static void init() {
         List<Loggable> loggers = new ArrayList<>();
 
         loggers.add(new FileLogger(LogLevel.DEBUG, "debug.txt"));
-        loggers.add(new FileLogger(LogLevel.Logger, "severe.txt"));
+        loggers.add(new FileLogger(LogLevel.SEVERE, "severe.txt"));
         loggers.add(new FileLogger(LogLevel.INFO, "info.txt"));
         loggers.add(new FileLogger(LogLevel.WARNING, "warning.txt"));
 
-        LogManager.getInstance().addLoggers(loggers);
+        manager.addLoggers(loggers);
+        manager.start(); // start logging thread
     }
 
     public static void debug(String message) {
@@ -49,7 +46,7 @@ public class Logger {
     }
 
     public static void severe(String message) {
-        logWithLevel(LogLevel.Logger, message);
+        logWithLevel(LogLevel.SEVERE, message);
     }
 
 }

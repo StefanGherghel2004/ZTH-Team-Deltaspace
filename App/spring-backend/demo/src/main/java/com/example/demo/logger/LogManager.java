@@ -59,7 +59,7 @@ public class LogManager extends Thread {
         List<LogMessage> remainingMessages = new ArrayList<>();
 
         logMessages.drainTo(remainingMessages);
-        log(LogLevel.DEBUG, "Remaining messages to flush" + remainingMessages.size());
+        log(LogLevel.DEBUG, "Remaining messages to flush - " + remainingMessages.size());
 
         for (LogMessage msg : remainingMessages) {
             log(msg.level(), msg.message());
