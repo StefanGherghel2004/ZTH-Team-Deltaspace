@@ -32,7 +32,7 @@ public class FileLogger implements Loggable {
     @Override
     public void log(LogLevel level, String message) {
 
-        if (this.level != level) {
+        if (level.ordinal() < this.level.ordinal()) {
             return;
         }
 
