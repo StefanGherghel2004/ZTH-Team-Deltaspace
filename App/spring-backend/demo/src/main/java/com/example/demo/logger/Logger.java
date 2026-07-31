@@ -12,7 +12,7 @@ public class Logger {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static void logWithLevel(LogLevel level, String message) {
-        manager.log(level, format(level, message));
+        manager.addMessage(new LogMessage(level, format(level, message)));
     }
 
     private static String format(LogLevel level, String message) {
@@ -29,7 +29,8 @@ public class Logger {
         loggers.add(new FileLogger(LogLevel.INFO, "info.txt"));
         loggers.add(new FileLogger(LogLevel.WARNING, "warning.txt"));
 
-        LogManager.getInstance().addLoggers(loggers);
+        manager.addLoggers(loggers);
+        manager.start();
     }
 
     public static void debug(String message) {
