@@ -5,10 +5,10 @@ import org.example.Community;
 import org.example.User;
 import org.example.apiclients.CommentApiClient;
 import org.example.commands.BackCommand;
-import org.example.commands.postmenu.DeleteCommentCommand;
-import org.example.commands.postmenu.DownVoteCommentCommand;
-import org.example.commands.postmenu.ReplyToCommentCommand;
-import org.example.commands.postmenu.UpVoteCommentCommand;
+import org.example.commands.commentmenu.DeleteCommentCommand;
+import org.example.commands.commentmenu.DownVoteCommentCommand;
+import org.example.commands.commentmenu.ReplyToCommentCommand;
+import org.example.commands.commentmenu.UpVoteCommentCommand;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.views.UIComment;
 

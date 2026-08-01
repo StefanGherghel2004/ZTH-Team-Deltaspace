@@ -1,4 +1,4 @@
-package org.example.commands.postmenu;
+package org.example.commands.commentmenu;
 
 import org.example.Comment;
 import org.example.apiclients.CommentApiClient;
@@ -6,7 +6,7 @@ import org.example.commands.Command;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.readers.Console;
 
-public class DownVoteCommentCommand implements Command {
+public class UpVoteCommentCommand implements Command {
     private final CommentApiClient commentApiClient = CommentApiClient.getInstance();
 
     @Override
@@ -15,7 +15,7 @@ public class DownVoteCommentCommand implements Command {
         Console console = Console.getInstance();
         Comment currentComment = app.getCurrentComment();
 
-        boolean success = commentApiClient.voteComment(currentComment, "down", app.getJwtToken());
+        boolean success = commentApiClient.voteComment(currentComment, "up", app.getJwtToken());
 
         if (!success) {
             console.error("Failed to register vote on the server.");
