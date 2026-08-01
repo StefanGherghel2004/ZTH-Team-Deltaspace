@@ -3,6 +3,7 @@
     public enum FilterType
     {
         None = 0,
-        Grayscale = 1
+        Grayscale = 1,
+        Invert = 2
     }
 }

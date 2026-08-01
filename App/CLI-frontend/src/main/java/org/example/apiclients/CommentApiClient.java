@@ -1,15 +1,14 @@
 package org.example.apiclients;
 
 import org.example.Comment;
+import org.example.response.ApiResponse;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class CommentApiClient {
 
@@ -40,7 +39,7 @@ public class CommentApiClient {
     public Comment addComment(Map<String, Object> commentPayload, String token) {
         try {
             return restClient.post()
-                    .uri("/api/comments")
+                    .uri("/comments")
                     .header("Authorization", "Bearer " + cleanBearerToken(token))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(commentPayload)
@@ -59,7 +58,7 @@ public class CommentApiClient {
     public Comment getCommentById(UUID id, String token) {
         try {
             return restClient.get()
-                    .uri("/api/comments/{id}", id)
+                    .uri("/comments/{id}", id)
                     .header("Authorization", "Bearer " + cleanBearerToken(token))
                     .retrieve()
                     .body(Comment.class);
@@ -77,7 +76,7 @@ public class CommentApiClient {
         try {
             return restClient.get()
                     .uri(uriBuilder -> {
-                        uriBuilder.path("/api/comments");
+                        uriBuilder.path("/comments");
                         if (postId != null) {
                             uriBuilder.queryParam("postId", postId);
                         }
@@ -97,7 +96,7 @@ public class CommentApiClient {
     public Comment updateComment(UUID id, Map<String, Object> updatePayload, String token) {
         try {
             return restClient.put()
-                    .uri("/api/comments/{id}", id)
+                    .uri("/comments/{id}", id)
                     .header("Authorization", "Bearer " + cleanBearerToken(token))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(updatePayload)
@@ -118,7 +117,7 @@ public class CommentApiClient {
     public boolean deleteCommentById(UUID id, String token) {
         try {
             restClient.delete()
-                    .uri("/api/comments/{id}", id)
+                    .uri("/comments/{id}", id)
                     .header("Authorization", "Bearer " + cleanBearerToken(token))
                     .retrieve()
                     .toBodilessEntity();
@@ -131,6 +130,32 @@ public class CommentApiClient {
             System.err.println("Unauthorized: Invalid or expired token.");
         } catch (Exception e) {
             System.err.println("Error deleting comment: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean voteComment(Comment comment, String voteType, String token){
+        try{
+            Map<String,String> body = new HashMap<>();
+            body.put("voteType",voteType);
+
+            ApiResponse<Map<String, Object>> response = restClient.put()
+                    .uri("/comments/{id}/vote", comment.getId())
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<ApiResponse<Map<String, Object>>>() {});
+
+            if (response != null && response.isSuccess() && response.getData() != null) {
+                Map<String, Object> data = response.getData();
+                comment.setUpvotes((Integer) data.get("upvotes"));
+                comment.setDownvotes((Integer) data.get("downvotes"));
+                comment.setUserVote((String) data.get("userVote"));
+                return true;
+            }
+        } catch (Exception e) {
+        System.err.println("Error sending vote: " + e.getMessage());
         }
         return false;
     }

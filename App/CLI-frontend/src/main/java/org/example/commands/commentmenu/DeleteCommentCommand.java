@@ -1,4 +1,4 @@
-package org.example.commands.postmenu;
+package org.example.commands.commentmenu;
 
 
 import org.example.Comment;
