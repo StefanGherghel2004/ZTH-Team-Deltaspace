@@ -35,7 +35,7 @@ public class PostApiClient {
     public Optional<Post> getPostById(UUID id, String token) {
         try {
             ApiResponse<Post> response = restClient.get()
-                    .uri("/api/posts/{id}", id)
+                    .uri("/posts/{id}", id)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .retrieve()
                     .body(new ParameterizedTypeReference<ApiResponse<Post>>() {
@@ -52,8 +52,8 @@ public class PostApiClient {
 
     public List<Post> getPosts(String subreddit, String token) {
         String uri = (subreddit != null && !subreddit.trim().isEmpty())
-                ? "/api/posts?subreddit=" + subreddit
-                : "/api/posts";
+                ? "/posts?subreddit=" + subreddit
+                : "/posts";
 
         try {
             ApiResponse<List<Post>> response = restClient.get()
@@ -76,7 +76,7 @@ public class PostApiClient {
 
     public Post createPost(MultiValueMap<String, Object> postData, String token) throws HttpClientErrorException {
         ApiResponse<Post> response = restClient.post()
-                .uri("/api/posts")
+                .uri("/posts")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(postData)
@@ -97,7 +97,7 @@ public class PostApiClient {
         });
 
         ApiResponse<Post> response = restClient.put()
-                .uri("/api/posts/{id}", id)
+                .uri("/posts/{id}", id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(body)
@@ -111,7 +111,7 @@ public class PostApiClient {
     public boolean deletePost(UUID id, String token) {
         try {
             ApiResponse<Void> response = restClient.delete()
-                    .uri("/api/posts/{id}", id)
+                    .uri("/posts/{id}", id)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .retrieve()
                     .body(new ParameterizedTypeReference<ApiResponse<Void>>() {
@@ -136,7 +136,7 @@ public class PostApiClient {
             body.put("voteType", voteType);
 
             ApiResponse<Map<String, Object>> response = restClient.put()
-                    .uri("/api/posts/{id}/vote", post.getId())
+                    .uri("/posts/{id}/vote", post.getId())
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(body)

@@ -19,7 +19,6 @@ public class UserApiClient {
 
     private static UserApiClient instance;
     private final RestClient restClient;
-    private static AppHandler appHandler = AppHandler.getInstance();
 
     public record AuthResponse(String token, User user) {}
 
@@ -38,7 +37,7 @@ public class UserApiClient {
 
     public AuthResponse login(String usernameOrEmail, String password) throws HttpClientErrorException.Unauthorized {
         return restClient.post()
-                .uri("/api/auth")
+                .uri("/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Map.of("usernameOrEmail", usernameOrEmail, "password", password))
                 .retrieve()
@@ -47,31 +46,11 @@ public class UserApiClient {
 
     public User registerUser(Map<String, Object> userCreatePayload) throws HttpClientErrorException.Conflict {
         return restClient.post()
-                .uri("/api/users/addUser")
+                .uri("/users/addUser")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userCreatePayload)
                 .retrieve()
                 .body(User.class);
-    }
-
-    public Optional<User> getUserByUsername(String username) {
-        try {
-            User user = restClient.get()
-                    .uri("/api/users/{username}", username)
-                    .header("Authorization", "Bearer " + appHandler.getJwtToken())
-                    .retrieve()
-                    .body(User.class);
-            return Optional.ofNullable(user);
-        } catch (HttpClientErrorException.NotFound e) {
-            return Optional.empty();
-        }
-    }
-
-    public List<User> listAllUsers() {
-        return restClient.get()
-                .uri("/api/users")
-                .retrieve()
-                .body(new ParameterizedTypeReference<List<User>>() {});
     }
 
     public User updateUser(String username, Map<String, Object> updateFields, String token) {
@@ -79,8 +58,6 @@ public class UserApiClient {
             System.err.println("Update failed: No active JWT session. Please log in first.");
             return null;
         }
-
-        String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         updateFields.forEach((key, value) -> {
@@ -91,8 +68,8 @@ public class UserApiClient {
 
         try {
             return restClient.put()
-                    .uri("/api/users/{username}", username)
-                    .header("Authorization", "Bearer " + cleanToken)
+                    .uri("/users/{username}", username)
+                    .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(body)
                     .retrieve()
@@ -112,12 +89,10 @@ public class UserApiClient {
             return false;
         }
 
-        String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
-
         try {
             restClient.delete()
-                    .uri("/api/users/{username}", username)
-                    .header("Authorization", "Bearer " + cleanToken)
+                    .uri("/users/{username}", username)
+                    .header("Authorization", "Bearer " + token)
                     .retrieve()
                     .toBodilessEntity();
             return true;
