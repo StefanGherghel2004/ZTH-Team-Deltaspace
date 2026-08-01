@@ -51,7 +51,7 @@ public class ShowCommentsCommand implements Command {
     private List<Comment> fetchCommentsById(UUID postId){
         try{return restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/api/comments")
+                        .path("/comments")
                         .queryParam("postId", postId)
                         .build())
                 .headers(headers -> {

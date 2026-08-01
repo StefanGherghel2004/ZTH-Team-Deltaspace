@@ -77,7 +77,6 @@ public class UIPost {
     }
 
     public void showPostSimple(Post post, int displayIndex) {
-        String vote = post.getUserVote();
         String formattedVotes = formatVotes(post);
 
 

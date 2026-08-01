@@ -101,6 +101,7 @@ public class UIComment {
         String vote = comment.getUserVote();
 
         if (vote != null) {
+            System.out.println("There is a vote here.");
             if (vote.equals("up")) {
                 upVoteStr = Color.textGreen(upVoteStr);
             } else if (vote.equals("down")) {
