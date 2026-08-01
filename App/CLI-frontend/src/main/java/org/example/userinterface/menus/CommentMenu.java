@@ -26,8 +26,11 @@ public class CommentMenu extends Menu {
         currentUser = appHandler.getCurrentUser();
         setTitle("Selected Comment");
         addOption("Reply", new ReplyToCommentCommand());
-        addOption("UpVote", new UpVoteCommentCommand());
-        addOption("DownVote", new DownVoteCommentCommand());
+        if (!commentApiClient.getCommentById(currentComment.getId(),appHandler.getJwtToken())
+                .getText().equals("[DELETED]")){
+            addOption("UpVote", new UpVoteCommentCommand());
+            addOption("DownVote", new DownVoteCommentCommand());
+        }
         if (currentComment.getAuthorUsername().equals(currentUser.getUsername())) {
             addOption( "Delete comment", new DeleteCommentCommand());
         }

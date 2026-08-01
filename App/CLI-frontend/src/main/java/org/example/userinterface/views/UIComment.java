@@ -1,8 +1,10 @@
 package org.example.userinterface.views;
 
 import org.example.Comment;
+import org.example.Post;
 import org.example.userinterface.readers.Console;
 import org.example.userinterface.textformatters.BoxPadder;
+import org.example.userinterface.textformatters.Color;
 import org.example.userinterface.textformatters.TextWrapper;
 import org.example.userinterface.textformatters.Theme;
 
@@ -15,6 +17,8 @@ public class UIComment {
     private static final String NO_COMMENTS = "(No comments yet. Be the first to reply!)";
     private static final String HEADER_TITLE = "Discussion Thread";
     private static final int MAX_PREVIEW_LENGTH = 40;
+    private static final String UPVOTE_SYMBOL = "▲ ";
+    private static final String DOWNVOTE_SYMBOL = "▼ ";
     private final Map<Integer,Comment> indexedComment = new HashMap<>();
     private static UIComment instance;
     private final Console console;
@@ -63,22 +67,23 @@ public class UIComment {
 
                 console.info(indent + branch + "[" + currentIndex + "] ["+
                         Theme.formatUsername(reply.getAuthorUsername()) + "]: "
-                        + safeText);
+                        + safeText + " " + formatVotes(reply));
 
                 printThread(reply.getId(), commentTree, depth + 1,indexCounter);
             }
         }
     }
 
-    public void showComment(Comment c) {
+    public void showComment(Comment comment) {
 
-        String title = c.getAuthorUsername();
+        String title = comment.getAuthorUsername();
 
-        List<String> wrappedContent = TextWrapper.wrap(c.getText(), MAX_TEXT_WIDTH);
+        List<String> wrappedContent = TextWrapper.wrap(comment.getText(), MAX_TEXT_WIDTH);
         List<String> lines = new ArrayList<>(wrappedContent);
-
-        String boxedPost = BoxPadder.format(lines, title);
-        console.info(boxedPost);
+        lines.add("");
+        lines.add(formatVotes(comment));
+        String boxedComment = BoxPadder.format(lines, title);
+        console.info(boxedComment);
     }
 
     public Comment getCommentByIndex(int index) {
@@ -87,5 +92,22 @@ public class UIComment {
 
     public boolean isValidIndex(int index) {
         return indexedComment.containsKey(index);
+    }
+
+    private String formatVotes(Comment comment) {
+        String upVoteStr = UPVOTE_SYMBOL + comment.getUpvotes();
+        String downVoteStr = DOWNVOTE_SYMBOL + comment.getDownvotes();
+
+        String vote = comment.getUserVote();
+
+        if (vote != null) {
+            if (vote.equals("up")) {
+                upVoteStr = Color.textGreen(upVoteStr);
+            } else if (vote.equals("down")) {
+                downVoteStr = Color.textRed(downVoteStr);
+            }
+        }
+
+        return upVoteStr + " | " + downVoteStr;
     }
 }
