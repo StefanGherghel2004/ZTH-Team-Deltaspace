@@ -33,12 +33,26 @@ namespace ImageProcessor.Service
             }
         }
 
+        private void ApplyInvert(byte[] pixels)
+        {
+            for (int i = 0; i < pixels.Length; i += 4)
+            {
+                pixels[i] = (byte)(255 - pixels[i]);
+                pixels[i + 1] = (byte)(255 - pixels[i + 1]);
+                pixels[i + 2] = (byte)(255 - pixels[2 + 1]);
+            }
+        }
+
         private void ApplyFilter(byte[] pixels, FilterType type)
         {
             switch (type)
             {
                 case FilterType.Grayscale:
                     ApplyGrayscale(pixels);
+                    break;
+
+                case FilterType.Invert:
+                    ApplyInvert(pixels);
                     break;
             }
         }
