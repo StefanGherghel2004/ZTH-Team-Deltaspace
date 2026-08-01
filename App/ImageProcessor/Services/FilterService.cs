@@ -39,7 +39,7 @@ namespace ImageProcessor.Service
             {
                 pixels[i] = (byte)(255 - pixels[i]);
                 pixels[i + 1] = (byte)(255 - pixels[i + 1]);
-                pixels[i + 2] = (byte)(255 - pixels[2 + 1]);
+                pixels[i + 2] = (byte)(255 - pixels[i + 2]);
             }
         }
 
