@@ -37,8 +37,8 @@ public class Comment extends BaseEntity {
     private Comment parentComment;
 
     @Column(nullable = false)
-    private int upvotes=0;
+    private int upvotes = 0;
 
     @Column(nullable = false)
-    private int downvotes=0;
+    private int downvotes = 0;
 }

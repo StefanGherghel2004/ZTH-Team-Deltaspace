@@ -53,7 +53,9 @@ public class CommentService {
     }
 
     public Comment findById (UUID id) {
-        return commentRepository.findById(id).orElseThrow(() ->
+        return commentRepository.findById(id)
+                .map(this::maskIfDeleted)
+                .orElseThrow(() ->
                 new CommentNotFoundException("Comment with id: " + id + " was not found."));
     }
 

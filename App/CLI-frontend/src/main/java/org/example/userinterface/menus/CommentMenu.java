@@ -6,7 +6,9 @@ import org.example.User;
 import org.example.apiclients.CommentApiClient;
 import org.example.commands.BackCommand;
 import org.example.commands.postmenu.DeleteCommentCommand;
+import org.example.commands.postmenu.DownVoteCommentCommand;
 import org.example.commands.postmenu.ReplyToCommentCommand;
+import org.example.commands.postmenu.UpVoteCommentCommand;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.views.UIComment;
 
@@ -24,6 +26,8 @@ public class CommentMenu extends Menu {
         currentUser = appHandler.getCurrentUser();
         setTitle("Selected Comment");
         addOption("Reply", new ReplyToCommentCommand());
+        addOption("UpVote", new UpVoteCommentCommand());
+        addOption("DownVote", new DownVoteCommentCommand());
         if (currentComment.getAuthorUsername().equals(currentUser.getUsername())) {
             addOption( "Delete comment", new DeleteCommentCommand());
         }

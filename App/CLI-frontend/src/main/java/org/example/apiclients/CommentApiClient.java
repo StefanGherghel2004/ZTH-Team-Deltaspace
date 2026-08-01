@@ -1,15 +1,14 @@
 package org.example.apiclients;
 
 import org.example.Comment;
+import org.example.response.ApiResponse;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class CommentApiClient {
 
@@ -131,6 +130,32 @@ public class CommentApiClient {
             System.err.println("Unauthorized: Invalid or expired token.");
         } catch (Exception e) {
             System.err.println("Error deleting comment: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean voteComment(Comment comment, String voteType, String token){
+        try{
+            Map<String,String> body = new HashMap<>();
+            body.put("voteType",voteType);
+
+            ApiResponse<Map<String, Object>> response = restClient.put()
+                    .uri("/api/comments/{id}/vote", comment.getId())
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<ApiResponse<Map<String, Object>>>() {});
+
+            if (response != null && response.isSuccess() && response.getData() != null) {
+                Map<String, Object> data = response.getData();
+                comment.setUpvotes((Integer) data.get("upvotes"));
+                comment.setDownvotes((Integer) data.get("downvotes"));
+                comment.setUserVote((String) data.get("userVote"));
+                return true;
+            }
+        } catch (Exception e) {
+        System.err.println("Error sending vote: " + e.getMessage());
         }
         return false;
     }

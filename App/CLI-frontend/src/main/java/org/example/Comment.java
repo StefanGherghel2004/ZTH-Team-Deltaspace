@@ -23,6 +23,11 @@ public class Comment {
 
     private String text;
     private UUID idParent;
+    @JsonProperty("upvotes")
+    private int upvotes;
+    @JsonProperty("downvotes")
+    private int downvotes;
+    private String userVote;
     @JsonProperty("parentComment")
     private void unpackParentComment(Map<String, Object> parentComment) {
         if (parentComment != null && parentComment.containsKey("id")) {
