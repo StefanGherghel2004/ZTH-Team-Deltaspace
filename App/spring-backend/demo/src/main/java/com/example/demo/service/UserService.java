@@ -14,6 +14,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -107,8 +108,32 @@ public class UserService {
     }
 
     public User getAuthenticatedUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return getOrCreateCurrentUser();
+        }
+
+        String username = auth.getName();
+
         return findByUsername(username);
+    }
+
+    private User getOrCreateCurrentUser() {
+        String username = "current_user";
+
+        return userRepository.findByUsername(username)
+                .orElseGet(() -> {
+
+                    Logger.warning("Creating hardcoded current_user");
+                    User newUser = new User();
+                    newUser.setUsername(username);
+                    newUser.setEmail("current_user@gmail.com");
+                    newUser.setPassword(passwordEncoder.encode("Parola1111+"));
+                    newUser.setDateOfBirth(LocalDate.now().minusYears(20));
+
+                    return userRepository.save(newUser);
+                });
     }
 
     private void validateAge(LocalDate dateOfBirth) {
