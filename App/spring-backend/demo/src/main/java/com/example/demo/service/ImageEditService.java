@@ -18,7 +18,7 @@ public class ImageEditService {
 
     private final RestClient restClient = RestClient.create();
 
-    private static final List<String> FILTERS = List.of("Grayscale","Invert");
+    private static final List<String> FILTERS = List.of("Grayscale","Invert","Sepia","Neon");
 
     private static final String URL = "http://localhost:5157/api/filter";
 
