@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
                 ))
                 .collect(Collectors.toList());
 
-        return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "Datele furnizate nu sunt valide", request, details);
+        return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "Data provided is not valid", request, details);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
