@@ -22,10 +22,10 @@ public class CommentResponseDto {
     private String userVote;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     private List<CommentResponseDto> replies;
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Entity
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class Comment extends BaseEntity {
 
     @Column(unique = false,nullable = false)
-    private String text;
+    private String content;
 
     @Column(name = "deleted", unique = false, nullable = false)
     private boolean deleted = false;
@@ -45,12 +45,4 @@ public class Comment extends BaseEntity {
 
     @Column(nullable = false)
     private int downvotes = 0;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

@@ -13,6 +13,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
+    @Mapping(source = "post.id", target = "postId")
     @Mapping(source = "user.username", target = "author")
     CommentResponseDto toDto(Comment comment);
 }

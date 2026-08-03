@@ -6,6 +6,7 @@ import com.example.demo.dto.comment.response.CommentResponseDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteRequestDto;
 import com.example.demo.dto.vote.VoteResponseDto;
+import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.model.Comment;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.response.ApiResponse;
@@ -40,7 +41,8 @@ public class CommentController {
 
     @GetMapping("/comments/{id}")
     public ResponseEntity<ApiResponse<CommentResponseDto>> getCommentById (@PathVariable UUID id) {
-        Comment comment = commentRepository.getReferenceById(id);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment with id: " + id + " was not found."));
         CommentResponseDto response = commentService.getEnrichedCommentDto(comment);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -64,7 +66,7 @@ public class CommentController {
     public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable UUID id) {
         commentService.deleteCommentById(id);
 
-        return ResponseEntity.ok(ApiResponse.successMessage("Comentariul a fost șters cu succes"));
+        return ResponseEntity.ok(ApiResponse.successMessage("Comment was deleted successfully!"));
     }
 
     @PutMapping("/comments/{id}")

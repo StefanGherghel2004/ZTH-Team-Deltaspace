@@ -37,7 +37,7 @@ public class CommentService {
         Post targetPost = postService.findById(postId);
 
         Comment commentToAdd = new Comment();
-        commentToAdd.setText(commentDto.getContent());
+        commentToAdd.setContent(commentDto.getContent());
         commentToAdd.setUser(authorUser);
         commentToAdd.setPost(targetPost);
 
@@ -103,7 +103,7 @@ public class CommentService {
         masked.setCreatedAt(comment.getCreatedAt());
         masked.setUpdatedAt(comment.getUpdatedAt());
 
-        masked.setText("[DELETED]");
+        masked.setContent("[DELETED]");
 
         return masked;
     }
@@ -124,7 +124,7 @@ public class CommentService {
         if (comment.isDeleted()) {
             throw new IllegalStateException("Cannot edit a deleted comment");
         }
-        comment.setText(updateDto.getContent());
+        comment.setContent(updateDto.getContent());
         Comment updatedComment = commentRepository.save(comment);
         return getEnrichedCommentDto(updatedComment);
     }
@@ -238,7 +238,7 @@ public class CommentService {
             dto.setUserVote(null);
         }
 
-        List<CommentResponseDto> replyDtos = commentRepository.findRepliesByParentId(displayComment.getId())
+        List<CommentResponseDto> replyDtos = commentRepository.findByParentCommentId(displayComment.getId())
                 .stream()
                 .map(this::getEnrichedCommentDto)
                 .toList();
