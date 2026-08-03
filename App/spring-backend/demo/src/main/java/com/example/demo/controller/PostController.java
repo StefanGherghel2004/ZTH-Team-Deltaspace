@@ -20,14 +20,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-    private final PostMapper postMapper;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
 
@@ -37,7 +35,7 @@ public class PostController {
                 .body(ApiResponse.success(response));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
         Post post = postService.findById(id);
 
@@ -46,7 +44,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping
+    @GetMapping("/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPosts(@RequestParam(required = false) String subreddit) {
         List<Post> posts;
         if (subreddit != null && !subreddit.trim().isEmpty()) {
@@ -62,7 +60,16 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @PutMapping("/{id}/vote")
+    @GetMapping("/subreddits/{name}/posts")
+    public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPostsBySubreddit(@PathVariable String name) {
+        List<Post> posts = postService.getCommunityPosts(name);
+        List<PostResponseDto> response = posts.stream()
+                .map(postService::getEnrichedPostDto)
+                .toList();
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PutMapping("/posts/{id}/vote")
     public ResponseEntity<ApiResponse<VoteResponseDto>> votePost(
             @PathVariable UUID id,
             @Valid @RequestBody VoteRequestDto voteDto) {
@@ -72,7 +79,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @ModelAttribute PostUpdateDto updateDto){
         Post updatedPost = postService.updatePost(id, updateDto);
         
@@ -82,7 +89,7 @@ public class PostController {
     }
 
     // this is 200 OK because 204 DELETED would not have a body and the docs specify this body
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<Void>> deletePostById (@PathVariable UUID id) {
 
         postService.deletePostById(id);
