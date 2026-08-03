@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.community.CommunityCreateDto;
+import com.example.demo.dto.community.response.CommunityResponseDto;
 import com.example.demo.model.Community;
 import org.mapstruct.Mapper;
 
@@ -8,7 +9,7 @@ import org.mapstruct.Mapper;
 public interface CommunityMapper {
     Community toEntity(CommunityCreateDto dto);
 
-    CommunityCreateDto toResponseDto(Community community);
+    CommunityResponseDto toResponseDto(Community community);
 
 
 }
