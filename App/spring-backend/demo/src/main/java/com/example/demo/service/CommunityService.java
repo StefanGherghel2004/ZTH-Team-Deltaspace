@@ -80,7 +80,10 @@ public class CommunityService {
         if(!communityToDelete.getAuthor().equals(user)){
             throw new AccessDeniedException("You are not allowed to perform this operation");
         }
-        communityRepository.delete(communityToDelete);
+        if(communityToDelete.getPosts()==null||communityToDelete.getPosts().isEmpty()){
+            communityRepository.delete(communityToDelete);
+        }
+
     }
 
     public Community updateCommunity(String communityName, CommunityUpdateDto updateDto){
@@ -96,9 +99,17 @@ public class CommunityService {
             community.setTopic(topic.name());
         }
 
-        community.setDescription(updateDto.getDescription());
+        if(updateDto.getDescription()!=null) {
+            community.setDescription(updateDto.getDescription());
+        }
+
         community.setTopic(updateDto.getTopic());
-        community.setName(updateDto.getName());
+        if(updateDto.getDisplayName()!=null) {
+            community.setDisplayName(updateDto.getDisplayName());
+        }
+        if(updateDto.getIconUrl()!=null) {
+            community.setIconUrl(updateDto.getIconUrl());
+        }
         return communityRepository.save(community);
     }
 

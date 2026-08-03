@@ -28,7 +28,7 @@ public class ApiResponse<T> {
         return response;
     }
 
-    public static <T> ApiResponse<T> success(T data,Integer total){
+    public static <T> ApiResponse<T> success(T data, int total) {
         ApiResponse<T> response = new ApiResponse<>();
         response.setSuccess(true);
         response.setData(data);
@@ -53,4 +53,5 @@ public class ApiResponse<T> {
         return response;
 
     }
+
 }

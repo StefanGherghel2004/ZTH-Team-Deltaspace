@@ -6,10 +6,12 @@ import com.example.demo.dto.community.response.CommunityResponseDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.mapper.CommunityMapper;
 import com.example.demo.model.Community;
+import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommunityRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.CommunityService;
+import com.example.demo.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ public class CommunityController {
     private final CommunityService communityService;
     private final CommunityMapper communityMapper;
     private final CommunityRepository communityRepository;
+    private final PostService postService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,10 +52,11 @@ public class CommunityController {
 
     }
     @GetMapping("/{name}")
-    public ResponseEntity<ApiResponse<CommunityResponseDto>> getCommunityByName(@PathVariable String communityName){
-        Community findByNameCommunity = communityService.findByName(communityName);
+    public ResponseEntity<ApiResponse<CommunityResponseDto>> getCommunityByName(@PathVariable String name){
+        Community findByNameCommunity = communityService.findByName(name);
         return ResponseEntity.ok(ApiResponse.success(communityService.toDto(findByNameCommunity)));
     }
+
 
     @DeleteMapping("/{communityName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -60,9 +64,9 @@ public class CommunityController {
         communityService.deleteCommunityByName(communityName);
     }
 
-    @PutMapping("{communityName}")
-    public Community updateCommunity(@PathVariable String communityName, @Valid @RequestBody CommunityUpdateDto updateDto){
-        return communityService.updateCommunity(communityName,updateDto);
+    @PutMapping("/{name}")
+    public Community updateCommunity(@PathVariable String name, @Valid @RequestBody CommunityUpdateDto updateDto){
+        return communityService.updateCommunity(name,updateDto);
     }
 
    /* @GetMapping("{communityName}")

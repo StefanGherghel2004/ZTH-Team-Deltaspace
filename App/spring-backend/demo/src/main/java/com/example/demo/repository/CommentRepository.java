@@ -11,9 +11,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByPostId(UUID postId);
-    Optional<Comment> findById(UUID id);
+public interface CommentRepository extends JpaRepository<Comment, UUID> {
+    List<Comment> findByParentCommentId(UUID parentId);
 
-    List<Comment> findByPostIdAndDeletedFalse(UUID postId);
+    List<Comment> findByPostIdAndParentCommentIdIsNull(UUID postId);
+
+    int countByPostId(UUID postId);
 }

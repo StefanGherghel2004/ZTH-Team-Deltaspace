@@ -1,7 +1,6 @@
 package org.example.commands.postmenu;
 
 import org.example.Comment;
-import org.example.Community;
 import org.example.Post;
 import org.example.commands.Command;
 import org.example.handlers.AppHandler;
