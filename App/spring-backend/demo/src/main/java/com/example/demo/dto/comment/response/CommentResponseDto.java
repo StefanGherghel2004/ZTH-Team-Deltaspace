@@ -1,9 +1,11 @@
 package com.example.demo.dto.comment.response;
 
-import com.example.demo.model.enums.VoteType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -12,13 +14,18 @@ public class CommentResponseDto {
     private UUID postId;
     private UUID parentId;
 
-    private String text;
+    private String content;
     private String author;
     private int upVotes;
     private int downVotes;
     private int score;
-    private String commentVote;
+    private String userVote;
 
-    private OffsetDateTime createdAt;
-    private OffsetDateTime updatedAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private LocalDateTime updatedAt;
+
+    private List<CommentResponseDto> replies;
 }

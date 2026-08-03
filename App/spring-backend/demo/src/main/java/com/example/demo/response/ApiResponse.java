@@ -19,11 +19,20 @@ public class ApiResponse<T> {
     private ApiError error;
     private Instant timestamp;
     private String path;
+    private Integer total;
 
     public static <T> ApiResponse<T> success(T data) {
         ApiResponse<T> response = new ApiResponse<>();
         response.setSuccess(true);
         response.setData(data);
+        return response;
+    }
+
+    public static <T> ApiResponse<T> success(T data, int total) {
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setData(data);
+        response.setTotal(total);
         return response;
     }
 
@@ -44,4 +53,5 @@ public class ApiResponse<T> {
         return response;
 
     }
+
 }
