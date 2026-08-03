@@ -27,14 +27,14 @@ public class S3ImageService {
     @Value("${aws.s3.region}")
     private String region;
 
-    public String uploadImage(MultipartFile file, String filter) {
+    public String uploadImage(MultipartFile file, Integer filter) {
         try {
             String extension = getExtension(file);
             byte[] imageBytes;
 
             try {
 
-                if (filter != null && !filter.isEmpty()) {
+                if (filter != null) {
                     imageBytes = imageEditService.edit(file, filter);
                 } else {
                     imageBytes = file.getBytes();

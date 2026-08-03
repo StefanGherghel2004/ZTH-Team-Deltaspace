@@ -17,6 +17,9 @@ public class PostResponseDto {
 
     private int upvotes;
     private int downvotes;
+    private int commentCount;
+
+    private Integer filter;
 
     private String userVote;
     private int score;

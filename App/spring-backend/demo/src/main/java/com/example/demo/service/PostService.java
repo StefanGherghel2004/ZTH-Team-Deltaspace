@@ -51,10 +51,11 @@ public class PostService {
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
             String imageUrl = s3ImageService.uploadImage(dto.getImage(), dto.getFilter());
             post.setImageUrl(imageUrl);
+            post.setFilter(dto.getFilter());
         }
 
-        if (dto.getCommunityName() != null && !dto.getCommunityName().isBlank()) {
-            Community community = communityService.findByName(dto.getCommunityName());
+        if (dto.getSubreddit() != null && !dto.getSubreddit().isBlank()) {
+            Community community = communityService.findByName(dto.getSubreddit());
             post.setCommunity(community);
         }
         Post savedPost =postRepository.save(post);
@@ -141,8 +142,7 @@ public class PostService {
 
         // this is filled according to the docs from the frontend not used in CLI
         dto.setScore(post.getUpvotes() - post.getDownvotes());
-        dto.setUpvotes(post.getUpvotes());
-        dto.setDownvotes(post.getDownvotes());
+        dto.setCommentCount(post.getComments().size());
         try {
             User currentUser = userService.getAuthenticatedUser();
             Optional<PostVote> voteOpt = postVoteRepository.findByPostAndUser(post, currentUser);
@@ -193,12 +193,19 @@ public class PostService {
             throw new AccessDeniedException("You are not allowed to perform this operation");
         }
 
-        post.setTitle(updateDto.getTitle());
-        post.setContent(updateDto.getContent());
+        if (updateDto.getTitle() != null) {
+            post.setTitle(updateDto.getTitle());
+        }
+
+        if (updateDto.getContent() != null) {
+            post.setContent(updateDto.getContent());
+        }
+
         post.setNsfw(updateDto.isNsfw());
         if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
             String imageLink = s3ImageService.uploadImage(updateDto.getImage(), updateDto.getFilter());
             post.setImageUrl(imageLink);
+            post.setFilter(updateDto.getFilter());
         }
 
 

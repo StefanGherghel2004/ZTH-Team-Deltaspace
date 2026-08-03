@@ -23,14 +23,14 @@ public class ImageEditService {
     private static final String URL = "http://localhost:5157/api/filter";
     //private static final String URL =  "http://172.31.42.212:5157/api/filter"; // toggle this before ./build.ps1 for EC2
 
-    public byte[] edit(MultipartFile file, String filter) throws IOException {
+    public byte[] edit(MultipartFile file, Integer filterId) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
-        boolean isValid = FILTERS.stream().anyMatch(f -> f.equalsIgnoreCase(filter));
-
-        if (!isValid) {
-            throw new IllegalArgumentException("This filter is not implemented. Available filters: " + FILTERS);
+        if (filterId == null || filterId < 1 || filterId > FILTERS.size()) {
+            throw new IllegalArgumentException("Invalid filter ID. Must be between 1 and " + FILTERS.size());
         }
+
+        String filterName = FILTERS.get(filterId - 1);
 
         ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
             @Override
@@ -40,7 +40,7 @@ public class ImageEditService {
         };
 
         body.add("imageFile", fileResource);
-        body.add("filter", filter);
+        body.add("filter", filterName);
 
         return restClient.post()
                 .uri(URL)
