@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.FileStorageException;
+import com.example.demo.logger.Logger;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,34 +36,37 @@ public class S3ImageService {
     @Value("${aws.s3.region}")
     private String region;
 
-    public String uploadImage(MultipartFile file, String filter) {
+
+    public String uploadImage(MultipartFile file, Integer filterId) {
+
+        Integer validFilterId = imageEditService.getValidFilterId(filterId);
 
         String extension = getExtension(file);
-        String uniqueId = UUID.randomUUID().toString();
-
-        String originalKey = "original/" + uniqueId + extension;
-        String editedKey = "edited/" + uniqueId + extension;
+        String key = "images/" + UUID.randomUUID() + extension;
 
         try {
 
-            uploadStream(file.getInputStream(), file.getSize(), originalKey, file.getContentType());
+            uploadStream(file.getInputStream(), file.getSize(), key, file.getContentType());
+            String finalUrl = buildPublicUrl(key);
 
-            if (filter == null || filter.isEmpty()) {
-                return buildPublicUrl(originalKey);
+            if (validFilterId == null) {
+                return finalUrl;
             }
 
-            String downloadUrl = generateDownloadUrl(originalKey);
-            String uploadUrl = generateUploadUrl(editedKey, file.getContentType());
-            
+            String downloadUrl = generateDownloadUrl(key);
+            String uploadUrl = generateUploadUrl(key);
+
             CompletableFuture.runAsync(() -> {
                 try {
-                    imageEditService.edit(downloadUrl, uploadUrl, filter);
-                } catch (Exception ignored) {
+
+                    imageEditService.edit(downloadUrl, uploadUrl, validFilterId);
+                } catch (Exception e) {
+                    Logger.severe(e.getMessage());
 
                 }
             });
 
-            return buildPublicUrl(editedKey);
+            return finalUrl;
 
         } catch (IOException e) {
             throw new FileStorageException("Error parsing file for upload: " + e.getMessage());
@@ -98,11 +102,10 @@ public class S3ImageService {
         return s3Presigner.presignGetObject(presignRequest).url().toString();
     }
 
-    private String generateUploadUrl(String key, String contentType) {
+    private String generateUploadUrl(String key) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
-                .contentType(contentType)
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()

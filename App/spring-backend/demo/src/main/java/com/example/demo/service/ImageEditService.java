@@ -1,13 +1,9 @@
 package com.example.demo.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,20 +20,22 @@ public class ImageEditService {
     private static final String URL = "http://localhost:5157/api/filter";
     //private static final String URL =  "http://172.31.42.212:5157/api/filter"; // toggle this before ./build.ps1 for EC2
 
-    public void edit(String downloadUrl, String uploadUrl, String filter) throws IOException {
-
-        boolean isValid = FILTERS.stream().anyMatch(f -> f.equalsIgnoreCase(filter));
-
-        if (!isValid) {
-            throw new IllegalArgumentException("This filter is not implemented. Available filters: " + FILTERS);
+    public Integer getValidFilterId(Integer filterId) {
+        if (filterId == null || filterId < 1 || filterId > FILTERS.size()) {
+            return null;
         }
+        return filterId;
+    }
+
+    public void edit(String downloadUrl, String uploadUrl, Integer filterId) throws IOException {
+
+        String filterName = FILTERS.get(filterId - 1);
 
         Map<String, String> payload = Map.of(
                 "downloadUrl", downloadUrl,
                 "uploadUrl", uploadUrl,
-                "filter", filter
+                "filter", filterName
         );
-
 
         restClient.post()
                 .uri(URL)
