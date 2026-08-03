@@ -23,6 +23,8 @@ public class Post extends BaseEntity {
     private String imageUrl;
     private boolean nsfw;
 
+    private Integer filter;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     // ignores fields added by hibernate
