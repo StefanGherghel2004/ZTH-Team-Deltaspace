@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.OffsetDateTime;
+import org.hibernate.annotations.Formula;
 
 @Data
 @Entity
@@ -36,7 +33,7 @@ public class Comment extends BaseEntity {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id", nullable = true)
+    @JoinColumn(name = "parent_id", nullable = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "replies", "parentComment"})
     private Comment parentComment;
 
@@ -45,4 +42,7 @@ public class Comment extends BaseEntity {
 
     @Column(nullable = false)
     private int downvotes = 0;
+
+    @Formula("upvotes - downvotes")
+    private int score;
 }

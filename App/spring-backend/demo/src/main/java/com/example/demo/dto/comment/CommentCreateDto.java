@@ -15,5 +15,5 @@ public class CommentCreateDto {
     @NotNull(message = "Comment must be referred to a user.")
     private String author;
 
-    private UUID parentCommentId;
+    private UUID parentId;
 }

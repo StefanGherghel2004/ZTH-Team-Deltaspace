@@ -12,9 +12,9 @@ import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
-    List<Comment> findByParentCommentId(UUID parentCommentId);
+    List<Comment> findByParentCommentId(UUID parentId);
 
-    List<Comment> findByPostIdAndParentCommentIsNull(UUID postId);
+    List<Comment> findByPostIdAndParentCommentIdIsNull(UUID postId);
 
     int countByPostId(UUID postId);
 }

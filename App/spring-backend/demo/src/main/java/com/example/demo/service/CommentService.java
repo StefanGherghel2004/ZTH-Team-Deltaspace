@@ -44,10 +44,10 @@ public class CommentService {
         commentToAdd.setUpvotes(0);
         commentToAdd.setDownvotes(0);
 
-        if (commentDto.getParentCommentId() != null) {
-            Comment parentComment = commentRepository.findById(commentDto.getParentCommentId())
+        if (commentDto.getParentId() != null) {
+            Comment parentComment = commentRepository.findById(commentDto.getParentId())
                     .orElseThrow(() -> new CommentNotFoundException("Parent comment with id: " +
-                            commentDto.getParentCommentId() + " was not found."));
+                            commentDto.getParentId() + " was not found."));
             commentToAdd.setParentComment(parentComment);
         }
 
@@ -210,20 +210,25 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<Comment> getTopLevelCommentsByPostId(UUID postId) {
         postService.findById(postId);
-        return commentRepository.findByPostIdAndParentCommentIsNull(postId)
+        return commentRepository.findByPostIdAndParentCommentIdIsNull(postId)
                 .stream()
                 .map(this::maskIfDeleted)
                 .toList();
     }
-
+    @Transactional(readOnly = true)
     public CommentResponseDto getEnrichedCommentDto(Comment comment) {
         Comment displayComment = maskIfDeleted(comment);
         CommentResponseDto dto = commentMapper.toDto(displayComment);
+
+        UUID parentId = (displayComment.getParentComment() != null)
+                ? displayComment.getParentComment().getId()
+                : null;
 
         // this is filled according to the docs from the frontend not used in CLI
         dto.setScore(displayComment.getUpvotes() - displayComment.getDownvotes());
         dto.setUpVotes(displayComment.getUpvotes());
         dto.setDownVotes(displayComment.getDownvotes());
+        dto.setParentId(parentId);
         try {
             User currentUser = userService.getAuthenticatedUser();
             Optional<CommentVote> voteOpt = commentVoteRepository.findByCommentAndUser(displayComment, currentUser);
@@ -238,7 +243,7 @@ public class CommentService {
             dto.setUserVote(null);
         }
 
-        List<CommentResponseDto> replyDtos = commentRepository.findByParentCommentId(displayComment.getId())
+        List<CommentResponseDto> replyDtos = commentRepository.findByParentCommentId(comment.getId())
                 .stream()
                 .map(this::getEnrichedCommentDto)
                 .toList();
