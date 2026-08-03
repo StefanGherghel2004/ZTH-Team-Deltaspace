@@ -36,7 +36,7 @@ public class CommunityController {
                 .body(ApiResponse.success(responseDto));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<ApiResponse<List<CommunityResponseDto>>> getCommunities(){
         List<Community> communities;
 
@@ -47,6 +47,11 @@ public class CommunityController {
                 .toList();
         return ResponseEntity.ok(ApiResponse.success(response,response.size()));
 
+    }
+    @GetMapping("/{name}")
+    public ResponseEntity<ApiResponse<CommunityResponseDto>> getCommunityByName(@PathVariable String communityName){
+        Community findByNameCommunity = communityService.findByName(communityName);
+        return ResponseEntity.ok(ApiResponse.success(communityService.toDto(findByNameCommunity)));
     }
 
     @DeleteMapping("/{communityName}")
@@ -60,12 +65,12 @@ public class CommunityController {
         return communityService.updateCommunity(communityName,updateDto);
     }
 
-    @GetMapping("{communityName}")
+   /* @GetMapping("{communityName}")
     public Community getCommunity(@PathVariable String communityName){
         return communityService.verifyNsfwCommunities(communityName);
 
     }
-
+*/
     @PostMapping("/{name}/join")
     public ResponseEntity<ApiResponse<Void>> joinCommunity(
             @PathVariable String name) { // Sau preiei ID-ul userului conectat

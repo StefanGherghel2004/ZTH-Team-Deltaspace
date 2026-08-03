@@ -105,6 +105,7 @@ public class CommunityService {
     public Community findByName(String name) {
         return communityRepository.findByName(name)
                 .orElseThrow(() -> new CommunityNotFoundException("Community not found with name=" + name));
+
     }
 
 
