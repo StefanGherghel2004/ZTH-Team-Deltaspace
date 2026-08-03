@@ -6,7 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @NoArgsConstructor
 @Data
 @Entity
@@ -16,12 +19,17 @@ public class Community extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(name="display_name",unique = false, nullable = false)
+    private String displayName;
+
     @Column(nullable = false)
     private String topic;
 
     @Column(name = "nsfw", nullable = true)
     private Boolean NSFW=false;
 
+    @Column(name="icon_url")
+    private String iconUrl;
     @Column
     private String description;
 
@@ -33,5 +41,14 @@ public class Community extends BaseEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Post> posts = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "community_members",
+            joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
+    private Set<User> members = new HashSet<>();
 
 }
