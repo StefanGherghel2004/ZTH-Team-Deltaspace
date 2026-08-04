@@ -35,6 +35,7 @@ public class PostService {
     private final PostVoteRepository postVoteRepository;
     private final PostMapper postMapper;
     private final CommunityRepository communityRepository;
+    private final ImageEditService imageEditService;
 
     public Post createPost(PostCreateDto dto) {
 
@@ -49,9 +50,11 @@ public class PostService {
         post.setAuthor(author);
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-            String imageUrl = s3ImageService.uploadImage(dto.getImage(), dto.getFilter());
+            Integer validFilter = imageEditService.getValidFilterId(dto.getFilter());
+            String imageUrl = s3ImageService.uploadImage(dto.getImage(), validFilter);
+
             post.setImageUrl(imageUrl);
-            post.setFilter(dto.getFilter());
+            post.setFilter(validFilter);
         }
 
         if (dto.getSubreddit() != null && !dto.getSubreddit().isBlank()) {
@@ -165,16 +168,6 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    public PostFeedDto getRandomizedFeed(String seed,int page,int size){
-        int offset=size*page;
-        List<Post> feedPosts=postRepository.getRandomizedFeed(seed,size,offset);
-
-        PostFeedDto postFeedDto = new PostFeedDto();
-        postFeedDto.setPosts(feedPosts);
-        postFeedDto.setSeed(seed);
-        return postFeedDto;
-    }
-
     public Post findById(UUID id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
@@ -203,9 +196,12 @@ public class PostService {
 
         post.setNsfw(updateDto.isNsfw());
         if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
-            String imageLink = s3ImageService.uploadImage(updateDto.getImage(), updateDto.getFilter());
-            post.setImageUrl(imageLink);
-            post.setFilter(updateDto.getFilter());
+            Integer validFilter = imageEditService.getValidFilterId(updateDto.getFilter());
+
+            String imageUrl = s3ImageService.uploadImage(updateDto.getImage(), validFilter);
+
+            post.setImageUrl(imageUrl);
+            post.setFilter(validFilter);
         }
 
 
