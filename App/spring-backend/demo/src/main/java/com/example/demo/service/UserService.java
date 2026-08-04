@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class UserService {
         if (!user.getUsername().equals(username)) {
             throw new AccessDeniedException("This account is not yours.");
         }
-
+/*
         if (updateDto.getEmail() != null && !updateDto.getEmail().isBlank()
                 && !updateDto.getEmail().equalsIgnoreCase(user.getEmail())) {
 
@@ -77,6 +78,15 @@ public class UserService {
             validateAge(updateDto.getDateOfBirth());
             user.setDateOfBirth(updateDto.getDateOfBirth());
         }
+*/
+        if(updateDto.getDisplayName()!=null ){
+            user.setDisplayName(updateDto.getDisplayName());
+        }
+
+        if(updateDto.getAvatarUrl()!=null) {
+            user.setAvatarUrl(updateDto.getDisplayName());
+        }
+
 
         return userRepository.save(user);
     }

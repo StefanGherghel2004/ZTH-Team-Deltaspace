@@ -30,7 +30,10 @@ public class User extends BaseEntity {
     private LocalDate dateOfBirth;
 
     @Column
-    private String profilePictureUrl;
+    private String avatarUrl;
+
+    @Column
+    private String displayName;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
