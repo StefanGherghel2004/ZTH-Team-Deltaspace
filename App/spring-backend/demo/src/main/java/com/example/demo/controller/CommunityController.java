@@ -59,9 +59,9 @@ public class CommunityController {
 
 
     @DeleteMapping("/{communityName}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCommunity(@PathVariable String communityName){
+    public ResponseEntity<ApiResponse<Void>> deleteCommunityByName(@PathVariable String communityName){
         communityService.deleteCommunityByName(communityName);
+        return ResponseEntity.ok(ApiResponse.successMessage("Community deleted successfully!"));
     }
 
     @PutMapping("/{name}")
@@ -85,10 +85,9 @@ public class CommunityController {
 
     @PostMapping("/{name}/leave")
     public ResponseEntity<ApiResponse<Void>> leaveCommunity(
-            @PathVariable String name,
-            @AuthenticationPrincipal User currentUser) {
+            @PathVariable String name) {
 
-        communityService.leaveCommunity(name, currentUser.getId());
+        communityService.leaveCommunity(name);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 

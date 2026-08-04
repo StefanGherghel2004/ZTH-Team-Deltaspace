@@ -83,6 +83,7 @@ public class CommunityService {
         if(communityToDelete.getPosts()==null||communityToDelete.getPosts().isEmpty()){
             communityRepository.delete(communityToDelete);
         }
+        else{throw new AccessDeniedException("Cannot Delete! Community still has posts!");}
 
     }
 
@@ -151,17 +152,21 @@ public class CommunityService {
         Community community = communityRepository.findByName(communityName)
                 .orElseThrow(()-> new RuntimeException("Community Not Found"));
         User user = userService.getAuthenticatedUser();
-        community.getMembers().add(user);
-        communityRepository.save(community);
+        if(community.getMembers().contains(user)){
+            throw new AccessDeniedException("You are already a member of this community!");
+        }
+        else {
+            community.getMembers().add(user);
+        }
+            communityRepository.save(community);
 
     }
 
     @Transactional
-    public void leaveCommunity(String communityName, UUID userId){
+    public void leaveCommunity(String communityName){
         Community community = communityRepository.findByName(communityName)
                 .orElseThrow(()-> new RuntimeException("Community Not Found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
+        User user = userService.getAuthenticatedUser();
 
         community.getMembers().remove(user);
         communityRepository.save(community);
