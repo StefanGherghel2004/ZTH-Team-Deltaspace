@@ -14,10 +14,10 @@ import java.util.List;
 indexes = {@Index(name = "idx_posts_community_id", columnList = "community_id, created_at DESC" )})
 public class Post extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(length = 300, nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length=10000,columnDefinition = "TEXT")
     private String content;
 
     private String imageUrl;
