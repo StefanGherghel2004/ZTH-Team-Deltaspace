@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 public class UserUpdateDto {
 
-    @Size(min=3,max=100,message = "Display Name must be between 3 and 100 characters")
+    @Size(min = 3, max = 100, message = "Display Name must be between 3 and 100 characters")
     private String displayName;
 
     private String avatarUrl;

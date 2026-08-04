@@ -1,40 +1,60 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.auth.AuthResponseDto;
+import com.example.demo.dto.auth.PasswordChangeDto;
 import com.example.demo.dto.user.UserCreateDto;
 import com.example.demo.dto.user.UserResponseDto;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
+import com.example.demo.response.ApiResponse;
 import com.example.demo.service.UserService;
 import java.util.List;
 
+import com.example.demo.service.auth.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.SQLRestriction;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    @PostMapping("/addUser")
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseDto addUser(@Valid @RequestBody UserCreateDto createDto) {
+    public ResponseEntity<ApiResponse<AuthResponseDto>> addUser(@Valid @RequestBody UserCreateDto createDto) {
         User userToSave = userMapper.toEntity(createDto);
-
         User savedUser = userService.addUser(userToSave);
 
-        return userMapper.toResponseDto(savedUser);
+        String jwtToken = jwtService.generateToken(savedUser.getUsername());
+
+        AuthResponseDto response = AuthResponseDto.builder()
+                .accessToken(jwtToken)
+                .user(AuthResponseDto.UserDto.builder()
+                        .username(savedUser.getUsername())
+                        .email(savedUser.getEmail())
+                        .build())
+                .build();
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(ApiResponse.success(response));
     }
 
-    @GetMapping("{username}")
-    public User getUserByUsername(@PathVariable String username) {
-        return userService.findByUsername(username);
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponseDto>> getAuthenticatedUser() {
+        User authenticatedUser = userService.getAuthenticatedUser();
+        UserResponseDto response = userMapper.toResponseDto(authenticatedUser);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     // a soft delete under hood (sets deleted = true)
@@ -49,8 +69,25 @@ public class UserController {
         return userService.listAllUsers();
     }
 
-    @PutMapping(value = "{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public User updateUser(@PathVariable String username, @Valid @ModelAttribute UserUpdateDto updateDto) {
-        return userService.updateUser(username, updateDto);
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDisplayNameOrAvatar(@Valid @RequestBody UserUpdateDto updateDto) {
+        User updatedUser = userService.updateAuthenticatedUser(updateDto);
+
+        UserResponseDto response = UserResponseDto.builder()
+                .username(updatedUser.getUsername())
+                .email(updatedUser.getEmail())
+                .displayName(updatedUser.getDisplayName())
+                .avatarUrl(updatedUser.getAvatarUrl())
+                .build();
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            @Valid @RequestBody PasswordChangeDto passwordDto
+    ) {
+        userService.changePassword(passwordDto);
+        return ResponseEntity.ok(ApiResponse.success("Password changed successfully"));
     }
 }

@@ -23,9 +23,8 @@ public class UserCreateDto {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
-/*
+
     @NotNull(message = "Date of birth is required")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
-*/
 }

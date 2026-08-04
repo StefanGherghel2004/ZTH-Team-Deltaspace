@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.auth.PasswordChangeDto;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.UserNotFoundException;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,38 +48,28 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User updateUser(String username, UserUpdateDto updateDto) {
-
+    public User updateAuthenticatedUser(UserUpdateDto updateDto) {
         User user = getAuthenticatedUser();
+        return applyUpdatesAndSave(user, updateDto);
+    }
 
-        if (!user.getUsername().equals(username)) {
+    public User updateUserByUsername(String username, UserUpdateDto updateDto) {
+        User authenticatedUser = getAuthenticatedUser();
+
+        if (!authenticatedUser.getUsername().equals(username)) {
             throw new AccessDeniedException("This account is not yours.");
         }
 
-        if (updateDto.getEmail() != null && !updateDto.getEmail().isBlank()
-                && !updateDto.getEmail().equalsIgnoreCase(user.getEmail())) {
+        return applyUpdatesAndSave(authenticatedUser, updateDto);
+    }
 
-            if (userRepository.findByEmail(updateDto.getEmail()).isPresent()) {
-                throw new IllegalArgumentException("Email '" + updateDto.getEmail() + "' is already in use.");
-            }
-            user.setEmail(updateDto.getEmail());
+    private User applyUpdatesAndSave(User user, UserUpdateDto updateDto) {
+        if (updateDto.getDisplayName() != null) {
+            user.setDisplayName(updateDto.getDisplayName());
         }
-
-        if (updateDto.getPassword() != null && !updateDto.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
-
+        if (updateDto.getAvatarUrl() != null) {
+            user.setAvatarUrl(updateDto.getAvatarUrl());
         }
-
-        if (updateDto.getProfilePicture() != null && !updateDto.getProfilePicture().isEmpty()) {
-            String imageUrl = s3ImageService.uploadImage(updateDto.getProfilePicture(), null);
-            user.setProfilePictureUrl(imageUrl);
-        }
-
-        if (updateDto.getDateOfBirth() != null) {
-            validateAge(updateDto.getDateOfBirth());
-            user.setDateOfBirth(updateDto.getDateOfBirth());
-        }
-
         return userRepository.save(user);
     }
 
@@ -145,6 +137,17 @@ public class UserService {
         if (Period.between(dateOfBirth, LocalDate.now()).getYears() < MIN_AGE) {
             throw new UserTooYoungException(MIN_AGE);
         }
+    }
+
+    public void changePassword(PasswordChangeDto passwordDto) {
+        User authenticatedUser = getAuthenticatedUser();
+
+        if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), authenticatedUser.getPassword())) {
+            throw new BadCredentialsException("Current password is incorrect");
+        }
+
+        authenticatedUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        userRepository.save(authenticatedUser);
     }
 }
 

@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 
 @Data
@@ -20,6 +18,9 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = false, nullable = true)
+    private String displayName;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -30,7 +31,7 @@ public class User extends BaseEntity {
     private LocalDate dateOfBirth;
 
     @Column
-    private String profilePictureUrl;
+    private String avatarUrl;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
