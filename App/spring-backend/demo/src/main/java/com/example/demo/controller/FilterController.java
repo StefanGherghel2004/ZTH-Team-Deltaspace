@@ -16,7 +16,7 @@ import org.springframework.web.client.RestClientException;
 public class FilterController {
 
     //private static final String URL = "http://localhost:5157/filters";
-    private static final String URL =  "http://172.31.42.212:5157/filters"; // toggle this before ./build.ps1
+    private static final String URL =  "http://172.31.7.33:5157/filters"; // toggle this before ./build.ps1
 
     private final RestClient restClient = RestClient.create();
 
