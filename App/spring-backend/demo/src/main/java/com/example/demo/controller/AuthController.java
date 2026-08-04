@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.auth.AuthRequestDto;
+import com.example.demo.dto.auth.AuthRequestLoginDto;
 import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.model.User;
 import com.example.demo.response.ApiError;
@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,8 +29,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestDto request) {
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestLoginDto request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -40,7 +39,7 @@ public class AuthController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             String jwtToken = jwtService.generateToken(userDetails.getUsername());
-            User user = userService.findByUsernameOrEmail(request.getUsername());
+            User user = userService.findByUsername(request.getUsername());
 
             AuthResponseDto response = AuthResponseDto.builder()
                     .accessToken(jwtToken)
@@ -56,9 +55,7 @@ public class AuthController {
 
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(apiError, "/auth"));
+                    .body(ApiResponse.error(apiError, "/auth/login"));
         }
     }
-
-
 }
