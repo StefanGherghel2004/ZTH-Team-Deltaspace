@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.auth.PasswordChangeDto;
+import com.example.demo.dto.user.PasswordChangeDto;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.UserNotFoundException;
