@@ -1,27 +1,62 @@
 ﻿using ImageProcessor.Filters;
+using ImageProcessor.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 
 namespace ImageProcessor.Service
 {
 
     public class FilterService
     {
-        public async Task<byte[]> ProcessImageAsync(Stream inputStream, FilterType type)
+        private readonly HttpClient _httpClient;
+
+        public FilterService(HttpClient httpClient)
         {
-            using var image = await Image.LoadAsync<Rgba32>(inputStream);
+            _httpClient = httpClient;
+        }
+
+        public async Task ProcessAndUploadImageAsync(ImageProcessingRequest request)
+        {
+            if (!Enum.TryParse<FilterType>(request.Filter, true, out var filterType))
+            {
+                throw new ArgumentException($"Filter {request.Filter} is not implemented.");
+            }
+ 
+            using var networkStream = await _httpClient.GetStreamAsync(request.DownloadUrl);
+
+            using var memStream = new MemoryStream();
+            await networkStream.CopyToAsync(memStream);
+       
+            memStream.Position = 0;
+
+            var originalFormat = await Image.DetectFormatAsync(memStream);
+
+            memStream.Position = 0;
+
+            using var image = await Image.LoadAsync<Rgba32>(memStream);
             var pixelData = new byte[image.Width * image.Height * 4];
             image.CopyPixelDataTo(pixelData);
 
-            ApplyFilter(pixelData, type);
+            ApplyFilter(pixelData, filterType);
 
             using var finalImage = Image.LoadPixelData<Rgba32>(pixelData, image.Width, image.Height);
             using var outStream = new MemoryStream();
-            await finalImage.SaveAsync(outStream, new PngEncoder());
-            return outStream.ToArray();
+
+            await finalImage.SaveAsync(outStream, originalFormat);
+
+            byte[] processedBytes = outStream.ToArray();
+
+            using var content = new ByteArrayContent(processedBytes);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue(originalFormat.DefaultMimeType);
+
+            var response = await _httpClient.PutAsync(request.UploadUrl, content);
+
+            response.EnsureSuccessStatusCode();
         }
 
         private void ApplyGrayscale(byte[] pixels)

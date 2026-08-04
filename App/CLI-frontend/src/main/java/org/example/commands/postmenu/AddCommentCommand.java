@@ -41,7 +41,7 @@ public class AddCommentCommand implements Command {
                 createDto.put("parentCommentId", appHandler.getCurrentComment().getIdParent());
             }
             Comment createdComment = restClient.post()
-                    .uri("/api/comments")
+                    .uri("/comments")
                     .contentType(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
                         if (appHandler.getJwtToken() != null) {
