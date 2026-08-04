@@ -168,16 +168,6 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    public PostFeedDto getRandomizedFeed(String seed,int page,int size){
-        int offset=size*page;
-        List<Post> feedPosts=postRepository.getRandomizedFeed(seed,size,offset);
-
-        PostFeedDto postFeedDto = new PostFeedDto();
-        postFeedDto.setPosts(feedPosts);
-        postFeedDto.setSeed(seed);
-        return postFeedDto;
-    }
-
     public Post findById(UUID id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));

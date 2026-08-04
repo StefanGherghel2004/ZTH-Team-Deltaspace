@@ -5,6 +5,7 @@ import org.example.commands.Command;
 import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
 import org.example.loggers.Logger;
+import org.example.response.ApiResponse;
 import org.example.userinterface.readers.Console;
 import org.example.userinterface.textformatters.Color;
 import org.example.userinterface.views.UICommunity;
@@ -13,6 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.List;
 
 public class ShowCommunitiesCommand implements Command {
@@ -26,16 +28,18 @@ public class ShowCommunitiesCommand implements Command {
         UICommunity uiCommunity = UICommunity.getInstance();
         Console console = Console.getInstance();
         try{
-        List<Community> communities=restClient.get()
-                .uri("/api/communities")
+        ApiResponse<List<Community>> response=restClient.get()
+                .uri("/subreddits")
                 .headers(headers -> {
                     if (appHandler.getJwtToken() != null) {
                         headers.setBearerAuth(appHandler.getJwtToken());
                     }
                 })
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<Community>>() {});
-
+                .body(new ParameterizedTypeReference<ApiResponse<List<Community>>>() {});
+        List<Community> communities = (response != null && response.getData() != null)
+                    ? response.getData()
+                    : Collections.emptyList();
         uiCommunity.showCommunitiesList(communities, appHandler.getCurrentUser());
 
             if(communities==null || communities.isEmpty()){
@@ -76,19 +80,17 @@ public class ShowCommunitiesCommand implements Command {
 
     private Community fetchCommunityByName(String name, String token) {
         try {
-            String rawJson = restClient.get()
-                    .uri("/api/communities/{name}", name)
+            ApiResponse<Community> response = restClient.get()
+                    .uri("/subreddits/{name}", name)
                     .headers(headers -> {
                         if (appHandler.getJwtToken() != null) {
                             headers.setBearerAuth(appHandler.getJwtToken());
                         }
                     })
                     .retrieve()
-                    .body(String.class);
+                    .body(new ParameterizedTypeReference<ApiResponse<Community>>() {});
 
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-            mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            return mapper.readValue(rawJson, Community.class);
+            return (response != null) ? response.getData() : null;
         } catch (Exception e) {
             return null;
         }

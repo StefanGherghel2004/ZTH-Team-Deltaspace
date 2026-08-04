@@ -21,11 +21,11 @@ public class UserCreateDto {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "Password must be at least 8 characters long, contain an uppercase letter, a digit, and a special character")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
-
+/*
     @NotNull(message = "Date of birth is required")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
+*/
 }

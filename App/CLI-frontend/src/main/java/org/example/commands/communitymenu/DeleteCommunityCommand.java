@@ -29,7 +29,7 @@ public class DeleteCommunityCommand implements Command {
         if (confirmation) {
             try {
                 restClient.delete()
-                        .uri("/api/communities/{communityName}", currentCommunity.getNickname())
+                        .uri("/subreddits/{name}", currentCommunity.getNickname())
                         .headers(headers -> {
 
                             if (appHandler.getJwtToken()!= null) {
