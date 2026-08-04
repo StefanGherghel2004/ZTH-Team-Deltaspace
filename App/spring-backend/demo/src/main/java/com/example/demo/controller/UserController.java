@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.auth.AuthResponseDto;
-import com.example.demo.dto.user.PasswordChangeDto;
+import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.dto.user.UserCreateDto;
 import com.example.demo.dto.user.UserResponseDto;
 import com.example.demo.dto.user.UserUpdateDto;
@@ -85,7 +85,7 @@ public class UserController {
 
     @PutMapping("/me/password")
     public ResponseEntity<ApiResponse<String>> changePassword(
-            @Valid @RequestBody PasswordChangeDto passwordDto
+            @Valid @RequestBody PasswordChangeRequestDto passwordDto
     ) {
         userService.changePassword(passwordDto);
         return ResponseEntity.ok(ApiResponse.success("Password changed successfully"));

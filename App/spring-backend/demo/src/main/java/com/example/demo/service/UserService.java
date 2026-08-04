@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.user.PasswordChangeDto;
+import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.UserNotFoundException;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -140,11 +139,15 @@ public class UserService {
         }
     }
 
-    public void changePassword(PasswordChangeDto passwordDto) {
+    public void changePassword(PasswordChangeRequestDto passwordDto) {
         User authenticatedUser = getAuthenticatedUser();
 
         if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), authenticatedUser.getPassword())) {
             throw new BadCredentialsException("Current password is incorrect");
+        }
+
+        if (passwordEncoder.matches(passwordDto.getNewPassword(), authenticatedUser.getPassword())) {
+            throw new IllegalArgumentException("New password cannot be the same as the current password.");
         }
 
         authenticatedUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
