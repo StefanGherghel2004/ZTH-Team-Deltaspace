@@ -3,9 +3,7 @@ package org.example.userinterface.menus;
 import org.example.Community;
 import org.example.commands.BackCommand;
 import org.example.commands.CreatePostCommand;
-import org.example.commands.communitymenu.DeleteCommunityCommand;
-import org.example.commands.communitymenu.OpenEditCommunityCommand;
-import org.example.commands.communitymenu.ShowPostsInCommunityCommand;
+import org.example.commands.communitymenu.*;
 import org.example.handlers.AppHandler;
 import org.example.userinterface.views.UICommunity;
 
@@ -33,6 +31,8 @@ public class CommunityMenu extends Menu {
             addOption("Edit Community", new OpenEditCommunityCommand());
             addOption("Delete community", new DeleteCommunityCommand());
         }
+        addOption("Join Communtiy", new JoinCommunityCommand());
+        addOption("Leave Community", new LeaveCommunityCommand());
     }
 
     addOption("Return to Main Menu", new BackCommand());

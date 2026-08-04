@@ -6,7 +6,9 @@ import org.example.commands.Command;
 import org.example.exceptions.BackNavigationException;
 import org.example.handlers.AppHandler;
 import org.example.loggers.Logger;
+import org.example.response.ApiResponse;
 import org.example.userinterface.readers.Console;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
@@ -42,12 +44,13 @@ public class CreateCommunityCommand implements Command {
             String selectedTopic = topics.get(choice - 1);
 
             Map<String, Object> createDto = new HashMap<>();
-            createDto.put("title", nickname);
+            createDto.put("name", nickname);
             createDto.put("description", description);
             createDto.put("topic", selectedTopic);
+            createDto.put("displayName",nickname);
 
-            Community createdCommunity = restClient.post()
-                    .uri("/api/communities")
+            ApiResponse<Community> response = restClient.post()
+                    .uri("/subreddits")
                     .contentType(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
                         if (appHandler.getJwtToken() != null) {
@@ -56,12 +59,21 @@ public class CreateCommunityCommand implements Command {
                     })
                     .body(createDto)
                     .retrieve()
-                    .body(Community.class);
-            appHandler.setCurrentCommunity(createdCommunity);
-            appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
+                    .body(new ParameterizedTypeReference<ApiResponse<Community>>() {});
 
-            console.success("Community created successfully!");
-            Logger.info("Community '" + nickname + "' created successfully!");
+            Community createdCommunity = (response != null && response.getData() != null)
+                    ? response.getData()
+                    : null;
+
+            if (createdCommunity != null) {
+                appHandler.setCurrentCommunity(createdCommunity);
+                appHandler.setCurrentState(AppHandler.State.ON_COMMUNITY);
+
+                console.success("Community created successfully!");
+                Logger.info("Community '" + createdCommunity.getNickname() + "' created successfully!");
+            } else {
+                console.error("Failed to parse created community data.");
+            }
 
 
         } catch (HttpClientErrorException.Conflict e) {

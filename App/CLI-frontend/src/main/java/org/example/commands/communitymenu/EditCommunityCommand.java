@@ -66,7 +66,7 @@ public class EditCommunityCommand implements Command {
                 }
             }
             Community updatedCommunity=restClient.put()
-                    .uri("/api/communities/{communityname}",currentCommunity.getNickname())
+                    .uri("/subreddits/{name}",currentCommunity.getNickname())
                     .contentType(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
                      if (appHandler.getJwtToken() != null) {

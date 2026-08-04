@@ -64,6 +64,8 @@ public class UICommunity {
         lines.add("Description: ");
         lines.addAll(wrappedContent);
         lines.add("");
+        lines.add("Member Count:");
+        lines.add(String.valueOf(c.getMemberCount()));
 
         String boxedCommunity= BoxPadder.format(lines,title);
         console.info(boxedCommunity);

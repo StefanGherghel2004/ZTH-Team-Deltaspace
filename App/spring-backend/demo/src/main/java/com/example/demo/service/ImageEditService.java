@@ -20,8 +20,8 @@ public class ImageEditService {
 
     private static final List<String> FILTERS = List.of("Grayscale","Invert","Sepia","Neon");
 
-    //private static final String URL = "http://localhost:5157/api/filter";
-    private static final String URL =  "http://172.31.42.212:5157/api/filter"; // toggle this before ./build.ps1 for EC2
+    private static final String URL = "http://localhost:5157/api/filter";
+    //private static final String URL =  "http://172.31.42.212:5157/api/filter"; // toggle this before ./build.ps1 for EC2
 
     public byte[] edit(MultipartFile file, Integer filterId) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
