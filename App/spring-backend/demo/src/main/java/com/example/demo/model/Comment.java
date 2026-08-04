@@ -15,7 +15,7 @@ import org.hibernate.annotations.Formula;
 @NoArgsConstructor
 public class Comment extends BaseEntity {
 
-    @Column(unique = false,nullable = false)
+    @Column(length = 1000, unique = false,nullable = false)
     private String content;
 
     @Column(name = "deleted", unique = false, nullable = false)

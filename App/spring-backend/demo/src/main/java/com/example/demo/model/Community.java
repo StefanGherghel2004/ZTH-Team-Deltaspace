@@ -30,7 +30,8 @@ public class Community extends BaseEntity {
 
     @Column(name="icon_url")
     private String iconUrl;
-    @Column
+
+    @Column(length = 500)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
