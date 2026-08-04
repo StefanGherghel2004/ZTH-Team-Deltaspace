@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.auth.AuthRequestDto;
+import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.model.User;
+import com.example.demo.response.ApiError;
+import com.example.demo.response.ApiResponse;
 import com.example.demo.service.UserService;
 import com.example.demo.service.auth.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,23 +31,32 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> loginUser(@RequestBody AuthRequestDto request) {
+    public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestDto request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsernameOrEmail(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             String jwtToken = jwtService.generateToken(userDetails.getUsername());
-            User user = userService.findByUsernameOrEmail(request.getUsernameOrEmail());
+            User user = userService.findByUsernameOrEmail(request.getUsername());
 
-            return ResponseEntity.ok(Map.of(
-                    "token", jwtToken,
-                    "user", user
-            ));
+            AuthResponseDto response = AuthResponseDto.builder()
+                    .accessToken(jwtToken)
+                    .user(AuthResponseDto.UserDto.builder()
+                            .username(user.getUsername())
+                            .email(user.getEmail())
+                            .build())
+                    .build();
+
+            return ResponseEntity.ok(ApiResponse.success(response));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong credentials.");
+            ApiError apiError = new ApiError("UNAUTHORIZED", "Wrong credentials.", List.of());
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(apiError, "/auth"));
         }
     }
 
