@@ -250,23 +250,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\serba\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\DELL\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\VSCommunity\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\serba\\AppData\\Roaming\\SPB_Data\\ZTH-Team-Deltaspace\\App\\ImageProcessor\\ImageProcessor.csproj",
+      "projectUniqueName": "C:\\Users\\DELL\\Downloads\\ZTH-Team-Deltaspace\\App\\ImageProcessor\\ImageProcessor.csproj",
       "projectName": "ImageProcessor",
-      "projectPath": "C:\\Users\\serba\\AppData\\Roaming\\SPB_Data\\ZTH-Team-Deltaspace\\App\\ImageProcessor\\ImageProcessor.csproj",
-      "packagesPath": "C:\\Users\\serba\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\serba\\AppData\\Roaming\\SPB_Data\\ZTH-Team-Deltaspace\\App\\ImageProcessor\\obj\\",
+      "projectPath": "C:\\Users\\DELL\\Downloads\\ZTH-Team-Deltaspace\\App\\ImageProcessor\\ImageProcessor.csproj",
+      "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\DELL\\Downloads\\ZTH-Team-Deltaspace\\App\\ImageProcessor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\VSCommunity\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\serba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -275,7 +275,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
