@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$DOCKER_USER = "stefangherghel"
+$DOCKER_USER = "stun14"
 $IMAGE_NAME = "image-service"
 $IMAGE_VERSION = "latest"
 
