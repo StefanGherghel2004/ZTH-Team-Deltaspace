@@ -2,11 +2,11 @@ spring:
   application:
     name: demo
   datasource:
-    url: jdbc:postgresql://localhost:5432/deltaspacedb3
-    #    url: jdbc:postgresql://172.31.35.243:5432/deltaspacedb #toggle this before ./build.ps1
+    #url: jdbc:postgresql://localhost:5432/deltaspacedb3
+    url: jdbc:postgresql://172.31.46.238:5432/deltaspacedb #toggle this before ./build.ps1
     username: postgres
-    password: ${POSTGRES-PASSWORD}
-    # password: user # toggle this before ./build.ps1
+    #password: ${POSTGRES-PASSWORD}
+    password: user # toggle this before ./build.ps1
   jpa:
     hibernate:
       ddl-auto: update
