@@ -16,9 +16,6 @@ public class PostCreateDto {
     private String content;
     private boolean nsfw;
 
-    @NotBlank(message = "Author is required")
-    private String author;
-
     private Integer filter;
 
     @NotBlank(message = "Subreddit is required")

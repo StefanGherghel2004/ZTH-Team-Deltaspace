@@ -12,8 +12,5 @@ public class CommentCreateDto {
     @NotBlank(message = "Comment contents cannot be empty.")
     private String content;
 
-    @NotNull(message = "Comment must be referred to a user.")
-    private String author;
-
     private UUID parentId;
 }

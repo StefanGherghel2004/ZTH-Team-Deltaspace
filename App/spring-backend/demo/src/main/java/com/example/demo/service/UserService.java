@@ -2,48 +2,46 @@ package com.example.demo.service;
 
 import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.dto.user.UserUpdateDto;
-import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.exception.UserTooYoungException;
-import com.example.demo.logger.Logger;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserService {
 
     private static final int MIN_AGE = 13;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final S3ImageService s3ImageService;
-
 
     public User addUser(User user) {
         user.setId(null);
         validateAge(user.getDateOfBirth());
 
-        Logger.info("Adding new user" + user);
+        log.info("Adding new user: {}", user.getUsername());
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         return userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public List<User> listAllUsers() {
         return userRepository.findAll();
     }
@@ -73,17 +71,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
     }
 
+    @Transactional(readOnly = true)
     public User findByUsernameOrEmail(String usernameOrEmail) {
-        return userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail)
+        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UserNotFoundException(
                         "User not found with username or email: " + usernameOrEmail));
     }
 
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email + "."));
@@ -91,45 +92,26 @@ public class UserService {
 
     public void deleteUserByUsername(String username) {
         User user = getAuthenticatedUser();
-
         if (!user.getUsername().equals(username)) {
             throw new AccessDeniedException("This account is not yours.");
         }
 
-        userRepository.delete(user);
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
-            return getOrCreateCurrentUser();
+            throw new BadCredentialsException("Full authentication is required.");
         }
 
-        String username = auth.getName();
-
-        return findByUsername(username);
-    }
-
-    private User getOrCreateCurrentUser() {
-        String username = "current_user";
-
-        return userRepository.findByUsername(username)
-                .orElseGet(() -> {
-
-                    Logger.warning("Creating hardcoded current_user");
-                    User newUser = new User();
-                    newUser.setUsername(username);
-                    newUser.setEmail("current_user@gmail.com");
-                    newUser.setPassword(passwordEncoder.encode("Parola1111+"));
-                    newUser.setDateOfBirth(LocalDate.now().minusYears(20));
-
-                    return userRepository.save(newUser);
-                });
+        return findByUsername(auth.getName());
     }
 
     private void validateAge(LocalDate dateOfBirth) {
-
         if (dateOfBirth == null) {
             return;
         }
@@ -154,4 +136,3 @@ public class UserService {
         userRepository.save(authenticatedUser);
     }
 }
-

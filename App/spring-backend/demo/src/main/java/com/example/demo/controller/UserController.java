@@ -64,11 +64,6 @@ public class UserController {
         userService.deleteUserByUsername(username);
     }
 
-    @GetMapping
-    public List<User> listAllUsers() {
-        return userService.listAllUsers();
-    }
-
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDisplayNameOrAvatar(@Valid @RequestBody UserUpdateDto updateDto) {
         User updatedUser = userService.updateAuthenticatedUser(updateDto);
