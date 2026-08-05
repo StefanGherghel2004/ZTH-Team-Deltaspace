@@ -29,6 +29,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
+/*has been also moved to usercontroller
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestLoginDto request) {
         try {
@@ -58,4 +59,6 @@ public class AuthController {
                     .body(ApiResponse.error(apiError, "/auth/login"));
         }
     }
+
+ */
 }
