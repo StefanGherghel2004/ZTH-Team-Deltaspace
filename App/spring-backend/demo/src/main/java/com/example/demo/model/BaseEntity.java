@@ -15,10 +15,10 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false)
     private OffsetDateTime updatedAt;
 
     @PrePersist
