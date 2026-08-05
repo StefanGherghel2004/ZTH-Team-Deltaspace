@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +21,20 @@ public class HomeController {
     private final RestClient restClient = RestClient.create();
 
     @GetMapping("filters")
-    public ResponseEntity<String> getFilters() {
+    public ResponseEntity<ApiResponse<?>> getFilters() {
 
         try {
 
-            return restClient.get()
+            ApiResponse<?> responseFromFilterService = restClient.get()
                     .uri(URL)
                     .retrieve()
-                    .toEntity(String.class);
+                    .body(ApiResponse.class);
+
+            return ResponseEntity.ok(responseFromFilterService);
 
         } catch (RestClientException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body("Error connecting to filter service" + e.getMessage());
+                    .body(ApiResponse.error(null, "/filters"));
         }
     }
 
@@ -39,7 +42,9 @@ public class HomeController {
     public String getHomePage() {
         return """
     ==============================================
-     W E L C O M E   T O   D E L T A   S P A C E
+    
+    -------------WELCOME TO DELTASPACE------------
+    
     ==============================================
     """;
     }
