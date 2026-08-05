@@ -93,16 +93,8 @@ public class CommentService {
             return comment;
         }
 
-        Comment masked = new Comment();
-        masked.setId(comment.getId());
-        masked.setUser(comment.getUser());
-        masked.setPost(comment.getPost());
-        masked.setParentComment(comment.getParentComment());
+        Comment masked = commentMapper.clone(comment);
         masked.setDeleted(true);
-
-        masked.setCreatedAt(comment.getCreatedAt());
-        masked.setUpdatedAt(comment.getUpdatedAt());
-
         masked.setContent("[DELETED]");
 
         return masked;
