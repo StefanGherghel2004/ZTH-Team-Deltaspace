@@ -101,7 +101,7 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @ModelAttribute PostUpdateDto updateDto){
+    public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @RequestBody PostUpdateDto updateDto){
         Post updatedPost = postService.updatePost(id, updateDto);
         
         PostResponseDto response = postService.getEnrichedPostDto(updatedPost);

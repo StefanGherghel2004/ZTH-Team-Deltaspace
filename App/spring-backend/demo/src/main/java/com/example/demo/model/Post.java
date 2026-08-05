@@ -24,7 +24,6 @@ public class Post extends BaseEntity {
     private String content;
 
     private String imageUrl;
-    private boolean nsfw;
 
     private Integer filter;
 

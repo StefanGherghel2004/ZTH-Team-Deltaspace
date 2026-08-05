@@ -61,14 +61,14 @@ public class PostService {
             post.setCommunity(community);
         }
         Post savedPost = postRepository.save(post);
-        if (savedPost.isNsfw() && savedPost.getCommunity() != null) {
-            Community community = savedPost.getCommunity();
-
-            if (Boolean.FALSE.equals(community.getNSFW())) {
-                community.setNSFW(true);
-                communityRepository.save(community);
-            }
-        }
+//        if (savedPost.getNsfw() && savedPost.getCommunity() != null) {
+//            Community community = savedPost.getCommunity();
+//
+//            if (Boolean.FALSE.equals(community.getNSFW())) {
+//                community.setNSFW(true);
+//                communityRepository.save(community);
+//            }
+//        }
         votePost(savedPost.getId(), "up");
         return savedPost;
     }
@@ -139,7 +139,6 @@ public class PostService {
         }
     }
 
-    // 🟢 Tranzacția acoperă citirea postărilor ȘI conversia DTO-urilor
     @Transactional(readOnly = true)
     public List<PostResponseDto> getAllEnrichedPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc().stream()
@@ -147,7 +146,6 @@ public class PostService {
                 .toList();
     }
 
-    // 🟢 Varianta pentru căutare după comunitate
     @Transactional(readOnly = true)
     public List<PostResponseDto> getCommunityEnrichedPosts(String communityName) {
         Community community = communityService.findByName(communityName);
@@ -156,21 +154,18 @@ public class PostService {
                 .toList();
     }
 
-    // 🟢 Varianta pentru un singur post
     @Transactional(readOnly = true)
     public PostResponseDto getEnrichedPostById(UUID id) {
         Post post = findById(id);
         return getEnrichedPostDto(post);
     }
 
-    // Metodă ajutătoare - FĂRĂ @Transactional direct pe ea
     public PostResponseDto getEnrichedPostDto(Post post) {
         PostResponseDto dto = postMapper.toDto(post);
 
         dto.setScore(post.getUpvotes() - post.getDownvotes());
         dto.setCommentCount(post.getComments() != null ? post.getComments().size() : 0);
 
-        // Verificăm autentificarea curat, FĂRĂ bloc try-catch care să strice tranzacția
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
             try {
@@ -221,39 +216,30 @@ public class PostService {
     public Post updatePost(UUID id, PostUpdateDto updateDto) {
         Post post = findById(id);
         User authenticatedUser = userService.getAuthenticatedUser();
-        if (!post.getAuthor().equals(authenticatedUser)) {
+
+        if (!post.getAuthor().getId().equals(authenticatedUser.getId())) {
             throw new AccessDeniedException("You are not allowed to perform this operation");
         }
 
-        if (updateDto.getTitle() != null) {
+        if (updateDto.getTitle() != null && !updateDto.getTitle().isBlank()) {
             post.setTitle(updateDto.getTitle());
         }
 
-        if (updateDto.getContent() != null) {
+        if (updateDto.getContent() != null && !updateDto.getContent().isBlank()) {
             post.setContent(updateDto.getContent());
         }
 
-        post.setNsfw(updateDto.isNsfw());
-        if (updateDto.getImage() != null && !updateDto.getImage().isEmpty()) {
-            Integer validFilter = imageEditService.getValidFilterId(updateDto.getFilter());
+        System.out.println(updateDto.getTitle() + updateDto.getContent());
 
-            String imageUrl = s3ImageService.uploadImage(updateDto.getImage(), validFilter);
+//        if (updateDto.getImage() != null && !updateDto.getImage().isEmpty()) {
+//            Integer validFilter = imageEditService.getValidFilterId(updateDto.getFilter());
+//            String imageUrl = s3ImageService.uploadImage(updateDto.getImage(), validFilter);
+//
+//            post.setImageUrl(imageUrl);
+//            post.setFilter(validFilter);
+//        }
 
-            post.setImageUrl(imageUrl);
-            post.setFilter(validFilter);
-        }
-
-        Post updatedPost = postRepository.save(post);
-
-        if (updatedPost.isNsfw() && updatedPost.getCommunity() != null) {
-            Community community = updatedPost.getCommunity();
-            if (Boolean.FALSE.equals(community.getNSFW())) {
-                community.setNSFW(true);
-                communityRepository.save(community);
-            }
-        }
-
-        return updatedPost;
+        return postRepository.save(post);
     }
 
     @Transactional
@@ -265,21 +251,20 @@ public class PostService {
         postRepository.delete(post);
         postRepository.flush();
 
-        boolean NSFW = post.isNsfw();
-        Community community = post.getCommunity();
-        if (NSFW && community != null) {
-            updateCommunityNSFWStatus(community);
-        }
+//        Community community = post.getCommunity();
+////        if (NSFW && community != null) {
+////            updateCommunityNSFWStatus(community);
+////        }
     }
 
-    private void updateCommunityNSFWStatus(Community community) {
-        if (community == null) return;
-
-        boolean stillHasNsfw = postRepository.existsByCommunityNameAndNsfwTrue(community.getName());
-
-        if (Boolean.TRUE.equals(community.getNSFW()) != stillHasNsfw) {
-            community.setNSFW(stillHasNsfw);
-            communityRepository.save(community);
-        }
-    }
+//    private void updateCommunityNSFWStatus(Community community) {
+//        if (community == null) return;
+//
+//        boolean stillHasNsfw = postRepository.existsByCommunityNameAndNsfwTrue(community.getName());
+//
+//        if (Boolean.TRUE.equals(community.getNSFW()) != stillHasNsfw) {
+//            community.setNSFW(stillHasNsfw);
+//            communityRepository.save(community);
+//        }
+//    }
 }

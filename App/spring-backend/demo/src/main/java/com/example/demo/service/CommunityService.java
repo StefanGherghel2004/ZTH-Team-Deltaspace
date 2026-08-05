@@ -47,12 +47,12 @@ public class CommunityService {
 
         User user = userService.getAuthenticatedUser();
 
-        Topic topic = getTopicFromString(dto.getTopic());
+        Topic topic = null;
 
         Community community = new Community();
         community.setAuthor(user);
         community.setName(dto.getName());
-        community.setTopic(topic.name());
+        community.setTopic(null);
         community.setDescription(dto.getDescription());
         community.setDisplayName(dto.getDisplayName());
         community.setIconUrl(dto.getIconUrl());
@@ -124,7 +124,7 @@ public class CommunityService {
     public Community verifyNsfwCommunities(String communityName){
         User authenticatedUser= userService.getAuthenticatedUser();
         int userAge = authenticatedUser.getAge();
-        boolean isNSFW = postRepository.existsByCommunityNameAndNsfwTrue(communityName);
+//        boolean isNSFW = postRepository.existsByCommunityNameAndNsfwTrue(communityName);
 //        if (isNSFW && userAge < NSFW_AGE) {
 //            throw new AccessDeniedException("This community is marked as NSFW");
 //        }
@@ -138,10 +138,6 @@ public class CommunityService {
                 result = topic;
                 break;
             }
-        }
-
-        if(result == null){
-            throw new IllegalArgumentException("The Selected Topic does not exist");
         }
 
         return result;

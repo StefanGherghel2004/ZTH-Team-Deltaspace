@@ -14,9 +14,4 @@ public class PostUpdateDto {
 
     @Size(max = 10000, message = "Content cannot exceed 10000 characters")
     private String content;
-    private boolean nsfw;
-
-    private Integer filter;
-
-    private MultipartFile image;
 }
