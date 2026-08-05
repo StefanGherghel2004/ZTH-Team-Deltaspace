@@ -78,7 +78,7 @@ public class CommunityService {
         Community communityToDelete = findByName(communityName);
         User user = userService.getAuthenticatedUser();
         if(!communityToDelete.getAuthor().equals(user)){
-            throw new AccessDeniedException("You are not allowed to perform this operation");
+            throw new AccessDeniedException("You are not allowed to perform this operation! You are not the owner!");
         }
         if(communityToDelete.getPosts()==null||communityToDelete.getPosts().isEmpty()){
             communityRepository.delete(communityToDelete);
@@ -149,8 +149,7 @@ public class CommunityService {
 
     @Transactional
     public void joinCommunity(String communityName){
-        Community community = communityRepository.findByName(communityName)
-                .orElseThrow(()-> new RuntimeException("Community Not Found"));
+        Community community = findByName(communityName);
         User user = userService.getAuthenticatedUser();
         if(community.getMembers().contains(user)){
             throw new AccessDeniedException("You are already a member of this community!");
@@ -164,8 +163,7 @@ public class CommunityService {
 
     @Transactional
     public void leaveCommunity(String communityName){
-        Community community = communityRepository.findByName(communityName)
-                .orElseThrow(()-> new RuntimeException("Community Not Found"));
+        Community community = findByName(communityName)
         User user = userService.getAuthenticatedUser();
 
         community.getMembers().remove(user);
