@@ -57,7 +57,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestLoginDto request) {
-        try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
@@ -76,13 +75,6 @@ public class UserController {
                     .build();
 
             return ResponseEntity.ok(ApiResponse.success(response));
-        } catch (AuthenticationException e) {
-            ApiError apiError = new ApiError("UNAUTHORIZED", "Wrong credentials.", List.of());
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(apiError, "/auth/login"));
-        }
     }
 
     @GetMapping("/me")
@@ -103,13 +95,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDisplayNameOrAvatar(@Valid @RequestBody UserUpdateDto updateDto) {
         User updatedUser = userService.updateAuthenticatedUser(updateDto);
-
-        UserResponseDto response = UserResponseDto.builder()
-                .username(updatedUser.getUsername())
-                .email(updatedUser.getEmail())
-                .displayName(updatedUser.getDisplayName())
-                .avatarUrl(updatedUser.getAvatarUrl())
-                .build();
+        UserResponseDto response = userMapper.toResponseDto(updatedUser);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

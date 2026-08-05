@@ -40,8 +40,7 @@ public class CommentService {
         commentToAdd.setContent(commentDto.getContent());
         commentToAdd.setUser(authorUser);
         commentToAdd.setPost(targetPost);
-
-        commentToAdd.setUpvotes(0);
+        voteComment(commentToAdd.getId(),"up");
         commentToAdd.setDownvotes(0);
 
         if (commentDto.getParentId() != null) {
