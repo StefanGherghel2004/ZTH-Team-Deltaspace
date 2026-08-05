@@ -70,6 +70,7 @@ public class PostService {
                 communityRepository.save(community);
             }
         }
+        votePost(savedPost.getId(),"up");
         return  savedPost;
 
     }
