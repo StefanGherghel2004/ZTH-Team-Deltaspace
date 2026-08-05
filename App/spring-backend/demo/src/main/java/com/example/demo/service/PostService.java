@@ -16,6 +16,7 @@ import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
 
+import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ public class PostService {
     private final PostMapper postMapper;
     private final CommunityRepository communityRepository;
     private final ImageEditService imageEditService;
+    private final EntityManager entityManager;
 
     @Transactional
     public Post createPost(PostCreateDto dto) {
@@ -60,7 +62,7 @@ public class PostService {
             Community community = communityService.findByName(dto.getSubreddit());
             post.setCommunity(community);
         }
-        Post savedPost = postRepository.save(post);
+
 //        if (savedPost.getNsfw() && savedPost.getCommunity() != null) {
 //            Community community = savedPost.getCommunity();
 //
@@ -69,8 +71,9 @@ public class PostService {
 //                communityRepository.save(community);
 //            }
 //        }
+        Post savedPost = postRepository.save(post);
         votePost(savedPost.getId(), "up");
-        return savedPost;
+        return findById(savedPost.getId());
     }
 
     @Transactional
@@ -83,7 +86,7 @@ public class PostService {
         if (voteTypeStr.equals("none")) {
             if (existingVoteOpt.isPresent()) {
                 PostVote existingVote = existingVoteOpt.get();
-                removeVoteFromPost(post, existingVote.getVoteType());
+                removeVoteFromPost(postId, existingVote.getVoteType());
                 postVoteRepository.delete(existingVote);
             }
         } else {
@@ -93,12 +96,12 @@ public class PostService {
                 PostVote existingVote = existingVoteOpt.get();
 
                 if (existingVote.getVoteType() == newVoteType) {
-                    removeVoteFromPost(post, existingVote.getVoteType());
+                    removeVoteFromPost(postId, existingVote.getVoteType());
                     postVoteRepository.delete(existingVote);
                     voteTypeStr = "none";
                 } else {
-                    removeVoteFromPost(post, existingVote.getVoteType());
-                    addVoteToPost(post, newVoteType);
+                    removeVoteFromPost(postId, existingVote.getVoteType());
+                    addVoteToPost(postId, newVoteType);
                     existingVote.setVoteType(newVoteType);
                     postVoteRepository.save(existingVote);
                 }
@@ -109,33 +112,36 @@ public class PostService {
                 newVote.setVoteType(newVoteType);
                 postVoteRepository.save(newVote);
 
-                addVoteToPost(post, newVoteType);
+                addVoteToPost(postId, newVoteType);
             }
         }
 
-        postRepository.save(post);
+        entityManager.flush();
+        entityManager.clear();
+
+        Post updatedPost = findById(postId);
 
         return VoteResponseDto.builder()
-                .upvotes(post.getUpvotes())
-                .downvotes(post.getDownvotes())
-                .score(post.getUpvotes() - post.getDownvotes())
+                .upvotes(updatedPost.getUpvotes())
+                .downvotes(updatedPost.getDownvotes())
+                .score(updatedPost.getUpvotes() - updatedPost.getDownvotes())
                 .userVote(voteTypeStr.equals("none") ? null : voteTypeStr)
                 .build();
     }
 
-    private void addVoteToPost(Post post, VoteType voteType) {
+    private void addVoteToPost(UUID postId, VoteType voteType) {
         if (voteType == VoteType.UPVOTE) {
-            post.setUpvotes(post.getUpvotes() + 1);
+            postRepository.incrementUpvotes(postId);
         } else {
-            post.setDownvotes(post.getDownvotes() + 1);
+            postRepository.incrementDownvotes(postId);
         }
     }
 
-    private void removeVoteFromPost(Post post, VoteType voteType) {
+    private void removeVoteFromPost(UUID postId, VoteType voteType) {
         if (voteType == VoteType.UPVOTE) {
-            post.setUpvotes(post.getUpvotes() - 1);
+            postRepository.decrementUpvotes(postId);
         } else {
-            post.setDownvotes(post.getDownvotes() - 1);
+            postRepository.decrementDownvotes(postId);
         }
     }
 
