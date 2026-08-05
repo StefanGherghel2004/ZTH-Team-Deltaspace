@@ -9,6 +9,8 @@ import com.example.demo.response.ApiError;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.response.ErrorDetail;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import java.security.SignatureException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +53,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             ExpiredJwtException.class,
-            AuthenticationException.class
+            AuthenticationException.class,
+            JwtException.class
     })
     public ResponseEntity<ApiResponse<Void>> handleUnauthorized(Exception e, HttpServletRequest request) {
         String message = e instanceof ExpiredJwtException ? "This token has expired." : e.getMessage();
@@ -102,6 +106,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleFileStorage(FileStorageException e, HttpServletRequest request) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_STORAGE_ERROR", e.getMessage(), request, null);
     }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e, HttpServletRequest request) {
