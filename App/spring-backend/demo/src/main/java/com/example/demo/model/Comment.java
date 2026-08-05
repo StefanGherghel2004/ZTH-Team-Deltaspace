@@ -43,6 +43,6 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private int downvotes = 0;
 
-    @Formula("upvotes - downvotes")
-    private int score;
+//    @Formula("upvotes - downvotes")
+//    private int score;
 }
