@@ -105,6 +105,7 @@ public class UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            System.out.println("Here problem!");
             throw new BadCredentialsException("Full authentication is required.");
         }
 

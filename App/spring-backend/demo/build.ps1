@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $DOCKER_USER = "stun14"
-$IMAGE_NAME = "deltaspace"
+$IMAGE_NAME = "spring-backend"
 $IMAGE_VERSION = "latest"
 
 Write-Host "### Pasul 1: Building image... ###" -ForegroundColor Blue

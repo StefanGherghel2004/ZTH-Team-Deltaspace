@@ -16,8 +16,8 @@ public class CommentResponseDto {
 
     private String content;
     private String author;
-    private int upVotes;
-    private int downVotes;
+    private int upvotes;
+    private int downvotes;
     private int score;
     private String userVote;
 

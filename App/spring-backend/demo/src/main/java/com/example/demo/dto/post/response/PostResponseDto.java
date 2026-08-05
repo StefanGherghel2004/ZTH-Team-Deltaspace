@@ -12,7 +12,6 @@ public class PostResponseDto {
     private String title;
     private String content;
 
-    private boolean nsfw;
     private String author;
 
     private int upvotes;
