@@ -24,7 +24,6 @@ public abstract class BaseEntity {
     @PrePersist
     protected void onCreate() {
         this.createdAt = OffsetDateTime.now(ZoneOffset.UTC);
-        this.updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
     }
 
     @PreUpdate
