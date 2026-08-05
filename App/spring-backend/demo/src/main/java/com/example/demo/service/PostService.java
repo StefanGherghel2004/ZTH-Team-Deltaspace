@@ -145,27 +145,6 @@ public class PostService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<PostResponseDto> getAllEnrichedPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc().stream()
-                .map(this::getEnrichedPostDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<PostResponseDto> getCommunityEnrichedPosts(String communityName) {
-        Community community = communityService.findByName(communityName);
-        return community.getPosts().stream()
-                .map(this::getEnrichedPostDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public PostResponseDto getEnrichedPostById(UUID id) {
-        Post post = findById(id);
-        return getEnrichedPostDto(post);
-    }
-
     public PostResponseDto getEnrichedPostDto(Post post) {
         PostResponseDto dto = postMapper.toDto(post);
 
@@ -234,16 +213,6 @@ public class PostService {
         if (updateDto.getContent() != null && !updateDto.getContent().isBlank()) {
             post.setContent(updateDto.getContent());
         }
-
-        System.out.println(updateDto.getTitle() + updateDto.getContent());
-
-//        if (updateDto.getImage() != null && !updateDto.getImage().isEmpty()) {
-//            Integer validFilter = imageEditService.getValidFilterId(updateDto.getFilter());
-//            String imageUrl = s3ImageService.uploadImage(updateDto.getImage(), validFilter);
-//
-//            post.setImageUrl(imageUrl);
-//            post.setFilter(validFilter);
-//        }
 
         return postRepository.save(post);
     }
