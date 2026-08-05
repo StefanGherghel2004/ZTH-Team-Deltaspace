@@ -52,7 +52,7 @@ public class CommentService {
         }
 
         Comment savedComment = commentRepository.save(commentToAdd);
-
+        voteComment(savedComment.getId(),"up");
         return getEnrichedCommentDto(savedComment);
     }
 
