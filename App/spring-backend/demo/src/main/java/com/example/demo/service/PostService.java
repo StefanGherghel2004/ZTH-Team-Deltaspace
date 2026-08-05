@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.post.PostCreateDto;
-import com.example.demo.dto.post.PostFeedDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteResponseDto;
@@ -16,7 +15,10 @@ import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
-import jakarta.transaction.Transactional;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +39,13 @@ public class PostService {
     private final CommunityRepository communityRepository;
     private final ImageEditService imageEditService;
 
+    @Transactional
     public Post createPost(PostCreateDto dto) {
-
         User author = userService.getAuthenticatedUser();
-
-        // TO DO add check if user is deleted
 
         Post post = new Post();
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
-        //post.setNsfw(dto.isNsfw());
         post.setAuthor(author);
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
@@ -61,7 +60,7 @@ public class PostService {
             Community community = communityService.findByName(dto.getSubreddit());
             post.setCommunity(community);
         }
-        Post savedPost =postRepository.save(post);
+        Post savedPost = postRepository.save(post);
         if (savedPost.isNsfw() && savedPost.getCommunity() != null) {
             Community community = savedPost.getCommunity();
 
@@ -70,9 +69,8 @@ public class PostService {
                 communityRepository.save(community);
             }
         }
-        votePost(savedPost.getId(),"up");
-        return  savedPost;
-
+        votePost(savedPost.getId(), "up");
+        return savedPost;
     }
 
     @Transactional
@@ -141,30 +139,69 @@ public class PostService {
         }
     }
 
+    // 🟢 Tranzacția acoperă citirea postărilor ȘI conversia DTO-urilor
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getAllEnrichedPosts() {
+        return postRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(this::getEnrichedPostDto)
+                .toList();
+    }
+
+    // 🟢 Varianta pentru căutare după comunitate
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getCommunityEnrichedPosts(String communityName) {
+        Community community = communityService.findByName(communityName);
+        return community.getPosts().stream()
+                .map(this::getEnrichedPostDto)
+                .toList();
+    }
+
+    // 🟢 Varianta pentru un singur post
+    @Transactional(readOnly = true)
+    public PostResponseDto getEnrichedPostById(UUID id) {
+        Post post = findById(id);
+        return getEnrichedPostDto(post);
+    }
+
+    // Metodă ajutătoare - FĂRĂ @Transactional direct pe ea
     public PostResponseDto getEnrichedPostDto(Post post) {
         PostResponseDto dto = postMapper.toDto(post);
 
-        // this is filled according to the docs from the frontend not used in CLI
         dto.setScore(post.getUpvotes() - post.getDownvotes());
-        dto.setCommentCount(post.getComments().size());
-        try {
-            User currentUser = userService.getAuthenticatedUser();
-            Optional<PostVote> voteOpt = postVoteRepository.findByPostAndUser(post, currentUser);
+        dto.setCommentCount(post.getComments() != null ? post.getComments().size() : 0);
 
-            if (voteOpt.isPresent()) {
-                VoteType type = voteOpt.get().getVoteType();
-                dto.setUserVote(type == VoteType.UPVOTE ? "up" : "down");
-            } else {
+        // Verificăm autentificarea curat, FĂRĂ bloc try-catch care să strice tranzacția
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            try {
+                User currentUser = userService.getAuthenticatedUser();
+                Optional<PostVote> voteOpt = postVoteRepository.findByPostAndUser(post, currentUser);
+
+                if (voteOpt.isPresent()) {
+                    VoteType type = voteOpt.get().getVoteType();
+                    dto.setUserVote(type == VoteType.UPVOTE ? "up" : "down");
+                } else {
+                    dto.setUserVote(null);
+                }
+            } catch (Exception ignored) {
                 dto.setUserVote(null);
             }
-
-        } catch (Exception e) {
+        } else {
             dto.setUserVote(null);
         }
 
         return dto;
     }
 
+    public PostResponseDto getEnrichedPostDtoForGuest(Post post) {
+        PostResponseDto postResponseDto = postMapper.toDto(post);
+        postResponseDto.setScore(post.getUpvotes() - post.getDownvotes());
+        postResponseDto.setCommentCount(post.getComments() != null ? post.getComments().size() : 0);
+        postResponseDto.setUserVote(null);
+        return postResponseDto;
+    }
+
+    @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
@@ -174,16 +211,17 @@ public class PostService {
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Post> getCommunityPosts(String communityName) {
         Community community = communityService.findByName(communityName);
         return community.getPosts();
     }
 
+    @Transactional
     public Post updatePost(UUID id, PostUpdateDto updateDto) {
         Post post = findById(id);
         User authenticatedUser = userService.getAuthenticatedUser();
-        if(!post.getAuthor().equals(authenticatedUser)){
+        if (!post.getAuthor().equals(authenticatedUser)) {
             throw new AccessDeniedException("You are not allowed to perform this operation");
         }
 
@@ -196,7 +234,7 @@ public class PostService {
         }
 
         post.setNsfw(updateDto.isNsfw());
-        if(updateDto.getImage()!=null && !updateDto.getImage().isEmpty()){
+        if (updateDto.getImage() != null && !updateDto.getImage().isEmpty()) {
             Integer validFilter = imageEditService.getValidFilterId(updateDto.getFilter());
 
             String imageUrl = s3ImageService.uploadImage(updateDto.getImage(), validFilter);
@@ -204,7 +242,6 @@ public class PostService {
             post.setImageUrl(imageUrl);
             post.setFilter(validFilter);
         }
-
 
         Post updatedPost = postRepository.save(post);
 
@@ -220,20 +257,19 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePostById (UUID id) {
+    public void deletePostById(UUID id) {
         Post post = findById(id);
-        if(!post.getAuthor().equals(userService.getAuthenticatedUser()))
+        if (!post.getAuthor().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this post.");
 
         postRepository.delete(post);
         postRepository.flush();
 
-        boolean NSFW=post.isNsfw();
+        boolean NSFW = post.isNsfw();
         Community community = post.getCommunity();
-        if(NSFW && community!=null){
+        if (NSFW && community != null) {
             updateCommunityNSFWStatus(community);
         }
-
     }
 
     private void updateCommunityNSFWStatus(Community community) {

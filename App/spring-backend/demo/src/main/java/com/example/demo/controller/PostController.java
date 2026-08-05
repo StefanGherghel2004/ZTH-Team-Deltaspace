@@ -9,13 +9,16 @@ import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Post;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.PostService;
+import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +27,7 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
@@ -38,9 +42,13 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
         Post post = postService.findById(id);
+        PostResponseDto response;
+        try{
+            response = postService.getEnrichedPostDto(post);
 
-        PostResponseDto response = postService.getEnrichedPostDto(post);
-
+        }catch(BadCredentialsException e){
+            response = postService.getEnrichedPostDtoForGuest(post);
+        }
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -52,20 +60,33 @@ public class PostController {
         } else {
             posts = postService.getAllPosts();
         }
-
-        List<PostResponseDto> response = posts.stream()
-                .map(postService::getEnrichedPostDto)
-                .toList();
-
+        List<PostResponseDto> response=new ArrayList<>();
+        try {
+            response = posts.stream()
+                    .map(postService::getEnrichedPostDto)
+                    .toList();
+        }catch(BadCredentialsException e){
+            response = posts.stream()
+                    .map(postService::getEnrichedPostDtoForGuest)
+                    .toList();
+        }
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/subreddits/{name}/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPostsBySubreddit(@PathVariable String name) {
         List<Post> posts = postService.getCommunityPosts(name);
-        List<PostResponseDto> response = posts.stream()
-                .map(postService::getEnrichedPostDto)
-                .toList();
+        List<PostResponseDto> response = new ArrayList<>();
+
+        try {
+            response = posts.stream()
+                    .map(postService::getEnrichedPostDto)
+                    .toList();
+        }catch(BadCredentialsException e){
+            response = posts.stream()
+                    .map(postService::getEnrichedPostDtoForGuest)
+                    .toList();
+        }
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
