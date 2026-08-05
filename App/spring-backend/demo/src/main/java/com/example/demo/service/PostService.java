@@ -221,7 +221,7 @@ public class PostService {
     public Post updatePost(UUID id, PostUpdateDto updateDto) {
         Post post = findById(id);
         User authenticatedUser = userService.getAuthenticatedUser();
-        if (!post.getAuthor().equals(authenticatedUser)) {
+        if (!(post.getAuthor().getId()==(authenticatedUser.getId()))) {
             throw new AccessDeniedException("You are not allowed to perform this operation");
         }
 
