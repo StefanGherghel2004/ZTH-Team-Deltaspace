@@ -95,13 +95,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDisplayNameOrAvatar(@Valid @RequestBody UserUpdateDto updateDto) {
         User updatedUser = userService.updateAuthenticatedUser(updateDto);
-
-        UserResponseDto response = UserResponseDto.builder()
-                .username(updatedUser.getUsername())
-                .email(updatedUser.getEmail())
-                .displayName(updatedUser.getDisplayName())
-                .avatarUrl(updatedUser.getAvatarUrl())
-                .build();
+        UserResponseDto response = userMapper.toResponseDto(updatedUser);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
