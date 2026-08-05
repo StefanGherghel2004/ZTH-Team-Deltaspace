@@ -65,8 +65,9 @@ public class CommunityController {
     }
 
     @PutMapping("/{name}")
-    public Community updateCommunity(@PathVariable String name, @Valid @RequestBody CommunityUpdateDto updateDto){
-        return communityService.updateCommunity(name,updateDto);
+    public ResponseEntity<ApiResponse<Void>> updateCommunity(@PathVariable String name, @Valid @RequestBody CommunityUpdateDto updateDto){
+        Community community = communityService.updateCommunity(name,updateDto);
+        return ResponseEntity.ok(ApiResponse.successMessage("Community successfully updated!"));
     }
 
    /* @GetMapping("{communityName}")
@@ -80,7 +81,7 @@ public class CommunityController {
             @PathVariable String name) { // Sau preiei ID-ul userului conectat
 
         communityService.joinCommunity(name);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(ApiResponse.successMessage("You have successfully joined the community!"));
     }
 
     @PostMapping("/{name}/leave")
@@ -88,7 +89,7 @@ public class CommunityController {
             @PathVariable String name) {
 
         communityService.leaveCommunity(name);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(ApiResponse.successMessage("You have successfully left the community!"));
     }
 
 }

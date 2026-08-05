@@ -165,10 +165,13 @@ public class CommunityService {
     public void leaveCommunity(String communityName){
         Community community = findByName(communityName);
         User user = userService.getAuthenticatedUser();
-
-        community.getMembers().remove(user);
-        communityRepository.save(community);
-
+        if(!community.getMembers().contains(user)){
+            throw new IllegalStateException("You are no longer member of this community");
+        }
+        else {
+            community.getMembers().remove(user);
+            communityRepository.save(community);
+        }
     }
 }
 

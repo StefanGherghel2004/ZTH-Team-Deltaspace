@@ -17,7 +17,7 @@ public class CommunityCreateDto {
     @Size(min=3,max=100,message = "Display Name must be between 3 and 100 characters")
     private String displayName;
 
-    @NotBlank(message = "Topic is required")
+
     private String topic;
 
     @NotBlank(message = "Description is required")

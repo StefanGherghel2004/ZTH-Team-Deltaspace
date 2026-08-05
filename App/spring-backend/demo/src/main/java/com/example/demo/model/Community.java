@@ -22,7 +22,7 @@ public class Community extends BaseEntity {
     @Column(name="display_name",unique = false, nullable = false)
     private String displayName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String topic;
 
     @Column(name = "nsfw", nullable = true)
