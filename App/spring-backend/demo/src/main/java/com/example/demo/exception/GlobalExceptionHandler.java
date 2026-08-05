@@ -57,9 +57,11 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", message, request, null);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler({AccessDeniedException.class,
+                       IllegalStateException.class
+    })
     public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(
-            AccessDeniedException e, HttpServletRequest request) {
+            Exception e, HttpServletRequest request) {
         return buildResponse(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), request, null);
     }
 
