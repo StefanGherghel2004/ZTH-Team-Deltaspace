@@ -64,8 +64,7 @@ public class CommentService {
 
     @Transactional
     public void deleteCommentById(UUID id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id: " + id + " was not found."));
+        Comment comment = findById(id);
 
         if (comment.isDeleted()) {
             throw new IllegalStateException("Comment is already deleted");
@@ -131,9 +130,7 @@ public class CommentService {
     @Transactional
     public VoteResponseDto voteComment(UUID commentId, String voteTypeStr) {
 
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id: " + commentId +
-                        " was not found."));
+        Comment comment = findById(commentId);
 
         if (comment.isDeleted()) {
             throw new IllegalStateException("Cannot vote on a deleted comment");

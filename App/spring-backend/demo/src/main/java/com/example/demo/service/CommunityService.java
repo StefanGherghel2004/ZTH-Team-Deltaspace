@@ -163,7 +163,7 @@ public class CommunityService {
 
     @Transactional
     public void leaveCommunity(String communityName){
-        Community community = findByName(communityName)
+        Community community = findByName(communityName);
         User user = userService.getAuthenticatedUser();
 
         community.getMembers().remove(user);
