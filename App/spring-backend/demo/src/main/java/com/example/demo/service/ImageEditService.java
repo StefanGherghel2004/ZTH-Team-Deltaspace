@@ -17,8 +17,8 @@ public class ImageEditService {
 
     private static final List<String> FILTERS = List.of("Grayscale","Invert","Sepia","Neon");
 
-    //private static final String URL = "http://localhost:5157/api/filter";
-    private static final String URL =  "http://172.31.7.33:5157/api/filter"; // toggle this before ./build.ps1 for EC2
+    private static final String URL = "http://localhost:5157/api/filter";
+    //private static final String URL =  "http://172.31.7.33:5157/api/filter"; // toggle this before ./build.ps1 for EC2
 
     public Integer getValidFilterId(Integer filterId) {
         if (filterId == null || filterId < 1 || filterId > FILTERS.size()) {

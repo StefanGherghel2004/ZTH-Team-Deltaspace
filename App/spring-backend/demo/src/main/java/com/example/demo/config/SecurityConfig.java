@@ -46,11 +46,16 @@ public class SecurityConfig {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                         })
                 )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register", "/filters").permitAll()
-                        .requestMatchers("/auth/me").authenticated()
-                        .anyRequest().authenticated()
 
+                .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers("/auth/login", "/auth/register","/filters").permitAll()
+
+
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+
+
+                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

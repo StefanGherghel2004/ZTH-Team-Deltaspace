@@ -14,7 +14,8 @@ public class PostCreateDto {
 
     @Size(max = 10000, message = "Content cannot exceed 10000 characters")
     private String content;
-    private boolean nsfw;
+
+    //private boolean nsfw;
 
     private Integer filter;
 

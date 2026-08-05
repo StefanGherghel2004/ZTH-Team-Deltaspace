@@ -46,7 +46,7 @@ public class PostService {
         Post post = new Post();
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
-        post.setNsfw(dto.isNsfw());
+        //post.setNsfw(dto.isNsfw());
         post.setAuthor(author);
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
