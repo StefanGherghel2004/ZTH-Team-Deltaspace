@@ -222,8 +222,8 @@ public class CommentService {
 
         // this is filled according to the docs from the frontend not used in CLI
         dto.setScore(displayComment.getUpvotes() - displayComment.getDownvotes());
-        dto.setUpVotes(displayComment.getUpvotes());
-        dto.setDownVotes(displayComment.getDownvotes());
+        dto.setUpvotes(displayComment.getUpvotes());
+        dto.setDownvotes(displayComment.getDownvotes());
         dto.setParentId(parentId);
         try {
             User currentUser = userService.getAuthenticatedUser();
