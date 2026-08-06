@@ -42,13 +42,9 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
         Post post = postService.findById(id);
-        PostResponseDto response;
-        try{
-            response = postService.getEnrichedPostDto(post);
 
-        }catch(BadCredentialsException e){
-            response = postService.getEnrichedPostDtoForGuest(post);
-        }
+        PostResponseDto response  = postService.getEnrichedPostDto(post);
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -60,33 +56,20 @@ public class PostController {
         } else {
             posts = postService.getAllPosts();
         }
-        List<PostResponseDto> response=new ArrayList<>();
-        try {
-            response = posts.stream()
+        List<PostResponseDto> response = posts.stream()
                     .map(postService::getEnrichedPostDto)
                     .toList();
-        }catch(BadCredentialsException e){
-            response = posts.stream()
-                    .map(postService::getEnrichedPostDtoForGuest)
-                    .toList();
-        }
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/subreddits/{name}/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPostsBySubreddit(@PathVariable String name) {
         List<Post> posts = postService.getCommunityPosts(name);
-        List<PostResponseDto> response = new ArrayList<>();
-
-        try {
-            response = posts.stream()
+        List<PostResponseDto> response = posts.stream()
                     .map(postService::getEnrichedPostDto)
                     .toList();
-        }catch(BadCredentialsException e){
-            response = posts.stream()
-                    .map(postService::getEnrichedPostDtoForGuest)
-                    .toList();
-        }
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

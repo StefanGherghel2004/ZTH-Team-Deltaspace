@@ -4,9 +4,9 @@ spring:
   datasource:
     #url: jdbc:postgresql://localhost:5432/deltaspacedb3
     url: jdbc:postgresql://172.31.46.238:5432/deltaspacedb #toggle this before ./build.ps1
-    username: postgres
+    username: ${POSTGRES_EC2_USER}
     #password: ${POSTGRES-PASSWORD}
-    password: user # toggle this before ./build.ps1
+    password: ${POSTGRES_EC2_PASSWORD} # toggle this before ./build.ps1
   jpa:
     hibernate:
       ddl-auto: update

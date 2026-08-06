@@ -188,14 +188,14 @@ public class PostService {
         return dto;
     }
 
-    public PostResponseDto getEnrichedPostDtoForGuest(Post post) {
+    /*public PostResponseDto getEnrichedPostDtoForGuest(Post post) {
         PostResponseDto postResponseDto = postMapper.toDto(post);
         postResponseDto.setScore(post.getUpvotes() - post.getDownvotes());
         postResponseDto.setCommentCount(post.getComments() != null ? post.getComments().size() : 0);
         postResponseDto.setUserVote(null);
         return postResponseDto;
     }
-
+*/
     @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
