@@ -11,6 +11,8 @@ import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommentVoteRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,16 +93,8 @@ public class CommentService {
             return comment;
         }
 
-        Comment masked = new Comment();
-        masked.setId(comment.getId());
-        masked.setUser(comment.getUser());
-        masked.setPost(comment.getPost());
-        masked.setParentComment(comment.getParentComment());
+        Comment masked = commentMapper.clone(comment);
         masked.setDeleted(true);
-
-        masked.setCreatedAt(comment.getCreatedAt());
-        masked.setUpdatedAt(comment.getUpdatedAt());
-
         masked.setContent("[DELETED]");
 
         return masked;
@@ -225,17 +219,22 @@ public class CommentService {
         dto.setUpvotes(displayComment.getUpvotes());
         dto.setDownvotes(displayComment.getDownvotes());
         dto.setParentId(parentId);
-        try {
-            User currentUser = userService.getAuthenticatedUser();
-            Optional<CommentVote> voteOpt = commentVoteRepository.findByCommentAndUser(displayComment, currentUser);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth!=null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            try {
+                User currentUser = userService.getAuthenticatedUser();
+                Optional<CommentVote> voteOpt = commentVoteRepository.findByCommentAndUser(displayComment, currentUser);
 
-            if (voteOpt.isPresent()) {
-                VoteType type = voteOpt.get().getVoteType();
-                dto.setUserVote(type == VoteType.UPVOTE ? "up" : "down");
-            } else {
+                if (voteOpt.isPresent()) {
+                    VoteType type = voteOpt.get().getVoteType();
+                    dto.setUserVote(type == VoteType.UPVOTE ? "up" : "down");
+                } else {
+                    dto.setUserVote(null);
+                }
+            } catch (Exception e) {
                 dto.setUserVote(null);
             }
-        } catch (Exception e) {
+        }else{
             dto.setUserVote(null);
         }
 
@@ -247,4 +246,16 @@ public class CommentService {
 
         return dto;
     }
+
+   /* public CommentResponseDto getEnrichedCommentsDtoForGuest(Comment comment){
+        Comment displayComment = maskIfDeleted(comment);
+        CommentResponseDto commentResponseDto = commentMapper.toDto(displayComment);
+        commentResponseDto.setScore(displayComment.getUpvotes()-displayComment.getDownvotes());
+        commentResponseDto.setUpvotes(displayComment.getUpvotes());
+        commentResponseDto.setDownvotes(displayComment.getDownvotes());
+        commentResponseDto.setUserVote(null);
+        return commentResponseDto;
+    }
+
+    */
 }
