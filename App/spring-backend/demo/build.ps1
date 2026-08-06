@@ -1,4 +1,6 @@
 $ErrorActionPreference = "Stop"
+# TODO add IPs as command line arguments to the build.ps1
+# goes all the way from here to Dockerfile -> application-yaml -> runtime
 
 $DOCKER_USER = "stun14"
 $IMAGE_NAME = "spring-backend"

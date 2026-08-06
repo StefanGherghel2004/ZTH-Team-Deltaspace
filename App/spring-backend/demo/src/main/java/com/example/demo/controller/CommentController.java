@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.dto.comment.response.CommentResponseDto;
+// todo unsed
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteRequestDto;
 import com.example.demo.dto.vote.VoteResponseDto;
@@ -24,7 +25,8 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
-
+// todo controllers should only inject services. repositories should be injected in services.
+    // todo services sometimes act like a reverse proxy from controller to database
     private final CommentService commentService;
     private final CommentRepository commentRepository;
 

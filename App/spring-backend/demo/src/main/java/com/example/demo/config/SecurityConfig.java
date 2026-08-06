@@ -63,7 +63,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-
+// todo remove /filters
                         .requestMatchers("/auth/login", "/auth/register","/filters").permitAll()
 
 

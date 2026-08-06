@@ -26,6 +26,9 @@ import java.security.SignatureException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+// todo check for duplicate code here, similar responses on same exceptions, etc.
+// make the class maintainable
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

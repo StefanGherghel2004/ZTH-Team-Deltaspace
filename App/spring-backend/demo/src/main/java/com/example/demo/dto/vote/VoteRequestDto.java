@@ -9,4 +9,5 @@ public class VoteRequestDto {
     @NotBlank
     @Pattern(regexp = "^(up|down|none)$", message = "voteType  is 'up', 'down' or 'none'")
     private String voteType;
+    // todo check if you can use an Enum instead of plain String
 }

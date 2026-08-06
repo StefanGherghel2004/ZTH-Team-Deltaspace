@@ -27,9 +27,10 @@ import java.util.UUID;
 @Slf4j
 public class CommentService {
 
-    private final CommentRepository commentRepository;
     private final UserService userService;
     private final PostService postService;
+
+    private final CommentRepository commentRepository;
     private final CommentVoteRepository commentVoteRepository;
     private final CommentMapper commentMapper;
 
@@ -37,7 +38,7 @@ public class CommentService {
     public CommentResponseDto addComment(CommentCreateDto commentDto, UUID postId) {
         User authorUser = userService.getAuthenticatedUser();
         Post targetPost = postService.findById(postId);
-
+        // use @Builder
         Comment commentToAdd = new Comment();
         commentToAdd.setContent(commentDto.getContent());
         commentToAdd.setUser(authorUser);
@@ -123,7 +124,9 @@ public class CommentService {
 
     @Transactional
     public VoteResponseDto voteComment(UUID commentId, String voteTypeStr) {
+// todo see if u wanna log the fact that an upvote was done after a new comment
 
+       // todo extract find by id and is deleted so that it is only for the voting. new comments dont need to be fetched again from the DB.
         Comment comment = findById(commentId);
 
         if (comment.isDeleted()) {
@@ -134,7 +137,7 @@ public class CommentService {
         String voteType = (voteTypeStr != null) ? voteTypeStr.toLowerCase() : "none";
 
         Optional<CommentVote> existingVoteOpt = commentVoteRepository.findByCommentAndUser(comment, user);
-
+// todo ifelesifelseifelseilfesfs ?? be smarter
         if ("none".equals(voteType)) {
             if (existingVoteOpt.isPresent()) {
                 CommentVote existingVote = existingVoteOpt.get();

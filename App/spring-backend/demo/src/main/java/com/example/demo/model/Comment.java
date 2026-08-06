@@ -27,6 +27,10 @@ public class Comment extends BaseEntity {
             "password", "dateOfBirth", "updatedAt"})
     private User user;
 
+
+    // JPA entity inhertiance - table per class hierarchy InheritanceType.TABLE_PER_CLASS
+    // todo AbstractTextEntity extended by Post and Comment
+    // Comment can be simplified by always having only one private AbstractTextEntity parent
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnore

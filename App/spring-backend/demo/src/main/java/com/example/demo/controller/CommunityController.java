@@ -24,8 +24,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/subreddits")
 @RequiredArgsConstructor
+// todo rename community to subreddit
 public class CommunityController {
     private final CommunityService communityService;
+    // todo delete junk
     private final CommunityMapper communityMapper;
     private final CommunityRepository communityRepository;
     private final PostService postService;
@@ -66,10 +68,11 @@ public class CommunityController {
 
     @PutMapping("/{name}")
     public ResponseEntity<ApiResponse<Void>> updateCommunity(@PathVariable String name, @Valid @RequestBody CommunityUpdateDto updateDto){
+        // todo check if u need to add the updated community to the response
         Community community = communityService.updateCommunity(name,updateDto);
         return ResponseEntity.ok(ApiResponse.successMessage("Community successfully updated!"));
     }
-
+// TODO JUNK
    /* @GetMapping("{communityName}")
     public Community getCommunity(@PathVariable String communityName){
         return communityService.verifyNsfwCommunities(communityName);
@@ -79,7 +82,7 @@ public class CommunityController {
     @PostMapping("/{name}/join")
     public ResponseEntity<ApiResponse<Void>> joinCommunity(
             @PathVariable String name) { // Sau preiei ID-ul userului conectat
-
+// TODO SAU PREIEI ???
         communityService.joinCommunity(name);
         return ResponseEntity.ok(ApiResponse.successMessage("You have successfully joined the community!"));
     }
@@ -89,7 +92,7 @@ public class CommunityController {
             @PathVariable String name) {
 
         communityService.leaveCommunity(name);
-        return ResponseEntity.ok(ApiResponse.successMessage("You have successfully left the community!"));
+        return ResponseEntity.ok(ApiResponse.successMessage("You have successfully left the community :<"));
     }
 
 }

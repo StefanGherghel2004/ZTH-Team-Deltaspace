@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    // todo decide if you want to send DTOs to the service and do the mapping there, or map in the controller and send entity to service
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -40,6 +41,7 @@ public class UserController {
         User userToSave = userMapper.toEntity(createDto);
         User savedUser = userService.addUser(userToSave);
 
+        // todo what to do if the user is saved in request 1, jwt token generation FAILS, then the user tries to register again
         String jwtToken = jwtService.generateToken(savedUser.getUsername());
 
         AuthResponseDto response = AuthResponseDto.builder()
@@ -63,9 +65,12 @@ public class UserController {
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
+            // todo simple null check for userDetails here
+
             String jwtToken = jwtService.generateToken(userDetails.getUsername());
             User user = userService.findByUsername(request.getUsername());
 
+            // todo extract auth response builder into a service method and reuse it
             AuthResponseDto response = AuthResponseDto.builder()
                     .accessToken(jwtToken)
                     .user(AuthResponseDto.UserDto.builder()
