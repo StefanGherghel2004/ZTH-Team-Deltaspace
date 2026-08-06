@@ -18,9 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,7 +54,10 @@ public class PostController {
         } else {
             posts = postService.getAllPosts();
         }
-        List<PostResponseDto> response = posts.stream()
+        List<Post> mutablePosts = new ArrayList<>(posts);
+        long seed = System.currentTimeMillis();
+        Collections.shuffle(mutablePosts,new Random(seed));
+        List<PostResponseDto> response = mutablePosts.stream()
                     .map(postService::getEnrichedPostDto)
                     .toList();
 
