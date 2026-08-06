@@ -16,4 +16,6 @@ public interface CommentMapper {
     @Mapping(source = "post.id", target = "postId")
     @Mapping(source = "user.username", target = "author")
     CommentResponseDto toDto(Comment comment);
+
+    Comment clone(Comment comment);
 }
