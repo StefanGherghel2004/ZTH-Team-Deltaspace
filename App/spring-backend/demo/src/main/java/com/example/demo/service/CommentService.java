@@ -247,15 +247,4 @@ public class CommentService {
         return dto;
     }
 
-   /* public CommentResponseDto getEnrichedCommentsDtoForGuest(Comment comment){
-        Comment displayComment = maskIfDeleted(comment);
-        CommentResponseDto commentResponseDto = commentMapper.toDto(displayComment);
-        commentResponseDto.setScore(displayComment.getUpvotes()-displayComment.getDownvotes());
-        commentResponseDto.setUpvotes(displayComment.getUpvotes());
-        commentResponseDto.setDownvotes(displayComment.getDownvotes());
-        commentResponseDto.setUserVote(null);
-        return commentResponseDto;
-    }
-
-    */
 }
