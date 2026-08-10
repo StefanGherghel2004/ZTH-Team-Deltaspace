@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IdenticalPasswordException.class)
     public ResponseEntity<ApiResponse<Void>> handleIdenticalPasswordException (IdenticalPasswordException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.UNPROCESSABLE_CONTENT, "VALIDATION_FAILED", e.getMessage(), request, null);
+        return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED", e.getMessage(), request, null);
     }
 
     private ResponseEntity<ApiResponse<Void>> buildResponse(
