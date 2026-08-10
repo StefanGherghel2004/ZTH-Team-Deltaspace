@@ -4,6 +4,7 @@ import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.exception.UserTooYoungException;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class UserService {
     private static final int MIN_AGE = 13;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     public User addUser(User user) {
         user.setId(null);
@@ -134,5 +136,16 @@ public class UserService {
 
         authenticatedUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         userRepository.save(authenticatedUser);
+    }
+
+    public User maskIfDeleted(User user){
+        if(!user.isDeleted()){
+            return user;
+        }
+        User masked = userMapper.clone(user);
+        masked.setDeleted(true);
+        masked.setUsername("[DELETED]");
+
+        return masked;
     }
 }
