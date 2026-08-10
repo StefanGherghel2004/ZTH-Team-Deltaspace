@@ -1,9 +1,6 @@
 package com.example.demo.exception;
 
-import com.example.demo.exception.notfound.CommentNotFoundException;
-import com.example.demo.exception.notfound.CommunityNotFoundException;
-import com.example.demo.exception.notfound.PostNotFoundException;
-import com.example.demo.exception.notfound.UserNotFoundException;
+import com.example.demo.exception.notfound.NotFoundException;
 import com.example.demo.response.ApiError;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.response.ErrorDetail;
@@ -13,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,14 +19,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-
-// todo check for duplicate code here, similar responses on same exceptions, etc.
-// make the class maintainable
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    //400 BAD REQUEST
     @ExceptionHandler({
             UserTooYoungException.class,
             IllegalArgumentException.class
@@ -38,8 +33,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Void>> handleMethodArgumentNotValidException(
+    public ResponseEntity<ApiResponse<Void>> handleValidationException(
             MethodArgumentNotValidException ex, HttpServletRequest request) {
+
         List<ErrorDetail> details = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -47,76 +43,77 @@ public class GlobalExceptionHandler {
                         error.getField(),
                         error.getDefaultMessage() != null ? error.getDefaultMessage() : "Validation failed"
                 ))
-                .collect(Collectors.toList());
+                .toList();
 
         return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "Data provided is not valid", request, details);
     }
 
+    //401 UNAUTHORIZED
     @ExceptionHandler({
-            ExpiredJwtException.class,
+            BadCredentialsException.class,
             AuthenticationException.class,
+            ExpiredJwtException.class,
             JwtException.class
     })
     public ResponseEntity<ApiResponse<Void>> handleUnauthorized(Exception e, HttpServletRequest request) {
-        String message = e instanceof ExpiredJwtException ? "This token has expired." : e.getMessage();
+        String message = (e instanceof ExpiredJwtException) ? "This token has expired." : e.getMessage();
         return buildResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", message, request, null);
     }
 
-    @ExceptionHandler({AccessDeniedException.class,
-                       IllegalStateException.class
+    //403 FORBIDDEN
+    @ExceptionHandler({
+            AccessDeniedException.class,
+            IllegalStateException.class
     })
-    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(
-            Exception e, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<Void>> handleForbidden(Exception e, HttpServletRequest request) {
         return buildResponse(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), request, null);
     }
 
-    @ExceptionHandler({
-            CommentNotFoundException.class,
-            PostNotFoundException.class,
-            UserNotFoundException.class,
-            CommunityNotFoundException.class
-    })
-    public ResponseEntity<ApiResponse<Void>> handleNotFoundException(Exception e, HttpServletRequest request) {
+    //404 NOT FOUND
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotFound(NotFoundException e, HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), request, null);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDatabaseError(DataIntegrityViolationException ex, HttpServletRequest request) {
-        List<ErrorDetail> details = List.of(
-                new ErrorDetail("database", ex.getMostSpecificCause().getMessage())
-        );
-        return buildResponse(HttpStatus.CONFLICT, "CONFLICT", "Database conflict error", request, details);
+    //409 CONFLICT
+    @ExceptionHandler({
+            DuplicateUserInformationException.class,
+            IdenticalPasswordException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleConflict(Exception e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, "CONFLICT", e.getMessage(), request, null);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, "DATA_CONFLICT", "Database resource conflict or constraint violation.", request, null);
+    }
+
+    //413 PAYLOAD TOO LARGE
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiResponse<Void>> handleMaxSizeException(MaxUploadSizeExceededException e, HttpServletRequest request) {
         return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "PAYLOAD_TOO_LARGE", "Max file size exceeded.", request, null);
     }
 
+    //422 UNPROCESSABLE ENTITY
     @ExceptionHandler(BusinessLogicException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBusinessLogicException(BusinessLogicException e, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<Void>> handleBusinessLogic(BusinessLogicException e, HttpServletRequest request) {
         return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", e.getMessage(), request, null);
     }
 
+    //429 TOO MANY REQUESTS
     @ExceptionHandler(RateLimitExceededException.class)
-    public ResponseEntity<ApiResponse<Void>> handleRateLimitExceeded(RateLimitExceededException e, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<Void>> handleRateLimit(RateLimitExceededException e, HttpServletRequest request) {
         return buildResponse(HttpStatus.TOO_MANY_REQUESTS, "TOO_MANY_REQUESTS", e.getMessage(), request, null);
     }
 
-    @ExceptionHandler(FileStorageException.class)
-    public ResponseEntity<ApiResponse<Void>> handleFileStorage(FileStorageException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_STORAGE_ERROR", e.getMessage(), request, null);
-    }
-
-    @ExceptionHandler(Exception.class)
+    //500 INTERNAL SERVER ERROR
+    @ExceptionHandler({
+            FileStorageException.class,
+            Exception.class
+    })
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e, HttpServletRequest request) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, null);
-    }
-
-    @ExceptionHandler({DuplicateUserInformationException.class, IdenticalPasswordException.class,
-    BadCredentialsException.class})
-    public ResponseEntity<ApiResponse<Void>> handleDuplicateUserInformationException (Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.CONFLICT, "CONFLICT",e.getMessage(),request,null);
     }
 
     private ResponseEntity<ApiResponse<Void>> buildResponse(
