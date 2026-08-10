@@ -8,10 +8,9 @@ import com.example.demo.dto.user.UserResponseDto;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
-import com.example.demo.response.ApiError;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.ApiResponseService;
 import com.example.demo.service.UserService;
-import java.util.List;
 
 import com.example.demo.service.auth.JwtService;
 import jakarta.validation.Valid;
@@ -21,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +32,7 @@ public class UserController {
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ApiResponseService apiResponseService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,17 +43,9 @@ public class UserController {
         // todo what to do if the user is saved in request 1, jwt token generation FAILS, then the user tries to register again
         String jwtToken = jwtService.generateToken(savedUser.getUsername());
 
-        AuthResponseDto response = AuthResponseDto.builder()
-                .accessToken(jwtToken)
-                .user(AuthResponseDto.UserDto.builder()
-                        .username(savedUser.getUsername())
-                        .email(savedUser.getEmail())
-                        .build())
-                .build();
+        AuthResponseDto response = apiResponseService.getAuthenticationResponse(savedUser,jwtToken);
 
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(ApiResponse.success(response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
     @PostMapping("/login")
@@ -70,14 +61,7 @@ public class UserController {
             String jwtToken = jwtService.generateToken(userDetails.getUsername());
             User user = userService.findByUsername(request.getUsername());
 
-            // todo extract auth response builder into a service method and reuse it
-            AuthResponseDto response = AuthResponseDto.builder()
-                    .accessToken(jwtToken)
-                    .user(AuthResponseDto.UserDto.builder()
-                            .username(user.getUsername())
-                            .email(user.getEmail())
-                            .build())
-                    .build();
+            AuthResponseDto response = apiResponseService.getAuthenticationResponse(user,jwtToken);
 
             return ResponseEntity.ok(ApiResponse.success(response));
     }

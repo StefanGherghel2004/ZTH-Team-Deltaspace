@@ -8,6 +8,7 @@ import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Post;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.ApiResponseService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -26,22 +27,20 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final ApiResponseService apiResponseService;
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
-        Post createdPost = postService.createPost(dto);
 
-        PostResponseDto response = postService.getEnrichedPostDto(createdPost);
+        PostResponseDto response = postService.getEnrichedPostDto(postService.createPost(dto));
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
-        Post post = postService.findById(id);
 
-        PostResponseDto response  = postService.getEnrichedPostDto(post);
+        PostResponseDto response  = postService.getEnrichedPostDto(postService.findById(id));
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -62,9 +61,7 @@ public class PostController {
         // TODO extract the shuffle in a service and there in a separate method
         //  because you might want to change the shuffle behaviour in the future
         Collections.shuffle(mutablePosts,new Random(seed));
-        List<PostResponseDto> response = mutablePosts.stream()
-                    .map(postService::getEnrichedPostDto)
-                    .toList();
+        List<PostResponseDto> response = apiResponseService.getPostListResponse(mutablePosts);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -72,9 +69,7 @@ public class PostController {
     @GetMapping("/subreddits/{name}/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPostsBySubreddit(@PathVariable String name) {
         List<Post> posts = postService.getCommunityPosts(name);
-        List<PostResponseDto> response = posts.stream()
-                    .map(postService::getEnrichedPostDto)
-                    .toList();
+        List<PostResponseDto> response = apiResponseService.getPostListResponse(posts);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

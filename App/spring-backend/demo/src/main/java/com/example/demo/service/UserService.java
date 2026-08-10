@@ -73,8 +73,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+        if (user.isDeleted())
+            throw new AccessDeniedException("The user account you are trying to access is deleted.");
+
+        return user;
     }
 
     @Transactional(readOnly = true)

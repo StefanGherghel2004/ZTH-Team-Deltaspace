@@ -15,9 +15,9 @@ import org.springframework.web.client.RestClientException;
 @RequiredArgsConstructor
 public class HomeController {
 // TODO DELETE COMMENTED-OUT CODE
-    //private static final String URL = "http://localhost:5157/filters";
+    private static final String URL = "http://localhost:5157/filters";
     //TODO Externalize ip AND PORT INTO CONFIG
-    private static final String URL =  "http://172.31.7.33:5157/filters";
+    //
     // TODO toggle this before ./build.ps1 - TRY TO PARAMETERIZE IT
 
 // todo move restClient into a service
@@ -38,7 +38,7 @@ public class HomeController {
 
         } catch (RestClientException e) {
             // LOG EXCEPTION ROOT CAUSE OR SOMETHING TO HELP WITH DEBUG
-            // THINK ABOUT WRITING A MESSAGE IN THE ERROR ESPONSE
+            // THINK ABOUT WRITING A MESSAGE IN THE ERROR RESPONSE
             // use global exception handler
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body(ApiResponse.error(null, "/filters"));
