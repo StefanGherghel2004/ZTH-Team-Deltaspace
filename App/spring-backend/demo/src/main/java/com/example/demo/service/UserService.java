@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.user.PasswordChangeRequestDto;
+import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.exception.UserTooYoungException;
@@ -9,7 +10,6 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

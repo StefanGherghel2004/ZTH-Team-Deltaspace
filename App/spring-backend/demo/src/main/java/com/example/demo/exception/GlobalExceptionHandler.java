@@ -111,8 +111,6 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_STORAGE_ERROR", e.getMessage(), request, null);
     }
 
-
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e, HttpServletRequest request) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, null);
