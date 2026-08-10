@@ -4,6 +4,7 @@ import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.DuplicateUserInformationException;
+import com.example.demo.exception.IdenticalPasswordException;
 import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.exception.UserTooYoungException;
 import com.example.demo.mapper.UserMapper;
@@ -142,7 +143,7 @@ public class UserService {
         }
 
         if (passwordEncoder.matches(passwordDto.getNewPassword(), authenticatedUser.getPassword())) {
-            throw new IllegalArgumentException("New password cannot be the same as the current password.");
+            throw new IdenticalPasswordException("New password cannot be the same as the current password.");
         }
 
         authenticatedUser.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
