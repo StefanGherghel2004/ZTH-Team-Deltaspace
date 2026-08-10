@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -112,14 +113,10 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, null);
     }
 
-    @ExceptionHandler(DuplicateUserInformationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDuplicateUserInformationException (DuplicateUserInformationException e, HttpServletRequest request) {
+    @ExceptionHandler({DuplicateUserInformationException.class, IdenticalPasswordException.class,
+    BadCredentialsException.class})
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateUserInformationException (Exception e, HttpServletRequest request) {
         return buildResponse(HttpStatus.CONFLICT, "CONFLICT",e.getMessage(),request,null);
-    }
-
-    @ExceptionHandler(IdenticalPasswordException.class)
-    public ResponseEntity<ApiResponse<Void>> handleIdenticalPasswordException (IdenticalPasswordException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED", e.getMessage(), request, null);
     }
 
     private ResponseEntity<ApiResponse<Void>> buildResponse(
