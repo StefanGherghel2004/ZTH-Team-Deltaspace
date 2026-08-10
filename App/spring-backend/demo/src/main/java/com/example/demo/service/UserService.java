@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.dto.user.UserUpdateDto;
+import com.example.demo.exception.DuplicateUserInformationException;
 import com.example.demo.exception.notfound.UserNotFoundException;
 import com.example.demo.exception.UserTooYoungException;
 import com.example.demo.mapper.UserMapper;
@@ -35,6 +36,12 @@ public class UserService {
     public User addUser(User user) {
         user.setId(null);
         validateAge(user.getDateOfBirth());
+
+        if(userRepository.findByUsername(user.getUsername()).isPresent())
+            throw new DuplicateUserInformationException("A user with this username already exists, please choose another username.");
+
+        if(userRepository.findByEmail(user.getEmail()).isPresent())
+            throw new DuplicateUserInformationException("A user with this email already exists.");
 
         log.info("Adding new user: {}", user.getUsername());
 

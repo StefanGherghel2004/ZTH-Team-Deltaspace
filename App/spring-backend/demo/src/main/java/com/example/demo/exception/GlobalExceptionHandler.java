@@ -1,6 +1,5 @@
 package com.example.demo.exception;
 
-import com.example.demo.exception.AccessDeniedException; // Your custom exception
 import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.notfound.CommunityNotFoundException;
 import com.example.demo.exception.notfound.PostNotFoundException;
@@ -10,19 +9,16 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.response.ErrorDetail;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import java.security.SignatureException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,6 +110,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e, HttpServletRequest request) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, null);
+    }
+
+    @ExceptionHandler(DuplicateUserInformationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateUserInformationException (DuplicateUserInformationException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, "CONFLICT",e.getMessage(),request,null);
     }
 
     private ResponseEntity<ApiResponse<Void>> buildResponse(
