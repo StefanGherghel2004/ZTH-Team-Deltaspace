@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.dto.comment.response.CommentResponseDto;
+import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
@@ -54,7 +55,7 @@ public class CommentService {
         }
 
         Comment savedComment = commentRepository.save(commentToAdd);
-        voteComment(savedComment.getId(),"up");
+        voteComment(savedComment.getId(),VoteAction.UP);
         return getEnrichedCommentDto(savedComment);
     }
 
@@ -123,10 +124,10 @@ public class CommentService {
     }
 
     @Transactional
-    public VoteResponseDto voteComment(UUID commentId, String voteTypeStr) {
-// todo see if u wanna log the fact that an upvote was done after a new comment
+    public VoteResponseDto voteComment(UUID commentId, VoteAction action) {
+        // todo see if u wanna log the fact that an upvote was done after a new comment
 
-       // todo extract find by id and is deleted so that it is only for the voting. new comments dont need to be fetched again from the DB.
+        // todo extract find by id and is deleted so that it is only for the voting. new comments dont need to be fetched again from the DB.
         Comment comment = findById(commentId);
 
         if (comment.isDeleted()) {
@@ -134,43 +135,44 @@ public class CommentService {
         }
 
         User user = userService.getAuthenticatedUser();
-        String voteType = (voteTypeStr != null) ? voteTypeStr.toLowerCase() : "none";
+        VoteAction finalAction = (action != null) ? action : VoteAction.NONE;
 
         Optional<CommentVote> existingVoteOpt = commentVoteRepository.findByCommentAndUser(comment, user);
-// todo ifelesifelseifelseilfesfs ?? be smarter
-        if ("none".equals(voteType)) {
+
+        // todo ifelesifelseifelseilfesfs ?? be smarter
+        if (finalAction == VoteAction.NONE) {
             if (existingVoteOpt.isPresent()) {
                 CommentVote existingVote = existingVoteOpt.get();
                 removeVoteFromComment(comment, existingVote.getVoteType());
                 commentVoteRepository.delete(existingVote);
             }
         } else {
-            VoteType newVoteType = "up".equals(voteType) ? VoteType.UPVOTE : VoteType.DOWNVOTE;
+            VoteType targetVoteType = (finalAction == VoteAction.UP) ? VoteType.UPVOTE : VoteType.DOWNVOTE;
 
             if (existingVoteOpt.isPresent()) {
                 CommentVote existingVote = existingVoteOpt.get();
 
-                if (existingVote.getVoteType() == newVoteType) {
-
+                if (existingVote.getVoteType() == targetVoteType) {
+                    // Toggle off existing vote
                     removeVoteFromComment(comment, existingVote.getVoteType());
                     commentVoteRepository.delete(existingVote);
-                    voteType = "none";
+                    finalAction = VoteAction.NONE;
                 } else {
-
+                    // Vote flip (UPVOTE -> DOWNVOTE or vice versa)
                     removeVoteFromComment(comment, existingVote.getVoteType());
-                    addVoteToComment(comment, newVoteType);
-                    existingVote.setVoteType(newVoteType);
+                    addVoteToComment(comment, targetVoteType);
+                    existingVote.setVoteType(targetVoteType);
                     commentVoteRepository.save(existingVote);
                 }
             } else {
-
+                // New vote
                 CommentVote newVote = new CommentVote();
                 newVote.setComment(comment);
                 newVote.setUser(user);
-                newVote.setVoteType(newVoteType);
+                newVote.setVoteType(targetVoteType);
                 commentVoteRepository.save(newVote);
 
-                addVoteToComment(comment, newVoteType);
+                addVoteToComment(comment, targetVoteType);
             }
         }
 
@@ -180,7 +182,7 @@ public class CommentService {
                 .upvotes(comment.getUpvotes())
                 .downvotes(comment.getDownvotes())
                 .score(comment.getUpvotes() - comment.getDownvotes())
-                .userVote("none".equals(voteType) ? null : voteType)
+                .userVote(finalAction == VoteAction.NONE ? null : finalAction.getValue())
                 .build();
     }
 
@@ -211,7 +213,10 @@ public class CommentService {
     @Transactional(readOnly = true)
     public CommentResponseDto getEnrichedCommentDto(Comment comment) {
         Comment displayComment = maskIfDeleted(comment);
+        displayComment.setUser(userService.maskIfDeleted(displayComment.getUser()));
+
         CommentResponseDto dto = commentMapper.toDto(displayComment);
+
 
         UUID parentId = (displayComment.getParentComment() != null)
                 ? displayComment.getParentComment().getId()

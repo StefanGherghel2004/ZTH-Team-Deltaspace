@@ -10,4 +10,5 @@ public interface UserMapper {
     User toEntity(UserCreateDto dto);
 
     UserResponseDto toResponseDto(User user);
+    User clone(User user);
 }

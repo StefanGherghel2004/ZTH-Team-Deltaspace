@@ -13,7 +13,6 @@ import java.time.Period;
 @Data
 @Entity
 @Table(name = "users")
-// instead of deleting it will update the deleted field
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
 public class User extends BaseEntity {
 

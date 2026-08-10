@@ -1,13 +1,13 @@
 package com.example.demo.dto.vote;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
 public class VoteRequestDto {
-    @NotBlank
-    @Pattern(regexp = "^(up|down|none)$", message = "voteType  is 'up', 'down' or 'none'")
-    private String voteType;
-    // todo check if you can use an Enum instead of plain String
+    @NotNull( message = "voteType  is 'up', 'down' or 'none'")
+    private VoteAction voteType;
+
 }

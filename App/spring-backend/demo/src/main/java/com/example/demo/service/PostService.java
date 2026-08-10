@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
+import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
@@ -63,56 +64,52 @@ public class PostService {
             post.setCommunity(community);
         }
 
-//        if (savedPost.getNsfw() && savedPost.getCommunity() != null) {
-//            Community community = savedPost.getCommunity();
-//
-//            if (Boolean.FALSE.equals(community.getNSFW())) {
-//                community.setNSFW(true);
-//                communityRepository.save(community);
-//            }
-//        }
+
         Post savedPost = postRepository.save(post);
-        votePost(savedPost.getId(), "up");
+        votePost(savedPost.getId(), VoteAction.UP);
         return findById(savedPost.getId());
     }
 
     @Transactional
-    public VoteResponseDto votePost(UUID postId, String voteTypeStr) {
+    public VoteResponseDto votePost(UUID postId, VoteAction action) {
         Post post = findById(postId);
         User user = userService.getAuthenticatedUser();
 
         Optional<PostVote> existingVoteOpt = postVoteRepository.findByPostAndUser(post, user);
 
-        if (voteTypeStr.equals("none")) {
+        VoteAction finalAction = action;
+
+        if (action == VoteAction.NONE) {
+            // Explicit unvote request
             if (existingVoteOpt.isPresent()) {
                 PostVote existingVote = existingVoteOpt.get();
                 removeVoteFromPost(postId, existingVote.getVoteType());
                 postVoteRepository.delete(existingVote);
             }
         } else {
-            VoteType newVoteType = voteTypeStr.equals("up") ? VoteType.UPVOTE : VoteType.DOWNVOTE;
+            VoteType targetVoteType = (action == VoteAction.UP) ? VoteType.UPVOTE : VoteType.DOWNVOTE;
 
             if (existingVoteOpt.isPresent()) {
                 PostVote existingVote = existingVoteOpt.get();
 
-                if (existingVote.getVoteType() == newVoteType) {
+                if (existingVote.getVoteType() == targetVoteType) {
                     removeVoteFromPost(postId, existingVote.getVoteType());
                     postVoteRepository.delete(existingVote);
-                    voteTypeStr = "none";
+                    finalAction = VoteAction.NONE;
                 } else {
                     removeVoteFromPost(postId, existingVote.getVoteType());
-                    addVoteToPost(postId, newVoteType);
-                    existingVote.setVoteType(newVoteType);
+                    addVoteToPost(postId, targetVoteType);
+                    existingVote.setVoteType(targetVoteType);
                     postVoteRepository.save(existingVote);
                 }
             } else {
                 PostVote newVote = new PostVote();
                 newVote.setPost(post);
                 newVote.setUser(user);
-                newVote.setVoteType(newVoteType);
+                newVote.setVoteType(targetVoteType);
                 postVoteRepository.save(newVote);
 
-                addVoteToPost(postId, newVoteType);
+                addVoteToPost(postId, targetVoteType);
             }
         }
 
@@ -125,7 +122,7 @@ public class PostService {
                 .upvotes(updatedPost.getUpvotes())
                 .downvotes(updatedPost.getDownvotes())
                 .score(updatedPost.getUpvotes() - updatedPost.getDownvotes())
-                .userVote(voteTypeStr.equals("none") ? null : voteTypeStr)
+                .userVote(finalAction == VoteAction.NONE ? null : finalAction.getValue())
                 .build();
     }
 
@@ -150,7 +147,9 @@ public class PostService {
 
         dto.setScore(post.getUpvotes() - post.getDownvotes());
         dto.setCommentCount(post.getComments() != null ? post.getComments().size() : 0);
-
+        if(post.getAuthor().isDeleted()) {
+            dto.setAuthor("[deleted]");
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
             try {
