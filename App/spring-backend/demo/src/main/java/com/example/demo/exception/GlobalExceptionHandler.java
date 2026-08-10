@@ -29,7 +29,10 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class
     })
     public ResponseEntity<ApiResponse<Void>> handleBadRequest(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", e.getMessage(), request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("request", e.getMessage())
+        );
+        return buildResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", e.getMessage(), request, details);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -57,7 +60,10 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ApiResponse<Void>> handleUnauthorized(Exception e, HttpServletRequest request) {
         String message = (e instanceof ExpiredJwtException) ? "This token has expired." : e.getMessage();
-        return buildResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", message, request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("authentication", message)
+        );
+        return buildResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", message, request, details);
     }
 
     //403 FORBIDDEN
@@ -66,45 +72,67 @@ public class GlobalExceptionHandler {
             IllegalStateException.class
     })
     public ResponseEntity<ApiResponse<Void>> handleForbidden(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("authorization", e.getMessage())
+        );
+        return buildResponse(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), request, details);
     }
 
     //404 NOT FOUND
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleNotFound(NotFoundException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("resource", e.getMessage())
+        );
+        return buildResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), request, details);
     }
 
     //409 CONFLICT
-    @ExceptionHandler({
-            DuplicateUserInformationException.class,
-            IdenticalPasswordException.class
-    })
+    @ExceptionHandler(DuplicateUserInformationException.class)
     public ResponseEntity<ApiResponse<Void>> handleConflict(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.CONFLICT, "CONFLICT", e.getMessage(), request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("conflict", e.getMessage())
+        );
+        return buildResponse(HttpStatus.CONFLICT, "CONFLICT", e.getMessage(), request, details);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
-        return buildResponse(HttpStatus.CONFLICT, "DATA_CONFLICT", "Database resource conflict or constraint violation.", request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("database", "Database constraint violation")
+        );
+        return buildResponse(HttpStatus.CONFLICT, "DATA_CONFLICT", "Database resource conflict or constraint violation.", request, details);
     }
 
     //413 PAYLOAD TOO LARGE
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiResponse<Void>> handleMaxSizeException(MaxUploadSizeExceededException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "PAYLOAD_TOO_LARGE", "Max file size exceeded.", request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("file", "File size exceeds maximum allowed upload limit.")
+        );
+        return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "PAYLOAD_TOO_LARGE", "Max file size exceeded.", request, details);
     }
 
     //422 UNPROCESSABLE ENTITY
-    @ExceptionHandler(BusinessLogicException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBusinessLogic(BusinessLogicException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", e.getMessage(), request, null);
+    @ExceptionHandler({
+            IdenticalPasswordException.class,
+            BusinessLogicException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleBusinessLogic(Exception e, HttpServletRequest request) {
+        String field = (e instanceof IdenticalPasswordException) ? "newPassword" : "businessRule";
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail(field, e.getMessage())
+        );
+        return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", e.getMessage(), request, details);
     }
 
     //429 TOO MANY REQUESTS
     @ExceptionHandler(RateLimitExceededException.class)
     public ResponseEntity<ApiResponse<Void>> handleRateLimit(RateLimitExceededException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.TOO_MANY_REQUESTS, "TOO_MANY_REQUESTS", e.getMessage(), request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("rateLimit", e.getMessage())
+        );
+        return buildResponse(HttpStatus.TOO_MANY_REQUESTS, "TOO_MANY_REQUESTS", e.getMessage(), request, details);
     }
 
     //500 INTERNAL SERVER ERROR
@@ -113,7 +141,10 @@ public class GlobalExceptionHandler {
             Exception.class
     })
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, null);
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("server", "An internal error occurred. Please try again later.")
+        );
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
     }
 
     private ResponseEntity<ApiResponse<Void>> buildResponse(
