@@ -8,14 +8,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "imageFile",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "filter",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "request",
+        "Type": "ImageProcessor.Models.ImageProcessingRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

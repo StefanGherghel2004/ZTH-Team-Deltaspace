@@ -1,15 +1,14 @@
 ﻿using ImageProcessor.Filters;
 using ImageProcessor.Models;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
+using System.Numerics;
+using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace ImageProcessor.Service
 {
-
     public class FilterService
     {
         private readonly HttpClient _httpClient;
@@ -25,126 +24,72 @@ namespace ImageProcessor.Service
             {
                 throw new ArgumentException($"Filter {request.Filter} is not implemented.");
             }
- 
             using var networkStream = await _httpClient.GetStreamAsync(request.DownloadUrl);
+            var (image, originalFormat) = await Image.LoadWithFormatAsync<Rgba32>(networkStream);
 
-            using var memStream = new MemoryStream();
-            await networkStream.CopyToAsync(memStream);
-       
-            memStream.Position = 0;
-
-            var originalFormat = await Image.DetectFormatAsync(memStream);
-
-            memStream.Position = 0;
-
-            using var image = await Image.LoadAsync<Rgba32>(memStream);
-            var pixelData = new byte[image.Width * image.Height * 4];
-            image.CopyPixelDataTo(pixelData);
-
-            ApplyFilter(pixelData, filterType);
-
-            using var finalImage = Image.LoadPixelData<Rgba32>(pixelData, image.Width, image.Height);
-            using var outStream = new MemoryStream();
-
-            await finalImage.SaveAsync(outStream, originalFormat);
-
-            byte[] processedBytes = outStream.ToArray();
-
-            using var content = new ByteArrayContent(processedBytes);
-
-            content.Headers.ContentType = new MediaTypeHeaderValue(originalFormat.DefaultMimeType);
-
-            var response = await _httpClient.PutAsync(request.UploadUrl, content);
-
-            response.EnsureSuccessStatusCode();
-        }
-
-        private void ApplyGrayscale(byte[] pixels)
-        {
-            for (int i = 0; i < pixels.Length; i += 4)
+            using (image)
             {
-                byte gray = (byte)((pixels[i] * 0.299) + (pixels[i + 1] * 0.587) + (pixels[i + 2] * 0.114));
-                pixels[i] = gray;
-                pixels[i + 1] = gray;
-                pixels[i + 2] = gray;
+                ApplyFilter(image, filterType);
+
+                using var outStream = new MemoryStream();
+                await image.SaveAsync(outStream, originalFormat);
+
+                outStream.Position = 0;
+                using var content = new StreamContent(outStream);
+                content.Headers.ContentType = new MediaTypeHeaderValue(originalFormat.DefaultMimeType);
+
+                var response = await _httpClient.PutAsync(request.UploadUrl, content);
+                response.EnsureSuccessStatusCode();
             }
         }
 
-        private void ApplyInvert(byte[] pixels)
-        {
-            for (int i = 0; i < pixels.Length; i += 4)
-            {
-                pixels[i] = (byte)(255 - pixels[i]);
-                pixels[i + 1] = (byte)(255 - pixels[i + 1]);
-                pixels[i + 2] = (byte)(255 - pixels[i + 2]);
-            }
-        }
-
-        private void ApplySepia(byte[]pixels)
-        {
-            for (int i = 0; i < pixels.Length; i += 4)
-            {
-                byte r = pixels[i];
-                byte g = pixels[i + 1];
-                byte b = pixels[i + 2];
-
-               
-                int newR = (int)(0.393 * r + 0.769 * g + 0.189 * b);
-                int newG = (int)(0.349 * r + 0.686 * g + 0.168 * b);
-                int newB = (int)(0.272 * r + 0.534 * g + 0.131 * b);
-
-                pixels[i] = (byte)Math.Min(255, newR); 
-                pixels[i + 1] = (byte)Math.Min(255, newG); 
-                pixels[i + 2] = (byte)Math.Min(255, newB); 
-            }
-        }
-
-        private void ApplyNeon(byte[] pixels)
-        {
-            
-                for (int i = 0; i < pixels.Length; i += 4)
-                {
-                    float r = pixels[i];
-                    float g = pixels[i + 1];
-                    float b = pixels[i + 2];
-
-                float lum = (0.299f * r + 0.587f * g + 0.114f * b) / 255f;
-                float smoothLum = lum * lum * (3.0f - 2.0f * lum);
-
-                float finalR = 10 + smoothLum * (255 - 10);
-                float finalG = 150 * (1.0f - smoothLum) + 20 * smoothLum;
-                float finalB = 230 * (1.0f - smoothLum) + 220 * smoothLum;
-
-                float intensity = Math.Min(1.0f, lum * 2.0f);
-
-                pixels[i] = (byte)Math.Clamp(finalR * intensity, 0, 255);
-                pixels[i + 1] = (byte)Math.Clamp(finalG * intensity, 0, 255);
-                pixels[i + 2] = (byte)Math.Clamp(finalB * intensity, 0, 255);
-            }
-            
-        }
-
-        private void ApplyFilter(byte[] pixels, FilterType type)
+        private void ApplyFilter(Image<Rgba32> image, FilterType type)
         {
             switch (type)
             {
                 case FilterType.Grayscale:
-                    ApplyGrayscale(pixels);
+                    image.Mutate(ctx => ctx.Grayscale());
                     break;
 
                 case FilterType.Invert:
-                    ApplyInvert(pixels);
+                    image.Mutate(ctx => ctx.Invert());
                     break;
 
                 case FilterType.Sepia:
-                    ApplySepia(pixels);
+                    image.Mutate(ctx => ctx.Sepia());
                     break;
 
                 case FilterType.Neon:
-                    ApplyNeon(pixels);
-                    break;  
-                   
+                    ApplyNeon(image);
+                    break;
             }
+        }
+
+        private static void ApplyNeon(Image<Rgba32> image)
+        {
+            image.Mutate(ctx => ctx.ProcessPixelRowsAsVector4(rowSpan =>
+            {
+                for (int i = 0; i < rowSpan.Length; i++)
+                {
+                    Vector4 v = rowSpan[i];
+
+                    float lum = 0.299f * v.X + 0.587f * v.Y + 0.114f * v.Z;
+                    float smoothLum = lum * lum * (3.0f - 2.0f * lum);
+
+                    float finalR = (10f + smoothLum * 245f) / 255f;
+                    float finalG = (150f * (1.0f - smoothLum) + 20f * smoothLum) / 255f;
+                    float finalB = (230f * (1.0f - smoothLum) + 220f * smoothLum) / 255f;
+
+                    float intensity = Math.Min(1.0f, lum * 2.0f);
+
+                    rowSpan[i] = new Vector4(
+                        Math.Clamp(finalR * intensity, 0f, 1f),
+                        Math.Clamp(finalG * intensity, 0f, 1f),
+                        Math.Clamp(finalB * intensity, 0f, 1f),
+                        v.W
+                    );
+                }
+            }));
         }
     }
 }
