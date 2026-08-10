@@ -4,13 +4,15 @@ import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ApiResponseService {
-    PostService postService;
+    private final PostService postService;
 
     public AuthResponseDto getAuthenticationResponse(User user, String jwtToken) {
 
