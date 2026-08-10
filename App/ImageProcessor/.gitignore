@@ -1,1 +1,14 @@
+# Build outputs
+bin/
+obj/
+out/
+
+# User-specific Visual Studio / Rider files
+*.user
+*.useros
 .vs/
+.idea/
+
+# NuGet package restores (if using legacy local package paths)
+*.nupkg
+packages/
