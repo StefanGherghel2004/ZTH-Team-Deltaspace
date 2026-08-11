@@ -12,6 +12,7 @@ import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommentVoteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,8 @@ public class CommentService {
     private final UserService userService;
     private final PostService postService;
 
+    private final ProfanityFilterService profanityFilterService;
+
     private final CommentRepository commentRepository;
     private final CommentVoteRepository commentVoteRepository;
     private final CommentMapper commentMapper;
@@ -40,8 +43,9 @@ public class CommentService {
         User authorUser = userService.getAuthenticatedUser();
         Post targetPost = postService.findById(postId);
         // use @Builder
+        String clearContent = profanityFilterService.censor(commentDto.getContent());
         Comment commentToAdd = new Comment();
-        commentToAdd.setContent(commentDto.getContent());
+        commentToAdd.setContent(clearContent);
         commentToAdd.setUser(authorUser);
         commentToAdd.setPost(targetPost);
         commentToAdd.setUpvotes(0);
