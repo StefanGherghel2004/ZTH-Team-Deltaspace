@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dto.auth.AuthRequestLoginDto;
 import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.dto.user.*;
+import com.example.demo.logger.Logger;
+import com.example.demo.dto.user.*;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.response.ApiResponse;
@@ -41,7 +43,7 @@ public class UserController {
 
         AuthResponseDto response = apiResponseService.getAuthenticationResponse(savedUser,jwtToken);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
     @PostMapping("/login")
@@ -63,6 +65,7 @@ public class UserController {
 
             AuthResponseDto response = apiResponseService.getAuthenticationResponse(user,jwtToken);
 
+            Logger.info("User %s logged in", user.getUsername());
             return ResponseEntity.ok(ApiResponse.success(response));
     }
 

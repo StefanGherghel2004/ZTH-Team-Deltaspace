@@ -7,6 +7,7 @@ import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
+import com.example.demo.logger.Logger;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
@@ -60,6 +61,7 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(commentToAdd);
         voteComment(savedComment.getId(),VoteAction.UP);
+        Logger.info("Comment created by %s", authorUser.getUsername());
         return getEnrichedCommentDto(savedComment);
     }
 
@@ -82,6 +84,7 @@ public class CommentService {
             throw new AccessDeniedException("You are not the author of this comment");
         }
         comment.setDeleted(true);
+        Logger.info("Comment deleted by %s", userService.getAuthenticatedUser().getUsername());
         commentRepository.save(comment);
     }
 
@@ -124,6 +127,7 @@ public class CommentService {
         }
         comment.setContent(updateDto.getContent());
         Comment updatedComment = commentRepository.save(comment);
+        Logger.info("Comment edited by %s", currentUser.getUsername());
         return getEnrichedCommentDto(updatedComment);
     }
 
@@ -158,6 +162,7 @@ public class CommentService {
 
         existingVoteOpt.ifPresent(existingVote->{removeVoteFromComment(comment,existingVote.getVoteType());
         if(newVoteType ==null) {
+            Logger.info("User %s unvoted comment %s", user.getUsername(), commentId);
             commentVoteRepository.delete(existingVote);
         }
         });
@@ -170,6 +175,7 @@ public class CommentService {
                 return vote;
             });
             voteToSave.setVoteType(newVoteType);
+            Logger.info("User %s voted comment %s", user.getUsername(), commentId);
             commentVoteRepository.save(voteToSave);
             addVoteToComment(comment, newVoteType);
         }

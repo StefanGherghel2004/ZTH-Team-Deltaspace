@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.exception.FileStorageException;
 import com.example.demo.logger.Logger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class S3ImageService {
 
     private final S3Client s3Client;
@@ -43,6 +45,7 @@ public class S3ImageService {
 
         String extension = getExtension(file);
         String key = "images/" + UUID.randomUUID() + extension;
+        Logger.info("Uploading file to S3: " + key);
 
         try {
 

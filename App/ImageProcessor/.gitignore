@@ -9,6 +9,9 @@ out/
 .vs/
 .idea/
 
-# NuGet package restores (if using legacy local package paths)
+# Ignore all compiled DLLs
+*.dll
+
+# NuGet package restores
 *.nupkg
 packages/
