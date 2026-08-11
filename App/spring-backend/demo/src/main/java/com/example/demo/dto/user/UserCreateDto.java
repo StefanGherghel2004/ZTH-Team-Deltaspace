@@ -13,7 +13,7 @@ public class UserCreateDto {
 
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username can only contain letters and numbers")
+    @Pattern(regexp = "^\\S+$", message = "Username cannot contain spaces or whitespace")
     private String username;
 
     @NotBlank(message = "Email is required")
