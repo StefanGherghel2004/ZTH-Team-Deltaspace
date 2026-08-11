@@ -65,12 +65,16 @@ public class UserService {
     }
 
     private User applyUpdatesAndSave(User user, UserUpdateDto updateDto) {
-        if (updateDto.getDisplayName() != null) {
+        if (updateDto.getDisplayName() == null)
+            user.setDisplayName(user.getUsername());
+        else
             user.setDisplayName(updateDto.getDisplayName());
-        }
-        if (updateDto.getAvatarUrl() != null) {
+
+        if(updateDto.getAvatarUrl() == null)
+            user.setAvatarUrl("");
+        else
             user.setAvatarUrl(updateDto.getAvatarUrl());
-        }
+
         return userRepository.save(user);
     }
 
