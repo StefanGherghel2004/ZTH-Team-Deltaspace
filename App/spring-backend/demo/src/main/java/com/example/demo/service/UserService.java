@@ -107,7 +107,7 @@ public class UserService {
         User user = getAuthenticatedUser();
         if (!passwordEncoder.matches(userDeleteDto.getPassword(),user.getPassword())) {
             Logger.warning("Current user is trying to delete another user's account.");
-            throw new BadCredentialsException("Password is incorrect");
+            throw new AccessDeniedException("Password is incorrect");
         }
 
         user.setDeleted(true);
@@ -141,7 +141,7 @@ public class UserService {
 
         if (!passwordEncoder.matches(passwordDto.getCurrentPassword(), authenticatedUser.getPassword())) {
             Logger.warning("Current password is incorrect");
-            throw new BadCredentialsException("Current password is incorrect");
+            throw new AccessDeniedException("Current password is incorrect");
         }
 
         if (passwordEncoder.matches(passwordDto.getNewPassword(), authenticatedUser.getPassword())) {
