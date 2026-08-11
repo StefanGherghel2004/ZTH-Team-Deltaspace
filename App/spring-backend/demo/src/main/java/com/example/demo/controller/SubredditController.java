@@ -23,7 +23,6 @@ import java.util.List;
 // todo rename subreddit to subreddit
 public class SubredditController {
     private final SubredditService subredditService;
-    // todo delete junk
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,7 +61,6 @@ public class SubredditController {
     @PutMapping("/{name}")
     public ResponseEntity<ApiResponse<SubredditResponseDto>> updateSubreddit(@PathVariable String name, @Valid @RequestBody SubredditUpdateDto updateDto){
         // todo check if u need to add the updated subreddit to the response
-        // era void inainte so test daca e ok
         Subreddit subreddit = subredditService.updateSubreddit(name,updateDto);
         SubredditResponseDto responseDto = subredditService.toDto(subreddit);
         return ResponseEntity.ok(ApiResponse.success(responseDto));
@@ -70,8 +68,7 @@ public class SubredditController {
 
     @PostMapping("/{name}/join")
     public ResponseEntity<ApiResponse<Void>> joinSubreddit(
-            @PathVariable String name) { // Sau preiei ID-ul userului conectat
-// TODO SAU PREIEI ???
+            @PathVariable String name) {
         subredditService.joinSubreddit(name);
         return ResponseEntity.ok(ApiResponse.successMessage("You have successfully joined the subreddit!"));
     }

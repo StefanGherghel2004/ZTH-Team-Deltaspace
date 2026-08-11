@@ -10,8 +10,6 @@ import com.example.demo.model.Subreddit;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.User;
 import com.example.demo.repository.SubredditRepository;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,19 +29,14 @@ public class SubredditService {
         TECH
     }
 
-    private static final int NSFW_AGE = 18;
 
     private final SubredditRepository subredditRepository;
-    private final PostRepository postRepository;
     private final UserService userService;
     private final SubredditMapper subredditMapper;
-    private final UserRepository userRepository;
 
     public SubredditResponseDto addSubreddit(SubredditCreateDto dto){
 
         User user = userService.getAuthenticatedUser();
-
-        Topic topic = null;
 
         Subreddit subreddit = new Subreddit();
         subreddit.setAuthor(user);
@@ -119,17 +112,6 @@ public class SubredditService {
         return subredditRepository.findByName(name)
                 .orElseThrow(() -> new SubredditNotFoundException("subreddit not found with name=" + name));
 
-    }
-
-
-    public Subreddit verifyNsfwCommunities(String subredditName){
-        User authenticatedUser= userService.getAuthenticatedUser();
-        int userAge = authenticatedUser.getAge();
-//        boolean isNSFW = postRepository.existsBysubredditNameAndNsfwTrue(subredditName);
-//        if (isNSFW && userAge < NSFW_AGE) {
-//            throw new AccessDeniedException("This subreddit is marked as NSFW");
-//        }
-        return findByName(subredditName);
     }
 
     private Topic getTopicFromString(String topicString) {

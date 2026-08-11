@@ -22,7 +22,6 @@ import com.example.demo.repository.PostVoteRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -227,21 +226,5 @@ public class PostService {
         Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
         postRepository.delete(post);
         postRepository.flush();
-
-//        Community community = post.getCommunity();
-////        if (NSFW && community != null) {
-////            updateCommunityNSFWStatus(community);
-////        }
     }
-
-//    private void updateCommunityNSFWStatus(Community community) {
-//        if (community == null) return;
-//
-//        boolean stillHasNsfw = postRepository.existsByCommunityNameAndNsfwTrue(community.getName());
-//
-//        if (Boolean.TRUE.equals(community.getNSFW()) != stillHasNsfw) {
-//            community.setNSFW(stillHasNsfw);
-//            communityRepository.save(community);
-//        }
-//    }
 }
