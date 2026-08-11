@@ -3,11 +3,13 @@ package com.example.demo.dto.comment;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 public class CommentCreateDto {
 
     @NotBlank(message = "Comment contents cannot be empty.")
