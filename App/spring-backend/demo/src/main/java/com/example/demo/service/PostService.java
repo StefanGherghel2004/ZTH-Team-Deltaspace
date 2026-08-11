@@ -183,9 +183,13 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> getCommunityPosts(String communityName) {
-        Community community = communityService.findByName(communityName);
-        return community.getPosts();
+    public List<Post> getAllPosts(String subreddit) {
+        if (subreddit != null && !subreddit.isBlank()) {
+            Community community = communityService.findByName(subreddit);
+            return community.getPosts();
+        }else{
+            return getAllPosts();
+        }
     }
 
     @Transactional
@@ -216,21 +220,5 @@ public class PostService {
 
         postRepository.delete(post);
         postRepository.flush();
-
-//        Community community = post.getCommunity();
-////        if (NSFW && community != null) {
-////            updateCommunityNSFWStatus(community);
-////        }
     }
-
-//    private void updateCommunityNSFWStatus(Community community) {
-//        if (community == null) return;
-//
-//        boolean stillHasNsfw = postRepository.existsByCommunityNameAndNsfwTrue(community.getName());
-//
-//        if (Boolean.TRUE.equals(community.getNSFW()) != stillHasNsfw) {
-//            community.setNSFW(stillHasNsfw);
-//            communityRepository.save(community);
-//        }
-//    }
 }
