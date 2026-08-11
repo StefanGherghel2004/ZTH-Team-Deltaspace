@@ -94,7 +94,7 @@ public class UserService {
 
     public void deleteAuthenticatedUser(UserDeleteDto userDeleteDto) {
         User user = getAuthenticatedUser();
-        if (!passwordEncoder.matches(user.getPassword(),userDeleteDto.getPassword()))
+        if (!passwordEncoder.matches(userDeleteDto.getPassword(),user.getPassword()))
             throw new BadCredentialsException("Password is incorrect");
         user.setDeleted(true);
         userRepository.save(user);
