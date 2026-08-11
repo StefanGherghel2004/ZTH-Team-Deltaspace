@@ -1,0 +1,1 @@
+[2026-08-11 13:28:49] SEVERE: I/O error on GET request for "http://localhost:5157/filters": Connection refused: getsockopt

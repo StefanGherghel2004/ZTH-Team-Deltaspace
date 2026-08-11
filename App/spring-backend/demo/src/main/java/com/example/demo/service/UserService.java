@@ -101,7 +101,7 @@ public class UserService {
 
     public void deleteAuthenticatedUser(UserDeleteDto userDeleteDto) {
         User user = getAuthenticatedUser();
-        if (!passwordEncoder.matches(userDeleteDto.getPassword(),user.getPassword())){
+        if (!passwordEncoder.matches(userDeleteDto.getPassword(),user.getPassword())) {
             Logger.warning("Current user is trying to delete another user's account.");
             throw new BadCredentialsException("Password is incorrect");
         }
