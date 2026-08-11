@@ -184,8 +184,12 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<Post> getAllPosts(String subredditName) {
-        Subreddit subreddit = subredditService.findByName(subredditName);
-        return subreddit.getPosts();
+        if(subredditName != null && !subredditName.isBlank()){
+            Subreddit subreddit = subredditService.findByName(subredditName);
+            return subreddit.getPosts();
+        }else{
+            return getAllPosts();
+        }
     }
 
     @Transactional

@@ -24,9 +24,6 @@ import java.util.List;
 public class SubredditController {
     private final SubredditService subredditService;
     // todo delete junk
-    private final SubredditMapper subredditMapper;
-    private final SubredditRepository subredditRepository;
-    private final PostService postService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
