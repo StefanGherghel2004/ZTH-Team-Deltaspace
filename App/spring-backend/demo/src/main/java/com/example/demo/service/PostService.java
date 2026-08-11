@@ -12,6 +12,7 @@ import com.example.demo.model.Subreddit;
 import com.example.demo.model.Post;
 import com.example.demo.model.PostVote;
 import com.example.demo.model.User;
+import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.SubredditRepository;
 import com.example.demo.repository.PostRepository;
@@ -20,6 +21,7 @@ import com.example.demo.repository.PostVoteRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,40 +79,37 @@ public class PostService {
 
         Optional<PostVote> existingVoteOpt = postVoteRepository.findByPostAndUser(post, user);
 
-        VoteAction finalAction = action;
+        VoteAction finalAction = (action != null) ? action : VoteAction.NONE;
 
-        if (action == VoteAction.NONE) {
-            // Explicit unvote request
-            if (existingVoteOpt.isPresent()) {
-                PostVote existingVote = existingVoteOpt.get();
-                removeVoteFromPost(postId, existingVote.getVoteType());
+        VoteType requestedVoteType = switch(finalAction){
+            case UP -> VoteType.UPVOTE;
+            case DOWN -> VoteType.DOWNVOTE;
+            case NONE -> null;
+        };
+
+        VoteType currentVoteType = existingVoteOpt.map(PostVote::getVoteType).orElse(null);
+        VoteType newVoteType = (currentVoteType == requestedVoteType) ? null:requestedVoteType;
+
+        if(currentVoteType==null && newVoteType==null){
+            return null;
+        }
+        existingVoteOpt.ifPresent(existingVote->{
+            removeVoteFromPost(postId,existingVote.getVoteType());
+            if(newVoteType==null){
                 postVoteRepository.delete(existingVote);
             }
-        } else {
-            VoteType targetVoteType = (action == VoteAction.UP) ? VoteType.UPVOTE : VoteType.DOWNVOTE;
+        });
 
-            if (existingVoteOpt.isPresent()) {
-                PostVote existingVote = existingVoteOpt.get();
-
-                if (existingVote.getVoteType() == targetVoteType) {
-                    removeVoteFromPost(postId, existingVote.getVoteType());
-                    postVoteRepository.delete(existingVote);
-                    finalAction = VoteAction.NONE;
-                } else {
-                    removeVoteFromPost(postId, existingVote.getVoteType());
-                    addVoteToPost(postId, targetVoteType);
-                    existingVote.setVoteType(targetVoteType);
-                    postVoteRepository.save(existingVote);
-                }
-            } else {
-                PostVote newVote = new PostVote();
-                newVote.setPost(post);
-                newVote.setUser(user);
-                newVote.setVoteType(targetVoteType);
-                postVoteRepository.save(newVote);
-
-                addVoteToPost(postId, targetVoteType);
-            }
+        if(newVoteType!=null){
+            PostVote voteToSave=existingVoteOpt.orElseGet(()->{
+                PostVote vote = new PostVote();
+                vote.setPost(post);
+                vote.setUser(user);
+                return vote;
+            });
+        voteToSave.setVoteType(newVoteType);
+        postVoteRepository.save(voteToSave);
+        addVoteToPost(postId,newVoteType);
         }
 
         entityManager.flush();
