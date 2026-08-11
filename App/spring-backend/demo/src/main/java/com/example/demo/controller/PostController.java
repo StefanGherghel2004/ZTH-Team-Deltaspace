@@ -26,7 +26,6 @@ import java.util.*;
 public class PostController {
 
     private final PostService postService;
-    private final UserService userService;
     private final ApiResponseService apiResponseService;
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
