@@ -2,17 +2,19 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
+
 @Table(name = "communities")
 public class Subreddit extends BaseEntity {
 
@@ -24,9 +26,6 @@ public class Subreddit extends BaseEntity {
 
     @Column(nullable = true)
     private String topic;
-
-    @Column(name = "nsfw", nullable = true)
-    private Boolean NSFW=false;
 
     @Column(name="icon_url")
     private String iconUrl;
@@ -41,6 +40,7 @@ public class Subreddit extends BaseEntity {
     // CascadeType.ALL ensures community deletion also removes all associated posts.
     @OneToMany(mappedBy = "subreddit", cascade = CascadeType.ALL)
     @JsonIgnore
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -49,6 +49,8 @@ public class Subreddit extends BaseEntity {
             joinColumns = @JoinColumn(name = "community_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
+    @Singular
     @JsonIgnore
     private Set<User> members = new HashSet<>();
 

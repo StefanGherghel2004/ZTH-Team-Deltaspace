@@ -45,14 +45,16 @@ public class SubredditService {
 
         Topic topic = null;
 
-        Subreddit subreddit = new Subreddit();
-        subreddit.setAuthor(user);
-        subreddit.setName(dto.getName());
-        subreddit.setTopic(null);
-        subreddit.setDescription(dto.getDescription());
-        subreddit.setDisplayName(dto.getDisplayName());
-        subreddit.setIconUrl(dto.getIconUrl());
-        subreddit.getMembers().add(user);
+        Subreddit subreddit= Subreddit.builder()
+                .author(user)
+                .name(dto.getName())
+                .displayName(dto.getDisplayName())
+                .topic(null)
+                .iconUrl(dto.getIconUrl())
+                .description(dto.getDescription())
+                .member(user)
+                .build();
+
         Subreddit savedSubreddit = subredditRepository.save(subreddit);
         Logger.info("Subreddit %s created", savedSubreddit.getName());
         return toDto(savedSubreddit);
