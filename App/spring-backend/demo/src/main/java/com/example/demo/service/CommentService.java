@@ -13,7 +13,6 @@ import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommentVoteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,15 +87,6 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    @Transactional(readOnly = true)
-    public List<Comment> getCommentsByPostId(UUID postId) {
-        Post post = postService.findById(postId);
-
-        return post.getComments().stream()
-                .map(this::maskIfDeleted)
-                .toList();
-    }
-
     private Comment maskIfDeleted(Comment comment) {
         if (!comment.isDeleted()) {
             return comment;
@@ -107,10 +97,6 @@ public class CommentService {
         masked.setContent("[DELETED]");
 
         return masked;
-    }
-
-    public List<Comment> getAllComments (){
-        return commentRepository.findAll();
     }
 
     @Transactional

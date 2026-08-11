@@ -5,7 +5,6 @@ import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.dto.user.*;
 import com.example.demo.logger.Logger;
 import com.example.demo.dto.user.*;
-import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.ApiResponseService;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    // todo decide if you want to send DTOs to the service and do the mapping there, or map in the controller and send entity to service
-    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final ApiResponseService apiResponseService;
@@ -72,12 +69,11 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> getAuthenticatedUser() {
         User authenticatedUser = userService.getAuthenticatedUser();
-        UserResponseDto response = userMapper.toResponseDto(authenticatedUser);
+        UserResponseDto response = UserResponseDto.fromEntity(authenticatedUser);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    // a soft delete under hood (sets deleted = true)
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<ApiResponse<Void>> deleteUser(@RequestBody UserDeleteDto userDeleteDto) {
@@ -89,7 +85,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDisplayNameOrAvatar(@Valid @RequestBody UserUpdateDto updateDto) {
         User updatedUser = userService.updateAuthenticatedUser(updateDto);
-        UserResponseDto response = userMapper.toResponseDto(updatedUser);
+        UserResponseDto response = UserResponseDto.fromEntity(updatedUser);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

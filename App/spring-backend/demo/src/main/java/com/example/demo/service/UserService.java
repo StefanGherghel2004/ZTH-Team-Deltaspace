@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -88,19 +87,6 @@ public class UserService {
         }
 
         return user;
-    }
-
-    @Transactional(readOnly = true)
-    public User findByUsernameOrEmail(String usernameOrEmail) {
-        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> new UserNotFoundException(
-                        "User not found with username or email: " + usernameOrEmail));
-    }
-
-    @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email + "."));
     }
 
     public void deleteAuthenticatedUser(UserDeleteDto userDeleteDto) {
