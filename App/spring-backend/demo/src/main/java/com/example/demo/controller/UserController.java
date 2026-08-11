@@ -73,7 +73,7 @@ public class UserController {
     // a soft delete under hood (sets deleted = true)
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<ApiResponse<>> deleteUser(@RequestBody UserDeleteDto userDeleteDto) {
+    public ResponseEntity<ApiResponse<String>> deleteUser(@RequestBody UserDeleteDto userDeleteDto) {
 
         userService.deleteAuthenticatedUser(userDeleteDto);
         return ResponseEntity.ok(ApiResponse.success("Account deleted successfully"));
