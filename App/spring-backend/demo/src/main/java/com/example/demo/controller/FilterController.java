@@ -15,8 +15,8 @@ import org.springframework.web.client.RestClientException;
 @RequiredArgsConstructor
 @RequestMapping("/filters")
 public class FilterController {
-    private static final String URL = "http://localhost:5157/filters";
-    //private static final String URL ="http://172.31.7.33:5157/filters";
+    //private static final String URL = "http://localhost:5157/filters";
+    private static final String URL ="http://172.31.7.33:5157/filters";
 
     private final RestClient restClient = RestClient.create();
 
