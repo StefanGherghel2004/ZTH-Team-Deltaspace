@@ -144,7 +144,6 @@ public class GlobalExceptionHandler {
         List<ErrorDetail> details = List.of(
                 new ErrorDetail("server", "An internal error occurred. Please try again later.")
         );
-        e.printStackTrace();
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
     }
 
