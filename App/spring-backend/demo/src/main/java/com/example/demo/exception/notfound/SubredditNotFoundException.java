@@ -1,0 +1,7 @@
+package com.example.demo.exception.notfound;
+
+public class SubredditNotFoundException extends RuntimeException {
+    public SubredditNotFoundException(String message) {
+        super(message);
+    }
+}

@@ -1,4 +1,4 @@
-package com.example.demo.dto.community;
+package com.example.demo.dto.subreddit;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CommunityCreateDto {
-    @NotBlank(message= "Community Name is required")
+public class SubredditCreateDto {
+    @NotBlank(message= "Subreddit Name is required")
     @Size(min=3,max=50,message = "Name must be  between 3 and 50 characters, alphanumerical + underscore")
 
     @Pattern(regexp="^[a-zA-Z_]+$")

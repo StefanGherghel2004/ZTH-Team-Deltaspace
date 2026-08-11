@@ -8,12 +8,12 @@ import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.mapper.PostMapper;
-import com.example.demo.model.Community;
+import com.example.demo.model.Subreddit;
 import com.example.demo.model.Post;
 import com.example.demo.model.PostVote;
 import com.example.demo.model.User;
 import com.example.demo.model.enums.VoteType;
-import com.example.demo.repository.CommunityRepository;
+import com.example.demo.repository.SubredditRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
 
@@ -35,10 +35,10 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
-    private final CommunityService communityService;
+    private final SubredditService subredditService;
     private final PostVoteRepository postVoteRepository;
     private final PostMapper postMapper;
-    private final CommunityRepository communityRepository;
+    private final SubredditRepository subredditRepository;
     private final ImageEditService imageEditService;
     private final EntityManager entityManager;
 
@@ -60,8 +60,8 @@ public class PostService {
         }
 
         if (dto.getSubreddit() != null && !dto.getSubreddit().isBlank()) {
-            Community community = communityService.findByName(dto.getSubreddit());
-            post.setCommunity(community);
+            Subreddit subreddit = subredditService.findByName(dto.getSubreddit());
+            post.setSubreddit(subreddit);
         }
 
 
@@ -183,13 +183,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> getAllPosts(String subreddit) {
-        if (subreddit != null && !subreddit.isBlank()) {
-            Community community = communityService.findByName(subreddit);
-            return community.getPosts();
-        }else{
-            return getAllPosts();
-        }
+    public List<Post> getSubredditPosts(String subredditName) {
+        Subreddit subreddit = subredditService.findByName(subredditName);
+        return subreddit.getPosts();
     }
 
     @Transactional
@@ -220,5 +216,21 @@ public class PostService {
 
         postRepository.delete(post);
         postRepository.flush();
+
+//        Community community = post.getCommunity();
+////        if (NSFW && community != null) {
+////            updateCommunityNSFWStatus(community);
+////        }
     }
+
+//    private void updateCommunityNSFWStatus(Community community) {
+//        if (community == null) return;
+//
+//        boolean stillHasNsfw = postRepository.existsByCommunityNameAndNsfwTrue(community.getName());
+//
+//        if (Boolean.TRUE.equals(community.getNSFW()) != stillHasNsfw) {
+//            community.setNSFW(stillHasNsfw);
+//            communityRepository.save(community);
+//        }
+//    }
 }
