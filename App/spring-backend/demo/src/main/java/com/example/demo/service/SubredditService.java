@@ -4,6 +4,7 @@ import com.example.demo.dto.subreddit.SubredditCreateDto;
 import com.example.demo.dto.subreddit.SubredditUpdateDto;
 import com.example.demo.dto.subreddit.response.SubredditResponseDto;
 import com.example.demo.exception.notfound.SubredditNotFoundException;
+import com.example.demo.logger.Logger;
 import com.example.demo.mapper.SubredditMapper;
 import com.example.demo.model.Subreddit;
 import com.example.demo.exception.AccessDeniedException;
@@ -13,7 +14,6 @@ import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
@@ -21,7 +21,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SubredditService {
 
     public enum Topic {
@@ -55,6 +54,7 @@ public class SubredditService {
         subreddit.setIconUrl(dto.getIconUrl());
         subreddit.getMembers().add(user);
         Subreddit savedSubreddit = subredditRepository.save(subreddit);
+        Logger.info("Subreddit %s created", savedSubreddit.getName());
         return toDto(savedSubreddit);
     }
     public List<Subreddit> listAllSubreddits(){
@@ -75,9 +75,11 @@ public class SubredditService {
         Subreddit subredditToDelete = findByName(subredditName);
         User user = userService.getAuthenticatedUser();
         if(!subredditToDelete.getAuthor().equals(user)){
+            Logger.warning("You are not allowed to perform this operation! You are not the owner!");
             throw new AccessDeniedException("You are not allowed to perform this operation! You are not the owner!");
         }
         if(subredditToDelete.getPosts()==null|| subredditToDelete.getPosts().isEmpty()){
+            Logger.info("Deleted %s subreddit", subredditToDelete.getName());
             subredditRepository.delete(subredditToDelete);
         }
         else{throw new AccessDeniedException("Cannot Delete! subreddit still has posts!");}
@@ -88,6 +90,7 @@ public class SubredditService {
         Subreddit subreddit = findByName(subredditName);
         User authenticatedUser = userService.getAuthenticatedUser();
         if(!subreddit.getAuthor().equals(authenticatedUser)) {
+            Logger.warning("%s is trying to update another user's subreddit.", authenticatedUser.getUsername());
             throw new AccessDeniedException("You are not allowed to perform this operation. You are not the owner");
         }
 
@@ -108,6 +111,7 @@ public class SubredditService {
         if(updateDto.getIconUrl()!=null) {
             subreddit.setIconUrl(updateDto.getIconUrl());
         }
+        Logger.info("%s has been updated", subreddit.getName());
         return subredditRepository.save(subreddit);
     }
 
@@ -150,7 +154,8 @@ public class SubredditService {
         else {
             subreddit.getMembers().add(user);
         }
-            subredditRepository.save(subreddit);
+        Logger.info("%s has joined a %s subreddit", user.getUsername(), subreddit.getName() + "");
+        subredditRepository.save(subreddit);
 
     }
 
@@ -163,6 +168,7 @@ public class SubredditService {
         }
         else {
             subreddit.getMembers().remove(user);
+            Logger.info("%s has left %s", user.getUsername(), subreddit.getName());
             subredditRepository.save(subreddit);
         }
     }

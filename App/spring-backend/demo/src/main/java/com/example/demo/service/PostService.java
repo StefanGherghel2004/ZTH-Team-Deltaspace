@@ -7,6 +7,7 @@ import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
+import com.example.demo.logger.Logger;
 import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Subreddit;
 import com.example.demo.model.Post;
@@ -69,6 +70,7 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
         votePost(savedPost.getId(), VoteAction.UP);
+        Logger.info("Post %s created by %s", savedPost.getTitle(), author.getUsername());
         return findById(savedPost.getId());
     }
 
@@ -127,16 +129,20 @@ public class PostService {
 
     private void addVoteToPost(UUID postId, VoteType voteType) {
         if (voteType == VoteType.UPVOTE) {
+            Logger.info("User %s upvoted post %s", userService.getAuthenticatedUser().getUsername(), postId);
             postRepository.incrementUpvotes(postId);
         } else {
+            Logger.info("User %s downvoted post %s", userService.getAuthenticatedUser().getUsername(), postId);
             postRepository.incrementDownvotes(postId);
         }
     }
 
     private void removeVoteFromPost(UUID postId, VoteType voteType) {
         if (voteType == VoteType.UPVOTE) {
+            Logger.info("User %s unvoted post %s", userService.getAuthenticatedUser().getUsername(), postId);
             postRepository.decrementUpvotes(postId);
         } else {
+            Logger.info("User %s unvoted post %s", userService.getAuthenticatedUser().getUsername(), postId);
             postRepository.decrementDownvotes(postId);
         }
     }
@@ -208,6 +214,7 @@ public class PostService {
             post.setContent(updateDto.getContent());
         }
 
+        Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());
         return postRepository.save(post);
     }
 
@@ -217,6 +224,7 @@ public class PostService {
         if (!post.getAuthor().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this post.");
 
+        Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
         postRepository.delete(post);
         postRepository.flush();
 
