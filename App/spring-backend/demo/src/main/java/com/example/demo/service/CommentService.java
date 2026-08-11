@@ -139,44 +139,37 @@ public class CommentService {
 
         Optional<CommentVote> existingVoteOpt = commentVoteRepository.findByCommentAndUser(comment, user);
 
-        // todo ifelesifelseifelseilfesfs ?? be smarter
-        if (finalAction == VoteAction.NONE) {
-            if (existingVoteOpt.isPresent()) {
-                CommentVote existingVote = existingVoteOpt.get();
-                removeVoteFromComment(comment, existingVote.getVoteType());
-                commentVoteRepository.delete(existingVote);
-            }
-        } else {
-            VoteType targetVoteType = (finalAction == VoteAction.UP) ? VoteType.UPVOTE : VoteType.DOWNVOTE;
 
-            if (existingVoteOpt.isPresent()) {
-                CommentVote existingVote = existingVoteOpt.get();
+        VoteType requestedVoteType = switch(finalAction){
+            case UP -> VoteType.UPVOTE;
+            case DOWN -> VoteType.DOWNVOTE;
+            case NONE -> null;
+        };
+        VoteType currentVoteType = existingVoteOpt.map(CommentVote::getVoteType).orElse(null);
+        VoteType newVoteType = (currentVoteType == requestedVoteType) ? null:requestedVoteType;
 
-                if (existingVote.getVoteType() == targetVoteType) {
-                    // Toggle off existing vote
-                    removeVoteFromComment(comment, existingVote.getVoteType());
-                    commentVoteRepository.delete(existingVote);
-                    finalAction = VoteAction.NONE;
-                } else {
-                    // Vote flip (UPVOTE -> DOWNVOTE or vice versa)
-                    removeVoteFromComment(comment, existingVote.getVoteType());
-                    addVoteToComment(comment, targetVoteType);
-                    existingVote.setVoteType(targetVoteType);
-                    commentVoteRepository.save(existingVote);
-                }
-            } else {
-                // New vote
-                CommentVote newVote = new CommentVote();
-                newVote.setComment(comment);
-                newVote.setUser(user);
-                newVote.setVoteType(targetVoteType);
-                commentVoteRepository.save(newVote);
-
-                addVoteToComment(comment, targetVoteType);
-            }
+        if(currentVoteType==null && newVoteType ==null) {
+            return null;
         }
 
-        commentRepository.save(comment);
+        existingVoteOpt.ifPresent(existingVote->{removeVoteFromComment(comment,existingVote.getVoteType());
+        if(newVoteType ==null) {
+            commentVoteRepository.delete(existingVote);
+        }
+        });
+
+        if(newVoteType !=null){
+            CommentVote voteToSave = existingVoteOpt.orElseGet(()->{
+                CommentVote vote = new CommentVote();
+                vote.setComment(comment);
+                vote.setUser(user);
+                return vote;
+            });
+            voteToSave.setVoteType(newVoteType);
+            commentVoteRepository.save(voteToSave);
+            addVoteToComment(comment, newVoteType);
+        }
+
 
         return VoteResponseDto.builder()
                 .upvotes(comment.getUpvotes())
