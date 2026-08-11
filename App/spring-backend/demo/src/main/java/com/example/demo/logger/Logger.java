@@ -11,14 +11,16 @@ public class Logger {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private static void logWithLevel(LogLevel level, String message) {
-        manager.addMessage(new LogMessage(level, format(level, message)));
+    private static void logWithLevel(LogLevel level, String message, Object... args) {
+        manager.addMessage(new LogMessage(level, format(level, message, args)));
     }
 
-    private static String format(LogLevel level, String message) {
+    private static String format(LogLevel level, String message, Object[] args) {
         String currentTime = LocalDateTime.now().format(TIME_FORMATTER);
 
-        return String.format("[%s] %s: %s", currentTime, level, message);
+        String formattedMessage = String.format(message, args);
+
+        return String.format("[%s] %s: %s", currentTime, level, formattedMessage);
     }
 
     public static void init() {
@@ -29,24 +31,26 @@ public class Logger {
         loggers.add(new FileLogger(LogLevel.INFO, "info.txt"));
         loggers.add(new FileLogger(LogLevel.WARNING, "warning.txt"));
 
+        loggers.add(new ConsoleLogger(LogLevel.DEBUG));
+
         manager.addLoggers(loggers);
         manager.start(); // start logging thread
     }
 
-    public static void debug(String message) {
-        logWithLevel(LogLevel.DEBUG, message);
+    public static void debug(String message, Object... args) {
+        logWithLevel(LogLevel.DEBUG, message, args);
     }
 
-    public static void info(String message) {
-        logWithLevel(LogLevel.INFO, message);
+    public static void info(String message, Object... args) {
+        logWithLevel(LogLevel.INFO, message, args);
     }
 
-    public static void warning(String message) {
-        logWithLevel(LogLevel.WARNING, message);
+    public static void warning(String message, Object... args) {
+        logWithLevel(LogLevel.WARNING, message, args);
     }
 
-    public static void severe(String message) {
-        logWithLevel(LogLevel.SEVERE, message);
+    public static void severe(String message, Object... args) {
+        logWithLevel(LogLevel.SEVERE, message, args);
     }
 
 }
