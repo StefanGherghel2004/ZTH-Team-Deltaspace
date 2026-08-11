@@ -52,9 +52,13 @@ public class UserController {
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            // todo simple null check for userDetails here
-
-            String jwtToken = jwtService.generateToken(userDetails.getUsername());
+            String jwtToken;
+            if (userDetails != null) {
+                jwtToken = jwtService.generateToken(userDetails.getUsername());
+            }
+            else{
+                jwtToken = null;
+            }
             User user = userService.findByUsername(request.getUsername());
 
             AuthResponseDto response = apiResponseService.getAuthenticationResponse(user,jwtToken);
@@ -73,10 +77,10 @@ public class UserController {
     // a soft delete under hood (sets deleted = true)
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<ApiResponse<String>> deleteUser(@RequestBody UserDeleteDto userDeleteDto) {
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@RequestBody UserDeleteDto userDeleteDto) {
 
         userService.deleteAuthenticatedUser(userDeleteDto);
-        return ResponseEntity.ok(ApiResponse.success("Account deleted successfully"));
+        return ResponseEntity.ok(ApiResponse.successMessage("Account deleted successfully"));
     }
 
     @PutMapping("/me")
