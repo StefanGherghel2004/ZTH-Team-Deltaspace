@@ -44,19 +44,19 @@ public class CommentService {
         Post targetPost = postService.findById(postId);
         // use @Builder
         String clearContent = profanityFilterService.censor(commentDto.getContent());
-        Comment commentToAdd = new Comment();
-        commentToAdd.setContent(clearContent);
-        commentToAdd.setUser(authorUser);
-        commentToAdd.setPost(targetPost);
-        commentToAdd.setUpvotes(0);
-        commentToAdd.setDownvotes(0);
 
+        Comment parentComment= null;
         if (commentDto.getParentId() != null) {
-            Comment parentComment = commentRepository.findById(commentDto.getParentId())
+            parentComment = commentRepository.findById(commentDto.getParentId())
                     .orElseThrow(() -> new CommentNotFoundException("Parent comment with id: " +
                             commentDto.getParentId() + " was not found."));
-            commentToAdd.setParentComment(parentComment);
+
         }
+        Comment commentToAdd=Comment.builder()
+                        .content(clearContent)
+                        .user(authorUser)
+                        .post(targetPost)
+                        .parentComment(parentComment).build();
 
         Comment savedComment = commentRepository.save(commentToAdd);
         voteComment(savedComment.getId(),VoteAction.UP);

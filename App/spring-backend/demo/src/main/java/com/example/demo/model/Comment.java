@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
+@Builder
 @Data
 @Entity
 @Table(name = "comments")
@@ -18,6 +20,7 @@ public class Comment extends BaseEntity {
     @Column(length = 1000, unique = false,nullable = false)
     private String content;
 
+    @Builder.Default
     @Column(name = "deleted", unique = false, nullable = false)
     private boolean deleted = false;
 
@@ -41,12 +44,12 @@ public class Comment extends BaseEntity {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "replies", "parentComment"})
     private Comment parentComment;
 
+    @Builder.Default
     @Column(nullable = false)
     private int upvotes = 0;
 
+    @Builder.Default
     @Column(nullable = false)
     private int downvotes = 0;
 
-//    @Formula("upvotes - downvotes")
-//    private int score;
 }

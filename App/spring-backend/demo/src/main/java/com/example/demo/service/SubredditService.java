@@ -10,6 +10,8 @@ import com.example.demo.model.Subreddit;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.User;
 import com.example.demo.repository.SubredditRepository;
+import com.example.demo.repository.PostRepository;
+import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,14 +40,18 @@ public class SubredditService {
 
         User user = userService.getAuthenticatedUser();
 
-        Subreddit subreddit = new Subreddit();
-        subreddit.setAuthor(user);
-        subreddit.setName(dto.getName());
-        subreddit.setTopic(null);
-        subreddit.setDescription(dto.getDescription());
-        subreddit.setDisplayName(dto.getDisplayName());
-        subreddit.setIconUrl(dto.getIconUrl());
-        subreddit.getMembers().add(user);
+        Topic topic = null;
+
+        Subreddit subreddit= Subreddit.builder()
+                .author(user)
+                .name(dto.getName())
+                .displayName(dto.getDisplayName())
+                .topic(null)
+                .iconUrl(dto.getIconUrl())
+                .description(dto.getDescription())
+                .member(user)
+                .build();
+
         Subreddit savedSubreddit = subredditRepository.save(subreddit);
         Logger.info("Subreddit %s created", savedSubreddit.getName());
         return toDto(savedSubreddit);
