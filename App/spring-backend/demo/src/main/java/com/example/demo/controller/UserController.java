@@ -2,10 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.auth.AuthRequestLoginDto;
 import com.example.demo.dto.auth.AuthResponseDto;
-import com.example.demo.dto.user.PasswordChangeRequestDto;
-import com.example.demo.dto.user.UserCreateDto;
-import com.example.demo.dto.user.UserResponseDto;
-import com.example.demo.dto.user.UserUpdateDto;
+import com.example.demo.dto.user.*;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.response.ApiResponse;
@@ -74,11 +71,12 @@ public class UserController {
     }
 
     // a soft delete under hood (sets deleted = true)
-    @DeleteMapping("/{username}")
+    @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable String username) {
+    public ResponseEntity<ApiResponse<>> deleteUser(@RequestBody UserDeleteDto userDeleteDto) {
 
-        userService.deleteUserByUsername(username);
+        userService.deleteAuthenticatedUser(userDeleteDto);
+        return ResponseEntity.ok(ApiResponse.success("Account deleted successfully"));
     }
 
     @PutMapping("/me")

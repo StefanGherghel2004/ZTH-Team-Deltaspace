@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.user.PasswordChangeRequestDto;
 import com.example.demo.dto.user.UserCreateDto;
+import com.example.demo.dto.user.UserDeleteDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.DuplicateUserInformationException;
@@ -91,12 +92,10 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email + "."));
     }
 
-    public void deleteUserByUsername(String username) {
+    public void deleteAuthenticatedUser(UserDeleteDto userDeleteDto) {
         User user = getAuthenticatedUser();
-        if (!user.getUsername().equals(username)) {
-            throw new AccessDeniedException("This account is not yours.");
-        }
-
+        if (!passwordEncoder.matches(user.getPassword(),userDeleteDto.getPassword()))
+            throw new BadCredentialsException("Password is incorrect");
         user.setDeleted(true);
         userRepository.save(user);
     }
