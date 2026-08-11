@@ -22,6 +22,9 @@ public class Post extends BaseEntity {
     @Column(length=10000,columnDefinition = "TEXT")
     private String content;
 
+    @Column(length = 1000, columnDefinition = "TEXT")
+    private String tldr;
+
     private String imageUrl;
 
     private Integer filter;

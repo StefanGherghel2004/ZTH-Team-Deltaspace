@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class UserUpdateDto {
 
     @Size(min = 3, max = 100, message = "Display Name must be between 3 and 100 characters")
