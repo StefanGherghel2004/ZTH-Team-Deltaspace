@@ -8,9 +8,13 @@ import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.mapper.PostMapper;
+import com.example.demo.model.Subreddit;
+import com.example.demo.model.Post;
+import com.example.demo.model.PostVote;
+import com.example.demo.model.User;
 import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
-import com.example.demo.repository.CommunityRepository;
+import com.example.demo.repository.SubredditRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
 
@@ -33,10 +37,10 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
-    private final CommunityService communityService;
+    private final SubredditService subredditService;
     private final PostVoteRepository postVoteRepository;
     private final PostMapper postMapper;
-    private final CommunityRepository communityRepository;
+    private final SubredditRepository subredditRepository;
     private final ImageEditService imageEditService;
     private final EntityManager entityManager;
 
@@ -58,8 +62,8 @@ public class PostService {
         }
 
         if (dto.getSubreddit() != null && !dto.getSubreddit().isBlank()) {
-            Community community = communityService.findByName(dto.getSubreddit());
-            post.setCommunity(community);
+            Subreddit subreddit = subredditService.findByName(dto.getSubreddit());
+            post.setSubreddit(subreddit);
         }
 
 
@@ -178,9 +182,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> getCommunityPosts(String communityName) {
-        Community community = communityService.findByName(communityName);
-        return community.getPosts();
+    public List<Post> getAllPosts(String subredditName) {
+        Subreddit subreddit = subredditService.findByName(subredditName);
+        return subreddit.getPosts();
     }
 
     @Transactional

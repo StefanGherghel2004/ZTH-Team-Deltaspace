@@ -1,11 +1,11 @@
-package com.example.demo.dto.community;
+package com.example.demo.dto.subreddit;
 
 
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CommunityUpdateDto {
+public class SubredditUpdateDto {
     private String topic;
 
     @Size(max=500,message = "Description must be max 500 characters")

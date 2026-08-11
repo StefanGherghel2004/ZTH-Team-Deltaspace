@@ -31,44 +31,34 @@ public class PostController {
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
+        Post createdPost = postService.createPost(dto);
 
-        PostResponseDto response = postService.getEnrichedPostDto(postService.createPost(dto));
+        PostResponseDto response = postService.getEnrichedPostDto(createdPost);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response));
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
+        Post post = postService.findById(id);
 
-        PostResponseDto response  = postService.getEnrichedPostDto(postService.findById(id));
+        PostResponseDto response  = postService.getEnrichedPostDto(post);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPosts(@RequestParam(required = false) String subreddit) {
-        // todo move decision logic to service
-        List<Post> posts;
-        if (subreddit != null && !subreddit.trim().isEmpty()) {
-            posts = postService.getCommunityPosts(subreddit);
-        } else {
-            posts = postService.getAllPosts();
-        }
-        List<Post> mutablePosts = new ArrayList<>(posts);
-        // TODO search on the internet what YAGNI means
-        // TODO decide with consumer of endpoint about the order of results
-        long seed = System.currentTimeMillis();
-        // TODO extract the shuffle in a service and there in a separate method
-        //  because you might want to change the shuffle behaviour in the future
-        Collections.shuffle(mutablePosts,new Random(seed));
-        List<PostResponseDto> response = apiResponseService.getPostListResponse(mutablePosts);
+        List<Post> posts = postService.getAllPosts(subreddit);
+        List<PostResponseDto> response = apiResponseService.getPostListResponse(posts);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @GetMapping("/subreddits/{name}/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPostsBySubreddit(@PathVariable String name) {
-        List<Post> posts = postService.getCommunityPosts(name);
+        List<Post> posts = postService.getAllPosts(name);
         List<PostResponseDto> response = apiResponseService.getPostListResponse(posts);
 
         return ResponseEntity.ok(ApiResponse.success(response));

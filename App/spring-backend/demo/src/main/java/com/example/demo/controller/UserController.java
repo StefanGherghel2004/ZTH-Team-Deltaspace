@@ -37,8 +37,7 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<AuthResponseDto>> addUser(@Valid @RequestBody UserCreateDto createDto) {
-        User userToSave = userMapper.toEntity(createDto);
-        User savedUser = userService.addUser(userToSave);
+        User savedUser = userService.addUser(createDto);
 
         // todo what to do if the user is saved in request 1, jwt token generation FAILS, then the user tries to register again
         String jwtToken = jwtService.generateToken(savedUser.getUsername());

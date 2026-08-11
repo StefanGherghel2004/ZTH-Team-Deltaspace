@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.user.PasswordChangeRequestDto;
+import com.example.demo.dto.user.UserCreateDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.dto.user.UserUpdateDto;
 import com.example.demo.exception.DuplicateUserInformationException;
@@ -34,7 +35,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public User addUser(User user) {
+    public User addUser(UserCreateDto userCreateDto) {
+        User user = userMapper.toEntity(userCreateDto);
         user.setId(null);
         validateAge(user.getDateOfBirth());
 
@@ -51,24 +53,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
-    public List<User> listAllUsers() {
-        return userRepository.findAll();
-    }
-
     public User updateAuthenticatedUser(UserUpdateDto updateDto) {
         User user = getAuthenticatedUser();
         return applyUpdatesAndSave(user, updateDto);
-    }
-
-    public User updateUserByUsername(String username, UserUpdateDto updateDto) {
-        User authenticatedUser = getAuthenticatedUser();
-
-        if (!authenticatedUser.getUsername().equals(username)) {
-            throw new AccessDeniedException("This account is not yours.");
-        }
-
-        return applyUpdatesAndSave(authenticatedUser, updateDto);
     }
 
     private User applyUpdatesAndSave(User user, UserUpdateDto updateDto) {
