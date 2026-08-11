@@ -26,20 +26,24 @@ import java.util.*;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
     private final ApiResponseService apiResponseService;
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
+        Post createdPost = postService.createPost(dto);
 
-        PostResponseDto response = postService.getEnrichedPostDto(postService.createPost(dto));
+        PostResponseDto response = postService.getEnrichedPostDto(createdPost);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response));
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
+        Post post = postService.findById(id);
 
-        PostResponseDto response  = postService.getEnrichedPostDto(postService.findById(id));
+        PostResponseDto response  = postService.getEnrichedPostDto(post);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
