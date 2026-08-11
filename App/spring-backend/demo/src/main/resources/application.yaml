@@ -16,6 +16,10 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+groq:
+  api:
+    key: ${GROQ_API_KEY}
+
 aws:
   s3:
     bucket-name: reddit-clone-deltaspace-eu

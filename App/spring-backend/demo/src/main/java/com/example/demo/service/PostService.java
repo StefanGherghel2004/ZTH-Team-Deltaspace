@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
@@ -15,6 +16,7 @@ import com.example.demo.model.PostVote;
 import com.example.demo.model.User;
 import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.SubredditRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
@@ -35,6 +37,7 @@ import java.util.UUID;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
     private final SubredditService subredditService;
@@ -43,6 +46,7 @@ public class PostService {
     private final SubredditRepository subredditRepository;
     private final ImageEditService imageEditService;
     private final EntityManager entityManager;
+    private final PostSummaryService postSummaryService;
 
     @Transactional
     public Post createPost(PostCreateDto dto) {
@@ -70,6 +74,15 @@ public class PostService {
         Post savedPost = postRepository.save(post);
         votePost(savedPost.getId(), VoteAction.UP);
         Logger.info("Post %s created by %s", savedPost.getTitle(), author.getUsername());
+
+        String tldr = postSummaryService.generateTldr(dto.getTitle(),dto.getContent());
+        Comment tldrComment = new Comment();
+        tldrComment.setParentComment(null);
+        tldrComment.setPost(post);
+        tldrComment.setUser(author);
+        tldrComment.setContent("TL;DR " + tldr);
+        commentRepository.save(tldrComment);
+
         return findById(savedPost.getId());
     }
 
