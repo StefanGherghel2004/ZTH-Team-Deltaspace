@@ -35,16 +35,16 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final CommentVoteRepository commentVoteRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
     private final SubredditService subredditService;
     private final PostVoteRepository postVoteRepository;
     private final PostMapper postMapper;
-    private final SubredditRepository subredditRepository;
+    private final ProfanityFilterService profanityFilterService;
     private final ImageEditService imageEditService;
     private final EntityManager entityManager;
     private final PostSummaryService postSummaryService;
+
 
     @Transactional
     public Post createPost(PostCreateDto dto) {
@@ -52,7 +52,8 @@ public class PostService {
 
         Post post = new Post();
         post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
+        String clearContent = profanityFilterService.censor(dto.getContent());
+        post.setContent(clearContent);
         post.setAuthor(author);
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
@@ -224,7 +225,8 @@ public class PostService {
         }
 
         if (updateDto.getContent() != null && !updateDto.getContent().isBlank()) {
-            post.setContent(updateDto.getContent());
+            String clearContent = profanityFilterService.censor(updateDto.getContent());
+            post.setContent(clearContent);
         }
 
         Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());

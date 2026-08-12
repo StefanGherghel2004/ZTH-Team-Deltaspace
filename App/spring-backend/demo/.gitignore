@@ -32,4 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+# Ignore all log files
 logs/
+
+# Ignore specific stress test scripts
+demo/stress-community.js
+demo/stress-test.js

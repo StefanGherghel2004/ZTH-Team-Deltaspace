@@ -42,29 +42,29 @@ public class CommentService {
     public CommentResponseDto addComment(CommentCreateDto commentDto, UUID postId) {
         User authorUser = userService.getAuthenticatedUser();
         Post targetPost = postService.findById(postId);
-        // use @Builder
+
         String clearContent = profanityFilterService.censor(commentDto.getContent());
 
-        Comment commentToAdd = new Comment();
-        commentToAdd.setContent(clearContent);
-        commentToAdd.setUser(authorUser);
-        commentToAdd.setPost(targetPost);
-        commentToAdd.setUpvotes(0);
-        commentToAdd.setDownvotes(0);
-
-
+        Comment parentComment = null;
         if (commentDto.getParentId() != null) {
-            Comment parentComment = commentRepository.findById(commentDto.getParentId())
-                    .orElseThrow(() -> new CommentNotFoundException("Parent comment with id: " +
-                            commentDto.getParentId() + " was not found."));
-
-            commentToAdd.setParentComment(parentComment);
+            parentComment = commentRepository.findById(commentDto.getParentId())
+                    .orElseThrow(() -> new CommentNotFoundException(
+                            "Parent comment with id: " + commentDto.getParentId() + " was not found."));
         }
 
 
+        Comment commentToAdd = Comment.builder()
+                .content(clearContent)
+                .user(authorUser)
+                .post(targetPost)
+                .parentComment(parentComment)
+                .build();
+
         Comment savedComment = commentRepository.save(commentToAdd);
-        voteComment(savedComment.getId(),VoteAction.UP);
+
+        voteComment(savedComment.getId(), VoteAction.UP);
         Logger.info("Comment created by %s", authorUser.getUsername());
+
         return getEnrichedCommentDto(savedComment);
     }
 
@@ -115,7 +115,8 @@ public class CommentService {
         if (comment.isDeleted()) {
             throw new IllegalStateException("Cannot edit a deleted comment");
         }
-        comment.setContent(updateDto.getContent());
+        String clearContent = profanityFilterService.censor(updateDto.getContent());
+        comment.setContent(clearContent);
         Comment updatedComment = commentRepository.save(comment);
         Logger.info("Comment edited by %s", currentUser.getUsername());
         return getEnrichedCommentDto(updatedComment);

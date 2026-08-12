@@ -34,22 +34,21 @@ public class SubredditService {
     private static final int NSFW_AGE = 18;
 
     private final SubredditRepository subredditRepository;
-    private final PostRepository postRepository;
     private final UserService userService;
     private final SubredditMapper subredditMapper;
-    private final UserRepository userRepository;
+    private final ProfanityFilterService profanityFilterService;
 
     public SubredditResponseDto addSubreddit(SubredditCreateDto dto){
 
         User user = userService.getAuthenticatedUser();
 
-        Topic topic = null;
+        String clearDescription = profanityFilterService.censor(dto.getDescription());
 
         Subreddit subreddit = new Subreddit();
         subreddit.setAuthor(user);
         subreddit.setName(dto.getName());
         subreddit.setTopic(null);
-        subreddit.setDescription(dto.getDescription());
+        subreddit.setDescription(clearDescription);
         subreddit.setDisplayName(dto.getDisplayName());
         subreddit.setIconUrl(dto.getIconUrl());
         subreddit.getMembers().add(user);
@@ -99,14 +98,16 @@ public class SubredditService {
             topic = getTopicFromString(updateDto.getTopic());
             subreddit.setTopic(topic.name());
         }
+        subreddit.setTopic(updateDto.getTopic());
 
         if(updateDto.getDescription()!=null) {
-            subreddit.setDescription(updateDto.getDescription());
+            String clearDescription = profanityFilterService.censor(updateDto.getDescription());
+            subreddit.setDescription(clearDescription);
         }
 
-        subreddit.setTopic(updateDto.getTopic());
         if(updateDto.getDisplayName()!=null) {
-            subreddit.setDisplayName(updateDto.getDisplayName());
+            String clearDisplayName = profanityFilterService.censor(updateDto.getDisplayName());
+            subreddit.setDisplayName(clearDisplayName);
         }
         if(updateDto.getIconUrl()!=null) {
             subreddit.setIconUrl(updateDto.getIconUrl());
@@ -119,17 +120,6 @@ public class SubredditService {
         return subredditRepository.findByName(name)
                 .orElseThrow(() -> new SubredditNotFoundException("subreddit not found with name=" + name));
 
-    }
-
-
-    public Subreddit verifyNsfwCommunities(String subredditName){
-        User authenticatedUser= userService.getAuthenticatedUser();
-        int userAge = authenticatedUser.getAge();
-//        boolean isNSFW = postRepository.existsBysubredditNameAndNsfwTrue(subredditName);
-//        if (isNSFW && userAge < NSFW_AGE) {
-//            throw new AccessDeniedException("This subreddit is marked as NSFW");
-//        }
-        return findByName(subredditName);
     }
 
     private Topic getTopicFromString(String topicString) {
