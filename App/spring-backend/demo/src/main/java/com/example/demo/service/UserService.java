@@ -57,6 +57,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User getOrCreateTldrBotUser() {
+        return userRepository.findByUsername("tldr-bot")
+                .orElseGet(() -> {
+                    UserCreateDto userCreateDto =
+                            new UserCreateDto("tldr-bot","tldr@bot.com",
+                                    "tldrbotpassword!",null);
+                    return addUser(userCreateDto);
+                });
+    }
+
     public User updateAuthenticatedUser(UserUpdateDto updateDto) {
         User user = getAuthenticatedUser();
         Logger.info("Updated info of user %s", user.getUsername());

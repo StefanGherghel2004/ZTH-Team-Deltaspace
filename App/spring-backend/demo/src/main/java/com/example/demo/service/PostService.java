@@ -76,9 +76,10 @@ public class PostService {
         if(dto.getContent().length() > 1500) {
             String tldr = postSummaryService.generateTldr(dto.getTitle(), dto.getContent());
             Comment tldrComment = new Comment();
+            User tldrBotUser = userService.getOrCreateTldrBotUser();
             tldrComment.setParentComment(null);
             tldrComment.setPost(post);
-            tldrComment.setUser(author);
+            tldrComment.setUser(tldrBotUser);
             tldrComment.setContent("TL;DR " + tldr);
             commentRepository.save(tldrComment);
         }
@@ -240,6 +241,10 @@ public class PostService {
         post.setTitle("[DELETED]");
         post.setContent("[DELETED]");
         post.setImageUrl(null);
+
+        Comment tldrComment = commentRepository.findByPostIdAndUserId(id,userService.getOrCreateTldrBotUser().getId());
+        tldrComment.setDeleted(true);
+        commentRepository.save(tldrComment);
 
         postRepository.save(post);
         postRepository.flush();
