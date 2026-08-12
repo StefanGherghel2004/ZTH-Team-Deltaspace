@@ -1,28 +1,55 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
+
+const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
+
 export const options = {
-    stages: [
-          // Normal load
-        { duration: '1m',  target: 300 },  // High load
-        { duration: '1m',  target: 600 },
-        { duration: '1m',  target: 900 },
-        { duration: '1m',  target: 1200 },// Stress threshold
-        { duration: '30s', target: 0 },    // Ramp-down
-    ],
+    scenarios: {
+        browse_posts: {
+            executor: 'ramping-vus',
+            startVUs: 0,
+            stages: [
+                { duration: '1m', target: 300 },
+                { duration: '2m', target: 600 },
+                { duration: '2m', target: 900 },
+            ],
+            exec: 'browsePosts',
+        },
+
+        users: {
+            executor: 'ramping-vus',
+            startVUs: 0,
+            stages: [
+                { duration: '1m', target: 50 },
+                { duration: '2m', target: 100 },
+                { duration: '2m', target: 150 },
+            ],
+            exec: 'getUsers',
+        },
+    },
     thresholds: {
-        http_req_failed: ['rate<0.05'],
-        http_req_duration: ['p(95)<1000']// Keep failed requests under 5%
+        http_req_failed: ['rate<0.01'],      // Error rate under 1%
+        http_req_duration: ['p(95)<1000'],   // 95% of requests under 1000ms
     },
 };
 
-export default function () {
-    const res = http.get('http://localhost:8080/posts');
+export function browsePosts() {
+    const res = http.get(`${BASE_URL}/posts`);
 
     check(res, {
-        'status is 200': (r) => r.status === 200,
-        'latency < 900ms': (r) => r.timings.duration < 1000,
+        'posts status 200': (r) => r.status === 200,
     });
 
-    sleep(Math.random() * 1 + 0.5);
+    sleep(Math.random() * 2 + 1); // Sleep 1-3 seconds
+}
+
+export function getUsers() {
+    const res = http.get(`${BASE_URL}/users`);
+
+    check(res, {
+        'users status 200': (r) => r.status === 200,
+    });
+
+    sleep(Math.random() * 3 + 1); // Sleep 1-4 seconds
 }
