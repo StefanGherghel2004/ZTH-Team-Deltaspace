@@ -47,7 +47,7 @@ public class PostRepository {
             WHERE id = ?;
             """;
 
-    private static final String deletePostByIdQuery = "DELETE FROM posts WHERE id = ?;";
+    private static final String deletePostByIdQuery = "UPDATE posts SET post_title = '[DELETED]', author_username = '[DELETED]', post_contents = '[DELETED]', image_link = NULL WHERE id = ?;";
 
     private PostRepository() {
         try {

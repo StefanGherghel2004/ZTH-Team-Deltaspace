@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.logger.Logger;
 import com.example.demo.model.Post;
 import com.example.demo.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,7 @@ public class PostSummaryService {
                 return response.choices().get(0).message().content().trim();
             }
         } catch (Exception e) {
+            Logger.severe(e.getMessage());
             System.err.println("Failed to generate TL;DR from Groq: " + e.getMessage());
         }
 
