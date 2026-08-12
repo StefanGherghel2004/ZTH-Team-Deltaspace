@@ -31,10 +31,13 @@ public class SubredditService {
         TECH
     }
 
+    private static final int NSFW_AGE = 18;
 
     private final SubredditRepository subredditRepository;
+    private final PostRepository postRepository;
     private final UserService userService;
     private final SubredditMapper subredditMapper;
+    private final UserRepository userRepository;
 
     public SubredditResponseDto addSubreddit(SubredditCreateDto dto){
 
@@ -42,16 +45,14 @@ public class SubredditService {
 
         Topic topic = null;
 
-        Subreddit subreddit= Subreddit.builder()
-                .author(user)
-                .name(dto.getName())
-                .displayName(dto.getDisplayName())
-                .topic(null)
-                .iconUrl(dto.getIconUrl())
-                .description(dto.getDescription())
-                .member(user)
-                .build();
-
+        Subreddit subreddit = new Subreddit();
+        subreddit.setAuthor(user);
+        subreddit.setName(dto.getName());
+        subreddit.setTopic(null);
+        subreddit.setDescription(dto.getDescription());
+        subreddit.setDisplayName(dto.getDisplayName());
+        subreddit.setIconUrl(dto.getIconUrl());
+        subreddit.getMembers().add(user);
         Subreddit savedSubreddit = subredditRepository.save(subreddit);
         Logger.info("Subreddit %s created", savedSubreddit.getName());
         return toDto(savedSubreddit);
@@ -118,6 +119,17 @@ public class SubredditService {
         return subredditRepository.findByName(name)
                 .orElseThrow(() -> new SubredditNotFoundException("subreddit not found with name=" + name));
 
+    }
+
+
+    public Subreddit verifyNsfwCommunities(String subredditName){
+        User authenticatedUser= userService.getAuthenticatedUser();
+        int userAge = authenticatedUser.getAge();
+//        boolean isNSFW = postRepository.existsBysubredditNameAndNsfwTrue(subredditName);
+//        if (isNSFW && userAge < NSFW_AGE) {
+//            throw new AccessDeniedException("This subreddit is marked as NSFW");
+//        }
+        return findByName(subredditName);
     }
 
     private Topic getTopicFromString(String topicString) {

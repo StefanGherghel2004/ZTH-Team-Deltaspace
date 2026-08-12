@@ -28,7 +28,7 @@ public class CommentRepository {
 
     private static final String updateCommentQuery = "UPDATE comments SET comment_text = ? WHERE id = ?;";
 
-    private static final String deleteCommentQuery = "DELETE FROM comments WHERE id = ?;";
+    private static final String deleteCommentQuery = "UPDATE comments SET comment_text = '[DELETED]', author_username = '[DELETED]' WHERE id = ?;";
     private static final String selectByPostQuery = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at ASC;";
 
     private CommentRepository() {

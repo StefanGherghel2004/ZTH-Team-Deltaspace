@@ -1,3 +1,5 @@
-[2026-08-11 13:28:40] INFO: User Rares logged in
-[2026-08-11 13:28:49] SEVERE: I/O error on GET request for "http://localhost:5157/filters": Connection refused: getsockopt
+[2026-08-12 11:14:56] INFO: Added Sdf as a new user
+[2026-08-12 11:15:20] INFO: User Rares logged in
+[2026-08-12 11:20:01] INFO: User Rares upvoted post 2e24daea-45fb-41f1-ac22-641a8992f34c
+[2026-08-12 11:20:01] INFO: Post New post created by Rares
 Remaining messages to flush - 0

@@ -4,6 +4,7 @@ import cli.backend.User;
 import cli.backend.commands.Command;
 import cli.backend.exceptions.BackNavigationException;
 import cli.backend.handlers.AppHandler;
+import cli.backend.loggers.Logger;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.UserService;
 
@@ -26,6 +27,7 @@ public class LoginCommand implements Command {
                 app.setCurrentState(AppHandler.State.LOGGED_IN);
                 return true;
             } catch (Exception e) {
+                Logger.severe("Login failed: " + e.getMessage());
                 console.error(e.getMessage());
             }
         }

@@ -16,10 +16,7 @@ import com.example.demo.model.PostVote;
 import com.example.demo.model.User;
 import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
-import com.example.demo.repository.CommentRepository;
-import com.example.demo.repository.SubredditRepository;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.PostVoteRepository;
+import com.example.demo.repository.*;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
@@ -38,6 +35,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final CommentVoteRepository commentVoteRepository;
     private final UserService userService;
     private final S3ImageService s3ImageService;
     private final SubredditService subredditService;
@@ -239,7 +237,11 @@ public class PostService {
             throw new AccessDeniedException("You are not the author of this post.");
 
         Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
-        postRepository.delete(post);
+        post.setTitle("[DELETED]");
+        post.setContent("[DELETED]");
+        post.setImageUrl(null);
+
+        postRepository.save(post);
         postRepository.flush();
     }
 }

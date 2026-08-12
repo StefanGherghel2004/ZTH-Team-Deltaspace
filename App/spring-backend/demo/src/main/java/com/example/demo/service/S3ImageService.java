@@ -72,6 +72,7 @@ public class S3ImageService {
             return finalUrl;
 
         } catch (IOException e) {
+            Logger.severe(e.getMessage());
             throw new FileStorageException("Error parsing file for upload: " + e.getMessage());
         }
 
@@ -87,6 +88,7 @@ public class S3ImageService {
         try {
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, contentLength));
         } catch (S3Exception e) {
+            Logger.severe(e.getMessage());
             throw new FileStorageException("Error from S3 upload service: " + e.awsErrorDetails().errorMessage());
         }
     }

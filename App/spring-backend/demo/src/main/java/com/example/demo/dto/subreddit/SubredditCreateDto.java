@@ -10,7 +10,7 @@ public class SubredditCreateDto {
     @NotBlank(message= "Subreddit Name is required")
     @Size(min=3,max=50,message = "Name must be  between 3 and 50 characters, alphanumerical + underscore")
 
-    @Pattern(regexp="^[a-zA-Z_]+$")
+    @Pattern(regexp="^[a-zA-Z_0-9]+$")
     private String name;
 
     @NotBlank(message = "Display Name is required")

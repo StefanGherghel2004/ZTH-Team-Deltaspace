@@ -9,9 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Entity
 
@@ -40,7 +38,7 @@ public class Subreddit extends BaseEntity {
     // CascadeType.ALL ensures community deletion also removes all associated posts.
     @OneToMany(mappedBy = "subreddit", cascade = CascadeType.ALL)
     @JsonIgnore
-    @Builder.Default
+
     private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -50,7 +48,6 @@ public class Subreddit extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
 
-    @Singular
     @JsonIgnore
     private Set<User> members = new HashSet<>();
 

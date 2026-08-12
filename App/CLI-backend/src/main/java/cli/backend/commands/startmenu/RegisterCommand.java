@@ -3,6 +3,7 @@ package cli.backend.commands.startmenu;
 
 import cli.backend.commands.Command;
 import cli.backend.exceptions.BackNavigationException;
+import cli.backend.loggers.Logger;
 import cli.backend.userinterface.readers.Console;
 import cli.backend.services.PasswordService;
 import cli.backend.services.UserService;
@@ -30,6 +31,7 @@ public class RegisterCommand implements Command {
             console.success("Registration successful! Welcome to our platform.");
         }
         catch (BackNavigationException backNavigationException){
+            Logger.severe(backNavigationException.getMessage());
             console.info(backNavigationException.getMessage());
         }
         return true;
