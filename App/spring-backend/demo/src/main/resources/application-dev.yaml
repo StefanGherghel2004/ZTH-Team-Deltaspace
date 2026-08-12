@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/deltaspacedb3
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+filter:
+  service:
+    url: http://localhost:5157/api/filter
+  controller:
+    url: http://localhost:5157/filters

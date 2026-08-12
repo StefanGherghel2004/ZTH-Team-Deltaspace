@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.logger.Logger;
 import com.example.demo.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,9 @@ import org.springframework.web.client.RestClientException;
 @RequiredArgsConstructor
 @RequestMapping("/filters")
 public class FilterController {
-    //private static final String URL = "http://localhost:5157/filters";
-    private static final String URL ="http://172.31.7.33:5157/filters";
+
+    @Value("${filter.controller.url}")
+    private String URL;
 
     private final RestClient restClient = RestClient.create();
 

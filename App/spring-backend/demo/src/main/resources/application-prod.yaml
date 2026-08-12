@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://172.31.46.238:5432/deltaspacedb
+    username: ${POSTGRES_EC2_USERNAME}
+    password: ${POSTGRES_EC2_PASSWORD}
+filter:
+  service:
+    url: http://172.31.7.33:5157/api/filter
+  controller:
+    url: http://172.31.7.33:5157/filters

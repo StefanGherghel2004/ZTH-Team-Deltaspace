@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -17,8 +18,8 @@ public class ImageEditService {
 
     private static final List<String> FILTERS = List.of("Grayscale","Invert","Sepia","Neon");
 
-    //private static final String URL = "http://localhost:5157/api/filter";
-    private static final String URL =  "http://172.31.7.33:5157/api/filter"; // toggle this before ./build.ps1 for EC2
+    @Value("${filter.service.url}")
+    private String URL;
 
     public Integer getValidFilterId(Integer filterId) {
         if (filterId == null || filterId < 1 || filterId > FILTERS.size()) {
