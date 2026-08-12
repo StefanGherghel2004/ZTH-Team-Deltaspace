@@ -6,7 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   servlet:
     multipart:
       max-file-size: 5MB
@@ -26,3 +26,11 @@ aws:
 
 jwt:
   secret: ${JWT_SECRET}
+
+logging:
+  level:
+    org.hibernate: OFF
+    org.hibernate.SQL: OFF
+    org.hibernate.orm.jdbc.bind: OFF
+    org.hibernate.type.descriptor.sql: OFF
+    org.hibernate.tool.hbm2ddl: OFF
