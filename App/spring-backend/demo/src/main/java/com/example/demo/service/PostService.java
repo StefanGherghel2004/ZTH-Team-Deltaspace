@@ -75,13 +75,15 @@ public class PostService {
         votePost(savedPost.getId(), VoteAction.UP);
         Logger.info("Post %s created by %s", savedPost.getTitle(), author.getUsername());
 
-        String tldr = postSummaryService.generateTldr(dto.getTitle(),dto.getContent());
-        Comment tldrComment = new Comment();
-        tldrComment.setParentComment(null);
-        tldrComment.setPost(post);
-        tldrComment.setUser(author);
-        tldrComment.setContent("TL;DR " + tldr);
-        commentRepository.save(tldrComment);
+        if(dto.getContent().length() > 1500) {
+            String tldr = postSummaryService.generateTldr(dto.getTitle(), dto.getContent());
+            Comment tldrComment = new Comment();
+            tldrComment.setParentComment(null);
+            tldrComment.setPost(post);
+            tldrComment.setUser(author);
+            tldrComment.setContent("TL;DR " + tldr);
+            commentRepository.save(tldrComment);
+        }
 
         return findById(savedPost.getId());
     }
