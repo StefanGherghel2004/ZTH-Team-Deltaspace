@@ -29,7 +29,7 @@ public class Logger {
         List<Loggable> loggers = new ArrayList<>();
 
         loggers.add(new FileLogger(LogLevel.DEBUG, "debug.txt"));
-        loggers.add(new FileLogger(LogLevel.Logger, "severe.txt"));
+        loggers.add(new FileLogger(LogLevel.SEVERE, "severe.txt"));
         loggers.add(new FileLogger(LogLevel.INFO, "info.txt"));
         loggers.add(new FileLogger(LogLevel.WARNING, "warning.txt"));
 
@@ -49,7 +49,7 @@ public class Logger {
     }
 
     public static void severe(String message) {
-        logWithLevel(LogLevel.Logger, message);
+        logWithLevel(LogLevel.SEVERE, message);
     }
 
 }

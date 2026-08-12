@@ -1,6 +1,7 @@
 package org.example.apiclients;
 
 import org.example.Community;
+import org.example.loggers.Logger;
 import org.example.response.ApiResponse;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
@@ -37,7 +38,7 @@ public class CommunityApiClient{
             System.out.println("You have successfully joined our community");
             return true;
             }catch (Exception e){
-                    System.err.println("An error occured");
+                    Logger.warning("An error occured");
                     e.printStackTrace();
                 }
         return false;
@@ -53,7 +54,7 @@ public class CommunityApiClient{
             System.out.println("You have successfully left the community...");
             return true;
         }catch (Exception e){
-            System.err.println("Error occurred when leaving the subreddit ");
+            Logger.warning("Error occurred when leaving the subreddit ");
             e.printStackTrace();
         }
         return false;
