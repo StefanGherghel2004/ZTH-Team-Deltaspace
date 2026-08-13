@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.dto.comment.response.CommentResponseDto;
-// todo unsed
-import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteRequestDto;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.notfound.CommentNotFoundException;
@@ -12,7 +10,6 @@ import com.example.demo.model.Comment;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.CommentService;
-import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

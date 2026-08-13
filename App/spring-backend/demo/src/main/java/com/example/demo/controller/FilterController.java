@@ -34,9 +34,6 @@ public class FilterController {
             return ResponseEntity.ok(responseFromFilterService);
 
         } catch (RestClientException e) {
-            // LOG EXCEPTION ROOT CAUSE OR SOMETHING TO HELP WITH DEBUG
-            // THINK ABOUT WRITING A MESSAGE IN THE ERROR RESPONSE
-            // use global exception handler
             Logger.severe(e.getMessage());
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body(ApiResponse.error(null, "/filters"));
