@@ -14,7 +14,7 @@ spring:
 
 groq:
   api:
-    key: ${GROQ_API_KEY}
+    key: ${GROQ_API_KEY:default_or_dummy_key}
 
 aws:
   s3:
@@ -34,3 +34,14 @@ logging:
     org.hibernate.orm.jdbc.bind: OFF
     org.hibernate.type.descriptor.sql: OFF
     org.hibernate.tool.hbm2ddl: OFF
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: "reddit-backend"

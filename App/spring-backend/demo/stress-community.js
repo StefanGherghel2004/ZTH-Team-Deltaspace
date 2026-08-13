@@ -3,34 +3,20 @@ import { check, group, sleep } from 'k6';
 import exec from 'k6/execution';
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
-const TOKEN = __ENV.JWT_TOKEN || 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTZXJiYW4iLCJpYXQiOjE3ODY1MzY0NjIsImV4cCI6MTc4NjU0NzI2Mn0.Kq0qUVICMBARvpgTrOrtBPJA8FOmRqccJsnZcphvC8Q';
+const TOKEN = __ENV.JWT_TOKEN || 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTZXJiYW4iLCJpYXQiOjE3ODY1NTc0MTgsImV4cCI6MTc4NjU2ODIxOH0.hcJF0zXuKa2tLPri6CsH6o89haOefJ2aoGcLsEk8fW8';
 
 export const options = {
     scenarios: {
-
-        browse_communities: {
-            executor: 'ramping-vus',
-            startVUs: 0,
-            stages: [
-                { duration: '30s', target: 50 },   // Warm-up
-                { duration: '1m',  target: 500 },  // Ramp-up readers
-                { duration: '2m',  target: 500 },  // Sustained load
-                { duration: '30s', target: 0 },    // Cool-down
-            ],
-            exec: 'browseJourney',
-        },
-
-
         create_communities: {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [
-                { duration: '30s', target: 10 },   // Warm-up
-                { duration: '1m',  target: 90 },   // Ramp-up creators
-                { duration: '2m',  target: 90 },   // Sustained load
+                { duration: '30s', target: 5 },    // Warm-up
+                { duration: '1m',  target: 30 },   // Ramp-up community creators
+                { duration: '1m',  target: 30 },   // Sustained load
                 { duration: '30s', target: 0 },    // Cool-down
             ],
-            exec: 'createJourney',
+            exec: 'createCommunityJourney',
         },
     },
 
@@ -57,45 +43,7 @@ function randomAlphaString(length) {
     return res;
 }
 
-export function browseJourney() {
-    let communityId = null;
-
-
-    group('GET List Subreddits', function () {
-        const page = Math.floor(Math.random() * 5);
-        const res = http.get(`${BASE_URL}/subreddits`, COMMON_PARAMS);
-
-        const pass = check(res, {
-            'GET list status 200': (r) => r.status === 200,
-        });
-
-
-        if (pass && res.json()) {
-            const body = res.json();
-            const items = Array.isArray(body) ? body : (body.content || []);
-            if (items.length > 0) {
-                communityId = items[Math.floor(Math.random() * items.length)].id;
-            }
-        }
-    });
-
-    sleep(Math.random() * 1.5 + 0.5);
-
-
-    if (communityId) {
-        group('GET Single Subreddit', function () {
-            const res = http.get(`${BASE_URL}/subreddits/${communityId}`, COMMON_PARAMS);
-
-            check(res, {
-                'GET single status 200': (r) => r.status === 200,
-            });
-        });
-
-        sleep(Math.random() * 2 + 1); // Think time (1s - 3s)
-    }
-}
-
-export function createJourney() {
+export function createCommunityJourney() {
     group('POST Create Community', function () {
         const vuId = exec.vu.idInTest;
         const iter = exec.scenario.iterationInTest;
@@ -111,13 +59,13 @@ export function createJourney() {
         const res = http.post(`${BASE_URL}/subreddits`, payload, COMMON_PARAMS);
 
         if (res.status !== 200 && res.status !== 201) {
-            console.error(`[CREATE FAILED] Status: ${res.status} | Body: ${res.body}`);
+            console.error(`[CREATE COMMUNITY FAILED] Status: ${res.status} | Body: ${res.body}`);
         }
 
         check(res, {
-            'POST status 200/201': (r) => r.status === 200 || r.status === 201,
+            'POST subreddit status 200/201': (r) => r.status === 200 || r.status === 201,
         });
     });
 
-    sleep(Math.random() * 3 + 2); // Creators pause longer (2s - 5s)
+    sleep(Math.random() * 3 + 2);
 }
