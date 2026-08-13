@@ -53,6 +53,7 @@ public class Subreddit extends BaseEntity {
 
     @Singular
     @JsonIgnore
+    @Singular
     private Set<User> members = new HashSet<>();
 
 }

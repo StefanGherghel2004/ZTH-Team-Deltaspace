@@ -1,0 +1,84 @@
+vars: {
+  d2-config: {
+    theme-id: 3 # Dark Mauve Theme
+    pad: 25
+  }
+}
+
+direction: down
+
+# --- Client Layer ---
+frontend: Web App Client {
+  shape: person
+}
+
+# --- AWS Cloud Infrastructure ---
+aws: AWS Infrastructure {
+  style: {
+    stroke-dash: 4
+    fill: "#11111b"
+    stroke: "#45475a"
+  }
+
+  # Layer 1: Services / Compute
+  services: Application Services {
+    style: {
+      fill: "#11111b"
+      stroke: "#313244"
+    }
+
+    ec2-backend: EC2: Spring API {
+      shape: rectangle
+      style: {
+        fill: "#2e3440"
+        stroke: "#a3be8c"
+      }
+    }
+
+    ec2-image-proc: "EC2: C# Image Processor" {
+      shape: rectangle
+      style: {
+        fill: "#2e3440"
+        stroke: "#d08770"
+      }
+    }
+  }
+
+  # Layer 2: Data & Persistence
+  storage: Storage & Persistence {
+    style: {
+      fill: "#11111b"
+      stroke: "#313244"
+    }
+
+    ec2-db: EC2: Database {
+      shape: cylinder
+      style: {
+        fill: "#2e3440"
+        stroke: "#88c0d0"
+      }
+    }
+
+    s3-bucket: Amazon S3: Media Bucket {
+      shape: cloud
+      style: {
+        fill: "#2e3440"
+        stroke: "#e8a87c"
+      }
+    }
+  }
+}
+
+# --- Flow Connections ---
+frontend -> aws: REST API Calls
+
+# Service to Service
+aws.services.ec2-backend -> aws.services.ec2-image-proc: Filter Requests (Async)
+
+# Service to Storage (Direct node targets)
+aws.services.ec2-backend -> aws.storage.ec2-db: Read / Write Data
+
+# Shortened label to prevent text collision across container titles
+aws.services.ec2-backend -> aws.storage.s3-bucket: Upload Images
+
+aws.services.ec2-image-proc -> aws.storage.s3-bucket: Processed Media
