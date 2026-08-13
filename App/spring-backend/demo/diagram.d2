@@ -1,84 +1,90 @@
 vars: {
   d2-config: {
-    theme-id: 3 # Dark Mauve Theme
-    pad: 25
+    theme-id: 4 # Grape Light Theme
+    pad: 10 # Decreased overall canvas padding
   }
 }
 
-direction: down
+direction: right
 
 # --- Client Layer ---
-frontend: Web App Client {
+frontend: Web Client {
   shape: person
+  style: {
+    fill: "#f3e8ff"
+    stroke: "#7e22ce"
+  }
 }
 
 # --- AWS Cloud Infrastructure ---
-aws: AWS Infrastructure {
+aws: AWS Cloud Infrastructure {
   style: {
     stroke-dash: 4
-    fill: "#11111b"
-    stroke: "#45475a"
+    fill: "#faf5ff"
+    stroke: "#9333ea"
   }
 
-  # Layer 1: Services / Compute
+  direction: right
+
+  # Column 1: Application Services
   services: Application Services {
+    direction: down
+
     style: {
-      fill: "#11111b"
-      stroke: "#313244"
+      fill: "#ffffff"
+      stroke: "#d8b4fe"
     }
 
     ec2-backend: EC2: Spring API {
       shape: rectangle
       style: {
-        fill: "#2e3440"
-        stroke: "#a3be8c"
+        fill: "#f3e8ff"
+        stroke: "#6b21a8"
       }
     }
 
     ec2-image-proc: "EC2: C# Image Processor" {
       shape: rectangle
       style: {
-        fill: "#2e3440"
-        stroke: "#d08770"
+        fill: "#fce7f3"
+        stroke: "#be185d"
       }
     }
+
+    ec2-backend -> ec2-image-proc: Filter Requests
   }
 
-  # Layer 2: Data & Persistence
+  # Column 2: Storage & Persistence
   storage: Storage & Persistence {
+    direction: down
+
     style: {
-      fill: "#11111b"
-      stroke: "#313244"
+      fill: "#ffffff"
+      stroke: "#d8b4fe"
     }
 
     ec2-db: EC2: Database {
       shape: cylinder
       style: {
-        fill: "#2e3440"
-        stroke: "#88c0d0"
+        fill: "#ede9fe"
+        stroke: "#4338ca"
       }
     }
 
     s3-bucket: Amazon S3: Media Bucket {
       shape: cloud
       style: {
-        fill: "#2e3440"
-        stroke: "#e8a87c"
+        fill: "#fae8ff"
+        stroke: "#a21caf"
       }
     }
   }
 }
 
-# --- Flow Connections ---
-frontend -> aws: REST API Calls
+# --- Connections Across Containers ---
+frontend -> aws.services.ec2-backend: REST API
 
-# Service to Service
-aws.services.ec2-backend -> aws.services.ec2-image-proc: Filter Requests (Async)
-
-# Service to Storage (Direct node targets)
-aws.services.ec2-backend -> aws.storage.ec2-db: Read / Write Data
-
-# Shortened label to prevent text collision across container titles
-aws.services.ec2-backend -> aws.storage.s3-bucket: Upload Images
-
+# Shortened edge labels reduce spacing dramatically
+aws.services.ec2-backend -> aws.storage.ec2-db: Read/Write
+aws.services.ec2-backend -> aws.storage.s3-bucket: Uploads
 aws.services.ec2-image-proc -> aws.storage.s3-bucket: Processed Media
