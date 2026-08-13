@@ -147,7 +147,7 @@ public class CommentService {
         VoteType currentVoteType = existingVoteOpt.map(CommentVote::getVoteType).orElse(null);
         VoteType newVoteType = (currentVoteType == requestedVoteType) ? null:requestedVoteType;
 
-        if(currentVoteType==null && newVoteType ==null) {
+        if(currentVoteType == null && newVoteType ==null) {
             return null;
         }
 
@@ -159,7 +159,7 @@ public class CommentService {
         });
 
         if(newVoteType !=null){
-            CommentVote voteToSave = existingVoteOpt.orElseGet(()->{
+            CommentVote voteToSave = existingVoteOpt.orElseGet(() -> {
                 CommentVote vote = new CommentVote();
                 vote.setComment(comment);
                 vote.setUser(user);
