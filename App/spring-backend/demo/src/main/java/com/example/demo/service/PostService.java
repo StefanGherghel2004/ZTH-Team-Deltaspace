@@ -72,7 +72,7 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
         votePost(savedPost.getId(), VoteAction.UP);
-        Logger.info("Post %s created by %s", savedPost.getTitle(), author.getUsername());
+        Logger.info("Post with id %s created by %s", savedPost.getId(), author.getUsername());
 
         if(dto.getContent().length() > 1500) {
             String tldr = postSummaryService.generateTldr(dto.getTitle(), dto.getContent());
@@ -83,6 +83,7 @@ public class PostService {
             tldrComment.setUser(tldrBotUser);
             tldrComment.setContent("TL;DR " + tldr);
             commentRepository.save(tldrComment);
+            Logger.info("Successfully added TL;DR comment.");
         }
 
         return findById(savedPost.getId());
@@ -245,8 +246,10 @@ public class PostService {
         post.setImageUrl(null);
 
         Comment tldrComment = commentRepository.findByPostIdAndUserId(id,userService.getOrCreateTldrBotUser().getId());
-        tldrComment.setDeleted(true);
-        commentRepository.save(tldrComment);
+        if(tldrComment != null) {
+            tldrComment.setDeleted(true);
+            commentRepository.save(tldrComment);
+        }
 
         postRepository.save(post);
         postRepository.flush();

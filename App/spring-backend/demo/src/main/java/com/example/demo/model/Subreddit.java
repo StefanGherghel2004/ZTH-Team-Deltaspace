@@ -39,6 +39,7 @@ public class Subreddit extends BaseEntity {
     @OneToMany(mappedBy = "subreddit", cascade = CascadeType.ALL)
     @JsonIgnore
 
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -49,6 +50,7 @@ public class Subreddit extends BaseEntity {
     )
 
     @JsonIgnore
+    @Singular
     private Set<User> members = new HashSet<>();
 
 }
