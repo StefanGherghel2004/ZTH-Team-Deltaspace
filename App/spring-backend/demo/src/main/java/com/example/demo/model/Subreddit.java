@@ -51,7 +51,6 @@ public class Subreddit extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
 
-    @Singular
     @JsonIgnore
     @Singular
     private Set<User> members = new HashSet<>();

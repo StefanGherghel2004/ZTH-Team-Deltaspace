@@ -7,6 +7,7 @@ import com.example.demo.response.ErrorDetail;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Null;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -145,6 +146,15 @@ public class GlobalExceptionHandler {
                 new ErrorDetail("server", "An internal error occurred. Please try again later.")
         );
         e.printStackTrace();
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
+    }
+
+    //Unfortunately we need this :-(
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTheNullPointerException(NullPointerException e, HttpServletRequest request) {
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("Shitty coding", "You are useless, can't even detect a NullPointerException!")
+        );
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
     }
 
