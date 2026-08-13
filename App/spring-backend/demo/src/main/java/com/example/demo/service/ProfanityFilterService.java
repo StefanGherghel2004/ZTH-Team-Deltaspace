@@ -48,12 +48,19 @@ public class ProfanityFilterService {
         int length = normalized.length();
 
         for (int i = 0; i < length; i++) {
+            if(!isWordStartBoundary(normalized, i)){
+                continue;
+            }
+
             TrieNode current = root;
             for (int j = i; j < length; j++) {
                 char ch = normalized.charAt(j);
                 current = current.children.get(ch);
                 if (current == null) break;
-                if (current.isEndOfWord) return true;
+
+                if (current.isEndOfWord && isWordFinishBoundary(normalized,i)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -67,6 +74,9 @@ public class ProfanityFilterService {
         int length = text.length();
 
         for (int i = 0; i < length; i++) {
+            if(!isWordStartBoundary(normalized,i)){
+                continue;
+            }
             TrieNode current = root;
             int matchEnd = -1;
 
@@ -74,7 +84,7 @@ public class ProfanityFilterService {
                 char ch = normalized.charAt(j);
                 current = current.children.get(ch);
                 if (current == null) break;
-                if (current.isEndOfWord) {
+                if (current.isEndOfWord && isWordFinishBoundary(normalized,j)) {
                     matchEnd = j;
                 }
             }
@@ -83,7 +93,7 @@ public class ProfanityFilterService {
                 for (int k = i; k <= matchEnd; k++) {
                     result[k] = '*';
                 }
-                i = matchEnd; // Skip past the matched word
+                i = matchEnd;
             }
         }
         return new String(result);
@@ -95,6 +105,14 @@ public class ProfanityFilterService {
             sb.append(LEET_MAP.getOrDefault(c, c));
         }
         return sb.toString();
+    }
+
+    private boolean isWordStartBoundary(String text, int index){
+        return index==0 || !Character.isLetterOrDigit(text.charAt(index-1));
+    }
+
+    private boolean isWordFinishBoundary(String text, int index){
+        return index==text.length()-1 || !Character.isLetterOrDigit(text.charAt(index+1));
     }
 
     private void addWord(String word) {

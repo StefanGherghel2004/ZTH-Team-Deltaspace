@@ -10,8 +10,6 @@ import com.example.demo.model.Subreddit;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.model.User;
 import com.example.demo.repository.SubredditRepository;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,8 +29,6 @@ public class SubredditService {
         TECH
     }
 
-    private static final int NSFW_AGE = 18;
-
     private final SubredditRepository subredditRepository;
     private final UserService userService;
     private final SubredditMapper subredditMapper;
@@ -44,14 +40,15 @@ public class SubredditService {
 
         String clearDescription = profanityFilterService.censor(dto.getDescription());
 
-        Subreddit subreddit = new Subreddit();
-        subreddit.setAuthor(user);
-        subreddit.setName(dto.getName());
-        subreddit.setTopic(null);
-        subreddit.setDescription(clearDescription);
-        subreddit.setDisplayName(dto.getDisplayName());
-        subreddit.setIconUrl(dto.getIconUrl());
-        subreddit.getMembers().add(user);
+        Subreddit subreddit = Subreddit.builder()
+                .author(user)
+                .name(dto.getName())
+                .topic(null)
+                .description(clearDescription)
+                .displayName(dto.getDisplayName())
+                .iconUrl(dto.getIconUrl())
+                .member(user).build();
+
         Subreddit savedSubreddit = subredditRepository.save(subreddit);
         Logger.info("Subreddit %s created", savedSubreddit.getName());
         return toDto(savedSubreddit);

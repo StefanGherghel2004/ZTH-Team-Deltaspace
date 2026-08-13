@@ -3,6 +3,7 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @NoArgsConstructor
 @Data
+@SuperBuilder
 @Entity
 
 @Table(name = "communities")
@@ -48,6 +50,7 @@ public class Subreddit extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
 
+    @Singular
     @JsonIgnore
     private Set<User> members = new HashSet<>();
 
