@@ -3,7 +3,7 @@ import { check, group, sleep } from 'k6';
 import exec from 'k6/execution';
 
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
-const TOKEN = __ENV.JWT_TOKEN || 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTZXJiYW4iLCJpYXQiOjE3ODY1NTc0MTgsImV4cCI6MTc4NjU2ODIxOH0.hcJF0zXuKa2tLPri6CsH6o89haOefJ2aoGcLsEk8fW8';
+const TOKEN = __ENV.JWT_TOKEN || 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTZXJiYW4iLCJpYXQiOjE3ODY2MDkyMTEsImV4cCI6MTc4NjYyMDAxMX0.-Vb3f2ZCSbDEYuBFeJGnHpFcv6Xii6ipkodRSlQBsyU';
 
 export const options = {
     scenarios: {

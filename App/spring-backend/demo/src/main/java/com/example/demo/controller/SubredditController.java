@@ -3,12 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.dto.subreddit.SubredditCreateDto;
 import com.example.demo.dto.subreddit.SubredditUpdateDto;
 import com.example.demo.dto.subreddit.response.SubredditResponseDto;
-import com.example.demo.mapper.SubredditMapper;
 import com.example.demo.model.Subreddit;
-import com.example.demo.repository.SubredditRepository;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.SubredditService;
-import com.example.demo.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/subreddits")
 @RequiredArgsConstructor
-// todo rename subreddit to subreddit
+
 public class SubredditController {
     private final SubredditService subredditService;
 

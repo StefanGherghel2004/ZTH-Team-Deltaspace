@@ -10,6 +10,7 @@ import com.example.demo.response.ApiResponse;
 import com.example.demo.service.ApiResponseService;
 import com.example.demo.service.UserService;
 
+import com.example.demo.service.auth.AuthService;
 import com.example.demo.service.auth.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +30,12 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final ApiResponseService apiResponseService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<AuthResponseDto>> addUser(@Valid @RequestBody UserCreateDto createDto) {
-        User savedUser = userService.addUser(createDto);
-
-        // todo what to do if the user is saved in request 1, jwt token generation FAILS, then the user tries to register again
-        String jwtToken = jwtService.generateToken(savedUser.getUsername());
-
-        AuthResponseDto response = apiResponseService.getAuthenticationResponse(savedUser,jwtToken);
-
+        AuthResponseDto response = authService.register(createDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
