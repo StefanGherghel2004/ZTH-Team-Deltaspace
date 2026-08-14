@@ -45,3 +45,7 @@ management:
   metrics:
     tags:
       application: "reddit-backend"
+    distribution:
+        percentiles-histogram:
+           "http.server.requests": true
+

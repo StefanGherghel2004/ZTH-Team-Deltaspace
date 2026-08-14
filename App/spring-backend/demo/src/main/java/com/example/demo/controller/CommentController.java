@@ -25,7 +25,6 @@ public class CommentController {
 // todo controllers should only inject services. repositories should be injected in services.
     // todo services sometimes act like a reverse proxy from controller to database
     private final CommentService commentService;
-    private final CommentRepository commentRepository;
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<CommentResponseDto>> addComment(
@@ -40,8 +39,7 @@ public class CommentController {
 
     @GetMapping("/comments/{id}")
     public ResponseEntity<ApiResponse<CommentResponseDto>> getCommentById (@PathVariable UUID id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id: " + id + " was not found."));
+        Comment comment = commentService.findById(id);
         CommentResponseDto response = commentService.getEnrichedCommentDto(comment);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -56,7 +54,7 @@ public class CommentController {
                 .map(commentService::getEnrichedCommentDto)
                 .toList();
 
-        int totalComments = commentRepository.countByPostId(postId);
+        int totalComments = commentService.countCommentsByPostId(postId);
 
         return ResponseEntity.ok(ApiResponse.success(response,totalComments));
     }
