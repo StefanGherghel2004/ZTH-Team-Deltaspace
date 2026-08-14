@@ -9,6 +9,7 @@ import com.example.demo.model.Post;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.ApiResponseService;
 import com.example.demo.service.PostService;
+import com.example.demo.service.PostShuffleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class PostController {
 
     private final PostService postService;
     private final ApiResponseService apiResponseService;
+    private final PostShuffleService postShuffleService;
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
@@ -46,7 +48,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPosts(@RequestParam(required = false) String subreddit) {
-        List<Post> posts = postService.getAllPosts(subreddit);
+        List<Post> posts = postShuffleService.getShuffledPosts(subreddit);
         List<PostResponseDto> response = apiResponseService.getPostListResponse(posts);
 
         return ResponseEntity.ok(ApiResponse.success(response));
