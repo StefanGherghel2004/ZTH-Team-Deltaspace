@@ -1,6 +1,7 @@
 package com.example.demo.exception;
 
 import com.example.demo.exception.notfound.NotFoundException;
+import com.example.demo.logger.Logger;
 import com.example.demo.response.ApiError;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.response.ErrorDetail;
@@ -145,16 +146,7 @@ public class GlobalExceptionHandler {
         List<ErrorDetail> details = List.of(
                 new ErrorDetail("server", "An internal error occurred. Please try again later.")
         );
-        e.printStackTrace();
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
-    }
-
-    //Unfortunately we need this :-(
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ApiResponse<Void>> handleTheNullPointerException(NullPointerException e, HttpServletRequest request) {
-        List<ErrorDetail> details = List.of(
-                new ErrorDetail("Shitty coding", "You are useless, can't even detect a NullPointerException!")
-        );
+        Logger.severe(e.getMessage());
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
     }
 
