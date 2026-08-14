@@ -12,5 +12,7 @@ public interface PostMapper {
     @Mapping(source = "author.username", target = "author")
     PostResponseDto toDto(Post post);
 
+    Post clone (Post post);
+
 }
 
