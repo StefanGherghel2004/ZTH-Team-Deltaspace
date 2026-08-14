@@ -7,6 +7,7 @@ import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
+import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.logger.Logger;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.model.*;
@@ -247,5 +248,9 @@ public class CommentService {
         dto.setReplies(replyDtos);
 
         return dto;
+    }
+
+    public int countCommentsByPostId(UUID postId) {
+        return commentRepository.countByPostId(postId);
     }
 }
