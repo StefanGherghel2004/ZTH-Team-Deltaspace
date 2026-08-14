@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.mapper.PostMapper;
 import com.example.demo.model.Post;
 import com.example.demo.model.PostVote;
 import com.example.demo.model.Subreddit;
@@ -32,6 +33,7 @@ public class PostShuffleService {
     private final PostVoteRepository postVoteRepository;
     private final UserService userService;
     private final SubredditService subredditService;
+    private final PostMapper postMapper;
 
     private static final double VOTE_WEIGHT = 1.0;
     private static final double COMMENT_WEIGHT = 2.5;
@@ -68,6 +70,7 @@ public class PostShuffleService {
                     .map(post -> new ScoredPost(post, calculateScore(post, preferredSubredditIds)))
                     .sorted(Comparator.comparingDouble(ScoredPost::score).reversed())
                     .map(ScoredPost::post)
+                    .map(this::maskIfDeleted)
                     .toList();
         } catch (Exception e) {
             log.error("Error during post scoring/shuffling. Falling back to candidate order.", e);
@@ -109,7 +112,7 @@ public class PostShuffleService {
     }
 
     private Set<UUID> getPreferredSubredditIds() {
-        // ✅ Safely check authentication without throwing Security Exceptions
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             return Collections.emptySet();
@@ -135,6 +138,18 @@ public class PostShuffleService {
             log.warn("Could not retrieve preferred subreddits: {}", e.getMessage());
             return Collections.emptySet();
         }
+    }
+    private Post maskIfDeleted(Post post) {
+        if (!post.isDeleted()) {
+            return post;
+        }
+
+        Post masked = postMapper.clone(post);
+        masked.setDeleted(true);
+        masked.setContent("[DELETED]");
+        masked.setTitle("[DELETED]");
+        masked.setImageUrl(null);
+        return masked;
     }
 
     private record ScoredPost(Post post, double score) {}

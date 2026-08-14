@@ -93,7 +93,9 @@ public class PostService {
     public VoteResponseDto votePost(UUID postId, VoteAction action) {
         Post post = findById(postId);
         User user = userService.getAuthenticatedUser();
-
+        if(post.isDeleted()){
+            throw new IllegalStateException("Cannot vote on a deleted post");
+        }
         Optional<PostVote> existingVoteOpt = postVoteRepository.findByPostAndUser(post, user);
 
         VoteAction finalAction = (action != null) ? action : VoteAction.NONE;
@@ -124,9 +126,9 @@ public class PostService {
                 vote.setUser(user);
                 return vote;
             });
-        voteToSave.setVoteType(newVoteType);
-        postVoteRepository.save(voteToSave);
-        addVoteToPost(postId,newVoteType);
+            voteToSave.setVoteType(newVoteType);
+            postVoteRepository.save(voteToSave);
+            addVoteToPost(postId,newVoteType);
         }
 
         entityManager.flush();
@@ -194,11 +196,15 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
-        return postRepository.findAllByOrderByCreatedAtDesc();
+        return postRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(this::maskIfDeleted)
+                .toList();
     }
 
     public Post findById(UUID id) {
         return postRepository.findById(id)
+                .map(this::maskIfDeleted)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
     }
 
@@ -206,7 +212,7 @@ public class PostService {
     public List<Post> getAllPosts(String subredditName) {
         if(subredditName != null && !subredditName.isBlank()){
             Subreddit subreddit = subredditService.findByName(subredditName);
-            return subreddit.getPosts();
+            return subreddit.getPosts().stream().map(this::maskIfDeleted).toList();
         }else{
             return getAllPosts();
         }
@@ -219,6 +225,9 @@ public class PostService {
 
         if (!post.getAuthor().getId().equals(authenticatedUser.getId())) {
             throw new AccessDeniedException("You are not allowed to perform this operation");
+        }
+        if (post.isDeleted()) {
+            throw new IllegalStateException("Cannot edit a deleted post");
         }
 
         if (updateDto.getTitle() != null && !updateDto.getTitle().isBlank()) {
@@ -239,11 +248,11 @@ public class PostService {
         Post post = findById(id);
         if (!post.getAuthor().equals(userService.getAuthenticatedUser()))
             throw new AccessDeniedException("You are not the author of this post.");
-
+        if(post.isDeleted()){
+            throw new IllegalStateException("Post already deleted");
+        }
         Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
-        post.setTitle("[DELETED]");
-        post.setContent("[DELETED]");
-        post.setImageUrl(null);
+        post.setDeleted(true);
 
         Comment tldrComment = commentRepository.findByPostIdAndUserId(id,userService.getOrCreateTldrBotUser().getId());
         if(tldrComment != null) {
@@ -253,5 +262,18 @@ public class PostService {
 
         postRepository.save(post);
         postRepository.flush();
+    }
+
+    private Post maskIfDeleted(Post post) {
+        if (!post.isDeleted()) {
+            return post;
+        }
+
+        Post masked = postMapper.clone(post);
+        masked.setDeleted(true);
+        masked.setContent("[DELETED]");
+        masked.setTitle("[DELETED]");
+        masked.setImageUrl(null);
+        return masked;
     }
 }

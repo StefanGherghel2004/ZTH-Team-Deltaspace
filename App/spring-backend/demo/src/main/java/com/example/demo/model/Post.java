@@ -43,6 +43,8 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private int downvotes=0;
 
+    @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
+    private boolean deleted=false;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
