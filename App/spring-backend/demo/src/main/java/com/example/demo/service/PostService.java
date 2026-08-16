@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -252,7 +251,6 @@ public class PostService {
             commentRepository.delete(tldrComment);
         }
 
-        postRepository.save(post);
         postRepository.flush();
     }
 
@@ -269,18 +267,25 @@ public class PostService {
         return masked;
     }
 
-    private boolean deletePost (Post post) {
-
-        if (post == null)
+    @Transactional
+    public boolean deletePost(Post post) {
+        if (post == null) {
             return true;
+        }
 
-        boolean isUnderOneHour = Duration.between(post.getCreatedAt(), OffsetDateTime.now()).toHours() < 1;
-        if (post.getComments() == null && post.getUpvotes() == 0 && post.getDownvotes() == 0 && isUnderOneHour) {
+        boolean isRecent = post.getCreatedAt() != null
+                && post.getCreatedAt().isAfter(OffsetDateTime.now().minusHours(1));
+
+        boolean hasNoComments = post.getComments() == null || post.getComments().isEmpty();
+        boolean hasNoVotes = post.getUpvotes() == 0 && post.getDownvotes() == 0;
+
+        if (hasNoComments && hasNoVotes && isRecent) {
             postRepository.delete(post);
-        }else{
+        } else {
             post.setDeleted(true);
             postRepository.save(post);
         }
+
         return true;
     }
 }

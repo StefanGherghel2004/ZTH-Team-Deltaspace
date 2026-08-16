@@ -7,7 +7,6 @@ import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
-import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.logger.Logger;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.model.*;
@@ -21,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,9 +88,8 @@ public class CommentService {
         if (!comment.getUser().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You are not the author of this comment");
         }
-        comment.setDeleted(true);
+        deleteComment(comment);
         Logger.info("Comment deleted by %s", userService.getAuthenticatedUser().getUsername());
-        commentRepository.save(comment);
     }
 
     private Comment maskIfDeleted(Comment comment) {
@@ -248,6 +248,33 @@ public class CommentService {
         dto.setReplies(replyDtos);
 
         return dto;
+    }
+
+    public List<Comment> getCommentReplies (Comment comment) {
+        return commentRepository.findByParentCommentId(comment.getId());
+    }
+
+    @Transactional
+    public boolean deleteComment(Comment comment) {
+        if (comment == null) {
+            return true;
+        }
+
+        boolean isRecent = comment.getCreatedAt() != null
+                && comment.getCreatedAt().isAfter(OffsetDateTime.now().minusHours(1));
+
+        List<Comment> replies = getCommentReplies(comment);
+        boolean hasNoReplies = replies == null || replies.isEmpty();
+        boolean hasNoVotes = comment.getUpvotes() == 0 && comment.getDownvotes() == 0;
+
+        if (hasNoReplies && hasNoVotes && isRecent) {
+            commentRepository.delete(comment);
+        } else {
+            comment.setDeleted(true);
+            commentRepository.save(comment);
+        }
+
+        return true;
     }
 
     public int countCommentsByPostId(UUID postId) {
