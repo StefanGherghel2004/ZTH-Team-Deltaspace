@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
@@ -74,17 +73,7 @@ public class PostService {
         votePost(savedPost.getId(), VoteAction.UP);
         Logger.info("Post with id %s created by %s", savedPost.getId(), author.getUsername());
 
-        if(dto.getContent().length() > 1500) {
-            String tldr = postSummaryService.generateTldr(dto.getTitle(), dto.getContent());
-            Comment tldrComment = new Comment();
-            User tldrBotUser = userService.getOrCreateTldrBotUser();
-            tldrComment.setParentComment(null);
-            tldrComment.setPost(post);
-            tldrComment.setUser(tldrBotUser);
-            tldrComment.setContent("TL;DR " + tldr);
-            commentRepository.save(tldrComment);
-            Logger.info("Successfully added TL;DR comment.");
-        }
+        postSummaryService.addTldrComment(savedPost);
 
         return findById(savedPost.getId());
     }
@@ -237,6 +226,7 @@ public class PostService {
         if (updateDto.getContent() != null && !updateDto.getContent().isBlank()) {
             String clearContent = profanityFilterService.censor(updateDto.getContent());
             post.setContent(clearContent);
+            postSummaryService.updateTldrComment(post);
         }
 
         Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());
@@ -254,7 +244,7 @@ public class PostService {
         Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
         post.setDeleted(true);
 
-        Comment tldrComment = commentRepository.findByPostIdAndUserId(id,userService.getOrCreateTldrBotUser().getId());
+        Comment tldrComment = commentRepository.findByPostIdAndUserId(id,postSummaryService.getOrCreateTldrBotUser().getId());
         if(tldrComment != null) {
             tldrComment.setDeleted(true);
             commentRepository.save(tldrComment);

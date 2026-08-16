@@ -13,7 +13,6 @@ import com.example.demo.logger.Logger;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.auth.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -58,15 +57,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User getOrCreateTldrBotUser() {
-        return userRepository.findByUsername("tldr-bot")
-                .orElseGet(() -> {
-                    UserCreateDto userCreateDto =
-                            new UserCreateDto("tldr-bot","tldr@bot.com",
-                                    "tldrbotpassword!",null);
-                    return addUser(userCreateDto);
-                });
-    }
 
     public User updateAuthenticatedUser(UserUpdateDto updateDto) {
         User user = getAuthenticatedUser();
