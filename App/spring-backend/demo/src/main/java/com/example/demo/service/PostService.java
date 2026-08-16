@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -242,12 +244,12 @@ public class PostService {
             throw new IllegalStateException("Post already deleted");
         }
         Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
-        post.setDeleted(true);
+
+        deletePost(post);
 
         Comment tldrComment = commentRepository.findByPostIdAndUserId(id,postSummaryService.getOrCreateTldrBotUser().getId());
         if(tldrComment != null) {
-            tldrComment.setDeleted(true);
-            commentRepository.save(tldrComment);
+            commentRepository.delete(tldrComment);
         }
 
         postRepository.save(post);
@@ -265,5 +267,20 @@ public class PostService {
         masked.setTitle("[DELETED]");
         masked.setImageUrl(null);
         return masked;
+    }
+
+    private boolean deletePost (Post post) {
+
+        if (post == null)
+            return true;
+
+        boolean isUnderOneHour = Duration.between(post.getCreatedAt(), OffsetDateTime.now()).toHours() < 1;
+        if (post.getComments() == null && post.getUpvotes() == 0 && post.getDownvotes() == 0 && isUnderOneHour) {
+            postRepository.delete(post);
+        }else{
+            post.setDeleted(true);
+            postRepository.save(post);
+        }
+        return true;
     }
 }
