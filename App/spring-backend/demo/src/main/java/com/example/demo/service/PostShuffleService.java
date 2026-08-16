@@ -33,6 +33,7 @@ public class PostShuffleService {
     private final PostRepository postRepository;
     private final PostVoteRepository postVoteRepository;
     private final UserService userService;
+    private final PostService postService;
     private final SubredditService subredditService;
     private final PostMapper postMapper;
     private final CommentRepository commentRepository;
@@ -72,12 +73,16 @@ public class PostShuffleService {
                     .map(post -> new ScoredPost(post, calculateScore(post, preferredSubredditIds)))
                     .sorted(Comparator.comparingDouble(ScoredPost::score).reversed())
                     .map(ScoredPost::post)
-                    .map(this::filteredPost)
+                    .map(postService::filteredPost)
                     .filter(Objects::nonNull)
                     .toList();
         } catch (Exception e) {
             log.error("Error during post scoring/shuffling. Falling back to candidate order.", e);
-            return candidatePosts;
+            return candidatePosts
+                    .stream()
+                    .map(postService::filteredPost)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
     }
 
@@ -142,37 +147,5 @@ public class PostShuffleService {
             return Collections.emptySet();
         }
     }
-    private Post maskIfDeleted(Post post) {
-        if (!post.isDeleted()) {
-            return post;
-        }
-
-        Post masked = postMapper.clone(post);
-        masked.setDeleted(true);
-        masked.setContent("[DELETED]");
-        masked.setTitle("[DELETED]");
-        masked.setImageUrl(null);
-        return masked;
-    }
-
-    private Post filteredPost(Post post) {
-        if (post == null) {
-            return null;
-        }
-
-        if (!post.isDeleted()) {
-            return post;
-        }
-
-        boolean hasNoActiveComments = !commentRepository.existsByPostIdAndDeletedIsFalse(post.getId());
-        System.out.println(hasNoActiveComments);
-
-        if (hasNoActiveComments) {
-            return null;
-        }
-
-        return maskIfDeleted(post);
-    }
-
     private record ScoredPost(Post post, double score) {}
 }

@@ -278,7 +278,7 @@ public class PostService {
         return masked;
     }
 
-    private Post filteredPost(Post post) {
+    public Post filteredPost(Post post) {
         if (post == null) {
             return null;
         }
