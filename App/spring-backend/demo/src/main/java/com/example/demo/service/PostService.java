@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -188,7 +189,8 @@ public class PostService {
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
-                .map(this::maskIfDeleted)
+                .map(this::filteredPost)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -202,7 +204,7 @@ public class PostService {
     public List<Post> getAllPosts(String subredditName) {
         if(subredditName != null && !subredditName.isBlank()){
             Subreddit subreddit = subredditService.findByName(subredditName);
-            return subreddit.getPosts().stream().map(this::maskIfDeleted).toList();
+            return subreddit.getPosts().stream().map(this::filteredPost).filter(Objects::nonNull).toList();
         }else{
             return getAllPosts();
         }
@@ -236,21 +238,30 @@ public class PostService {
 
     @Transactional
     public void deletePostById(UUID id) {
-        Post post = findById(id);
-        if (!post.getAuthor().equals(userService.getAuthenticatedUser()))
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id=" + id));
+
+        if (!post.getAuthor().getId().equals(userService.getAuthenticatedUser().getId())) {
             throw new AccessDeniedException("You are not the author of this post.");
-        if(post.isDeleted()){
+        }
+        if (post.isDeleted()) {
             throw new IllegalStateException("Post already deleted");
         }
+
         Logger.info("Post %s deleted by %s", post.getTitle(), userService.getAuthenticatedUser().getUsername());
 
-        deletePost(post);
-
-        Comment tldrComment = commentRepository.findByPostIdAndUserId(id,postSummaryService.getOrCreateTldrBotUser().getId());
-        if(tldrComment != null) {
+        User tldrBot = postSummaryService.getOrCreateTldrBotUser();
+        Comment tldrComment = commentRepository.findByPostIdAndUserId(id, tldrBot.getId());
+        if (tldrComment != null) {
+            if (post.getComments() != null) {
+                post.getComments().remove(tldrComment);
+            }
             commentRepository.delete(tldrComment);
+            commentRepository.flush();
         }
 
+        post.setDeleted(true);
+        postRepository.save(post);
         postRepository.flush();
     }
 
@@ -267,25 +278,21 @@ public class PostService {
         return masked;
     }
 
-    @Transactional
-    public boolean deletePost(Post post) {
+    private Post filteredPost(Post post) {
         if (post == null) {
-            return true;
+            return null;
         }
 
-        boolean isRecent = post.getCreatedAt() != null
-                && post.getCreatedAt().isAfter(OffsetDateTime.now().minusHours(1));
-
-        boolean hasNoComments = post.getComments() == null || post.getComments().isEmpty();
-        boolean hasNoVotes = post.getUpvotes() == 0 && post.getDownvotes() == 0;
-
-        if (hasNoComments && hasNoVotes && isRecent) {
-            postRepository.delete(post);
-        } else {
-            post.setDeleted(true);
-            postRepository.save(post);
+        if (!post.isDeleted()) {
+            return post;
         }
 
-        return true;
+        boolean hasNoActiveComments = !commentRepository.existsByPostIdAndDeletedIsFalse(post.getId());
+
+        if (hasNoActiveComments) {
+            return null;
+        }
+
+        return maskIfDeleted(post);
     }
 }

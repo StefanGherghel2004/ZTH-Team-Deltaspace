@@ -6,6 +6,7 @@ import com.example.demo.model.PostVote;
 import com.example.demo.model.Subreddit;
 import com.example.demo.model.User;
 import com.example.demo.model.enums.VoteType;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class PostShuffleService {
     private final UserService userService;
     private final SubredditService subredditService;
     private final PostMapper postMapper;
+    private final CommentRepository commentRepository;
 
     private static final double VOTE_WEIGHT = 1.0;
     private static final double COMMENT_WEIGHT = 2.5;
@@ -70,7 +72,8 @@ public class PostShuffleService {
                     .map(post -> new ScoredPost(post, calculateScore(post, preferredSubredditIds)))
                     .sorted(Comparator.comparingDouble(ScoredPost::score).reversed())
                     .map(ScoredPost::post)
-                    .map(this::maskIfDeleted)
+                    .map(this::filteredPost)
+                    .filter(Objects::nonNull)
                     .toList();
         } catch (Exception e) {
             log.error("Error during post scoring/shuffling. Falling back to candidate order.", e);
@@ -150,6 +153,25 @@ public class PostShuffleService {
         masked.setTitle("[DELETED]");
         masked.setImageUrl(null);
         return masked;
+    }
+
+    private Post filteredPost(Post post) {
+        if (post == null) {
+            return null;
+        }
+
+        if (!post.isDeleted()) {
+            return post;
+        }
+
+        boolean hasNoActiveComments = !commentRepository.existsByPostIdAndDeletedIsFalse(post.getId());
+        System.out.println(hasNoActiveComments);
+
+        if (hasNoActiveComments) {
+            return null;
+        }
+
+        return maskIfDeleted(post);
     }
 
     private record ScoredPost(Post post, double score) {}

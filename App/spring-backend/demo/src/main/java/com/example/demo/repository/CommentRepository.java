@@ -14,6 +14,8 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     List<Comment> findByPostIdAndParentCommentIdIsNull(UUID postId);
 
+    boolean existsByPostIdAndDeletedIsFalse(UUID postId);
+
     //This is used just for the tldr bot
     Comment findByPostIdAndUserId(UUID userId, UUID postId);
 

@@ -88,7 +88,8 @@ public class CommentService {
         if (!comment.getUser().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You are not the author of this comment");
         }
-        deleteComment(comment);
+        comment.setDeleted(true);
+        commentRepository.save(comment);
         Logger.info("Comment deleted by %s", userService.getAuthenticatedUser().getUsername());
     }
 
@@ -252,29 +253,6 @@ public class CommentService {
 
     public List<Comment> getCommentReplies (Comment comment) {
         return commentRepository.findByParentCommentId(comment.getId());
-    }
-
-    @Transactional
-    public boolean deleteComment(Comment comment) {
-        if (comment == null) {
-            return true;
-        }
-
-        boolean isRecent = comment.getCreatedAt() != null
-                && comment.getCreatedAt().isAfter(OffsetDateTime.now().minusHours(1));
-
-        List<Comment> replies = getCommentReplies(comment);
-        boolean hasNoReplies = replies == null || replies.isEmpty();
-        boolean hasNoVotes = comment.getUpvotes() == 0 && comment.getDownvotes() == 0;
-
-        if (hasNoReplies && hasNoVotes && isRecent) {
-            commentRepository.delete(comment);
-        } else {
-            comment.setDeleted(true);
-            commentRepository.save(comment);
-        }
-
-        return true;
     }
 
     public int countCommentsByPostId(UUID postId) {
