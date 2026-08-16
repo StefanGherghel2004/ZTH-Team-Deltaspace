@@ -5,24 +5,23 @@ import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.dto.comment.response.CommentResponseDto;
 import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
-import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
+import com.example.demo.exception.notfound.CommentNotFoundException;
 import com.example.demo.logger.Logger;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommentVoteRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,8 +32,8 @@ public class CommentService {
 
     private final UserService userService;
     private final PostService postService;
-
     private final ProfanityFilterService profanityFilterService;
+    private final CommentFilterService commentFilterService;
 
     private final CommentRepository commentRepository;
     private final CommentVoteRepository commentVoteRepository;
@@ -54,7 +53,6 @@ public class CommentService {
                             "Parent comment with id: " + commentDto.getParentId() + " was not found."));
         }
 
-
         Comment commentToAdd = Comment.builder()
                 .content(clearContent)
                 .user(authorUser)
@@ -70,11 +68,11 @@ public class CommentService {
         return getEnrichedCommentDto(savedComment);
     }
 
-    public Comment findById (UUID id) {
+    public Comment findById(UUID id) {
         return commentRepository.findById(id)
                 .map(this::maskIfDeleted)
                 .orElseThrow(() ->
-                new CommentNotFoundException("Comment with id: " + id + " was not found."));
+                        new CommentNotFoundException("Comment with id: " + id + " was not found."));
     }
 
     @Transactional
@@ -90,6 +88,7 @@ public class CommentService {
         }
         comment.setDeleted(true);
         commentRepository.save(comment);
+        commentRepository.flush();
         Logger.info("Comment deleted by %s", userService.getAuthenticatedUser().getUsername());
     }
 
@@ -126,9 +125,6 @@ public class CommentService {
 
     @Transactional
     public VoteResponseDto voteComment(UUID commentId, VoteAction action) {
-        // todo see if u wanna log the fact that an upvote was done after a new comment
-
-        // todo extract find by id and is deleted so that it is only for the voting. new comments dont need to be fetched again from the DB.
         Comment comment = findById(commentId);
 
         if (comment.isDeleted()) {
@@ -140,27 +136,27 @@ public class CommentService {
 
         Optional<CommentVote> existingVoteOpt = commentVoteRepository.findByCommentAndUser(comment, user);
 
-
-        VoteType requestedVoteType = switch(finalAction){
+        VoteType requestedVoteType = switch (finalAction) {
             case UP -> VoteType.UPVOTE;
             case DOWN -> VoteType.DOWNVOTE;
             case NONE -> null;
         };
         VoteType currentVoteType = existingVoteOpt.map(CommentVote::getVoteType).orElse(null);
-        VoteType newVoteType = (currentVoteType == requestedVoteType) ? null:requestedVoteType;
+        VoteType newVoteType = (currentVoteType == requestedVoteType) ? null : requestedVoteType;
 
-        if(currentVoteType == null && newVoteType ==null) {
+        if (currentVoteType == null && newVoteType == null) {
             return null;
         }
 
-        existingVoteOpt.ifPresent(existingVote->{removeVoteFromComment(comment,existingVote.getVoteType());
-        if(newVoteType ==null) {
-            Logger.info("User %s unvoted comment %s", user.getUsername(), commentId);
-            commentVoteRepository.delete(existingVote);
-        }
+        existingVoteOpt.ifPresent(existingVote -> {
+            removeVoteFromComment(comment, existingVote.getVoteType());
+            if (newVoteType == null) {
+                Logger.info("User %s unvoted comment %s", user.getUsername(), commentId);
+                commentVoteRepository.delete(existingVote);
+            }
         });
 
-        if(newVoteType !=null){
+        if (newVoteType != null) {
             CommentVote voteToSave = existingVoteOpt.orElseGet(() -> {
                 CommentVote vote = new CommentVote();
                 vote.setComment(comment);
@@ -172,7 +168,6 @@ public class CommentService {
             commentVoteRepository.save(voteToSave);
             addVoteToComment(comment, newVoteType);
         }
-
 
         return VoteResponseDto.builder()
                 .upvotes(comment.getUpvotes())
@@ -203,28 +198,31 @@ public class CommentService {
         postService.findById(postId);
         return commentRepository.findByPostIdAndParentCommentIdIsNull(postId)
                 .stream()
-                .map(this::maskIfDeleted)
+                .map(commentFilterService::filteredComment)
+                .filter(Objects::nonNull)
                 .toList();
     }
+
     @Transactional(readOnly = true)
     public CommentResponseDto getEnrichedCommentDto(Comment comment) {
         Comment displayComment = maskIfDeleted(comment);
-        displayComment.setUser(userService.maskIfDeleted(displayComment.getUser()));
+        if (displayComment.getUser() != null) {
+            displayComment.setUser(userService.maskIfDeleted(displayComment.getUser()));
+        }
 
         CommentResponseDto dto = commentMapper.toDto(displayComment);
-
 
         UUID parentId = (displayComment.getParentComment() != null)
                 ? displayComment.getParentComment().getId()
                 : null;
 
-        // this is filled according to the docs from the frontend not used in CLI
         dto.setScore(displayComment.getUpvotes() - displayComment.getDownvotes());
         dto.setUpvotes(displayComment.getUpvotes());
         dto.setDownvotes(displayComment.getDownvotes());
         dto.setParentId(parentId);
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth!=null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
             try {
                 User currentUser = userService.getAuthenticatedUser();
                 Optional<CommentVote> voteOpt = commentVoteRepository.findByCommentAndUser(displayComment, currentUser);
@@ -238,21 +236,19 @@ public class CommentService {
             } catch (Exception e) {
                 dto.setUserVote(null);
             }
-        }else{
+        } else {
             dto.setUserVote(null);
         }
 
         List<CommentResponseDto> replyDtos = commentRepository.findByParentCommentId(comment.getId())
                 .stream()
+                .map(commentFilterService::filteredComment)
+                .filter(Objects::nonNull)
                 .map(this::getEnrichedCommentDto)
                 .toList();
         dto.setReplies(replyDtos);
 
         return dto;
-    }
-
-    public List<Comment> getCommentReplies (Comment comment) {
-        return commentRepository.findByParentCommentId(comment.getId());
     }
 
     public int countCommentsByPostId(UUID postId) {

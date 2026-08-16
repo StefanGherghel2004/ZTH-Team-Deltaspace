@@ -36,15 +36,18 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final PostVoteRepository postVoteRepository;
+
     private final UserService userService;
     private final S3ImageService s3ImageService;
     private final SubredditService subredditService;
-    private final PostVoteRepository postVoteRepository;
-    private final PostMapper postMapper;
     private final ProfanityFilterService profanityFilterService;
     private final ImageEditService imageEditService;
-    private final EntityManager entityManager;
     private final PostSummaryService postSummaryService;
+    private final CommentFilterService commentFilterService;
+
+    private final EntityManager entityManager;
+    private final PostMapper postMapper;
 
 
     @Transactional
@@ -159,7 +162,13 @@ public class PostService {
         PostResponseDto dto = postMapper.toDto(post);
 
         dto.setScore(post.getUpvotes() - post.getDownvotes());
-        dto.setCommentCount(post.getComments() != null ? post.getComments().size() : 0);
+        int commentCount = (post.getComments() != null)
+                ? (int) post.getComments().stream()
+                .map(commentFilterService::filteredComment)
+                .filter(Objects::nonNull)
+                .count()
+                : 0;
+        dto.setCommentCount(commentCount);
         if(post.getAuthor().isDeleted()) {
             dto.setAuthor("[deleted]");
         }
