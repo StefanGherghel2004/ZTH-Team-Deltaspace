@@ -44,7 +44,7 @@ public class PostService {
     private final ProfanityFilterService profanityFilterService;
     private final ImageEditService imageEditService;
     private final PostSummaryService postSummaryService;
-    private final CommentFilterService commentFilterService;
+    private final CommentService commentService;
 
     private final EntityManager entityManager;
     private final PostMapper postMapper;
@@ -164,7 +164,7 @@ public class PostService {
         dto.setScore(post.getUpvotes() - post.getDownvotes());
         int commentCount = (post.getComments() != null)
                 ? (int) post.getComments().stream()
-                .map(commentFilterService::filteredComment)
+                .map(commentService::filteredComment)
                 .filter(Objects::nonNull)
                 .count()
                 : 0;

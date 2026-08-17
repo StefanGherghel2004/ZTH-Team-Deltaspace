@@ -7,12 +7,14 @@ import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.CommentNotFoundException;
+import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.logger.Logger;
 import com.example.demo.mapper.CommentMapper;
 import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommentVoteRepository;
+import com.example.demo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -31,10 +33,9 @@ import java.util.UUID;
 public class CommentService {
 
     private final UserService userService;
-    private final PostService postService;
     private final ProfanityFilterService profanityFilterService;
-    private final CommentFilterService commentFilterService;
 
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final CommentVoteRepository commentVoteRepository;
     private final CommentMapper commentMapper;
@@ -42,7 +43,8 @@ public class CommentService {
     @Transactional
     public CommentResponseDto addComment(CommentCreateDto commentDto, UUID postId) {
         User authorUser = userService.getAuthenticatedUser();
-        Post targetPost = postService.findById(postId);
+        Post targetPost = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " was not found."));
 
         String clearContent = profanityFilterService.censor(commentDto.getContent());
 
@@ -195,10 +197,10 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<Comment> getTopLevelCommentsByPostId(UUID postId) {
-        postService.findById(postId);
+        postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post with id: " + postId + " was not found."));
         return commentRepository.findByPostIdAndParentCommentIdIsNull(postId)
                 .stream()
-                .map(commentFilterService::filteredComment)
+                .map(this::filteredComment)
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -242,13 +244,30 @@ public class CommentService {
 
         List<CommentResponseDto> replyDtos = commentRepository.findByParentCommentId(comment.getId())
                 .stream()
-                .map(commentFilterService::filteredComment)
+                .map(this::filteredComment)
                 .filter(Objects::nonNull)
                 .map(this::getEnrichedCommentDto)
                 .toList();
         dto.setReplies(replyDtos);
 
         return dto;
+    }
+
+    public Comment filteredComment(Comment comment) {
+        if (comment == null) {
+            return null;
+        }
+
+        if (!comment.isDeleted()) {
+            return comment;
+        }
+
+        boolean hasActiveReplies = commentRepository.existsByParentCommentIdAndDeletedIsFalse(comment.getId());
+        if (!hasActiveReplies) {
+            return null;
+        }
+
+        return maskIfDeleted(comment);
     }
 
     public int countCommentsByPostId(UUID postId) {
