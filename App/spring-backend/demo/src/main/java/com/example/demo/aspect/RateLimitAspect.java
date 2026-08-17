@@ -77,7 +77,7 @@ public class RateLimitAspect {
         Bucket bucket = cache.get(key, k -> createNewBucket(rateLimitAnnotation));
 
         if (!bucket.tryConsume(1)) {
-            Logger.warning("Too many request on {}", key);
+            Logger.warning("Too many request on " + key);
             throw new RateLimitExceededException("Too many requests. Please try again later.");
         }
 
