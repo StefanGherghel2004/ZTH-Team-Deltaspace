@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.filter.FilterDto;
 import com.example.demo.logger.Logger;
 import com.example.demo.response.ApiResponse;
+import com.example.demo.service.FilterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,31 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/filters")
 public class FilterController {
 
-    @Value("${filter.controller.url}")
-    private String URL;
-
-    private final RestClient restClient = RestClient.create();
+    private final FilterService filterService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> getFilters() {
-// LOG TRACE START AND END
-        try {
-            ApiResponse<?> responseFromFilterService = restClient.get()
-                    .uri(URL)
-                    .retrieve()
-                    .body(ApiResponse.class);
+    public ResponseEntity<ApiResponse<List<FilterDto>>> getFilters() {
+        Logger.info("GET /filters request received");
+        List<FilterDto> filters = filterService.getAllFilters();
 
-            return ResponseEntity.ok(responseFromFilterService);
+        return ResponseEntity.ok(ApiResponse.success(filters));
 
-        } catch (RestClientException e) {
-            Logger.severe(e.getMessage());
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(ApiResponse.error(null, "/filters"));
-        }
     }
 }

@@ -6,7 +6,9 @@
         Grayscale = 1,
         Invert = 2,
         Sepia=3,
-        Neon=4
+        Neon=4,
+        Sketch=5,
+        Pixel= 6
 
     }
 }

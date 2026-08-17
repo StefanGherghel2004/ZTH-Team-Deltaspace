@@ -62,6 +62,14 @@ namespace ImageProcessor.Service
                 case FilterType.Neon:
                     ApplyNeon(image);
                     break;
+
+                case FilterType.Sketch:
+                    ApplySketch(image);
+                    break;
+
+                case FilterType.Pixel:
+                    ApplyPixel(image);
+                    break;
             }
         }
 
@@ -91,5 +99,43 @@ namespace ImageProcessor.Service
                 }
             }));
         }
+
+        private static void ApplySketch(Image<Rgba32> image)
+        {
+            // combines multiple effects to simulate a ink sketch effect
+            image.Mutate(x => x
+                .Grayscale()
+                .GaussianSharpen(2.5f)
+                .Contrast(2.0f)
+                .DetectEdges()
+                .Invert()
+            );
+        }
+
+        private static void ApplyPixel(Image<Rgba32> image)
+        {
+            int origWidth = image.Width;
+            int origHeight = image.Height;
+            int scaleFactor = 24; // factor controlling the pixel size
+            int gridWidth = Math.Max(8, origWidth / scaleFactor);
+            int gridHeight = Math.Max(8, origHeight / scaleFactor);
+            image.Mutate(x => x
+                // shrink the image
+                .Resize(new ResizeOptions
+                {
+                    Size = new Size(gridWidth, gridHeight),
+                    Sampler = KnownResamplers.NearestNeighbor
+                })
+                // enlarge it back to original size to create a pixelated effect
+                .Resize(new ResizeOptions
+                {
+                    Size = new Size(origWidth, origHeight),
+                    Sampler = KnownResamplers.NearestNeighbor
+                })
+                .Saturate(1.7f)
+                .Contrast(1.4f));
+        }
+
+
     }
 }
