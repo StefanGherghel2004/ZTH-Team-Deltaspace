@@ -37,6 +37,7 @@ public class CommentController {
                 .body(ApiResponse.success(createdComment));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping("/comments/{id}")
     public ResponseEntity<ApiResponse<CommentResponseDto>> getCommentById (@PathVariable UUID id) {
         Comment comment = commentService.findById(id);
@@ -44,6 +45,7 @@ public class CommentController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<List<CommentResponseDto>>> getComments(@PathVariable UUID postId) {
         List<Comment> comments;
@@ -76,6 +78,7 @@ public class CommentController {
         return ResponseEntity.ok(ApiResponse.success(updatedComment));
     }
 
+    @RateLimit(requests = 100)
     @PutMapping("/comments/{id}/vote")
     public ResponseEntity<ApiResponse<VoteResponseDto>> voteComment(
             @PathVariable UUID id,

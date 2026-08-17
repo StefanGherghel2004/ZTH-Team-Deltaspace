@@ -32,6 +32,7 @@ public class SubredditController {
                 .body(ApiResponse.success(responseDto));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping
     public ResponseEntity<ApiResponse<List<SubredditResponseDto>>> getSubreddits(){
         List<Subreddit> communities;
@@ -44,6 +45,8 @@ public class SubredditController {
         return ResponseEntity.ok(ApiResponse.success(response,response.size()));
 
     }
+
+    @RateLimit(requests = 100)
     @GetMapping("/{name}")
     public ResponseEntity<ApiResponse<SubredditResponseDto>> getSubredditByName(@PathVariable String name){
         Subreddit findByNameSubreddit = subredditService.findByName(name);
