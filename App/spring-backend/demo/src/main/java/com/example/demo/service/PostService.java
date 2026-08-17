@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public class PostService {
     private final PostVoteRepository postVoteRepository;
 
     private final UserService userService;
-    private final S3ImageService s3ImageService;
+    private final ImageUploadService imageUploadService;
     private final SubredditService subredditService;
     private final ProfanityFilterService profanityFilterService;
     private final ImageEditService imageEditService;
@@ -62,7 +61,7 @@ public class PostService {
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
             Integer validFilter = imageEditService.getValidFilterId(dto.getFilter());
-            String imageUrl = s3ImageService.uploadImage(dto.getImage(), validFilter);
+            String imageUrl = imageUploadService.upload(dto.getImage(), validFilter);
 
             post.setImageUrl(imageUrl);
             post.setFilter(validFilter);
