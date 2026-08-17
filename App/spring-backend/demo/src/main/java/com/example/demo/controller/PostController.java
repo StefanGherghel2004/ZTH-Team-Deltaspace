@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RateLimit;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
@@ -27,6 +28,7 @@ public class PostController {
     private final ApiResponseService apiResponseService;
     private final PostShuffleService postShuffleService;
 
+    @RateLimit(requests = 15)
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
@@ -37,6 +39,7 @@ public class PostController {
                 .body(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> getPostById(@PathVariable UUID id) {
         Post post = postService.findById(id);
@@ -46,6 +49,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping("/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPosts(@RequestParam(required = false) String subreddit) {
         List<Post> posts = postShuffleService.getShuffledPosts(subreddit);
@@ -54,6 +58,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping("/subreddits/{name}/posts")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getPostsBySubreddit(@PathVariable String name) {
         List<Post> posts = postService.getAllPosts(name);
@@ -62,6 +67,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 100)
     @PutMapping("/posts/{id}/vote")
     public ResponseEntity<ApiResponse<VoteResponseDto>> votePost(
             @PathVariable UUID id,
@@ -72,6 +78,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 25)
     @PutMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @RequestBody PostUpdateDto updateDto){
         Post updatedPost = postService.updatePost(id, updateDto);

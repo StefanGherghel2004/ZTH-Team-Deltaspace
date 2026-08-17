@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RateLimit;
 import com.example.demo.dto.auth.AuthRequestLoginDto;
 import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.dto.user.*;
@@ -32,6 +33,7 @@ public class UserController {
     private final ApiResponseService apiResponseService;
     private final AuthService authService;
 
+    @RateLimit
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<AuthResponseDto>> addUser(@Valid @RequestBody UserCreateDto createDto) {
@@ -39,6 +41,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
+    @RateLimit
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestLoginDto request) {
             Authentication authentication = authenticationManager.authenticate(
@@ -62,6 +65,7 @@ public class UserController {
             return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 100)
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> getAuthenticatedUser() {
         User authenticatedUser = userService.getAuthenticatedUser();
@@ -78,6 +82,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.successMessage("Account deleted successfully"));
     }
 
+    @RateLimit
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDisplayNameOrAvatar(@Valid @RequestBody UserUpdateDto updateDto) {
         User updatedUser = userService.updateAuthenticatedUser(updateDto);
@@ -86,10 +91,10 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit
     @PutMapping("/me/password")
     public ResponseEntity<ApiResponse<String>> changePassword(
-            @Valid @RequestBody PasswordChangeRequestDto passwordDto
-    ) {
+            @Valid @RequestBody PasswordChangeRequestDto passwordDto) {
         userService.changePassword(passwordDto);
         return ResponseEntity.ok(ApiResponse.success("Password changed successfully"));
     }
