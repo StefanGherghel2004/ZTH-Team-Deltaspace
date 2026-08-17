@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RateLimit;
 import com.example.demo.dto.auth.AuthRequestLoginDto;
 import com.example.demo.dto.auth.AuthResponseDto;
 import com.example.demo.dto.user.*;
@@ -32,6 +33,7 @@ public class UserController {
     private final ApiResponseService apiResponseService;
     private final AuthService authService;
 
+    @RateLimit
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<AuthResponseDto>> addUser(@Valid @RequestBody UserCreateDto createDto) {
@@ -39,6 +41,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
+    @RateLimit
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponseDto>> loginUser(@RequestBody AuthRequestLoginDto request) {
             Authentication authentication = authenticationManager.authenticate(

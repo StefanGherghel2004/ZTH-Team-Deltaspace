@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RateLimit;
 import com.example.demo.dto.comment.CommentCreateDto;
 import com.example.demo.dto.comment.CommentUpdateDto;
 import com.example.demo.dto.comment.response.CommentResponseDto;
@@ -22,10 +23,9 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
-// todo controllers should only inject services. repositories should be injected in services.
-    // todo services sometimes act like a reverse proxy from controller to database
     private final CommentService commentService;
 
+    @RateLimit(requests = 25)
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<CommentResponseDto>> addComment(
             @Valid @RequestBody CommentCreateDto commentDto,
@@ -45,8 +45,7 @@ public class CommentController {
     }
 
     @GetMapping("/posts/{postId}/comments")
-    public ResponseEntity<ApiResponse<List<CommentResponseDto>>>
-    getComments(@PathVariable UUID postId) {
+    public ResponseEntity<ApiResponse<List<CommentResponseDto>>> getComments(@PathVariable UUID postId) {
         List<Comment> comments;
         comments = commentService.getTopLevelCommentsByPostId(postId);
 
@@ -66,6 +65,7 @@ public class CommentController {
         return ResponseEntity.ok(ApiResponse.successMessage("Comment was deleted successfully!"));
     }
 
+    @RateLimit(requests = 25)
     @PutMapping("/comments/{id}")
     public ResponseEntity<ApiResponse<CommentResponseDto>> updateComment(
             @PathVariable UUID id,

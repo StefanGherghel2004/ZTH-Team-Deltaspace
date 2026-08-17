@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RateLimit;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
@@ -27,6 +28,7 @@ public class PostController {
     private final ApiResponseService apiResponseService;
     private final PostShuffleService postShuffleService;
 
+    @RateLimit(requests = 15)
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
@@ -72,6 +74,7 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @RateLimit(requests = 25)
     @PutMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @RequestBody PostUpdateDto updateDto){
         Post updatedPost = postService.updatePost(id, updateDto);

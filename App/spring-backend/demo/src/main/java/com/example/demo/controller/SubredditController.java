@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.RateLimit;
 import com.example.demo.dto.subreddit.SubredditCreateDto;
 import com.example.demo.dto.subreddit.SubredditUpdateDto;
 import com.example.demo.dto.subreddit.response.SubredditResponseDto;
@@ -21,6 +22,7 @@ import java.util.List;
 public class SubredditController {
     private final SubredditService subredditService;
 
+    @RateLimit(requests = 25)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<SubredditResponseDto>> addSubreddit(@Valid @RequestBody SubredditCreateDto createDto){
@@ -55,9 +57,9 @@ public class SubredditController {
         return ResponseEntity.ok(ApiResponse.successMessage("subreddit deleted successfully!"));
     }
 
+    @RateLimit(requests = 25)
     @PutMapping("/{name}")
     public ResponseEntity<ApiResponse<SubredditResponseDto>> updateSubreddit(@PathVariable String name, @Valid @RequestBody SubredditUpdateDto updateDto){
-        // todo check if u need to add the updated subreddit to the response
         Subreddit subreddit = subredditService.updateSubreddit(name,updateDto);
         SubredditResponseDto responseDto = subredditService.toDto(subreddit);
         return ResponseEntity.ok(ApiResponse.success(responseDto));
