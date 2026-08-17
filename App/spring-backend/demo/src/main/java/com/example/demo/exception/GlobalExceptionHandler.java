@@ -139,7 +139,6 @@ public class GlobalExceptionHandler {
 
     //500 INTERNAL SERVER ERROR
     @ExceptionHandler({
-            FileStorageException.class,
             Exception.class
     })
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e, HttpServletRequest request) {

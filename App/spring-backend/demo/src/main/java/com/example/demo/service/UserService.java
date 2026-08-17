@@ -113,6 +113,16 @@ public class UserService {
         return findByUsername(auth.getName());
     }
 
+    public String currentUsernameOrNull() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return null;
+        }
+
+        return auth.getName();
+    }
+
     private void validateAge(LocalDate dateOfBirth) {
         if (dateOfBirth == null) {
             return;

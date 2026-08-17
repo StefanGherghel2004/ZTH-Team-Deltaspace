@@ -30,17 +30,14 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
     private final HandlerExceptionResolver exceptionResolver;
-    private final RateLimitingFilter rateLimitingFilter;
 
     public SecurityConfig(
             JwtAuthFilter jwtAuthFilter,
             UserDetailsService userDetailsService,
-            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver,
-            RateLimitingFilter rateLimitingFilter) {
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userDetailsService = userDetailsService;
         this.exceptionResolver = exceptionResolver;
-        this.rateLimitingFilter = rateLimitingFilter;
 
     }
 
@@ -63,13 +60,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-// todo remove /filters
                         .requestMatchers("/auth/login", "/auth/register","/filters").permitAll()
-
-
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
-
-
                         .anyRequest().authenticated()
                 )
 
@@ -77,8 +69,6 @@ public class SecurityConfig {
 
                 // Set custom authentication provider
                 .authenticationProvider(authenticationProvider())
-
-                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // Add JWT filter before Spring Security's default filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
