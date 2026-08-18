@@ -67,7 +67,7 @@ public class PostSummaryService {
         """.formatted(title, content);
 
         Map<String, Object> requestBody = Map.of(
-                "model", "llama-3.1-8b-instant",
+                "model", "llama-3.3-70b-versatile",
                 "temperature", 0.2,
                 "messages", List.of(
                         Map.of("role", "user", "content", prompt)
