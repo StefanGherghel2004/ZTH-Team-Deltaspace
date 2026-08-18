@@ -53,6 +53,10 @@ public class CommentService {
             parentComment = commentRepository.findById(commentDto.getParentId())
                     .orElseThrow(() -> new CommentNotFoundException(
                             "Parent comment with id: " + commentDto.getParentId() + " was not found."));
+
+            if (parentComment.getUser().getUsername().equalsIgnoreCase("tldr-bot")){
+                throw new AccessDeniedException("You cannot reply to a comment authored by a bot.");
+            }
         }
 
         Comment commentToAdd = Comment.builder()
@@ -131,6 +135,10 @@ public class CommentService {
 
         if (comment.isDeleted()) {
             throw new IllegalStateException("Cannot vote on a deleted comment");
+        }
+
+        if(comment.getUser().getUsername().equalsIgnoreCase("tldr-bot")){
+            throw new AccessDeniedException("You cannot vote a comment authored by a bot.");
         }
 
         User user = userService.getAuthenticatedUser();

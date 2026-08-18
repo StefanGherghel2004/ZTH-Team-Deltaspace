@@ -150,6 +150,7 @@ public class PostSummaryService {
         String tldr = generateTldr(post.getTitle(), post.getContent());
         if (tldr != null) {
             tldrComment.setContent("TL;DR " + tldr);
+            Logger.info("Successfully updated TL;DR comment for post %s.", post.getId());
             return commentRepository.save(tldrComment);
         }
 

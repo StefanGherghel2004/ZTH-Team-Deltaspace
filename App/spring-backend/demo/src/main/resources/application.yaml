@@ -15,7 +15,7 @@ spring:
 groq:
   api:
     key: ${GROQ_API_KEY:default_or_dummy_key}
-    model: llama3-8b-8192
+    model: openai/gpt-oss-120b
 
 aws:
   s3:
