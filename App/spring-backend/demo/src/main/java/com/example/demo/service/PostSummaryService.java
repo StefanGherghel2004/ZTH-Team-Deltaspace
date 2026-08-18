@@ -27,6 +27,9 @@ public class PostSummaryService {
     @Value("${groq.api.key}")
     private String apiKey;
 
+    @Value("${groq.api.model}")
+    private String model;
+
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final UserService userService;
@@ -67,7 +70,7 @@ public class PostSummaryService {
         """.formatted(title, content);
 
         Map<String, Object> requestBody = Map.of(
-                "model", "llama-3.3-70b-versatile",
+                "model", model,
                 "temperature", 0.2,
                 "messages", List.of(
                         Map.of("role", "user", "content", prompt)

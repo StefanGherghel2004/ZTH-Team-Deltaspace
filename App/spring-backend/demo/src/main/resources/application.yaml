@@ -15,6 +15,7 @@ spring:
 groq:
   api:
     key: ${GROQ_API_KEY:default_or_dummy_key}
+    model: llama3-8b-8192
 
 aws:
   s3:
