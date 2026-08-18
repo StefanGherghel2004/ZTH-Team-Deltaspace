@@ -223,21 +223,29 @@ public class PostService {
         Post post = findById(id);
         User authenticatedUser = userService.getAuthenticatedUser();
 
-        if (!post.getAuthor().getId().equals(authenticatedUser.getId())) {
+        if (post.getAuthor() == null || !post.getAuthor().getId().equals(authenticatedUser.getId())) {
             throw new AccessDeniedException("You are not allowed to perform this operation");
         }
         if (post.isDeleted()) {
             throw new IllegalStateException("Cannot edit a deleted post");
         }
 
-        if (updateDto.getTitle() != null && !updateDto.getTitle().isBlank()) {
+        boolean hasContentChange = updateDto.getContent() != null && !updateDto.getContent().isBlank();
+        boolean hasTitleChange = updateDto.getTitle() != null && !updateDto.getTitle().isBlank();
+
+        String oldPostContent = post.getContent();
+
+        if (hasTitleChange) {
             post.setTitle(updateDto.getTitle());
         }
 
-        if (updateDto.getContent() != null && !updateDto.getContent().isBlank()) {
+        if (hasContentChange) {
             String clearContent = profanityFilterService.censor(updateDto.getContent());
             post.setContent(clearContent);
-            postSummaryService.updateTldrComment(post);
+        }
+
+        if (hasTitleChange || hasContentChange) {
+            postSummaryService.updateTldrComment(post, oldPostContent);
         }
 
         Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());

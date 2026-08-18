@@ -9,13 +9,16 @@ import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,10 @@ public class PostSummaryService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+
+    private final DiffMatchPatch dmp = new DiffMatchPatch();
+    private static final double SIGNIFICANT_CHANGE_THRESHOLD = 0.20;
+    private static final int MIN_CHAR_CHANGE = 300;
 
     private RestClient restClient;
 
@@ -110,7 +117,7 @@ public class PostSummaryService {
         return null;
     }
 
-    public Comment updateTldrComment(Post post) {
+    public Comment updateTldrComment(Post post, String oldContents) {
         if (post == null || post.getContent() == null || post.getTitle() == null) {
             return null;
         }
@@ -118,13 +125,23 @@ public class PostSummaryService {
         User tldrBot = getOrCreateTldrBotUser();
         Comment tldrComment = commentRepository.findByPostIdAndUserId(post.getId(), tldrBot.getId());
 
+        if (post.getContent().length() <= 1500) {
+            if (tldrComment != null) {
+                if (post.getComments() != null) {
+                    post.getComments().remove(tldrComment);
+                }
+                commentRepository.delete(tldrComment);
+                commentRepository.flush();
+            }
+            return null;
+        }
+
         if (tldrComment == null) {
             return addTldrComment(post);
         }
 
-        if (post.getContent().length() <= 1500) {
-            commentRepository.delete(tldrComment);
-            return null;
+        if (!isSignificantChange(oldContents, post.getContent())) {
+            return tldrComment;
         }
 
         String tldr = generateTldr(post.getTitle(), post.getContent());
@@ -134,6 +151,45 @@ public class PostSummaryService {
         }
 
         return tldrComment;
+    }
+
+    public boolean isSignificantChange(String oldContent, String newContent) {
+        if (Objects.equals(oldContent, newContent)) {
+            return false;
+        }
+
+        if (oldContent == null || newContent == null) {
+            return true;
+        }
+
+        if (oldContent.trim().equals(newContent.trim())) {
+            return false;
+        }
+
+        LinkedList<DiffMatchPatch.Diff> diffs = dmp.diffMain(oldContent, newContent);
+        dmp.diffCleanupSemantic(diffs);
+
+        int totalDeletedChars = 0;
+        int totalInsertedChars = 0;
+
+        for (DiffMatchPatch.Diff diff : diffs) {
+            if (diff.operation == DiffMatchPatch.Operation.DELETE) {
+                totalDeletedChars += diff.text.length();
+            } else if (diff.operation == DiffMatchPatch.Operation.INSERT) {
+                totalInsertedChars += diff.text.length();
+            }
+        }
+
+        int changedChars = totalDeletedChars + totalInsertedChars;
+        int baseLength = Math.max(oldContent.length(), newContent.length());
+
+        if (baseLength == 0) {
+            return false;
+        }
+
+        double changeRatio = (double) changedChars / baseLength;
+
+        return changedChars >= MIN_CHAR_CHANGE || changeRatio >= SIGNIFICANT_CHANGE_THRESHOLD;
     }
 
     private record GroqResponse(List<Choice> choices) {}

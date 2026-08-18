@@ -119,6 +119,7 @@ public class PostServiceTest {
         sampleSubreddit = new Subreddit();
         sampleSubreddit.setId(UUID.randomUUID());
         sampleSubreddit.setName("gaming");
+        sampleSubreddit.setPosts(new ArrayList<>());
 
         samplePost = new Post();
         samplePost.setId(samplePostId);
@@ -406,7 +407,7 @@ public class PostServiceTest {
         postInSubreddit.setId(UUID.randomUUID());
         postInSubreddit.setDeleted(false);
 
-        sampleSubreddit.setPosts(List.of(postInSubreddit));
+        sampleSubreddit.setPosts(new ArrayList<>(List.of(postInSubreddit)));
 
         when(subredditService.findByName("gaming")).thenReturn(sampleSubreddit);
 
@@ -430,6 +431,8 @@ public class PostServiceTest {
     @Test
     @DisplayName("Should successfully update post when user is the author and post is active")
     void updatePostSuccess() {
+        String originalContent = samplePost.getContent();
+
         PostUpdateDto updateDto = new PostUpdateDto();
         updateDto.setTitle("Updated Title");
         updateDto.setContent("Updated clean content");
@@ -444,7 +447,7 @@ public class PostServiceTest {
         assertThat(result).isNotNull();
         assertThat(samplePost.getTitle()).isEqualTo("Updated Title");
         assertThat(samplePost.getContent()).isEqualTo("Updated clean content");
-        verify(postSummaryService, times(1)).updateTldrComment(samplePost);
+        verify(postSummaryService, times(1)).updateTldrComment(samplePost, originalContent);
         verify(postRepository, times(1)).save(samplePost);
     }
 
@@ -498,7 +501,9 @@ public class PostServiceTest {
         tldrComment.setId(UUID.randomUUID());
         tldrComment.setUser(tldrBot);
 
-        samplePost.getComments().add(tldrComment);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(tldrComment);
+        samplePost.setComments(comments);
 
         when(postRepository.findById(samplePostId)).thenReturn(Optional.of(samplePost));
         when(userService.getAuthenticatedUser()).thenReturn(sampleUser);
@@ -563,7 +568,7 @@ public class PostServiceTest {
         samplePost.setDownvotes(2);
 
         Comment activeComment = new Comment();
-        samplePost.setComments(List.of(activeComment));
+        samplePost.setComments(new ArrayList<>(List.of(activeComment)));
 
         PostVote vote = new PostVote();
         vote.setVoteType(VoteType.UPVOTE);
