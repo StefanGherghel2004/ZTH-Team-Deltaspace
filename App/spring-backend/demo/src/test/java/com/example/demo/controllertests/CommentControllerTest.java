@@ -73,7 +73,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("POST /posts/{postId}/comments - Should create a comment and return 201 Created")
-    void addComment_Success() throws Exception {
+    void addCommentSuccess() throws Exception {
         CommentCreateDto createDto = new CommentCreateDto("Sample comment content",null);
         when(commentService.addComment(any(CommentCreateDto.class), eq(samplePostId))).thenReturn(sampleCommentResponseDto);
 
@@ -89,7 +89,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("GET /comments/{id} - Should return comment by id and 200 OK")
-    void getCommentById_Success() throws Exception {
+    void getCommentByIdSuccess() throws Exception {
         when(commentService.findById(sampleCommentId)).thenReturn(sampleComment);
         when(commentService.getEnrichedCommentDto(sampleComment)).thenReturn(sampleCommentResponseDto);
 
@@ -104,7 +104,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("GET /posts/{postId}/comments - Should return top-level comments and 200 OK")
-    void getComments_Success() throws Exception {
+    void getCommentsSuccess() throws Exception {
         List<Comment> commentList = List.of(sampleComment);
 
         when(commentService.getTopLevelCommentsByPostId(samplePostId)).thenReturn(commentList);
@@ -123,7 +123,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("DELETE /comments/{id} - Should delete comment and return success message with 200 OK")
-    void deleteComment_Success() throws Exception {
+    void deleteCommentSuccess() throws Exception {
         doNothing().when(commentService).deleteCommentById(sampleCommentId);
 
         mockMvc.perform(delete("/comments/{id}", sampleCommentId))
@@ -135,7 +135,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("PUT /comments/{id} - Should update comment and return 200 OK")
-    void updateComment_Success() throws Exception {
+    void updateCommentSuccess() throws Exception {
         CommentUpdateDto updateDto = new CommentUpdateDto();
         updateDto.setContent("Updated comment content");
 
@@ -157,7 +157,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("PUT /comments/{id}/vote - Should register vote on comment and return 200 OK")
-    void voteComment_Success() throws Exception {
+    void voteCommentSuccess() throws Exception {
         VoteRequestDto voteDto = new VoteRequestDto();
         voteDto.setVoteType(VoteAction.UP);
 

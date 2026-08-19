@@ -89,8 +89,7 @@ public class PostSummaryService {
                 return response.choices().get(0).message().content().trim();
             }
         } catch (Exception e) {
-            Logger.severe(e.getMessage());
-            System.err.println("Failed to generate TL;DR from Groq: " + e.getMessage());
+            Logger.severe("Failed to generate TL;DR from Groq: " + e.getMessage());
         }
 
         return null;
