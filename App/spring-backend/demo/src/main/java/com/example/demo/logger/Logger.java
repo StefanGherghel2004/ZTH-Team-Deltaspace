@@ -5,16 +5,36 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for logging messages across the application.
+ * Acts as a facade to the underlying {@link LogManager}, providing methods to log
+ * messages at various levels (DEBUG, INFO, WARNING, SEVERE).
+ */
 public class Logger {
 
     private static final LogManager manager = LogManager.getInstance();
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Internal method to process and delegate the logging of a message with a specific level.
+     *
+     * @param level   the severity level of the log
+     * @param message the message template to log
+     * @param args    the arguments to be injected into the message template
+     */
     private static void logWithLevel(LogLevel level, String message, Object... args) {
         manager.addMessage(new LogMessage(level, format(level, message, args)));
     }
 
+    /**
+     * Formats the log message with a timestamp, the log level, and the provided arguments.
+     *
+     * @param level   the severity level of the log
+     * @param message the message template
+     * @param args    the arguments to format into the message
+     * @return the fully formatted log string
+     */
     private static String format(LogLevel level, String message, Object[] args) {
         String currentTime = LocalDateTime.now().format(TIME_FORMATTER);
 
@@ -23,6 +43,11 @@ public class Logger {
         return String.format("[%s] %s: %s", currentTime, level, formattedMessage);
     }
 
+    /**
+     * Initializes the logging system.
+     * This method configures the default loggers (file loggers for each level and a console logger for DEBUG)
+     * and starts the underlying logging thread in the {@link LogManager}.
+     */
     public static void init() {
         List<Loggable> loggers = new ArrayList<>();
 
