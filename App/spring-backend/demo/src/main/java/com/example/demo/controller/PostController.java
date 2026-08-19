@@ -28,7 +28,7 @@ public class PostController {
     private final ApiResponseService apiResponseService;
     private final PostShuffleService postShuffleService;
 
-    @RateLimit(requests = 15)
+    @RateLimit(requests = 100)
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
