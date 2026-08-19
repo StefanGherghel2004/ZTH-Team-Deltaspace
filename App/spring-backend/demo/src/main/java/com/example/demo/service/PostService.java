@@ -5,8 +5,6 @@ import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
-import com.example.demo.event.PostCreatedEvent;
-import com.example.demo.event.PostUpdatedEvent;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.logger.Logger;
@@ -20,7 +18,6 @@ import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.*;
 
 import jakarta.persistence.EntityManager;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,10 +42,8 @@ public class PostService {
     private final SubredditService subredditService;
     private final ProfanityFilterService profanityFilterService;
     private final ImageEditService imageEditService;
-    private final CommentService commentService;
     private final PostSummaryService postSummaryService;
-
-    private final ApplicationEventPublisher eventPublisher;
+    private final CommentService commentService;
 
     private final EntityManager entityManager;
     private final PostMapper postMapper;
@@ -82,7 +77,7 @@ public class PostService {
         votePost(savedPost.getId(), VoteAction.UP);
         Logger.info("Post with id %s created by %s", savedPost.getId(), author.getUsername());
 
-        eventPublisher.publishEvent(new PostCreatedEvent(savedPost.getId()));
+        postSummaryService.addTldrComment(savedPost);
 
         return findById(savedPost.getId());
     }
@@ -250,7 +245,7 @@ public class PostService {
         }
 
         if (hasTitleChange || hasContentChange) {
-            eventPublisher.publishEvent(new PostUpdatedEvent(post.getId(), oldPostContent));
+            postSummaryService.updateTldrComment(post, oldPostContent);
         }
 
         Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());

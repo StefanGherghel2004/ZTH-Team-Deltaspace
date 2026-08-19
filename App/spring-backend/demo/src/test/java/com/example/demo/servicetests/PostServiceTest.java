@@ -5,8 +5,6 @@ import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
 import com.example.demo.dto.vote.VoteAction;
 import com.example.demo.dto.vote.VoteResponseDto;
-import com.example.demo.event.PostCreatedEvent;
-import com.example.demo.event.PostUpdatedEvent;
 import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.mapper.PostMapper;
@@ -36,7 +34,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -86,9 +83,6 @@ public class PostServiceTest {
 
     @Mock
     private PostSummaryService postSummaryService;
-
-    @Mock
-    private ApplicationEventPublisher eventPublisher;
 
     @Mock
     private CommentService commentService;
@@ -156,7 +150,7 @@ public class PostServiceTest {
     }
 
     @Test
-    @DisplayName("Should successfully create a post with image and subreddit, auto-upvote it, and publish PostCreatedEvent")
+    @DisplayName("Should successfully create a post with image and subreddit, auto-upvote it, and generate tldr")
     void createPostWithImageAndSubredditSuccess() {
         MultipartFile mockImage = new MockMultipartFile("image", "test.jpg", "image/jpeg", new byte[]{1, 2, 3});
 
@@ -188,11 +182,11 @@ public class PostServiceTest {
         assertThat(result.getId()).isEqualTo(samplePostId);
         verify(postRepository, times(1)).incrementUpvotes(samplePostId);
         verify(postVoteRepository, times(1)).save(any(PostVote.class));
-        verify(eventPublisher, times(1)).publishEvent(any(PostCreatedEvent.class));
+        verify(postSummaryService, times(1)).addTldrComment(any(Post.class));
     }
 
     @Test
-    @DisplayName("Should successfully create a text-only post without image and subreddit and publish PostCreatedEvent")
+    @DisplayName("Should successfully create a text-only post without image and subreddit")
     void createPostTextOnlySuccess() {
         PostCreateDto dto = new PostCreateDto();
         dto.setTitle("Text Post");
@@ -215,7 +209,7 @@ public class PostServiceTest {
         assertThat(result).isNotNull();
         verify(imageUploadService, never()).upload(any(), anyInt());
         verify(subredditService, never()).findByName(anyString());
-        verify(eventPublisher, times(1)).publishEvent(any(PostCreatedEvent.class));
+        verify(postSummaryService, times(1)).addTldrComment(any(Post.class));
     }
 
     @Test
@@ -435,8 +429,10 @@ public class PostServiceTest {
     }
 
     @Test
-    @DisplayName("Should successfully update post when user is the author and post is active and publish PostUpdatedEvent")
+    @DisplayName("Should successfully update post when user is the author and post is active")
     void updatePostSuccess() {
+        String originalContent = samplePost.getContent();
+
         PostUpdateDto updateDto = new PostUpdateDto();
         updateDto.setTitle("Updated Title");
         updateDto.setContent("Updated clean content");
@@ -451,7 +447,7 @@ public class PostServiceTest {
         assertThat(result).isNotNull();
         assertThat(samplePost.getTitle()).isEqualTo("Updated Title");
         assertThat(samplePost.getContent()).isEqualTo("Updated clean content");
-        verify(eventPublisher, times(1)).publishEvent(any(PostUpdatedEvent.class));
+        verify(postSummaryService, times(1)).updateTldrComment(samplePost, originalContent);
         verify(postRepository, times(1)).save(samplePost);
     }
 
