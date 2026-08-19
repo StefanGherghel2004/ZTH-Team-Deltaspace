@@ -14,7 +14,6 @@ import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,9 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 
+/**
+ * Service class for managing user-related operations.
+ * Handles user creation, updates, soft deletion, password changes, and authentication context retrieval.
+ */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional
 public class UserService {
 
@@ -36,6 +38,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
+    /**
+     * Registers a new user in the system.
+     *
+     * @param userCreateDto the data transfer object containing new user details
+     * @return the saved {@link User} entity
+     * @throws UserTooYoungException if the user is below the minimum required age
+     * @throws DuplicateUserInformationException if the username or email is already taken
+     */
     public User addUser(UserCreateDto userCreateDto) {
         User user = userMapper.toEntity(userCreateDto);
         user.setId(null);
@@ -57,13 +67,25 @@ public class UserService {
         return userRepository.save(user);
     }
 
-
+    /**
+     * Updates the currently authenticated user's profile information.
+     *
+     * @param updateDto the data transfer object containing the updated fields
+     * @return the updated {@link User} entity
+     */
     public User updateAuthenticatedUser(UserUpdateDto updateDto) {
         User user = getAuthenticatedUser();
         Logger.info("Updated info of user %s", user.getUsername());
         return applyUpdatesAndSave(user, updateDto);
     }
 
+    /**
+     * Helper method to apply updates to a user entity and save it.
+     *
+     * @param user the user entity to update
+     * @param updateDto the data transfer object containing the new values
+     * @return the saved {@link User} entity
+     */
     private User applyUpdatesAndSave(User user, UserUpdateDto updateDto) {
         if (updateDto.getDisplayName() == null)
             user.setDisplayName(user.getUsername());
@@ -78,6 +100,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Finds a user by their username.
+     *
+     * @param username the username to search for
+     * @return the found {@link User} entity
+     * @throws UserNotFoundException if no user is found with the given username
+     * @throws AccessDeniedException if the found user account is marked as deleted
+     */
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -90,6 +120,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Soft deletes the currently authenticated user's account.
+     *
+     * @param userDeleteDto the data transfer object containing the user's password for verification
+     * @throws AccessDeniedException if the provided password does not match the current password
+     */
     public void deleteAuthenticatedUser(UserDeleteDto userDeleteDto) {
         User user = getAuthenticatedUser();
         if (!passwordEncoder.matches(userDeleteDto.getPassword(),user.getPassword())) {
@@ -101,6 +137,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Retrieves the currently authenticated user from the security context.
+     *
+     * @return the authenticated {@link User} entity
+     * @throws BadCredentialsException if the user is not authenticated
+     */
     @Transactional(readOnly = true)
     public User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -113,6 +155,11 @@ public class UserService {
         return findByUsername(auth.getName());
     }
 
+    /**
+     * Retrieves the username of the currently authenticated user.
+     *
+     * @return the username if authenticated, or {@code null} if not authenticated
+     */
     public String currentUsernameOrNull() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -123,6 +170,12 @@ public class UserService {
         return auth.getName();
     }
 
+    /**
+     * Validates that the provided date of birth meets the minimum age requirement.
+     *
+     * @param dateOfBirth the user's date of birth
+     * @throws UserTooYoungException if the user is younger than {@link #MIN_AGE}
+     */
     private void validateAge(LocalDate dateOfBirth) {
         if (dateOfBirth == null) {
             return;
@@ -133,6 +186,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Changes the password of the currently authenticated user.
+     *
+     * @param passwordDto the data transfer object containing current and new passwords
+     * @throws AccessDeniedException if the provided current password is incorrect
+     * @throws IdenticalPasswordException if the new password is the same as the current password
+     */
     public void changePassword(PasswordChangeRequestDto passwordDto) {
         User authenticatedUser = getAuthenticatedUser();
 
@@ -151,6 +211,12 @@ public class UserService {
         userRepository.save(authenticatedUser);
     }
 
+    /**
+     * Masks the user's username as [DELETED] if their account is marked as deleted.
+     *
+     * @param user the user entity to check
+     * @return a masked clone of the user if deleted, otherwise the original user entity
+     */
     public User maskIfDeleted(User user){
         if(!user.isDeleted()){
             return user;
