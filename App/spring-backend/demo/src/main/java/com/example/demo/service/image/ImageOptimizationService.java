@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.image;
 
 import com.example.demo.logger.Logger;
 import lombok.AllArgsConstructor;

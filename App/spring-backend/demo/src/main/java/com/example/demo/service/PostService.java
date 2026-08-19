@@ -17,6 +17,8 @@ import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
 import com.example.demo.repository.*;
 
+import com.example.demo.service.image.ImageEditService;
+import com.example.demo.service.image.ImageUploadService;
 import jakarta.persistence.EntityManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

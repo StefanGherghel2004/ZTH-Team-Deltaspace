@@ -105,6 +105,7 @@ namespace ImageProcessor.Service
             // combines multiple effects to simulate a ink sketch effect
             image.Mutate(x => x
                 .Grayscale()
+                .GaussianBlur(1.0f)
                 .GaussianSharpen(2.5f)
                 .Contrast(2.0f)
                 .DetectEdges()
