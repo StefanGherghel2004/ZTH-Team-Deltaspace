@@ -37,7 +37,7 @@ public class CommentController {
                 .body(ApiResponse.success(createdComment));
     }
 
-    @RateLimit(requests = 100)
+    @RateLimit(requests = 15)
     @GetMapping("/comments/{id}")
     public ResponseEntity<ApiResponse<CommentResponseDto>> getCommentById (@PathVariable UUID id) {
         Comment comment = commentService.findById(id);
