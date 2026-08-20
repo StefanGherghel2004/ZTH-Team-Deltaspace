@@ -43,6 +43,7 @@ public class PostService {
     private final ImageUploadService imageUploadService;
     private final SubredditService subredditService;
     private final ProfanityFilterService profanityFilterService;
+    private final EmojiFormatterService emojiFormatterService;
     private final ImageEditService imageEditService;
     private final PostSummaryService postSummaryService;
     private final CommentService commentService;
@@ -56,8 +57,11 @@ public class PostService {
         User author = userService.getAuthenticatedUser();
 
         Post post = new Post();
-        post.setTitle(dto.getTitle());
-        String clearContent = profanityFilterService.censor(dto.getContent());
+        post.setTitle(emojiFormatterService.format(dto.getTitle()));
+
+        String withEmojis = emojiFormatterService.format(dto.getContent());
+        String clearContent = profanityFilterService.censor(withEmojis);
+
         post.setContent(clearContent);
         post.setAuthor(author);
 
@@ -238,11 +242,12 @@ public class PostService {
         String oldPostContent = post.getContent();
 
         if (hasTitleChange) {
-            post.setTitle(updateDto.getTitle());
+            post.setTitle(emojiFormatterService.format(updateDto.getTitle()));
         }
 
         if (hasContentChange) {
-            String clearContent = profanityFilterService.censor(updateDto.getContent());
+            String emojiContent = emojiFormatterService.format(updateDto.getContent());
+            String clearContent = profanityFilterService.censor(emojiContent);
             post.setContent(clearContent);
         }
 

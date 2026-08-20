@@ -88,7 +88,7 @@ public class ImageEditService {
             filterRepository.incrementUsageCount(Long.valueOf(filterId));
             Logger.info("Image edit request successfully sent for filter: %s", filter.getName());
         } catch (RestClientException e) {
-            Logger.warning("Failed to communicate with image editing service for filterId %d: {}", filterId, e.getMessage(), e);
+            Logger.warning("Failed to communicate with image editing service for filterId %d: %s", filterId, e.getMessage(), e);
             throw new RuntimeException("Image editing service communication failed", e);
         }
     }
