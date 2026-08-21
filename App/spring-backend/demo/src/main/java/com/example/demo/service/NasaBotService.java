@@ -4,14 +4,18 @@ import com.example.demo.dto.dailycontent.NasaApodResponse;
 import com.example.demo.dto.dailycontent.NasaSearchResponse;
 import com.example.demo.dto.dailycontent.NasaNeoResponse;
 import com.example.demo.logger.Logger;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.Subreddit;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.SubredditRepository;
 import com.example.demo.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,12 +24,14 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 /**
  * Service responsible for automatically fetching live NASA data from multiple APIs
- * (APOD, NASA Image Library, and NeoWs) and generating scheduled posts inside the Space subreddit.
+ * (APOD, NASA Image Library, and NeoWs), generating scheduled posts inside the Space subreddit,
+ * and handling automated AI Q&A replies directly via Groq API.
  */
 @Service
 @RequiredArgsConstructor
@@ -48,20 +54,38 @@ public class NasaBotService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final SubredditRepository subredditRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${nasa.api.key}")
     private String nasaApiKey;
 
-    private final RestClient restClient = RestClient.create();
+    @Value("${groq.api.key}")
+    private String groqApiKey;
+
+    @Value("${groq.api.model}")
+    private String groqModel;
+
+    private RestClient restClient;
+    private RestClient groqRestClient;
     private final Random random = new Random();
+
+    @PostConstruct
+    private void init() {
+        this.restClient = RestClient.create();
+
+        this.groqRestClient = RestClient.builder()
+                .baseUrl("https://api.groq.com/openai/v1")
+                .defaultHeader("Authorization", "Bearer " + groqApiKey)
+                .build();
+    }
 
     /**
      * Scheduled task that runs periodically to generate a diverse NASA-sourced post.
      * Randomly picks one of three available content sources (APOD, Image Library, or Asteroid data).
      */
-   // @Scheduled(cron = "0 0 12 * * ?")
-    @Scheduled(fixedRate = 60000)
+    //@Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 0 12 * * ?")
     @Transactional
     public void generateNasaPost() {
         try {
@@ -81,6 +105,43 @@ public class NasaBotService {
             Logger.warning("Failed to generate NASA post: %s", e.getMessage());
         }
     }
+
+    /**
+     * Scheduled task that periodically checks for unanswered user comments on NasaBot's posts
+     * and replies to them automatically using the embedded Groq AI logic.
+     */
+    @Scheduled(fixedRate = 45000)
+    @Transactional
+    public void processNasaBotQA() {
+        try {
+            User botUser = getOrCreateNasaBotUser();
+            List<Comment> allComments = commentRepository.findAll();
+
+            for (Comment userComment : allComments) {
+                if (userComment.getUser().getId().equals(botUser.getId())) {
+                    continue;
+                }
+
+                if (userComment.isDeleted()) {
+                    continue;
+                }
+
+                Post post = userComment.getPost();
+                if (post == null || post.getContent() == null || !post.getAuthor().getId().equals(botUser.getId())) {
+                    continue;
+                }
+
+                boolean botAlreadyResponded = commentRepository.existsByParentCommentIdAndUserId(userComment.getId(), botUser.getId());
+
+                if (!botAlreadyResponded) {
+                    replyToUserQuestion(post, userComment);
+                }
+            }
+        } catch (Exception e) {
+            Logger.warning("Failed processing NasaBot Q&A task: %s", e.getMessage());
+        }
+    }
+
 
     /**
      * Fetches Astronomy Picture of the Day (APOD) items from NASA and creates a post for the first valid image.
@@ -208,15 +269,77 @@ public class NasaBotService {
     }
 
     /**
-     * Helper method to build, populate, and save a Post entity into the database without
-     * using the authenticated user.
-     *
-     * @param title    the title of the post
-     * @param content  the main body content/description of the post
-     * @param imageUrl the media link associated with the post (can be null)
-     * @param author   the user who authored the post
-     * @param subreddit the subreddit where the post belongs
+     * Calls the Groq API directly from NasaBot to answer a user's question based on the post content.
      */
+    private String answerQuestionAboutPost(String postTitle, String postContent, String userQuestion) {
+        if (postContent == null || userQuestion == null || userQuestion.isBlank()) {
+            return null;
+        }
+
+        String prompt = """
+        You are NasaBot, a knowledgeable AI space expert and astronomer. 
+        You are chatting with users on a forum post titled "%s" which has the following content:
+        ---
+        %s
+        ---
+        
+        The user has asked you the following question:
+        "%s"
+        
+        Guidelines for your answer:
+        1. If the question is directly related to the post content, use that information.
+        2. If the user asks a general space or astronomical question that isn't explicitly in the text, use your broad astronomical knowledge to provide a helpful, accurate, and concise answer.
+        3. STRICT FORMATTING RULE: Do not use any markdown formatting (no asterisks, no bolding, no italics, no bullet points, and no HTML tags). Write your entire response in plain text only.
+        4. STRICT RESPONSE LENGTH: Limit to 700 CHARACTERS
+        5. Do not use conversational filler, greetings, or meta-text. Keep the answer direct and clear.
+        """.formatted(postTitle, postContent, userQuestion);
+
+        Map<String, Object> requestBody = Map.of(
+                "model", groqModel,
+                "temperature", 0.3,
+                "messages", List.of(
+                        Map.of("role", "user", "content", prompt)
+                )
+        );
+
+        try {
+            GroqResponse response = groqRestClient.post()
+                    .uri("/chat/completions")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .body(GroqResponse.class);
+
+            if (response != null && response.choices() != null && !response.choices().isEmpty()) {
+                return response.choices().get(0).message().content().trim();
+            }
+        } catch (Exception e) {
+            Logger.severe("NasaBot failed to generate answer from Groq: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    private void replyToUserQuestion(Post post, Comment userComment) {
+        User botUser = getOrCreateNasaBotUser();
+
+        String aiAnswer = answerQuestionAboutPost(
+                post.getTitle(),
+                post.getContent(),
+                userComment.getContent()
+        );
+
+        if (aiAnswer != null) {
+            Comment botReply = new Comment();
+            botReply.setPost(post);
+            botReply.setUser(botUser);
+            botReply.setParentComment(userComment);
+            botReply.setContent(aiAnswer);
+            commentRepository.save(botReply);
+            Logger.info("NasaBot successfully replied to a comment on post: %s", post.getId());
+        }
+    }
+
     private void createAndSavePost(String title, String content, String imageUrl, User author, Subreddit subreddit) {
         Post post = new Post();
         post.setTitle(title);
@@ -263,4 +386,8 @@ public class NasaBotService {
             return subredditRepository.save(newSubreddit);
         });
     }
+
+    private record GroqResponse(List<Choice> choices) {}
+    private record Choice(Message message) {}
+    private record Message(String content) {}
 }

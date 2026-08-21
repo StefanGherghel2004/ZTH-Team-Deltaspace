@@ -23,6 +23,8 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     //This is used just for the tldr bot
     Comment findByPostIdAndUserId(UUID userId, UUID postId);
 
+    boolean existsByParentCommentIdAndUserId(UUID parentCommentId, UUID userId);
+
     int countByPostId(UUID postId);
 
     UUID user(User user);
