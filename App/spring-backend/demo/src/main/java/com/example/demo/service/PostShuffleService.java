@@ -58,7 +58,7 @@ public class PostShuffleService {
         } else {
             candidatePosts = postRepository.findAllByOrderByCreatedAtDesc()
                     .stream()
-                    .limit(200)
+                    .limit(500)
                     .collect(Collectors.toCollection(ArrayList::new));
         }
 
@@ -69,14 +69,15 @@ public class PostShuffleService {
         Post pinnedNasaPost = null;
 
         if (isGlobalFeed) {
+            // just the newest post from NASA Bot is shown on top of feed
             pinnedNasaPost = candidatePosts.stream()
-                    .filter(p -> p.getAuthor() != null && "NasaBot".equals(p.getAuthor().getUsername()))
+                    .filter(p -> p.getAuthor() != null && p.getAuthor().getUsername() != null
+                            && "NasaBot".equals(p.getAuthor().getUsername()))
                     .max(Comparator.comparing(Post::getCreatedAt))
                     .orElse(null);
 
-            if (pinnedNasaPost != null) {
-                candidatePosts.remove(pinnedNasaPost);
-            }
+            candidatePosts.removeIf(p -> p.getAuthor() != null && p.getAuthor().getUsername() != null
+                    && "NasaBot".equals(p.getAuthor().getUsername()));
         }
 
         Set<UUID> preferredSubredditIds = getPreferredSubredditIds();
