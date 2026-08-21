@@ -84,7 +84,6 @@ public class NasaBotService {
      * Scheduled task that runs periodically to generate a diverse NASA-sourced post.
      * Randomly picks one of three available content sources (APOD, Image Library, or Asteroid data).
      */
-    //@Scheduled(fixedRate = 60000)
     @Scheduled(cron = "0 0 12 * * ?")
     @Transactional
     public void generateNasaPost() {
