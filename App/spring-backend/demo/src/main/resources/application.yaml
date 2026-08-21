@@ -17,6 +17,10 @@ groq:
     key: ${GROQ_API_KEY:default_or_dummy_key}
     model: openai/gpt-oss-120b
 
+nasa:
+  api:
+    key: ${NASA_API_KEY:DEMO_KEY}
+
 aws:
   s3:
     bucket-name: reddit-clone-deltaspace-eu
