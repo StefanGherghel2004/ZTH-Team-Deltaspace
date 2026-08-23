@@ -59,19 +59,39 @@ public class PostSummaryService {
     }
 
     public String generateTldr(String title, String content) {
+        int charCount = content.length();
+        String lengthConstraint;
+        int maxTokens;
+
+        if (charCount <= 2500) {
+            lengthConstraint = "strictly 2 sentences (between 40 and 60 words)";
+            maxTokens = 120;
+        } else if (charCount <= 5000) {
+            lengthConstraint = "3 to 4 sentences (between 70 and 110 words)";
+            maxTokens = 200;
+        } else if (charCount <= 7500) {
+            lengthConstraint = "4 to 5 sentences (between 120 and 160 words)";
+            maxTokens = 300;
+        } else {
+            lengthConstraint = "5 to 7 sentences (between 170 and 220 words)";
+            maxTokens = 400;
+        }
+
         String prompt = """
-        You are a forum post summarizer.
-        Write a concise TL;DR summary of approximately 80 to 110 words (2 to 4 sentences) for the following long post.
-        Capture the background context, the main argument or problem, and the key question or takeaway.
-        Do not use conversational filler, greetings, or intro/outro meta-text (e.g., do NOT start with "TL;DR:" or "Here is a summary:").
-        
-        Title: %s
-        Content: %s
-        """.formatted(title, content);
+    You are a forum post summarizer.
+    Write a concise TL;DR summary in a single continuous paragraph of %s for the following post.
+    Capture the background context, the main argument or problem, and the key question or takeaway.
+    Do not use bullet points, lists, line breaks, conversational filler, greetings, or intro/outro meta-text (e.g., do NOT start with "TL;DR:" or "Here is a summary:").
+    Output only the continuous text summary.
+
+    Title: %s
+    Content: %s
+    """.formatted(lengthConstraint, title, content);
 
         Map<String, Object> requestBody = Map.of(
                 "model", model,
                 "temperature", 0.2,
+                "max_tokens", maxTokens,
                 "messages", List.of(
                         Map.of("role", "user", "content", prompt)
                 )
