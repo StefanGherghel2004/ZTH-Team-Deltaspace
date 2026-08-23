@@ -1,15 +1,28 @@
 package com.example.demo.service;
 
+import com.example.demo.logger.Logger;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
 
 @Service
 public class ProfanityFilterService {
+
+    @Value("${groq.api.key}")
+    private String apiKey;
+
+    @Value("${groq.api.model}")
+    private String model;
+
+    private RestClient restClient;
 
     private final TrieNode root = new TrieNode();
 
@@ -47,6 +60,11 @@ public class ProfanityFilterService {
 
     @PostConstruct
     public void init() {
+
+        this.restClient = RestClient.builder()
+                .baseUrl("https://api.groq.com/openai/v1")
+                .defaultHeader("Authorization","Bearer " + apiKey)
+                .build();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 Objects.requireNonNull(getClass().getResourceAsStream("App/spring-backend/demo/profanity-words.txt")),
                 StandardCharsets.UTF_8))) {
@@ -69,7 +87,54 @@ public class ProfanityFilterService {
         return findFirstMatch(text) != null;
     }
 
-    public String censor(String text) {
+    public String censor(String text){
+        if(text==null || text.isBlank()) return text;
+        String locallyCensored = censorLocal(text);
+        try{
+            return censorGroq(locallyCensored);
+        }catch (Exception e) {
+            Logger.severe("Failed to censor text using Groq: " + e.getMessage());
+            return locallyCensored;
+        }
+    }
+
+    public String censorGroq(String text){
+        String prompt= """
+                Ești un filtru strict de moderare. 
+        Primești un text care poate fi deja parțial cenzurat cu ***.
+        Înlocuiește ORICE alt cuvânt vulgar, înjurătură, jignire sau expresie ofensatoare rămasă cu ***.
+        Păstrează caracterele *** existente intacte.
+        Păstrează exact structura și punctuația propoziției.
+        Returnează DOAR textul cenzurat final, fără ghilimele, fără introduceri și fără explicații.
+
+        Text: %s
+        """.formatted(text);
+        Map<String , Object> requestBody = Map.of(
+                "model",model,
+                "temperature",0.2,
+                "messages", List.of(
+                        Map.of("role", "user", "content", prompt)
+                )
+        );
+        try{
+            GroqResponse response = restClient.post()
+                    .uri("/chat/completions")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .body(GroqResponse.class);
+            if(response!=null && response.choices()!=null && !response.choices().isEmpty())
+            {
+                return response.choices().get(0).message().content().trim();
+            }
+        }catch(Exception e){
+                Logger.severe("Failed to censor using Groq");
+            }
+        return text;
+
+    }
+
+    public String censorLocal(String text) {
         if (text == null || text.isBlank()) return text;
 
         List<CharSpan> spans = buildSpans(text);
@@ -192,4 +257,7 @@ public class ProfanityFilterService {
         Map<Character, TrieNode> children = new HashMap<>();
         boolean isEndOfWord;
     }
+    private record GroqResponse(List<Choice> choices) {}
+    private record Choice(Message message) {}
+    private record Message(String content) {}
 }
