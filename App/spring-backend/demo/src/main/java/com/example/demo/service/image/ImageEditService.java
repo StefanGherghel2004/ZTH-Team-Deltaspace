@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.image;
 
 
 import com.example.demo.logger.Logger;
@@ -58,11 +58,11 @@ public class ImageEditService {
     @Transactional
     public void edit(String downloadUrl, String uploadUrl, Integer filterId) {
 
-        Logger.info("Attempting to edit image with filterId: {}", filterId);
+        Logger.info("Attempting to edit image with filterId: %d", filterId);
 
         Filter filter = filterRepository.findById(filterId.longValue())
                 .orElseThrow(() -> {
-                    Logger.warning("Image edit failed: Filter with id = {} not found", filterId);
+                    Logger.warning("Image edit failed: Filter with id = %d not found", filterId);
                     return new IllegalArgumentException("Filter with id = " + filterId + " not found");
                 });
 
@@ -86,9 +86,9 @@ public class ImageEditService {
                     .toBodilessEntity();
 
             filterRepository.incrementUsageCount(Long.valueOf(filterId));
-            Logger.info("Image edit request successfully sent for filter: {}", filter.getName());
+            Logger.info("Image edit request successfully sent for filter: %s", filter.getName());
         } catch (RestClientException e) {
-            Logger.warning("Failed to communicate with image editing service for filterId {}: {}", filterId, e.getMessage(), e);
+            Logger.warning("Failed to communicate with image editing service for filterId %d: %s", filterId, e.getMessage(), e);
             throw new RuntimeException("Image editing service communication failed", e);
         }
     }

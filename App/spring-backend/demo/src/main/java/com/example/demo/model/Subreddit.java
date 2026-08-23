@@ -40,8 +40,8 @@ public class Subreddit extends BaseEntity {
     // CascadeType.ALL ensures community deletion also removes all associated posts.
     @OneToMany(mappedBy = "subreddit", cascade = CascadeType.ALL)
     @JsonIgnore
-
     @Builder.Default
+    @OrderBy("createdAt DESC")
     private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -50,8 +50,7 @@ public class Subreddit extends BaseEntity {
             joinColumns = @JoinColumn(name = "community_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-
-
+    
     @JsonIgnore
     @Singular
     private Set<User> members = new HashSet<>();

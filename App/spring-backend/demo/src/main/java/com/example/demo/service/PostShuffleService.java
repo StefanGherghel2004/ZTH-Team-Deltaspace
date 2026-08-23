@@ -48,8 +48,9 @@ public class PostShuffleService {
     @Transactional(readOnly = true)
     public List<Post> getShuffledPosts(String subredditName) {
         List<Post> candidatePosts;
+        boolean isGlobalFeed = (subredditName == null || subredditName.isBlank());
 
-        if (subredditName != null && !subredditName.isBlank()) {
+        if (!isGlobalFeed) {
             Subreddit subreddit = subredditService.findByName(subredditName);
             candidatePosts = (subreddit != null && subreddit.getPosts() != null)
                     ? new ArrayList<>(subreddit.getPosts())
@@ -57,32 +58,57 @@ public class PostShuffleService {
         } else {
             candidatePosts = postRepository.findAllByOrderByCreatedAtDesc()
                     .stream()
-                    .limit(200)
-                    .toList();
+                    .limit(500)
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
 
         if (candidatePosts.isEmpty()) {
             return Collections.emptyList();
         }
 
+        Post pinnedNasaPost = null;
+
+        if (isGlobalFeed) {
+            // just the newest post from NASA Bot is shown on top of feed
+            pinnedNasaPost = candidatePosts.stream()
+                    .filter(p -> p.getAuthor() != null && p.getAuthor().getUsername() != null
+                            && "NasaBot".equals(p.getAuthor().getUsername()))
+                    .max(Comparator.comparing(Post::getCreatedAt))
+                    .orElse(null);
+
+            candidatePosts.removeIf(p -> p.getAuthor() != null && p.getAuthor().getUsername() != null
+                    && "NasaBot".equals(p.getAuthor().getUsername()));
+        }
+
         Set<UUID> preferredSubredditIds = getPreferredSubredditIds();
 
         try {
-            return candidatePosts.stream()
+            List<Post> result = candidatePosts.stream()
                     .filter(Objects::nonNull)
                     .map(post -> new ScoredPost(post, calculateScore(post, preferredSubredditIds)))
                     .sorted(Comparator.comparingDouble(ScoredPost::score).reversed())
                     .map(ScoredPost::post)
                     .map(postService::filteredPost)
                     .filter(Objects::nonNull)
-                    .toList();
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            if (pinnedNasaPost != null) {
+                result.add(0, pinnedNasaPost);
+            }
+
+            return result;
         } catch (Exception e) {
             log.error("Error during post scoring/shuffling. Falling back to candidate order.", e);
-            return candidatePosts
-                    .stream()
+            List<Post> fallbackList = candidatePosts.stream()
                     .map(postService::filteredPost)
                     .filter(Objects::nonNull)
-                    .toList();
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            if (pinnedNasaPost != null) {
+                fallbackList.add(0, pinnedNasaPost);
+            }
+
+            return fallbackList;
         }
     }
 

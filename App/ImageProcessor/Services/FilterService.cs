@@ -105,6 +105,7 @@ namespace ImageProcessor.Service
             // combines multiple effects to simulate a ink sketch effect
             image.Mutate(x => x
                 .Grayscale()
+                .GaussianBlur(1.0f)
                 .GaussianSharpen(2.5f)
                 .Contrast(2.0f)
                 .DetectEdges()
@@ -116,7 +117,7 @@ namespace ImageProcessor.Service
         {
             int origWidth = image.Width;
             int origHeight = image.Height;
-            int scaleFactor = 24; // factor controlling the pixel size
+            int scaleFactor = 18; // factor controlling the pixel size
             int gridWidth = Math.Max(8, origWidth / scaleFactor);
             int gridHeight = Math.Max(8, origHeight / scaleFactor);
             image.Mutate(x => x

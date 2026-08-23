@@ -34,6 +34,7 @@ public class CommentService {
 
     private final UserService userService;
     private final ProfanityFilterService profanityFilterService;
+    private final EmojiFormatterService emojiFormatterService;
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
@@ -46,7 +47,8 @@ public class CommentService {
         Post targetPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post with id " + postId + " was not found."));
 
-        String clearContent = profanityFilterService.censor(commentDto.getContent());
+        String emojiContent = emojiFormatterService.format(commentDto.getContent());
+        String clearContent = profanityFilterService.censor(emojiContent);
 
         Comment parentComment = null;
         if (commentDto.getParentId() != null) {
@@ -122,7 +124,9 @@ public class CommentService {
         if (comment.isDeleted()) {
             throw new IllegalStateException("Cannot edit a deleted comment");
         }
-        String clearContent = profanityFilterService.censor(updateDto.getContent());
+        String emojiContent = emojiFormatterService.format(updateDto.getContent());
+        String clearContent = profanityFilterService.censor(emojiContent);
+
         comment.setContent(clearContent);
         Comment updatedComment = commentRepository.save(comment);
         Logger.info("Comment edited by %s", currentUser.getUsername());
