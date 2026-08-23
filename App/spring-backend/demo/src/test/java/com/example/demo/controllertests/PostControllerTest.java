@@ -75,7 +75,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("POST /posts - Should create a post with multipart form data and return 201 Created")
-    void createPost_Success() throws Exception {
+    void createPostSuccess() throws Exception {
         MockMultipartFile imageFile = new MockMultipartFile(
                 "image",
                 "image.png",
@@ -102,7 +102,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("GET /posts/{id} - Should return post details and 200 OK")
-    void getPostById_Success() throws Exception {
+    void getPostByIdSuccess() throws Exception {
         when(postService.findById(samplePostId)).thenReturn(samplePost);
         when(postService.getEnrichedPostDto(samplePost)).thenReturn(samplePostResponseDto);
 
@@ -117,7 +117,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("GET /posts - Should return list of shuffled posts and 200 OK")
-    void getPosts_Success() throws Exception {
+    void getPostsSuccess() throws Exception {
         List<Post> postList = List.of(samplePost);
         List<PostResponseDto> responseList = List.of(samplePostResponseDto);
 
@@ -136,7 +136,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("GET /subreddits/{name}/posts - Should return posts belonging to subreddit and 200 OK")
-    void getPostsBySubreddit_Success() throws Exception {
+    void getPostsBySubredditSuccess() throws Exception {
         List<Post> postList = List.of(samplePost);
         List<PostResponseDto> responseList = List.of(samplePostResponseDto);
 
@@ -154,7 +154,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("PUT /posts/{id}/vote - Should register vote and return 200 OK")
-    void votePost_Success() throws Exception {
+    void votePostSuccess() throws Exception {
         VoteRequestDto voteDto = new VoteRequestDto();
         voteDto.setVoteType(VoteAction.UP);
 
@@ -179,7 +179,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("PUT /posts/{id} - Should update post and return 200 OK")
-    void updatePost_Success() throws Exception {
+    void updatePostSuccess() throws Exception {
         PostUpdateDto updateDto = new PostUpdateDto();
         updateDto.setTitle("Updated Title");
         updateDto.setContent("Updated content");
@@ -211,7 +211,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("DELETE /posts/{id} - Should delete post and return success message with 200 OK")
-    void deletePostById_Success() throws Exception {
+    void deletePostByIdSuccess() throws Exception {
         doNothing().when(postService).deletePostById(samplePostId);
 
         mockMvc.perform(delete("/posts/{id}", samplePostId))

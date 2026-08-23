@@ -80,7 +80,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("POST /auth/register - Should register user and return 201 Created")
-    void addUser_Success() throws Exception {
+    void addUserSuccess() throws Exception {
         UserCreateDto createDto = new UserCreateDto("testuser","testuser@example.com","password123!", null);
 
         when(authService.register(any(UserCreateDto.class))).thenReturn(sampleAuthResponse);
@@ -98,7 +98,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("POST /auth/login - Should authenticate user and return 200 OK with token")
-    void loginUser_Success() throws Exception {
+    void loginUserSuccess() throws Exception {
         AuthRequestLoginDto loginDto = new AuthRequestLoginDto();
         loginDto.setUsername("testuser");
         loginDto.setPassword("password123!");
@@ -128,7 +128,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("GET /auth/me - Should return authenticated user details")
-    void getAuthenticatedUser_Success() throws Exception {
+    void getAuthenticatedUserSuccess() throws Exception {
         when(userService.getAuthenticatedUser()).thenReturn(sampleUser);
 
         mockMvc.perform(get("/auth/me"))
@@ -141,7 +141,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("DELETE /auth/me - Should delete authenticated user and return success message")
-    void deleteUser_Success() throws Exception {
+    void deleteUserSuccess() throws Exception {
         UserDeleteDto deleteDto = new UserDeleteDto();
         deleteDto.setPassword("password123!");
 
@@ -158,7 +158,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("PUT /auth/me - Should update display name or avatar and return updated user")
-    void updateUserDisplayNameOrAvatar_Success() throws Exception {
+    void updateUserDisplayNameOrAvatarSuccess() throws Exception {
         UserUpdateDto updateDto = new UserUpdateDto();
         updateDto.setDisplayName("Updated Name");
         updateDto.setAvatarUrl("https://avatar.url/img.png");
@@ -176,7 +176,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("PUT /auth/me/password - Should update password and return success message")
-    void changePassword_Success() throws Exception {
+    void changePasswordSuccess() throws Exception {
         PasswordChangeRequestDto passwordDto = new PasswordChangeRequestDto();
         passwordDto.setCurrentPassword("oldPassword123!");
         passwordDto.setNewPassword("newPassword123!");
