@@ -99,16 +99,23 @@ public class ProfanityFilterService {
     }
 
     public String censorGroq(String text){
-        String prompt= """
-                Ești un filtru strict de moderare. 
-        Primești un text care poate fi deja parțial cenzurat cu ***.
-        Înlocuiește ORICE alt cuvânt vulgar, înjurătură, jignire sau expresie ofensatoare rămasă cu ***.
-        Păstrează caracterele *** existente intacte.
-        Păstrează exact structura și punctuația propoziției.
-        Returnează DOAR textul cenzurat final, fără ghilimele, fără introduceri și fără explicații.
+        String prompt = """
+You are a strict content moderation filter.
+Your task is to replace any profane, offensive, or inappropriate words with ***.
 
-        Text: %s
-        """.formatted(text);
+PAY SPECIAL ATTENTION to evasion techniques:
+1. Spaced-out words (e.g., "b a d w o r d" or "f u c k" must become "***").
+2. Obfuscated words using symbols, dots, hyphens, or underscores (e.g., "b.a.d.w.o.r.d", "f_u_c_k", "b-a-d").
+3. Repeated characters or stretched words (e.g., "baaaadwooorrd", "f uuuu c k").
+4. Leetspeak or character substitution (e.g., "b4dw0rd", "phuck").
+
+Output Rules:
+- Keep existing *** characters intact.
+- Preserve sentence structure, capitalization, and surrounding non-profane words.
+- Return ONLY the final censored text, without quotes, explanations, or introductory text.
+
+Text: %s
+""".formatted(text);
         Map<String , Object> requestBody = Map.of(
                 "model",model,
                 "temperature",0.2,
