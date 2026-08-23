@@ -37,6 +37,7 @@ public class PostSummaryService {
     private final DiffMatchPatch dmp = new DiffMatchPatch();
     private static final double SIGNIFICANT_CHANGE_THRESHOLD = 0.20;
     private static final int MIN_CHAR_CHANGE = 300;
+    private static final int MAX_COMMENT_LENGTH = 1000;
 
     private RestClient restClient;
 
@@ -59,15 +60,28 @@ public class PostSummaryService {
     }
 
     public String generateTldr(String title, String content) {
+        int charCount = content.length();
+        String lengthInstruction;
+
+        if (charCount <= 2500) {
+            lengthInstruction = "approximately 35 to 50 words (strictly 2 sentences)";
+        } else if (charCount <= 5000) {
+            lengthInstruction = "approximately 60 to 80 words (2 to 3 sentences)";
+        } else if (charCount <= 7500) {
+            lengthInstruction = "approximately 85 to 105 words (3 to 4 sentences)";
+        } else {
+            lengthInstruction = "strictly between 110 and 130 words (4 to 5 sentences)";
+        }
+
         String prompt = """
         You are a forum post summarizer.
-        Write a concise TL;DR summary of approximately 80 to 110 words (2 to 4 sentences) for the following long post.
+        Write a concise TL;DR summary in a single continuous paragraph of %s for the following post.
         Capture the background context, the main argument or problem, and the key question or takeaway.
-        Do not use conversational filler, greetings, or intro/outro meta-text (e.g., do NOT start with "TL;DR:" or "Here is a summary:").
+        Do not use bullet points, lists, line breaks, conversational filler, greetings, or intro/outro meta-text (e.g., do NOT start with "TL;DR:" or "Here is a summary:").
         
         Title: %s
         Content: %s
-        """.formatted(title, content);
+        """.formatted(lengthInstruction, title, content);
 
         Map<String, Object> requestBody = Map.of(
                 "model", model,
@@ -102,8 +116,13 @@ public class PostSummaryService {
 
         if (post.getContent().length() > 1500) {
             String tldr = generateTldr(post.getTitle(), post.getContent());
-            if (tldr == null) {
+            if (tldr == null || tldr.trim().isBlank()) {
                 return null;
+            }
+
+            String finalContent = "TL;DR " + tldr.trim();
+            if (finalContent.length() > MAX_COMMENT_LENGTH) {
+                finalContent = finalContent.substring(0, MAX_COMMENT_LENGTH - 3) + "...";
             }
 
             Comment tldrComment = new Comment();
@@ -111,7 +130,7 @@ public class PostSummaryService {
             tldrComment.setParentComment(null);
             tldrComment.setPost(post);
             tldrComment.setUser(tldrBotUser);
-            tldrComment.setContent("TL;DR " + tldr);
+            tldrComment.setContent(finalContent);
             commentRepository.save(tldrComment);
             Logger.info("Successfully added TL;DR comment.");
             return tldrComment;
@@ -147,8 +166,12 @@ public class PostSummaryService {
         }
 
         String tldr = generateTldr(post.getTitle(), post.getContent());
-        if (tldr != null) {
-            tldrComment.setContent("TL;DR " + tldr);
+        if (tldr != null && !tldr.trim().isBlank()) {
+            String finalContent = "TL;DR " + tldr.trim();
+            if (finalContent.length() > MAX_COMMENT_LENGTH) {
+                finalContent = finalContent.substring(0, MAX_COMMENT_LENGTH - 3) + "...";
+            }
+            tldrComment.setContent(finalContent);
             Logger.info("Successfully updated TL;DR comment for post %s.", post.getId());
             return commentRepository.save(tldrComment);
         }
