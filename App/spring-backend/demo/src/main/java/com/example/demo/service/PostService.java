@@ -9,22 +9,23 @@ import com.example.demo.exception.AccessDeniedException;
 import com.example.demo.exception.notfound.PostNotFoundException;
 import com.example.demo.logger.Logger;
 import com.example.demo.mapper.PostMapper;
-import com.example.demo.model.Subreddit;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.PostVote;
+import com.example.demo.model.Subreddit;
 import com.example.demo.model.User;
-import com.example.demo.model.*;
 import com.example.demo.model.enums.VoteType;
-import com.example.demo.repository.*;
-
+import com.example.demo.repository.CommentRepository;
+import com.example.demo.repository.PostRepository;
+import com.example.demo.repository.PostVoteRepository;
 import com.example.demo.service.image.ImageEditService;
 import com.example.demo.service.image.ImageUploadService;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +51,6 @@ public class PostService {
 
     private final EntityManager entityManager;
     private final PostMapper postMapper;
-
 
     @Transactional
     public Post createPost(PostCreateDto dto) {
@@ -78,7 +78,6 @@ public class PostService {
             post.setSubreddit(subreddit);
         }
 
-
         Post savedPost = postRepository.save(post);
         votePost(savedPost.getId(), VoteAction.UP);
         Logger.info("Post with id %s created by %s", savedPost.getId(), author.getUsername());
@@ -92,34 +91,34 @@ public class PostService {
     public VoteResponseDto votePost(UUID postId, VoteAction action) {
         Post post = findById(postId);
         User user = userService.getAuthenticatedUser();
-        if(post.isDeleted()){
+        if (post.isDeleted()) {
             throw new IllegalStateException("Cannot vote on a deleted post");
         }
         Optional<PostVote> existingVoteOpt = postVoteRepository.findByPostAndUser(post, user);
 
         VoteAction finalAction = (action != null) ? action : VoteAction.NONE;
 
-        VoteType requestedVoteType = switch(finalAction){
+        VoteType requestedVoteType = switch (finalAction) {
             case UP -> VoteType.UPVOTE;
             case DOWN -> VoteType.DOWNVOTE;
             case NONE -> null;
         };
 
         VoteType currentVoteType = existingVoteOpt.map(PostVote::getVoteType).orElse(null);
-        VoteType newVoteType = (currentVoteType == requestedVoteType) ? null:requestedVoteType;
+        VoteType newVoteType = (currentVoteType == requestedVoteType) ? null : requestedVoteType;
 
-        if(currentVoteType==null && newVoteType==null){
+        if (currentVoteType == null && newVoteType == null) {
             return null;
         }
-        existingVoteOpt.ifPresent(existingVote->{
-            removeVoteFromPost(postId,existingVote.getVoteType());
-            if(newVoteType==null){
+        existingVoteOpt.ifPresent(existingVote -> {
+            removeVoteFromPost(postId, existingVote.getVoteType());
+            if (newVoteType == null) {
                 postVoteRepository.delete(existingVote);
             }
         });
 
-        if(newVoteType!=null){
-            PostVote voteToSave=existingVoteOpt.orElseGet(()->{
+        if (newVoteType != null) {
+            PostVote voteToSave = existingVoteOpt.orElseGet(() -> {
                 PostVote vote = new PostVote();
                 vote.setPost(post);
                 vote.setUser(user);
@@ -127,7 +126,7 @@ public class PostService {
             });
             voteToSave.setVoteType(newVoteType);
             postVoteRepository.save(voteToSave);
-            addVoteToPost(postId,newVoteType);
+            addVoteToPost(postId, newVoteType);
         }
 
         entityManager.flush();
@@ -174,7 +173,7 @@ public class PostService {
                 .count()
                 : 0;
         dto.setCommentCount(commentCount);
-        if(post.getAuthor().isDeleted()) {
+        if (post.getAuthor().isDeleted()) {
             dto.setAuthor("[deleted]");
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -216,10 +215,10 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<Post> getAllPosts(String subredditName) {
-        if(subredditName != null && !subredditName.isBlank()){
+        if (subredditName != null && !subredditName.isBlank()) {
             Subreddit subreddit = subredditService.findByName(subredditName);
             return subreddit.getPosts().stream().map(this::filteredPost).filter(Objects::nonNull).toList();
-        }else{
+        } else {
             return getAllPosts();
         }
     }
@@ -251,12 +250,14 @@ public class PostService {
             post.setContent(clearContent);
         }
 
+        Post saved = postRepository.save(post);
+
         if (hasTitleChange || hasContentChange) {
-            postSummaryService.updateTldrCommentAsync(post.getId(), oldPostContent);
+            postSummaryService.updateTldrCommentAsync(saved.getId(), saved.getTitle(), saved.getContent(), oldPostContent);
         }
 
-        Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());
-        return postRepository.save(post);
+        Logger.info("Post %s updated by %s", saved.getTitle(), authenticatedUser.getUsername());
+        return saved;
     }
 
     @Transactional

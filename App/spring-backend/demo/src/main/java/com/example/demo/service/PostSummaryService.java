@@ -41,7 +41,7 @@ public class PostSummaryService {
 
     private final DiffMatchPatch dmp = new DiffMatchPatch();
     private static final double SIGNIFICANT_CHANGE_THRESHOLD = 0.10;
-    private static final int MIN_CHAR_CHANGE = 150;
+    private static final int MIN_CHAR_CHANGE = 120;
     private static final int MAX_COMMENT_LENGTH = 1000;
 
     private RestClient restClient;
@@ -62,8 +62,46 @@ public class PostSummaryService {
 
     @Async
     @Transactional
-    public void updateTldrCommentAsync(UUID postId, String oldContents) {
-        postRepository.findById(postId).ifPresent(post -> updateTldrComment(post, oldContents));
+    public void updateTldrCommentAsync(UUID postId, String title, String newContent, String oldContent) {
+        if (title == null || newContent == null) {
+            return;
+        }
+
+        User tldrBot = getOrCreateTldrBotUser();
+        Comment tldrComment = commentRepository.findByPostIdAndUserId(postId, tldrBot.getId());
+
+        if (newContent.length() <= 1500) {
+            if (tldrComment != null) {
+                postRepository.findById(postId).ifPresent(post -> {
+                    if (post.getComments() != null) {
+                        post.getComments().remove(tldrComment);
+                    }
+                });
+                commentRepository.delete(tldrComment);
+                commentRepository.flush();
+            }
+            return;
+        }
+
+        if (tldrComment == null) {
+            postRepository.findById(postId).ifPresent(this::addTldrComment);
+            return;
+        }
+
+        if (!isSignificantChange(oldContent, newContent)) {
+            return;
+        }
+
+        String tldr = generateTldr(title, newContent);
+        if (tldr != null && !tldr.trim().isBlank()) {
+            String finalContent = "TL;DR " + tldr.trim();
+            if (finalContent.length() > MAX_COMMENT_LENGTH) {
+                finalContent = finalContent.substring(0, MAX_COMMENT_LENGTH - 3) + "...";
+            }
+            tldrComment.setContent(finalContent);
+            commentRepository.save(tldrComment);
+            Logger.info("Successfully updated TL;DR comment asynchronously for post %s.", postId);
+        }
     }
 
     public User getOrCreateTldrBotUser() {
@@ -95,14 +133,15 @@ public class PostSummaryService {
         Write a concise TL;DR summary in a single continuous paragraph of %s for the following post.
         Capture the background context, the main argument or problem, and the key question or takeaway.
         Do not use bullet points, lists, line breaks, conversational filler, greetings, or intro/outro meta-text (e.g., do NOT start with "TL;DR:" or "Here is a summary:").
-        
+
         Title: %s
         Content: %s
         """.formatted(lengthInstruction, title, content);
 
         Map<String, Object> requestBody = Map.of(
                 "model", model,
-                "temperature", 0.2,
+                "temperature", 0.1,
+                "max_tokens", 150,
                 "messages", List.of(
                         Map.of("role", "user", "content", prompt)
                 )

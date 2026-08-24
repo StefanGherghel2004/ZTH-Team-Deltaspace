@@ -454,7 +454,12 @@ public class PostServiceTest {
         assertThat(result).isNotNull();
         assertThat(samplePost.getTitle()).isEqualTo("Updated Title");
         assertThat(samplePost.getContent()).isEqualTo("Updated clean content");
-        verify(postSummaryService, times(1)).updateTldrCommentAsync(samplePost.getId(), originalContent);
+        verify(postSummaryService, times(1)).updateTldrCommentAsync(
+                samplePost.getId(),
+                "Updated Title",
+                "Updated clean content",
+                originalContent
+        );
         verify(postRepository, times(1)).save(samplePost);
     }
 
