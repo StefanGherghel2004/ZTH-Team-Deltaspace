@@ -18,6 +18,7 @@ import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.PostVoteRepository;
 import com.example.demo.service.CommentService;
+import com.example.demo.service.EmojiFormatterService;
 import com.example.demo.service.image.ImageEditService;
 import com.example.demo.service.image.ImageUploadService;
 import com.example.demo.service.PostService;
@@ -79,6 +80,9 @@ public class PostServiceTest {
     private ProfanityFilterService profanityFilterService;
 
     @Mock
+    private EmojiFormatterService emojiFormatterService;
+
+    @Mock
     private ImageEditService imageEditService;
 
     @Mock
@@ -131,6 +135,9 @@ public class PostServiceTest {
         samplePost.setDownvotes(0);
         samplePost.setDeleted(false);
         samplePost.setComments(new ArrayList<>());
+
+        lenient().when(emojiFormatterService.format(anyString()))
+                .thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @AfterEach
@@ -150,7 +157,7 @@ public class PostServiceTest {
     }
 
     @Test
-    @DisplayName("Should successfully create a post with image and subreddit, auto-upvote it, and generate tldr")
+    @DisplayName("Should successfully create a post with image and subreddit, auto-upvote it")
     void createPostWithImageAndSubredditSuccess() {
         MultipartFile mockImage = new MockMultipartFile("image", "test.jpg", "image/jpeg", new byte[]{1, 2, 3});
 

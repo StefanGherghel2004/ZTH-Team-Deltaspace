@@ -18,6 +18,7 @@ import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommentVoteRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.CommentService;
+import com.example.demo.service.EmojiFormatterService;
 import com.example.demo.service.ProfanityFilterService;
 import com.example.demo.service.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -42,6 +43,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -53,6 +55,9 @@ public class CommentServiceTest {
 
     @Mock
     private ProfanityFilterService profanityFilterService;
+
+    @Mock
+    private EmojiFormatterService emojiFormatterService;
 
     @Mock
     private PostRepository postRepository;
@@ -107,6 +112,9 @@ public class CommentServiceTest {
                 .downvotes(0)
                 .deleted(false)
                 .build();
+
+        lenient().when(emojiFormatterService.format(anyString()))
+                .thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @AfterEach
