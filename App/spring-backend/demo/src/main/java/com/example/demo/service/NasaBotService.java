@@ -45,7 +45,7 @@ public class NasaBotService {
     private static final String SUBREDDIT_DESCRIPTION = "Daily Astronomy Pictures, NASA Archive treasures, and Asteroid updates.";
     private static final String SUBREDDIT_ICON_URL = "https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg";
 
-    private static final String APOD_API_URL = "https://api.nasa.gov/planetary/apod?api_key=%s&count=5";
+    private static final String APOD_API_URL = "https://api.nasa.gov/planetary/apod?api_key=%s&thumbs=true";
     private static final String LIBRARY_SEARCH_API_URL = "https://images-api.nasa.gov/search?q=%s&media_type=image";
     private static final String ASTEROID_API_URL = "https://api.nasa.gov/neo/rest/v1/feed?start_date=%s&end_date=%s&api_key=%s";
 
@@ -153,29 +153,38 @@ public class NasaBotService {
         String url = String.format(APOD_API_URL, nasaApiKey);
 
         try {
-            NasaApodResponse[] nasaDataArray = restClient.get()
+            NasaApodResponse nasaData = restClient.get()
                     .uri(url)
                     .retrieve()
-                    .body(NasaApodResponse[].class);
+                    .body(NasaApodResponse.class);
 
-            if (nasaDataArray != null) {
-                for (NasaApodResponse nasaData : nasaDataArray) {
-                    if ("image".equals(nasaData.media_type())) {
-                        createAndSavePost(
-                                "APOD: " + nasaData.title(),
-                                nasaData.explanation(),
-                                nasaData.url(),
-                                botUser,
-                                subreddit
-                        );
-                        Logger.info("Posted APOD image successfully: %s", nasaData.title());
-                        return;
-                    }
+            if (nasaData != null) {
+                boolean isVideo = "video".equals(nasaData.media_type());
+                String finalImageUrl = isVideo ? nasaData.thumbnail_url() : nasaData.url();
+
+                // attach video link if the NASA APOD contains a video
+                String finalContent = nasaData.explanation();
+                if (isVideo) {
+                    finalContent += "\n\n🎥 Watch the original video here: " + nasaData.url();
+                }
+
+                if (finalImageUrl != null) {
+                    createAndSavePost(
+                            "APOD: " + nasaData.title(),
+                            finalContent,
+                            finalImageUrl,
+                            botUser,
+                            subreddit
+                    );
+                    Logger.info("Posted APOD successfully: %s", nasaData.title());
+                    return;
                 }
             }
+
             fetchLibrarySearchAndPost(botUser, subreddit);
+
         } catch (Exception e) {
-            Logger.warning("Failed to fetch APOD, trying NASA Library Search. Error: %s", e.getMessage());
+            Logger.warning("Failed to fetch current APOD, trying NASA Library Search. Error: %s", e.getMessage());
             fetchLibrarySearchAndPost(botUser, subreddit);
         }
     }

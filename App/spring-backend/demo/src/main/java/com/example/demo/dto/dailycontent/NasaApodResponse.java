@@ -10,5 +10,6 @@ public record NasaApodResponse(
         String title,
         String explanation,
         String url,
-        String media_type
+        String media_type,
+        String thumbnail_url
 ) {}
