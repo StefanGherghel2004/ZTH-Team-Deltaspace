@@ -189,7 +189,7 @@ public class PostServiceTest {
         assertThat(result.getId()).isEqualTo(samplePostId);
         verify(postRepository, times(1)).incrementUpvotes(samplePostId);
         verify(postVoteRepository, times(1)).save(any(PostVote.class));
-        verify(postSummaryService, times(1)).addTldrComment(any(Post.class));
+        verify(postSummaryService, times(1)).addTldrCommentAsync(any(UUID.class));
     }
 
     @Test
@@ -216,7 +216,7 @@ public class PostServiceTest {
         assertThat(result).isNotNull();
         verify(imageUploadService, never()).upload(any(), anyInt());
         verify(subredditService, never()).findByName(anyString());
-        verify(postSummaryService, times(1)).addTldrComment(any(Post.class));
+        verify(postSummaryService, times(1)).addTldrCommentAsync(any(UUID.class));
     }
 
     @Test
@@ -454,7 +454,7 @@ public class PostServiceTest {
         assertThat(result).isNotNull();
         assertThat(samplePost.getTitle()).isEqualTo("Updated Title");
         assertThat(samplePost.getContent()).isEqualTo("Updated clean content");
-        verify(postSummaryService, times(1)).updateTldrComment(samplePost, originalContent);
+        verify(postSummaryService, times(1)).updateTldrCommentAsync(samplePost.getId(), originalContent);
         verify(postRepository, times(1)).save(samplePost);
     }
 

@@ -83,7 +83,7 @@ public class PostService {
         votePost(savedPost.getId(), VoteAction.UP);
         Logger.info("Post with id %s created by %s", savedPost.getId(), author.getUsername());
 
-        postSummaryService.addTldrComment(savedPost);
+        postSummaryService.addTldrCommentAsync(savedPost.getId());
 
         return findById(savedPost.getId());
     }
@@ -252,7 +252,7 @@ public class PostService {
         }
 
         if (hasTitleChange || hasContentChange) {
-            postSummaryService.updateTldrComment(post, oldPostContent);
+            postSummaryService.updateTldrCommentAsync(post.getId(), oldPostContent);
         }
 
         Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());

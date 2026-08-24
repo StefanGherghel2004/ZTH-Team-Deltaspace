@@ -6,19 +6,23 @@ import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommentRepository;
+import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +36,7 @@ public class PostSummaryService {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final UserService userService;
 
     private final DiffMatchPatch dmp = new DiffMatchPatch();
@@ -47,6 +52,18 @@ public class PostSummaryService {
                 .baseUrl("https://api.groq.com/openai/v1")
                 .defaultHeader("Authorization", "Bearer " + apiKey)
                 .build();
+    }
+
+    @Async
+    @Transactional
+    public void addTldrCommentAsync(UUID postId) {
+        postRepository.findById(postId).ifPresent(this::addTldrComment);
+    }
+
+    @Async
+    @Transactional
+    public void updateTldrCommentAsync(UUID postId, String oldContents) {
+        postRepository.findById(postId).ifPresent(post -> updateTldrComment(post, oldContents));
     }
 
     public User getOrCreateTldrBotUser() {
