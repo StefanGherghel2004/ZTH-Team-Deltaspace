@@ -40,8 +40,8 @@ public class PostSummaryService {
     private final UserService userService;
 
     private final DiffMatchPatch dmp = new DiffMatchPatch();
-    private static final double SIGNIFICANT_CHANGE_THRESHOLD = 0.20;
-    private static final int MIN_CHAR_CHANGE = 300;
+    private static final double SIGNIFICANT_CHANGE_THRESHOLD = 0.10;
+    private static final int MIN_CHAR_CHANGE = 150;
     private static final int MAX_COMMENT_LENGTH = 1000;
 
     private RestClient restClient;
