@@ -47,6 +47,7 @@ public class PostService {
     private final ImageEditService imageEditService;
     private final PostSummaryService postSummaryService;
     private final CommentService commentService;
+    private final SpamFilterService spamFilterService;
 
     private final EntityManager entityManager;
     private final PostMapper postMapper;
@@ -57,11 +58,18 @@ public class PostService {
         User author = userService.getAuthenticatedUser();
 
         Post post = new Post();
-        post.setTitle(emojiFormatterService.format(dto.getTitle()));
+        String formattedTitle=emojiFormatterService.format(dto.getTitle());
+
 
         String withEmojis = emojiFormatterService.format(dto.getContent());
         String clearContent = profanityFilterService.censor(withEmojis);
-
+        boolean isSpam = spamFilterService.isSpam(clearContent);
+        if (isSpam) {
+            post.setTitle("!!!! WARNING. THIS POST MAY CONTAIN SPAM !!!! " );
+        }
+        else{
+        post.setTitle(formattedTitle);
+        }
         post.setContent(clearContent);
         post.setAuthor(author);
 
