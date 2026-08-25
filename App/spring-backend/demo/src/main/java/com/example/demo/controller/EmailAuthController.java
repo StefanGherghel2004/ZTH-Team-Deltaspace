@@ -40,19 +40,56 @@ public class EmailAuthController {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Email Verified - Deltaspace</title>
                 <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-                    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0e1117; color: #e6edf3; padding: 20px; }
-                    .card { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 48px 32px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
-                    .icon-badge { width: 72px; height: 72px; background: rgba(35, 134, 54, 0.15); border: 2px solid #238636; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: #2ea043; font-size: 32px; }
-                    h1 { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: #ffffff; }
-                    p { font-size: 14px; color: #8b949e; line-height: 1.6; }
+                    * { 
+                        margin: 0; 
+                        padding: 0; 
+                        box-sizing: border-box; 
+                        font-family: 'Courier New', Courier, monospace; 
+                    }
+                    body { 
+                        min-height: 100vh; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        background: #0b0c10; 
+                        color: #9ba1b6; 
+                        padding: 20px; 
+                    }
+                    .card { 
+                        background: #12141d; 
+                        border: 1px solid #1f2438; 
+                        border-radius: 12px; 
+                        padding: 40px 32px; 
+                        max-width: 440px; 
+                        width: 100%; 
+                        text-align: center; 
+                    }
+                    .icon { 
+                        font-size: 32px; 
+                        color: #00b4d8; 
+                        margin-bottom: 16px; 
+                        font-weight: bold; 
+                    }
+                    h1 { 
+                        font-size: 20px; 
+                        font-weight: bold; 
+                        letter-spacing: 1.5px; 
+                        margin-bottom: 12px; 
+                        color: #ffffff; 
+                        text-transform: uppercase; 
+                    }
+                    p { 
+                        font-size: 13px; 
+                        line-height: 1.6; 
+                        letter-spacing: 0.5px; 
+                    }
                 </style>
             </head>
             <body>
                 <div class="card">
-                    <div class="icon-badge">✓</div>
-                    <h1>Email Verified!</h1>
-                    <p>Your account is now fully activated. You can close this tab and return to the application.</p>
+                    <div class="icon">[ ✓ ]</div>
+                    <h1>Email Verified</h1>
+                    <p>Your account is now activated. You can close this window and return to Deltaspace.</p>
                 </div>
             </body>
             </html>
@@ -68,22 +105,59 @@ public class EmailAuthController {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Verification Failed - Deltaspace</title>
                 <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-                    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0e1117; color: #e6edf3; padding: 20px; }
-                    .card { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 48px 32px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
-                    .icon-badge { width: 72px; height: 72px; background: rgba(218, 54, 51, 0.15); border: 2px solid #da3633; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: #f85149; font-size: 32px; }
-                    h1 { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: #ffffff; }
-                    p { font-size: 14px; color: #8b949e; line-height: 1.6; }
+                    * { 
+                        margin: 0; 
+                        padding: 0; 
+                        box-sizing: border-box; 
+                        font-family: 'Courier New', Courier, monospace; 
+                    }
+                    body { 
+                        min-height: 100vh; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        background: #0b0c10; 
+                        color: #9ba1b6; 
+                        padding: 20px; 
+                    }
+                    .card { 
+                        background: #12141d; 
+                        border: 1px solid #1f2438; 
+                        border-radius: 12px; 
+                        padding: 40px 32px; 
+                        max-width: 440px; 
+                        width: 100%; 
+                        text-align: center; 
+                    }
+                    .icon { 
+                        font-size: 32px; 
+                        color: #d902ee; 
+                        margin-bottom: 16px; 
+                        font-weight: bold; 
+                    }
+                    h1 { 
+                        font-size: 20px; 
+                        font-weight: bold; 
+                        letter-spacing: 1.5px; 
+                        margin-bottom: 12px; 
+                        color: #ffffff; 
+                        text-transform: uppercase; 
+                    }
+                    p { 
+                        font-size: 13px; 
+                        line-height: 1.6; 
+                        letter-spacing: 0.5px; 
+                    }
                 </style>
             </head>
             <body>
                 <div class="card">
-                    <div class="icon-badge">✕</div>
+                    <div class="icon">[ ✕ ]</div>
                     <h1>Verification Failed</h1>
                     <p>%s</p>
                 </div>
             </body>
             </html>
-            """.formatted(errorMessage != null ? errorMessage : "This link is invalid or has already expired.");
+            """.formatted(errorMessage != null ? errorMessage : "This link is invalid or has expired.");
     }
 }
