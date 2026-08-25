@@ -57,20 +57,16 @@ public class PostService {
     public Post createPost(PostCreateDto dto) {
         User author = userService.getAuthenticatedUser();
 
-        Post post = new Post();
-        String formattedTitle=emojiFormatterService.format(dto.getTitle());
-
-
+        String formattedTitle = emojiFormatterService.format(dto.getTitle());
         String withEmojis = emojiFormatterService.format(dto.getContent());
         String clearContent = profanityFilterService.censor(withEmojis);
         boolean isSpam = spamFilterService.isSpam(clearContent);
-        if (isSpam) {
-            post.setTitle("!!!! WARNING. THIS POST MAY CONTAIN SPAM !!!! " );
-        }
-        else{
+        String warningPrefix = "!!!!       WARNING. THIS POST MAY CONTAIN SPAM       !!!! ";
+
+        Post post = new Post();
         post.setTitle(formattedTitle);
-        }
-        post.setContent(clearContent);
+
+        post.setContent(isSpam ? warningPrefix + clearContent : clearContent);
         post.setAuthor(author);
 
         if (dto.getImage() != null && !dto.getImage().isEmpty()) {
@@ -85,7 +81,6 @@ public class PostService {
             Subreddit subreddit = subredditService.findByName(dto.getSubreddit());
             post.setSubreddit(subreddit);
         }
-
 
         Post savedPost = postRepository.save(post);
         votePost(savedPost.getId(), VoteAction.UP);
@@ -248,6 +243,7 @@ public class PostService {
         boolean hasTitleChange = updateDto.getTitle() != null && !updateDto.getTitle().isBlank();
 
         String oldPostContent = post.getContent();
+        String warningPrefix = "!!!!       WARNING. THIS POST MAY CONTAIN SPAM       !!!! ";
 
         if (hasTitleChange) {
             post.setTitle(emojiFormatterService.format(updateDto.getTitle()));
@@ -256,13 +252,23 @@ public class PostService {
         if (hasContentChange) {
             String emojiContent = emojiFormatterService.format(updateDto.getContent());
             String clearContent = profanityFilterService.censor(emojiContent);
-            post.setContent(clearContent);
-        }
 
-        if (hasTitleChange || hasContentChange) {
-            postSummaryService.updateTldrComment(post, oldPostContent);
-        }
+            if (clearContent.startsWith(warningPrefix)) {
+                clearContent = clearContent.substring(warningPrefix.length());
+            }
 
+            boolean isSpam = spamFilterService.isSpam(clearContent);
+
+            if (isSpam) {
+                post.setContent(warningPrefix + clearContent);
+            } else {
+                post.setContent(clearContent);
+            }
+
+            if (hasTitleChange || hasContentChange) {
+                postSummaryService.updateTldrComment(post, oldPostContent);
+            }
+        }
         Logger.info("Post %s updated by %s", post.getTitle(), authenticatedUser.getUsername());
         return postRepository.save(post);
     }

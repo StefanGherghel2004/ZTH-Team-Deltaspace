@@ -51,9 +51,12 @@ public class CommentService {
         String emojiContent = emojiFormatterService.format(commentDto.getContent());
         String clearContent = profanityFilterService.censor(emojiContent);
         boolean isSpam = spamFilterService.isSpam(clearContent);
-        if(isSpam){
-            clearContent="!!!!            WARNING. THIS COMMENT MAY CONTAIN SPAM               !!!! " + clearContent;
+        String warningPrefix = "!!!!            WARNING. THIS COMMENT MAY CONTAIN SPAM               !!!! ";
+
+        if (isSpam) {
+            clearContent = warningPrefix + clearContent;
         }
+
         Comment parentComment = null;
         if (commentDto.getParentId() != null) {
             parentComment = commentRepository.findById(commentDto.getParentId())
@@ -130,6 +133,16 @@ public class CommentService {
         }
         String emojiContent = emojiFormatterService.format(updateDto.getContent());
         String clearContent = profanityFilterService.censor(emojiContent);
+        String warningPrefix = "!!!!            WARNING. THIS COMMENT MAY CONTAIN SPAM               !!!! ";
+
+        if (clearContent.startsWith(warningPrefix)) {
+            clearContent = clearContent.substring(warningPrefix.length());
+        }
+
+        boolean isSpam = spamFilterService.isSpam(clearContent);
+        if (isSpam) {
+            clearContent = warningPrefix + clearContent;
+        }
 
         comment.setContent(clearContent);
         Comment updatedComment = commentRepository.save(comment);
