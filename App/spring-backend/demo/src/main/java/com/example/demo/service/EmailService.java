@@ -47,10 +47,10 @@ public class EmailService {
                                                 Thank you for signing up for the Deltaspace platform! Please confirm your email address by clicking the button below:
                                             </p>
 
-                                            <!-- Deltaspace Gradient Button -->
+                                            <!-- Solid Color Button -->
                                             <table border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto 36px auto;">
                                                 <tr>
-                                                    <td align="center" style="border-radius: 9999px; background: #9c27b0; background: linear-gradient(90deg, #d902ee 0%%, #7b2cbf 50%%, #00b4d8 100%%); box-shadow: 0 0 20px rgba(217, 2, 238, 0.35);">
+                                                    <td align="center" style="border-radius: 9999px; background-color: #d902ee;">
                                                         <a href="%s" target="_blank" style="display: inline-block; padding: 16px 48px; font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; border-radius: 9999px; letter-spacing: 0.5px; text-transform: uppercase;">
                                                             Verify Email Address
                                                         </a>
