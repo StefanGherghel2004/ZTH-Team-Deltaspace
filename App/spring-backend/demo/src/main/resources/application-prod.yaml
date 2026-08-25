@@ -8,3 +8,5 @@ filter:
     url: http://172.31.7.33:5157/api/filter
   controller:
     url: http://172.31.7.33:5157/filters
+app:
+  base-url: http://16.170.241.36:8080

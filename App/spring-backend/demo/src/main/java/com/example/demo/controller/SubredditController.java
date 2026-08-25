@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.annotation.RateLimit;
+import com.example.demo.annotation.RequireVerified;
 import com.example.demo.dto.subreddit.SubredditCreateDto;
 import com.example.demo.dto.subreddit.SubredditUpdateDto;
 import com.example.demo.dto.subreddit.response.SubredditResponseDto;
@@ -23,6 +24,7 @@ public class SubredditController {
     private final SubredditService subredditService;
 
     @RateLimit(requests = 25)
+    @RequireVerified
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<SubredditResponseDto>> addSubreddit(@Valid @RequestBody SubredditCreateDto createDto){
@@ -55,12 +57,14 @@ public class SubredditController {
 
 
     @DeleteMapping("/{subredditName}")
+    @RequireVerified
     public ResponseEntity<ApiResponse<Void>> deleteSubredditByName(@PathVariable String subredditName){
         subredditService.deleteSubredditByName(subredditName);
         return ResponseEntity.ok(ApiResponse.successMessage("subreddit deleted successfully!"));
     }
 
     @RateLimit(requests = 25)
+    @RequireVerified
     @PutMapping("/{name}")
     public ResponseEntity<ApiResponse<SubredditResponseDto>> updateSubreddit(@PathVariable String name, @Valid @RequestBody SubredditUpdateDto updateDto){
         Subreddit subreddit = subredditService.updateSubreddit(name,updateDto);
@@ -69,6 +73,7 @@ public class SubredditController {
     }
 
     @PostMapping("/{name}/join")
+    @RequireVerified
     public ResponseEntity<ApiResponse<Void>> joinSubreddit(
             @PathVariable String name) {
         subredditService.joinSubreddit(name);
@@ -76,6 +81,7 @@ public class SubredditController {
     }
 
     @PostMapping("/{name}/leave")
+    @RequireVerified
     public ResponseEntity<ApiResponse<Void>> leaveSubreddit(
             @PathVariable String name) {
 

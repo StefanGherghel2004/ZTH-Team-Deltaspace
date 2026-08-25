@@ -8,3 +8,6 @@ filter:
     url: http://localhost:5157/api/filter
   controller:
     url: http://localhost:5157/filters
+
+app:
+  base-url: http://localhost:8080

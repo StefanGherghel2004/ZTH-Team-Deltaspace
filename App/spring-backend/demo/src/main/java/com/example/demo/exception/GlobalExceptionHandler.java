@@ -149,6 +149,17 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "An unexpected error occurred.", request, details);
     }
 
+    @ExceptionHandler(AccountNotVerifiedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccountNotVerifiedException(
+            AccountNotVerifiedException e, HttpServletRequest request) {
+
+        List<ErrorDetail> details = List.of(
+                new ErrorDetail("account", e.getMessage())
+        );
+        return buildResponse(HttpStatus.FORBIDDEN, "ACCOUNT_NOT_VERIFIED",
+                "Please verify your email address before performing this action.", request, details);
+    }
+
     private ResponseEntity<ApiResponse<Void>> buildResponse(
             HttpStatus status,
             String code,

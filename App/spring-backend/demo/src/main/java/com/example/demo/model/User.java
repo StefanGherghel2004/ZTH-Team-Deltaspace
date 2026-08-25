@@ -37,6 +37,9 @@ public class User extends BaseEntity {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
+    @Column(nullable = false)
+    private boolean verified = false;
+
     @JsonIgnore
     public int getAge() {
         if (this.dateOfBirth == null) {

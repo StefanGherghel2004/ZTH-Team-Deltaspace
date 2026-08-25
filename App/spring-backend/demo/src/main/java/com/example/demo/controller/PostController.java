@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.annotation.RateLimit;
+import com.example.demo.annotation.RequireVerified;
 import com.example.demo.dto.post.PostCreateDto;
 import com.example.demo.dto.post.PostUpdateDto;
 import com.example.demo.dto.post.response.PostResponseDto;
@@ -29,6 +30,7 @@ public class PostController {
     private final PostShuffleService postShuffleService;
 
     @RateLimit(requests = 15)
+    @RequireVerified
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@Valid @ModelAttribute PostCreateDto dto) {
         Post createdPost = postService.createPost(dto);
@@ -68,6 +70,7 @@ public class PostController {
     }
 
     @RateLimit(requests = 100)
+    @RequireVerified
     @PutMapping("/posts/{id}/vote")
     public ResponseEntity<ApiResponse<VoteResponseDto>> votePost(
             @PathVariable UUID id,
@@ -79,6 +82,7 @@ public class PostController {
     }
 
     @RateLimit(requests = 25)
+    @RequireVerified
     @PutMapping("/posts/{id}")
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost(@PathVariable UUID id, @Valid @RequestBody PostUpdateDto updateDto){
         Post updatedPost = postService.updatePost(id, updateDto);
@@ -90,6 +94,7 @@ public class PostController {
 
     // this is 200 OK because 204 DELETED would not have a body and the docs specify this body
     @DeleteMapping("/posts/{id}")
+    @RequireVerified
     public ResponseEntity<ApiResponse<Void>> deletePostById (@PathVariable UUID id) {
 
         postService.deletePostById(id);
