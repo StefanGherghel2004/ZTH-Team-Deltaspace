@@ -35,6 +35,7 @@ public class CommentService {
     private final UserService userService;
     private final ProfanityFilterService profanityFilterService;
     private final EmojiFormatterService emojiFormatterService;
+    private final SpamFilterService spamFilterService;
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
@@ -49,7 +50,10 @@ public class CommentService {
 
         String emojiContent = emojiFormatterService.format(commentDto.getContent());
         String clearContent = profanityFilterService.censor(emojiContent);
-
+        boolean isSpam = spamFilterService.isSpam(clearContent);
+        if(isSpam){
+            clearContent="!!!!            WARNING. THIS COMMENT MAY CONTAIN SPAM               !!!! " + clearContent;
+        }
         Comment parentComment = null;
         if (commentDto.getParentId() != null) {
             parentComment = commentRepository.findById(commentDto.getParentId())
