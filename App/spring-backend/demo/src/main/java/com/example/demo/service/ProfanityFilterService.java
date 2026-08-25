@@ -66,7 +66,7 @@ public class ProfanityFilterService {
                 .defaultHeader("Authorization","Bearer " + apiKey)
                 .build();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Objects.requireNonNull(getClass().getResourceAsStream("App/spring-backend/demo/profanity-words.txt")),
+                Objects.requireNonNull(getClass().getResourceAsStream("/profanity-words.txt")),
                 StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -89,13 +89,26 @@ public class ProfanityFilterService {
 
     public String censor(String text){
         if(text==null || text.isBlank()) return text;
+
         String locallyCensored = censorLocal(text);
-        try{
-            return censorGroq(locallyCensored);
-        }catch (Exception e) {
-            Logger.severe("Failed to censor text using Groq: " + e.getMessage());
+        boolean localFoundSomething = locallyCensored.contains("*");
+
+        if (localFoundSomething) {
             return locallyCensored;
         }
+
+        if (!containsSuspiciousEvasion(text)) {
+            return locallyCensored;
+        }
+
+
+            try {
+                return censorGroq(locallyCensored);
+            } catch (Exception e) {
+                Logger.severe("Failed to censor text using Groq: " + e.getMessage());
+            }
+
+        return locallyCensored;
     }
 
     public String censorGroq(String text){
@@ -258,6 +271,10 @@ Text: %s
             current = current.children.computeIfAbsent(ch, k -> new TrieNode());
         }
         current.isEndOfWord = true;
+    }
+    private boolean containsSuspiciousEvasion(String text) {
+        return text.toLowerCase()
+                .matches(".*\\b\\w([\\s._-]+\\w){3,}\\b.*");
     }
 
     private static class TrieNode {
